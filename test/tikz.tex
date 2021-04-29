@@ -1,0 +1,45 @@
+\documentclass{article}
+
+\usepackage{tikz}
+
+\begin{document}
+
+
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(ggplot2)}
+\hlkwd{library}\hlstd{(ggpmisc)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# generate artificial data}
+\hlkwd{set.seed}\hlstd{(}\hlnum{4321}\hlstd{)}
+\hlstd{x} \hlkwb{<-} \hlnum{1}\hlopt{:}\hlnum{100}
+\hlstd{y} \hlkwb{<-} \hlstd{(x} \hlopt{+} \hlstd{x}\hlopt{^}\hlnum{2} \hlopt{+} \hlstd{x}\hlopt{^}\hlnum{3}\hlstd{)} \hlopt{+} \hlkwd{rnorm}\hlstd{(}\hlkwd{length}\hlstd{(x),} \hlkwc{mean} \hlstd{=} \hlnum{0}\hlstd{,} \hlkwc{sd} \hlstd{=} \hlkwd{mean}\hlstd{(x}\hlopt{^}\hlnum{3}\hlstd{)} \hlopt{/} \hlnum{4}\hlstd{)}
+\hlstd{my.data} \hlkwb{<-} \hlkwd{data.frame}\hlstd{(x,}
+                      \hlstd{y,}
+                      \hlkwc{group} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"A"}\hlstd{,} \hlstr{"B"}\hlstd{),}
+                      \hlkwc{y2} \hlstd{= y} \hlopt{*} \hlkwd{c}\hlstd{(}\hlnum{0.5}\hlstd{,}\hlnum{2}\hlstd{),}
+                      \hlkwc{block} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"a"}\hlstd{,} \hlstr{"a"}\hlstd{,} \hlstr{"b"}\hlstd{,} \hlstr{"b"}\hlstd{))}
+
+\hlkwd{str}\hlstd{(my.data)}
+\end{alltt}
+\begin{verbatim}
+## 'data.frame':	100 obs. of  5 variables:
+##  $ x    : int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ y    : num  -27205 -14243 45791 53731 -8029 ...
+##  $ group: Factor w/ 2 levels "A","B": 1 2 1 2 1 2 1 2 1 2 ...
+##  $ y2   : num  -13603 -28485 22895 107463 -4014 ...
+##  $ block: Factor w/ 2 levels "a","b": 1 1 2 2 1 1 2 2 1 1 ...
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+

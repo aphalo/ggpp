@@ -1,0 +1,6 @@
+This version depends on a commit in ggplot2 git repo dated 9 February 2017.
+Apparently all what is needed is a single statement edit in file layer.r line 232:
+
+ -    evaled <- data.frame(evaled, stringsAsFactors = FALSE)
+ +    evaled <- as.data.frame(tibble::as_tibble(evaled))
+

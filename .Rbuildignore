@@ -1,0 +1,12 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+vignettes/figure
+inst-not
+test
+data-raw
+^CONDUCT\.md$
+^_pkgdown\.yml$
+^pkgdown$
+^README\.Rmd$
+^build-binary-from-source.sh$
+^\.github$

@@ -1,0 +1,50 @@
+Package: ggpextra
+Type: Package
+Title: Grammar Extensions to 'ggplot2'
+Version: 0.4.0
+Date: 2021-04-26
+Authors@R:
+    c(
+    person("Pedro J.", "Aphalo", email = "pedro.aphalo@helsinki.fi", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3385-972X")),
+    person("Kamil", "Slowikowski", role = "ctb")
+    )
+Maintainer: Pedro J. Aphalo <pedro.aphalo@helsinki.fi>
+Description: Extensions to 'ggplot2' respecting the grammar of graphics
+    paradigm. Geom: "table", "plot" and "grob" add insets to plots
+    using native data coordinates, while "table_npc", "plot_npc" and "grob_npc"
+    do the same using "npc" coordinates through new aesthetics "npcx" and "npcy". 
+    Statistics: select observations based on 2D density. Positions: radial 
+    nudging away from a center point and nudging away from a line or curve.
+License: GPL (>= 2)
+LazyData: TRUE
+LazyLoad: TRUE
+ByteCompile: TRUE
+Depends:
+    R (>= 3.6.0),
+    ggplot2 (>= 3.3.2)
+Imports:
+    grid,
+    rlang (>= 0.4.7),
+    magrittr (>= 1.5),
+    generics (>= 0.1.0),
+    glue (>= 1.4.2),
+    gridExtra (>= 2.3),
+    scales (>= 1.1.1),
+    splus2R (>= 1.2-2),
+    tibble (>= 3.0.3),
+    plyr (>= 1.8.6),
+    dplyr (>= 1.0.2),
+    lubridate (>= 1.7.9),
+    stringr (>= 1.4.0)
+Suggests:
+    knitr (>= 1.29),
+    rmarkdown (>= 2.3),
+    gginnards(>= 0.0.3),
+    ggrepel (>= 0.9.1),
+    magick (>= 2.6.0)
+URL: https://docs.r4photobiology.info/ggpextra/, 
+     https://github.com/aphalo/ggpextra
+BugReports: https://github.com/aphalo/ggpextra/issues
+Encoding: UTF-8
+RoxygenNote: 7.1.1
+VignetteBuilder: knitr
