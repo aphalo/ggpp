@@ -1,4 +1,4 @@
 library(testthat)
-library(ggpmisc)
+library(ggpextra)
 
-test_check("ggpmisc")
+test_check("ggpextra")

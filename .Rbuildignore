@@ -3,6 +3,7 @@
 vignettes/figure
 inst-not
 test
+tests
 data-raw
 ^CONDUCT\.md$
 ^_pkgdown\.yml$
