@@ -14,7 +14,7 @@ reference:
     contents:
     - annotate
     - geom_text_npc
-    - geom_linked_text
+    - geom_text_linked
     - geom_x_margin_point
     - geom_x_margin_arrow
     - geom_x_margin_grob

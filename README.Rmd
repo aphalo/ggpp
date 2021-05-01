@@ -84,7 +84,7 @@ Geometries `geom_x_margin_arrow()`, `geom_y_margin_arrow()`,
 axes. `geom_vhlines()` and `geom_quadrant_lines()` draw vertical and horizontal
 reference lines within a single layer.
 
-Geometry `geom_linked_text()` connects text drawn at a nudged position to
+Geometry `geom_text_linked()` connects text drawn at a nudged position to
 the original position, usually that of a point being labelled.
 
 ## Statistics

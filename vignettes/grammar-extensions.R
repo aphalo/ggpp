@@ -221,7 +221,7 @@ my.cars$name <- rownames(my.cars)
 my.cars <- my.cars[order(my.cars$wt), ]
 ggplot(my.cars, aes(wt, mpg, label = name)) +
   geom_point() +
-  geom_linked_text(aes(colour = factor(cyl)),
+  geom_text_linked(aes(colour = factor(cyl)),
                    angle = 90,
                    hjust = 1.04, nudge_y = -1, 
                    nudge_x = c(0, 0, -0.05, +0.05, 0, 0 ,0, 0),
@@ -471,13 +471,13 @@ ggplot(df, aes(x, y, label = l)) +
 ## -----------------------------------------------------------------------------
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
-  geom_linked_text(position = position_nudge_keep(x = 0.1, y = 0.15),
+  geom_text_linked(position = position_nudge_keep(x = 0.1, y = 0.15),
                    hjust = -0.8, vjust = 0.2)
 
 ## ---- eval=eval_flag----------------------------------------------------------
 #  ggplot(df, aes(x, y, label = l)) +
 #    geom_point() +
-#    geom_linked_text(nudge_x = 0.1, nudge_y = 0.15, hjust = -0.8, vjust = 0.2)
+#    geom_text_linked(nudge_x = 0.1, nudge_y = 0.15, hjust = -0.8, vjust = 0.2)
 
 ## -----------------------------------------------------------------------------
 set.seed(84532)

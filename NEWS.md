@@ -26,6 +26,7 @@ either `numeric` or `character` do not have this restriction and can be
 used as in *geoms* from 'ggplot2'. *These new features may change in the
 near future*.
 
+-   Rename `geom_linked_text()` into `geom_text_linked()`.
 -   Implement justifications `"outward_mean"` , `"inward_mean"` ,
     `"outward_median"` and `"inward_median"` so that outward and inward
     are with respect to the centroid of the data instead of to the
@@ -48,9 +49,8 @@ near future*.
     labels have been rotated by more than 45 degrees.
 -   [ggplot2, ggrepel] The problem with angle is a "feature" in
     'ggplot2' also present in 'ggrepel'. A pull request for
-    `ggplot2::geom_text()` has been submitted. As this code change
-    alters how old plots are rendered, it is possible that it will not
-    be accepted by the maintainers.
+    `ggplot2::geom_text()` has been submitted. This is now in the 'ggplot2' 
+    3.3.4 milestone.
 
 # ggpmisc 0.3.9
 

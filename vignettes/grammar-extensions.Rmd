@@ -249,7 +249,7 @@ requirement.
 | `ggrepel::geom_text_repel()`   |                    | `character` vector          |
 | `ggrepel::geom_label_repel()`  |                    | `character` vector          |
 | `ggplot2::geom_label()`        | `geom_label_npc()` | `character` vector          |
-| `geom_linked_text()`           | _coming soon_      | `character` vector          |  
+| `geom_text_linked()`           | _coming soon_      | `character` vector          |  
 | `geom_plot()`                  | `geom_plot_npc()`  | `list()` of `ggplot2::gg`   |
 | `geom_table()`                 | `geom_table_npc()` | `list()` of `data.frame`    |
 | `geom_grob()`                  | `geom_grob_npc()`  | `list()` of `grid::grob`    |
@@ -656,7 +656,7 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
 
 ```
 
-### geom_linked_text()
+### geom_text_linked()
 
 With package 'ggrepel' we have become used to easily add text and labels linked
 to the labeled observations or points by a line segment or arrow. However,
@@ -664,7 +664,7 @@ sometimes a plot has few text labels and repulsion is unnecessary. In such
 cases nudging or dodging may be enough, or even preferable so as to achieve
 consistency.
 
-We can achieve this with `geom_linked_text()` together with a suitable position
+We can achieve this with `geom_text_linked()` together with a suitable position
 function that retains the original _x_ and _y_ coordinates of the point. We
 currently provide two different, and flexible nudge functions described in
 a later section. One of them is used by default providing the same default
@@ -680,7 +680,7 @@ my.cars$name <- rownames(my.cars)
 my.cars <- my.cars[order(my.cars$wt), ]
 ggplot(my.cars, aes(wt, mpg, label = name)) +
   geom_point() +
-  geom_linked_text(aes(colour = factor(cyl)),
+  geom_text_linked(aes(colour = factor(cyl)),
                    angle = 90,
                    hjust = 1.04, nudge_y = -1, 
                    nudge_x = c(0, 0, -0.05, +0.05, 0, 0 ,0, 0),
@@ -1245,7 +1245,7 @@ adjustment of positions, repulsion is more generally applicable.
 
 All the new position functions save the original coordinates to allow linking
 the nudged objects, usually text labels, to be linked to the original
-position. This is currently only supported by `geom_linked_text()`, but they
+position. This is currently only supported by `geom_text_linked()`, but they
 may be also supported by 'ggrepel' in the future.
 
 ### position_nudge_keep()
@@ -1253,7 +1253,7 @@ may be also supported by 'ggrepel' in the future.
 `position_nudge_keep()` (and `position_nudge_center()` With the default 
 `direction = "none"`) behaves as `ggplot2::position_nudge()` but saves the 
 original coordinates. Currently the saved original coordinates are used only
-by `geom_linked_text()` as shown in the corresponding section above.
+by `geom_text_linked()` as shown in the corresponding section above.
 
 ```{r}
 set.seed(84532)
@@ -1271,12 +1271,12 @@ ggplot(df, aes(x, y, label = l)) +
   geom_point() +
   geom_text(position = position_nudge_keep(x = 0.1, y = 0.15))
 ```
-When using `geom_linked_text()` we need to change the default justification.
+When using `geom_text_linked()` we need to change the default justification.
 
 ```{r}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
-  geom_linked_text(position = position_nudge_keep(x = 0.1, y = 0.15),
+  geom_text_linked(position = position_nudge_keep(x = 0.1, y = 0.15),
                    hjust = -0.8, vjust = 0.2)
 ```
 
@@ -1286,7 +1286,7 @@ is equivalent.
 ```{r, eval=eval_flag}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
-  geom_linked_text(nudge_x = 0.1, nudge_y = 0.15, hjust = -0.8, vjust = 0.2)
+  geom_text_linked(nudge_x = 0.1, nudge_y = 0.15, hjust = -0.8, vjust = 0.2)
 ```
 ### position_nudge_to()
 

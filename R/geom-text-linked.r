@@ -1,6 +1,6 @@
 #' @title Linked Text
 #'
-#' @description Text geoms are useful for labelling plots. `geom_linked_text()`
+#' @description Text geoms are useful for labelling plots. `geom_text_linked()`
 #'   adds text to the plot and for nudged positions links the original location
 #'   to the nudged text with a segment.
 #'
@@ -84,32 +84,32 @@
 #' p <- ggplot(my.cars, aes(wt, mpg, label = name))
 #'
 #' # default behavior is as for geon_text()
-#' p + geom_linked_text()
+#' p + geom_text_linked()
 #' # Avoid overlaps
-#' p + geom_linked_text(check_overlap = TRUE)
+#' p + geom_text_linked(check_overlap = TRUE)
 #' # Change size of the label
-#' p + geom_linked_text(size = 2.5)
+#' p + geom_text_linked(size = 2.5)
 #'
 #' # Use nudging
 #' p +
 #'   geom_point() +
-#'   geom_linked_text(hjust = -0.04, nudge_x = 0.12) +
+#'   geom_text_linked(hjust = -0.04, nudge_x = 0.12) +
 #'   expand_limits(x = 6.2)
 #' p +
 #'   geom_point() +
-#'   geom_linked_text(hjust = -0.04, nudge_x = 0.12,
+#'   geom_text_linked(hjust = -0.04, nudge_x = 0.12,
 #'   arrow = arrow(length = grid::unit(1.5, "mm"))) +
 #'   expand_limits(x = 6.2)
 #' p +
 #'   geom_point() +
-#'   geom_linked_text(vjust = -0.5, nudge_y = 0.5)
+#'   geom_text_linked(vjust = -0.5, nudge_y = 0.5)
 #' p +
 #'   geom_point() +
-#'   geom_linked_text(hjust = -0.02, nudge_x = 0.1,
+#'   geom_text_linked(hjust = -0.02, nudge_x = 0.1,
 #'                    vjust = -0.2, nudge_y = 0.5)
 #' p +
 #'   geom_point() +
-#'   geom_linked_text(angle = 90,
+#'   geom_text_linked(angle = 90,
 #'                    hjust = -0.04, nudge_y = 1,
 #'                    arrow = arrow(length = grid::unit(1.5, "mm"))) +
 #'   expand_limits(y = 40)
@@ -117,33 +117,33 @@
 #' # Add aesthetic mappings
 #' p +
 #'   geom_point() +
-#'   geom_linked_text(aes(colour = factor(cyl)),
+#'   geom_text_linked(aes(colour = factor(cyl)),
 #'                    angle = 90,
 #'                    hjust = -0.04, nudge_y = 1,
 #'                    arrow = arrow(length = grid::unit(1.5, "mm"))) +
 #'   scale_colour_discrete(l = 40) +
 #'   expand_limits(y = 40)
 #'
-#' p + geom_linked_text(aes(size = wt)) +
+#' p + geom_text_linked(aes(size = wt)) +
 #'     expand_limits(x = c(2, 6))
 #' # Scale height of text, rather than sqrt(height)
 #' p +
-#'   geom_linked_text(aes(size = wt)) +
+#'   geom_text_linked(aes(size = wt)) +
 #'   scale_radius(range = c(3,6)) +
 #'     expand_limits(x = c(2, 6))
 #'
 #' # You can display expressions by setting parse = TRUE.  The
 #' # details of the display are described in ?plotmath, but note that
-#' # geom_linked_text uses strings, not expressions.
+#' # geom_text_linked uses strings, not expressions.
 #' p +
-#'   geom_linked_text(
+#'   geom_text_linked(
 #'     aes(label = paste(wt, "^(", cyl, ")", sep = "")),
 #'     parse = TRUE
 #'   )
 #'
 #' # Add a text annotation
 #' p +
-#'   geom_linked_text() +
+#'   geom_text_linked() +
 #'   annotate(
 #'     "linked_text", label = "plot mpg vs. wt",
 #'     x = 2, y = 15, size = 3, colour = "red"
@@ -157,52 +157,44 @@
 #'   text = c("bottom-left", "bottom-right", "top-left", "top-right", "center")
 #' )
 #' ggplot(df, aes(x, y)) +
-#'   geom_linked_text(aes(label = text))
+#'   geom_text_linked(aes(label = text))
 #' ggplot(df, aes(x, y)) +
-#'   geom_linked_text(aes(label = text), vjust = "inward", hjust = "inward")
+#'   geom_text_linked(aes(label = text), vjust = "inward", hjust = "inward")
 #' ggplot(df, aes(x, y)) +
-#'   geom_linked_text(aes(label = text), hjust = "inward", angle = 33)
+#'   geom_text_linked(aes(label = text), hjust = "inward", angle = 33)
 #' ggplot(df, aes(x, y)) +
-#'   geom_linked_text(aes(label = text), hjust = "inward", angle = 66)
+#'   geom_text_linked(aes(label = text), hjust = "inward", angle = 66)
 #' ggplot(df, aes(x, y)) +
-#'   geom_linked_text(aes(label = text), hjust = "inward", angle = 90)
+#'   geom_text_linked(aes(label = text), hjust = "inward", angle = 90)
 #' ggplot(df, aes(x, y)) +
-#'   geom_linked_text(aes(label = text), vjust = "inward", hjust = "inward", angle = 33)
+#'   geom_text_linked(aes(label = text), vjust = "inward", hjust = "inward", angle = 33)
 #' ggplot(df, aes(x, y)) +
-#'   geom_linked_text(aes(label = text), vjust = "inward", hjust = "inward", angle = 66)
+#'   geom_text_linked(aes(label = text), vjust = "inward", hjust = "inward", angle = 66)
 #' ggplot(df, aes(x, y)) +
-#'   geom_linked_text(aes(label = text), vjust = "inward", hjust = "inward", angle = 90)
+#'   geom_text_linked(aes(label = text), vjust = "inward", hjust = "inward", angle = 90)
 #' ggplot(df, aes(x, y)) +
-#'   geom_linked_text(aes(label = text), vjust = "inward_zero", hjust = "inward_zero")
+#'   geom_text_linked(aes(label = text), vjust = "inward_1.5", hjust = "inward_1.5")
 #' ggplot(df, aes(x - 1.5, y - 1.5)) +
-#'   geom_linked_text(aes(label = text), vjust = "inward_zero", hjust = "inward_zero")
+#'   geom_text_linked(aes(label = text), vjust = "inward_0.0", hjust = "inward_0.0")
 #' ggplot(df, aes(x, y)) +
-#'   geom_linked_text(aes(label = text), vjust = "inward_1.5", hjust = "inward_1.5")
+#'   geom_text_linked(aes(label = text), vjust = "inward_mean", hjust = "inward_mean")
 #' ggplot(df, aes(x - 1.5, y - 1.5)) +
-#'   geom_linked_text(aes(label = text), vjust = "inward_0.0", hjust = "inward_0.0")
+#'   geom_text_linked(aes(label = text), vjust = "inward_mean", hjust = "inward_mean")
 #' ggplot(df, aes(x, y)) +
-#'   geom_linked_text(aes(label = text), vjust = "inward_mean", hjust = "inward_mean")
-#' ggplot(df, aes(x - 1.5, y - 1.5)) +
-#'   geom_linked_text(aes(label = text), vjust = "inward_mean", hjust = "inward_mean")
-#' ggplot(df, aes(x, y)) +
-#'   geom_linked_text(aes(label = text), vjust = "inward_median", hjust = "inward_median")
+#'   geom_text_linked(aes(label = text), vjust = "inward_median", hjust = "inward_median")
 #'
 #' ggplot(df, aes(x, y)) +
-#'   geom_linked_text(aes(label = text), vjust = "outward", hjust = "outward")
+#'   geom_text_linked(aes(label = text), vjust = "outward", hjust = "outward")
 #' ggplot(df, aes(x, y)) +
-#'   geom_linked_text(aes(label = text), vjust = "outward_zero", hjust = "outward_zero")
+#'   geom_text_linked(aes(label = text), vjust = "outward_mean", hjust = "outward_mean")
 #' ggplot(df, aes(x - 1.5, y - 1.5)) +
-#'   geom_linked_text(aes(label = text), vjust = "outward_zero", hjust = "outward_zero")
+#'   geom_text_linked(aes(label = text), vjust = "outward_mean", hjust = "outward_mean")
 #' ggplot(df, aes(x, y)) +
-#'   geom_linked_text(aes(label = text), vjust = "outward_mean", hjust = "outward_mean")
+#'   geom_text_linked(aes(label = text), vjust = "outward_median", hjust = "outward_median")
 #' ggplot(df, aes(x - 1.5, y - 1.5)) +
-#'   geom_linked_text(aes(label = text), vjust = "outward_mean", hjust = "outward_mean")
-#' ggplot(df, aes(x, y)) +
-#'   geom_linked_text(aes(label = text), vjust = "outward_median", hjust = "outward_median")
-#' ggplot(df, aes(x - 1.5, y - 1.5)) +
-#'   geom_linked_text(aes(label = text), vjust = "outward_median", hjust = "outward_median")
+#'   geom_text_linked(aes(label = text), vjust = "outward_median", hjust = "outward_median")
 #'
-geom_linked_text <- function(mapping = NULL,
+geom_text_linked <- function(mapping = NULL,
                              data = NULL,
                              stat = "identity",
                              position = "identity",
@@ -370,8 +362,6 @@ compute_just1d <- function(data,
         switch(unique(just),
                outward = "scale",
                inward = "scale",
-               outward_zero = 0,
-               inward_zero = 0,
                outward_mean = mean,
                inward_mean = mean,
                outward_median = stats::median,
@@ -424,8 +414,6 @@ compute_just2d <- function(data,
         switch(unique(just),
                outward = "scale",
                inward = "scale",
-               outward_zero = 0,
-               inward_zero = 0,
                outward_mean = mean,
                inward_mean = mean,
                outward_median = stats::median,
@@ -472,7 +460,7 @@ compute_just2d <- function(data,
                                           vjust = hjust,
                                           middle = middle)
         split_at[selector] <- split_at_crossed[selector]
-        obs[selector] <- data[[i]][selector]
+        obs[selector] <- data[[j]][selector]
       }
     }
     inward <- just == "inward"

@@ -38,7 +38,7 @@ ggplot(df, aes(x, y, label = label)) +
 
 ggplot(df, aes(x, y, label = label)) +
   geom_point() +
-  geom_linked_text(position = position_nudge_to(y = 3),
+  geom_text_linked(position = position_nudge_to(y = 3),
                    vjust = -0.2)
 
 }
