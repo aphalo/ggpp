@@ -7,14 +7,14 @@ editor_options:
 # ggpextra 0.4.0
 
 This new name is the result of splitting package 'ggpmisc' into two packages:
-'ggpectra' containing extensions to the grammar of graphics that add extra
+'ggpextra' containing extensions to the grammar of graphics that add extra
 features to it and 'ggpdecorate' containing extensions to 'ggplot2' related 
 to plot decorations based on model fits, statistical summaries and other descriptors of the data being plotted. Package 'ggpmisc' will remain as a loader
 of these two packages. Package 'gginnards' containing tools for editing
 ggplot objects as well as tools for inspecting them is an earlier spin-off from
 'gpmisc'.
 
-Compared to 'ggpmisc' 0.3.8, the following changes have been introduced.
+Compared to 'ggpmisc' 0.3.9, the following changes have been introduced.
 New justification styles have being implemented to complement
 `position_nudge_center()` . They are supported in `geom_text_linked()`,
 `geom_plot()`, `geom_table()`, `geom_grob()` and `geom_marging_grob()`.

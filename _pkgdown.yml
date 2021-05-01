@@ -1,10 +1,10 @@
-destination: ../ggpmisc-docs
-url: https://docs.r4photobiology.info/ggpmisc/
+destination: ../ggpextra-docs
+url: https://docs.r4photobiology.info/ggpextra/
 
 reference:
   - title: Package overview
     contents:
-    - '`ggpmisc-package`'
+    - '`ggpextra-package`'
   - title: Scales
     desc: Scales control de mapping of data to aesthetics.
     contents:
@@ -40,6 +40,14 @@ reference:
     - position_nudge_to
     - position_nudge_center
     - position_nudge_line
+  - title: Plot creation
+    desc: Additional ggplot methods
+    contents:
+    - ggplot
+  - title: Fortify or Try
+    desc: Convert R objects containing observations in other formats into 'tibble' objects suitable for plotting.
+    contents:
+    - try_data_frame
 
 navbar:
   structure:
@@ -74,6 +82,8 @@ navbar:
       menu:
       - text: Blog on R by Pedro J. Aphalo
         href: https://www.r4photobiology.info/
+      - text: Package 'ggpmisc'
+        href: https://docs.r4photobiology.info/ggpmisc/
       - text: Package 'gginnards'
         href: https://docs.r4photobiology.info/gginnards/
       - text: Resources about 'ggplot2'
