@@ -154,18 +154,18 @@ gplot_draw_panel_fun <-
     if (is.character(data$vjust)) {
       data$vjust <-
         compute_just2d(data = data,
-                       panel_params = panel_params,
                        coord = coord,
-                       hjust = NULL,
-                       vjust = data$vjust)
+                       panel_params = panel_params,
+                       just = data$vjust,
+                       a = "y", b = "x")
     }
     if (is.character(data$hjust)) {
       data$hjust <-
         compute_just2d(data = data,
-                       panel_params = panel_params,
                        coord = coord,
-                       hjust = data$hjust,
-                       vjust = NULL)
+                       panel_params = panel_params,
+                       just = data$hjust,
+                       a = "x", b = "y")
     }
 
     plot.grobs <- grid::gList()

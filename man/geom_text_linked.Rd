@@ -106,11 +106,10 @@ Note that when you resize a plot, text labels stay the same size,
   `hjust` aesthetics. These can either be a number between 0 (right/bottom)
   and 1 (top/left) or a character (`"left"`, `"middle"`, `"right"`,
   `"bottom"`, `"center"`, `"top"`). There seevral two special alignments:
-  `"inward"` and `"outward"`. Inward always aligns text towards the center
-  of the plotting area, and outward aligns it away from the center of the
-  plotting area. It tagged with `_zero`, `_mean` or `_median`, zero in the
-  user data coordinates, or the mean or median of the data in the panel
-  along the corresponding axis is used as center.
+  `"inward"` and `"outward"`. Inward always aligns text towards the center of
+  the plotting area, and outward aligns it away from the center of the
+  plotting area. It tagged with `_mean` or `_median` the mean or median of
+  the data in the panel along the corresponding axis is used as center.
 }
 
 \examples{
