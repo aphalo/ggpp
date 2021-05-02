@@ -410,3 +410,26 @@ just_dir <- function(x, tol = 0.001, split_at = 0.5) {
   out[x > split_at + tol] <- 3L
   out
 }
+
+# as in pull request to ggplot2
+compute_just <- function(just, a, b = a, angle = 0) {
+  #  As justification direction is relative to the text, not the plotting area
+  #  we need to swap x and y if text direction is rotated so that hjust is
+  #  applied along y and vjust along x.
+  if (any(grepl("outward|inward", just))) {
+    selector <-
+      grepl("outward|inward", just) & abs(angle) > 45 & abs(angle) < 135
+    ab <- a
+    ab[selector] <- b[selector]
+
+    inward <- just == "inward"
+    just[inward] <- c("left", "middle", "right")[just_dir(ab[inward])]
+    outward <- just == "outward"
+    just[outward] <- c("right", "middle", "left")[just_dir(ab[outward])]
+  }
+
+  unname(c(left = 0, center = 0.5, right = 1,
+           bottom = 0, middle = 0.5, top = 1)[just])
+}
+
+
