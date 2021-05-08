@@ -273,6 +273,10 @@ the relative position of points with respect to arbitrary points or
 lines, or with respect to a polynomial or smoothing spline fitted
 on-the-fly to the the observations.
 
+These new position functions are compatible with 'ggrepel' (>= 0.9.2) and
+similarly to `position_nudge_repel()` support drawing segments or arrows
+connecting the original position to the nudged position.
+
 ## Highlighting data features
 
 If maxima or minima are to be labeled in a plot, this can be automated
@@ -1231,29 +1235,31 @@ internally to `stats::density()` the examples given earlier for
 Function `position_nudge()` from package 'ggplot2' simply applies the nudge, or
 *x* and *y* shift based directly on the values passed to its parameters `x` and
 `y`. A new variation on simple nudge is provided by function
-`position_nudge_to()`.
+`position_nudge_to()`, which accepts the desired nudged coordinates directly.
 
-Two new position functions supporting advanced nudging are made available by
-package 'ggpextra'. While `position_nudge()` implements shifts along $x$ and $y$
-axes that are the same for every observation, the new functions compute the
-direction of the nudging specifically for each observation.
-
-One can think of this approach as nudging away from a focal point, a line or a
-curve. It is deterministic, while repulsion is aleatory. Advanced nudging works
-very well, but only for some patterns of observations and may require manual
-adjustment of positions, repulsion is more generally applicable.
+Two new position functions supporting advanced nudging are also provided. While
+`position_nudge()` implements shifts along $x$ and $y$ axes that are the same
+for every observation, the new functions compute the direction of the nudging
+specifically for each observation. One can think of this approach as nudging
+away from a focal point, a line or a curve. It is deterministic, while repulsion
+is aleatory. Advanced nudging works very well, but only for some patterns of
+observations and may require manual adjustment of positions, repulsion is more
+generally applicable.
 
 All the new position functions save the original coordinates to allow linking
 the nudged objects, usually text labels, to be linked to the original
-position. This is currently only supported by `geom_text_linked()`, but they
-may be also supported by 'ggrepel' in the future.
+position. Linking is supported by `geom_text_linked()` from this package and
+by `geom_text_repel()` and `geom_label_repel()` from 'ggrepel' 
+(in the future)>= 0.9.2). They can be also used with all other geoms as the
+nudged coordinates are returned in the same way as by other 'ggplot2'
+position functions, but other geoms will ignore the original positions stored
+in `data`.
 
 ### position_nudge_keep()
 
-`position_nudge_keep()` (and `position_nudge_center()` With the default 
-`direction = "none"`) behaves as `ggplot2::position_nudge()` but saves the 
-original coordinates. Currently the saved original coordinates are used only
-by `geom_text_linked()` as shown in the corresponding section above.
+`position_nudge_keep()`, and `position_nudge_center()` With the default 
+`direction = "none"`, behave as `ggplot2::position_nudge()` but save the 
+original coordinates as `ggrepel::position_nudge_repel()` does.
 
 ```{r}
 set.seed(84532)
@@ -1288,6 +1294,13 @@ ggplot(df, aes(x, y, label = l)) +
   geom_point() +
   geom_text_linked(nudge_x = 0.1, nudge_y = 0.15, hjust = -0.8, vjust = 0.2)
 ```
+
+```{r}
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_repel(position = position_nudge_keep(x = 0.15, y = 0.2))
+```
+
 ### position_nudge_to()
 
 Function `position_nudge_to()` differs from `ggplot2::position_nudge()` in that
@@ -1382,6 +1395,14 @@ ggplot(df, aes(x, y, label = l)) +
   geom_text(position = position_nudge_center(x = 0.1,
                                              y = 0.3,
                                              direction = "radial"))
+```
+
+```{r}
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_repel(position = position_nudge_center(x = 0.1,
+                                                   y = 0.3,
+                                                   direction = "radial"))
 ```
 
 ### position_nudge_line()
@@ -1521,6 +1542,18 @@ ggplot(df, aes(x, yy, label = l)) +
                                            y = 6,
                                            formula = y ~ poly(x, 2, raw = TRUE),
                                            direction = "split"))
+```
+
+```{r, eval=eval_flag}
+ggplot(df, aes(x, yy, label = l)) +
+  geom_point() +
+  stat_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE)) +
+  geom_text_repel(aes(y = yy, label = l),
+                  position = position_nudge_line(method = "lm",
+                                                 x = 0.6, 
+                                                 y = 6,
+                                                 formula = y ~ poly(x, 2, raw = TRUE),
+                                                 direction = "split"))
 ```
 
 Grouping is supported.

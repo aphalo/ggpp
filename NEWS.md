@@ -6,12 +6,15 @@ editor_options:
 
 # ggpextra 0.4.0
 
-This new name is the result of splitting package 'ggpmisc' into two packages:
-'ggpextra' containing extensions to the grammar of graphics that add extra
-features to it and 'ggpdecorate' containing extensions to 'ggplot2' related 
-to plot decorations based on model fits, statistical summaries and other descriptors of the data being plotted. Package 'ggpmisc' will remain as a loader
-of these two packages. Package 'gginnards' containing tools for editing
-ggplot objects as well as tools for inspecting them is an earlier spin-off from
+This new package is the result of splitting package 'ggpmisc' into two
+packages: 'ggpextra' containing extensions to the grammar of graphics
+and 'ggpmisc' containing extensions to 'ggplot2' related to plot
+decorations based on model fits, statistical summaries and other
+descriptors of the data being plotted. Package 'ggpmisc' depends on
+'ggpextra' with no visible changes for users. Package 'ggpextra' can be
+loaded instead of 'ggpmisc' when only the extensions it contains are
+needed. Package 'gginnards' containing tools for editing ggplot objects
+as well as tools for inspecting them is an earlier spin-off from
 'gpmisc'.
 
 Compared to 'ggpmisc' 0.3.9, the following changes have been introduced.
@@ -39,18 +42,18 @@ near future*.
     `"outward_-3e-2"` are supported. This should be useful when manual
     tweaking is desired. As special cases `"outward_0"` and `"inward_0"`
     apply jsutification outward and inward with respect to the origin.
-    This should be useful for biplots used for PCA and
-    similar cases with arrows radiating out of the origin.
-    (The `"outward"` and `"inward"` justification implemented in 'ggplot2'
-    is relative to the middle of the $x$ or $y$ scales.) 
+    This should be useful for biplots used for PCA and similar cases
+    with arrows radiating out of the origin. (The `"outward"` and
+    `"inward"` justification implemented in 'ggplot2' is relative to the
+    middle of the $x$ or $y$ scales.)
 -   Fix problem related to `"outward"` and `"inward"` justification of
     text labels when `angle` aesthetic takes values \< -45 or \> 45
     degrees. This code change alters how old plots are rendered if text
     labels have been rotated by more than 45 degrees.
 -   [ggplot2, ggrepel] The problem with angle is a "feature" in
     'ggplot2' also present in 'ggrepel'. A pull request for
-    `ggplot2::geom_text()` has been submitted. This is now in the 'ggplot2' 
-    3.3.4 milestone.
+    `ggplot2::geom_text()` has been submitted. This is now in the
+    'ggplot2' 3.3.4 milestone.
 
 # ggpmisc 0.3.9
 

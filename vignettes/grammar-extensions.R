@@ -480,6 +480,11 @@ ggplot(df, aes(x, y, label = l)) +
 #    geom_text_linked(nudge_x = 0.1, nudge_y = 0.15, hjust = -0.8, vjust = 0.2)
 
 ## -----------------------------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_repel(position = position_nudge_keep(x = 0.15, y = 0.2))
+
+## -----------------------------------------------------------------------------
 set.seed(84532)
 df <- data.frame(
   x = rnorm(8),
@@ -533,6 +538,13 @@ ggplot(df, aes(x, y, label = l)) +
   geom_text(position = position_nudge_center(x = 0.1,
                                              y = 0.3,
                                              direction = "radial"))
+
+## -----------------------------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_repel(position = position_nudge_center(x = 0.1,
+                                                   y = 0.3,
+                                                   direction = "radial"))
 
 ## -----------------------------------------------------------------------------
 set.seed(16532)
@@ -610,6 +622,17 @@ ggplot(df, aes(x, yy, label = l)) +
 #                                             y = 6,
 #                                             formula = y ~ poly(x, 2, raw = TRUE),
 #                                             direction = "split"))
+
+## ---- eval=eval_flag----------------------------------------------------------
+#  ggplot(df, aes(x, yy, label = l)) +
+#    geom_point() +
+#    stat_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE)) +
+#    geom_text_repel(aes(y = yy, label = l),
+#                    position = position_nudge_line(method = "lm",
+#                                                   x = 0.6,
+#                                                   y = 6,
+#                                                   formula = y ~ poly(x, 2, raw = TRUE),
+#                                                   direction = "split"))
 
 ## -----------------------------------------------------------------------------
 df <- data.frame(x = rep(1:10, 2),
