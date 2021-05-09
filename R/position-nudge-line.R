@@ -266,7 +266,7 @@ position_nudge_line <- function(x = NA_real_,
   )
 }
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export

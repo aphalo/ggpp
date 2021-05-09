@@ -1,4 +1,4 @@
-#' @details Package 'ggpextra' provides functions that extend the grammar of
+#' @details Package 'ggpp' provides functions that extend the grammar of
 #' graphics as implemented in 'ggplot2'. It attempts to stay true to the
 #' original grammar and to respect the naming conventions used in 'ggplot2'.
 #'

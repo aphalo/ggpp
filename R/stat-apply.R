@@ -167,7 +167,7 @@ stat_apply_panel <- function(mapping = NULL,
 
 # Define here to avoid a note in check as the import from 'dplyr' is not seen
 # when the function is defined in-line in the ggproto object.
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #'
 #' @format NULL
 #' @usage NULL
@@ -219,7 +219,7 @@ stat_apply_fun <- function(data,
 #' implement one or more of the following:
 #'
 #' @name Stats
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export
@@ -243,7 +243,7 @@ StatApplyGroup <-
 #' implement one or more of the following:
 #'
 #' @name Stats
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export

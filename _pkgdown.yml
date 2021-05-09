@@ -1,10 +1,10 @@
-destination: ../ggpextra-docs
-url: https://docs.r4photobiology.info/ggpextra/
+destination: ../ggpp-docs
+url: https://docs.r4photobiology.info/ggpp/
 
 reference:
   - title: Package overview
     contents:
-    - '`ggpextra-package`'
+    - '`ggpp-package`'
   - title: Scales
     desc: Scales control de mapping of data to aesthetics.
     contents:
@@ -71,7 +71,7 @@ navbar:
       href: news/index.html
     github:
       icon: fab fa-github fa-lg
-      href: https://github.com/aphalo/ggpextra/
+      href: https://github.com/aphalo/ggpp/
     articles:
       text: Articles
       menu:

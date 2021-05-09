@@ -1,4 +1,4 @@
-Package: ggpextra
+Package: ggpp
 Type: Package
 Title: Grammar Extensions to 'ggplot2'
 Version: 0.4.0
@@ -46,9 +46,9 @@ Suggests:
     gginnards(>= 0.0.3),
     ggrepel (>= 0.9.1),
     magick (>= 2.6.0)
-URL: https://docs.r4photobiology.info/ggpextra/, 
-     https://github.com/aphalo/ggpextra
-BugReports: https://github.com/aphalo/ggpextra/issues
+URL: https://docs.r4photobiology.info/ggpp/, 
+     https://github.com/aphalo/ggpp
+BugReports: https://github.com/aphalo/ggpp/issues
 Encoding: UTF-8
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr

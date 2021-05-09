@@ -239,7 +239,7 @@ dens2d_flt_compute_fun <-
     }
   }
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export
@@ -252,7 +252,7 @@ StatDens2dFilter <-
     required_aes = c("x", "y")
   )
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export

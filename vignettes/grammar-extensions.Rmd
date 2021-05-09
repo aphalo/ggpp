@@ -31,7 +31,7 @@ eval_flag <- FALSE  # evaluate all code chunks
 We load all the packages used in the examples.
 
 ```{r, message=FALSE}
-library(ggpextra)
+library(ggpp)
 library(ggrepel)
 library(tibble)
 library(dplyr)
@@ -128,7 +128,7 @@ Before showing how this works in practice, we load the package and set
 an uncluttered theme as default.
 
 ```{r, message=FALSE}
-library(ggpextra)
+library(ggpp)
 theme_set(theme_bw() + theme(panel.grid = element_blank()))
 ```
 
@@ -165,7 +165,7 @@ p1 + expand_limits(y = 0)
 ```
 
 To support the existing syntax for annotations using the new geometries,
-function `ggplot2::annotate()` is overridden when package 'ggpextra' is
+function `ggplot2::annotate()` is overridden when package 'ggpp' is
 loaded. The new definition adds support for the new pseudo-aesthetics
 *npcx* and *npcy* retaining its original 'ggplot2' behaviour in all
 other respects.
@@ -228,7 +228,7 @@ that future updates to 'ggplot2' can break this functionality.
 
 ## When to use annotations and when insets
 
-Package 'ggpextra' adds support for various plot annotations and
+Package 'ggpp' adds support for various plot annotations and
 reference guides. It also adds support for some data labels related to
 data features. While developing these statistics, it became clear that
 expanding the grammar of graphics's support for annotations would
@@ -594,7 +594,7 @@ to be rendered.
 ```{r}
 file.name <- 
   system.file("extdata", "Isoquercitin.png", 
-              package = "ggpextra", mustWork = TRUE)
+              package = "ggpp", mustWork = TRUE)
 Isoquercitin <- magick::image_read(file.name)
 grobs.tb <- tibble(x = c(0, 10, 20, 40), y = c(4, 5, 6, 9),
                    width = c(0.05, 0.05, 0.01, 1),
@@ -713,7 +713,7 @@ converted to `"npc"` units: `"bottom"`, `"center"`, `"top"`, `"left"`,
 `"middle"`, `"right"` (`"centre"` is a synonym for `"center"`).
 
 To make these scales useful we need also to define *geometries* that use
-these new aesthetics. Package 'ggpextra' currently provides
+these new aesthetics. Package 'ggpp' currently provides
 `geom_text_npc()`, `geom_label_npc()`, `geom_table_npc()`,
 `geom_plot_npc()` and `geom_grob_npc()`.
 
@@ -752,7 +752,7 @@ normal geoms, with facets also supported.
 ```{r}
 file.name <- 
   system.file("extdata", "Robinin.png", 
-              package = "ggpextra", mustWork = TRUE)
+              package = "ggpp", mustWork = TRUE)
 Robinin <- magick::image_read(file.name)
 
 set.seed(123456)

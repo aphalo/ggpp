@@ -264,7 +264,7 @@ dens1d_labs_compute_fun <-
     data
   }
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export

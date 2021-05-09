@@ -13,14 +13,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-# ggpextra  <img src="man/figures/logo-ggpextra.png" align="right" width="150" />
+# ggpp  <img src="man/figures/logo-ggpp.png" align="right" width="150" />
 
-[![cran version](https://www.r-pkg.org/badges/version/ggpextra)](https://cran.r-project.org/package=ggpextra) 
-[![R build status](https://github.com/aphalo/ggpextra/workflows/R-CMD-check/badge.svg)](https://github.com/aphalo/ggpextra/actions)
+[![cran version](https://www.r-pkg.org/badges/version/ggpp)](https://cran.r-project.org/package=ggpp) 
+[![R build status](https://github.com/aphalo/ggpp/workflows/R-CMD-check/badge.svg)](https://github.com/aphalo/ggpp/actions)
 
 ## Purpose
 
-Package '**ggpextra**' (Grammar Extensions to 'ggplot2') is a set of
+Package '**ggpp**' (Grammar Extensions to 'ggplot2') is a set of
 extensions to R package 'ggplot2' (>= 3.0.0). New geoms support insets plots,
 tables and grobs as insets using a syntax consistent with the grammar of 
 graphics. The grammar is also extended to support native plot coordinates 
@@ -126,7 +126,7 @@ into which it is being split.
 ## Examples
 
 ```{r readme-02, message=FALSE}
-library(ggpextra)
+library(ggpp)
 library(ggrepel)
 ```
 
@@ -150,32 +150,32 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
 Installation of the most recent stable version from CRAN:
 
 ```{r cran-instalaltion, eval=FALSE}
-install.packages("ggpextra")
+install.packages("ggpp")
 ```
 
 Installation of the current unstable version from GitHub:
 
 ```{r bb-instalaltion, eval=FALSE}
 # install.packages("devtools")
-devtools::install_github("aphalo/ggpextra")
+devtools::install_github("aphalo/ggpp")
 ```
 
 ## Documentation 
 
-HTML documentation is available at (https://docs.r4photobiology.info/ggpextra/), including a _User Guide_.
+HTML documentation is available at (https://docs.r4photobiology.info/ggpp/), including a _User Guide_.
 
 News about updates are regularly posted at (https://www.r4photobiology.info/).
 
 ## Contributing
 
-Please report bugs and request new features at (https://github.com/aphalo/ggpextra/issues). Pull requests are welcome at (https://github.com/aphalo/ggpextra).
+Please report bugs and request new features at (https://github.com/aphalo/ggpp/issues). Pull requests are welcome at (https://github.com/aphalo/ggpp).
 
 ## Citation
 
 If you use this package to produce scientific or commercial publications, please cite according to:
 
 ```{r, eval=FALSE}
-citation("ggpextra")
+citation("ggpp")
 ```
 
 ## License

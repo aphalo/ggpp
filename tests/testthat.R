@@ -1,4 +1,4 @@
 library(testthat)
-library(ggpextra)
+library(ggpp)
 
-test_check("ggpextra")
+test_check("ggpp")

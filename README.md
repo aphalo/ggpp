@@ -1,16 +1,16 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ggpextra <img src="man/figures/logo-ggpextra.png" align="right" width="150" />
+# ggpp <img src="man/figures/logo-ggpp.png" align="right" width="150" />
 
 [![cran
-version](https://www.r-pkg.org/badges/version/ggpextra)](https://cran.r-project.org/package=ggpextra)
+version](https://www.r-pkg.org/badges/version/ggpp)](https://cran.r-project.org/package=ggpp)
 [![R build
-status](https://github.com/aphalo/ggpextra/workflows/R-CMD-check/badge.svg)](https://github.com/aphalo/ggpextra/actions)
+status](https://github.com/aphalo/ggpp/workflows/R-CMD-check/badge.svg)](https://github.com/aphalo/ggpp/actions)
 
 ## Purpose
 
-Package ‘**ggpextra**’ (Grammar Extensions to ‘ggplot2’) is a set of
+Package ‘**ggpp**’ (Grammar Extensions to ‘ggplot2’) is a set of
 extensions to R package ‘ggplot2’ (&gt;= 3.0.0). New geoms support
 insets plots, tables and grobs as insets using a syntax consistent with
 the grammar of graphics. The grammar is also extended to support native
@@ -80,7 +80,7 @@ and `geom_y_margin_point()` make it possible to add marks along the *x*
 and *y* axes. `geom_vhlines()` and `geom_quadrant_lines()` draw vertical
 and horizontal reference lines within a single layer.
 
-Geometry `geom_linked_text()` connects text drawn at a nudged position
+Geometry `geom_text_linked()` connects text drawn at a nudged position
 to the original position, usually that of a point being labelled.
 
 ## Statistics
@@ -125,7 +125,7 @@ will remain as a “loader” of the packages into which it is being split.
 ## Examples
 
 ``` r
-library(ggpextra)
+library(ggpp)
 library(ggrepel)
 ```
 
@@ -150,21 +150,20 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
 Installation of the most recent stable version from CRAN:
 
 ``` r
-install.packages("ggpextra")
+install.packages("ggpp")
 ```
 
 Installation of the current unstable version from GitHub:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("aphalo/ggpextra")
+devtools::install_github("aphalo/ggpp")
 ```
 
 ## Documentation
 
 HTML documentation is available at
-(<https://docs.r4photobiology.info/ggpextra/>), including a *User
-Guide*.
+(<https://docs.r4photobiology.info/ggpp/>), including a *User Guide*.
 
 News about updates are regularly posted at
 (<https://www.r4photobiology.info/>).
@@ -172,8 +171,8 @@ News about updates are regularly posted at
 ## Contributing
 
 Please report bugs and request new features at
-(<https://github.com/aphalo/ggpextra/issues>). Pull requests are welcome
-at (<https://github.com/aphalo/ggpextra>).
+(<https://github.com/aphalo/ggpp/issues>). Pull requests are welcome at
+(<https://github.com/aphalo/ggpp>).
 
 ## Citation
 
@@ -181,7 +180,7 @@ If you use this package to produce scientific or commercial
 publications, please cite according to:
 
 ``` r
-citation("ggpextra")
+citation("ggpp")
 ```
 
 ## License

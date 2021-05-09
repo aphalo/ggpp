@@ -4,14 +4,14 @@ editor_options:
     wrap: 72
 ---
 
-# ggpextra 0.4.0
+# ggpp 0.4.0
 
 This new package is the result of splitting package 'ggpmisc' into two
-packages: 'ggpextra' containing extensions to the grammar of graphics
+packages: 'ggpp' containing extensions to the grammar of graphics
 and 'ggpmisc' containing extensions to 'ggplot2' related to plot
 decorations based on model fits, statistical summaries and other
 descriptors of the data being plotted. Package 'ggpmisc' depends on
-'ggpextra' with no visible changes for users. Package 'ggpextra' can be
+'ggpp' with no visible changes for users. Package 'ggpp' can be
 loaded instead of 'ggpmisc' when only the extensions it contains are
 needed. Package 'gginnards' containing tools for editing ggplot objects
 as well as tools for inspecting them is an earlier spin-off from

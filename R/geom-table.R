@@ -212,7 +212,7 @@ geom_table <- function(mapping = NULL, data = NULL,
 
 # Defined here to avoid a note in check --as-cran as the imports from 'broom'
 # are not seen when the function is defined in-line in the ggproto object.
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #'
 #' @format NULL
 #' @usage NULL
@@ -334,7 +334,7 @@ gtb_draw_panel_fun <-
     grid::gTree(children = tb.grobs, name = grid.name)
   }
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export
@@ -399,7 +399,7 @@ geom_table_npc <- function(mapping = NULL, data = NULL,
 
 # Defined here to avoid a note in check --as-cran as the imports from 'broom'
 # are not seen when the function is defined in-line in the ggproto object.
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #'
 #' @format NULL
 #' @usage NULL
@@ -513,7 +513,7 @@ gtbnpc_draw_panel_fun <-
     grid::gTree(children = tb.grobs, name = grid.name)
   }
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export

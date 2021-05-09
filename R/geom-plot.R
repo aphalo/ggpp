@@ -130,7 +130,7 @@ geom_plot <- function(mapping = NULL, data = NULL,
   )
 }
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #'
 #' @format NULL
 #' @usage NULL
@@ -198,7 +198,7 @@ gplot_draw_panel_fun <-
     grid::gTree(children = plot.grobs, name = grid.name)
   }
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export
@@ -248,7 +248,7 @@ geom_plot_npc <- function(mapping = NULL, data = NULL,
   )
 }
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #'
 #' @format NULL
 #' @usage NULL
@@ -305,7 +305,7 @@ gplotnpc_draw_panel_fun <-
     grid::gTree(children = plot.grobs, name = grid.name)
   }
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export

@@ -137,7 +137,7 @@ stat_quadrant_counts <- function(mapping = NULL, data = NULL, geom = "text_npc",
   )
 }
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #'
 #' @format NULL
 #' @usage NULL
@@ -260,7 +260,7 @@ compute_counts_fun <- function(data,
    }
 }
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export

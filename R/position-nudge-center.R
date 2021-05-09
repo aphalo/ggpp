@@ -264,7 +264,7 @@ position_nudge_center <-
     )
   }
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export

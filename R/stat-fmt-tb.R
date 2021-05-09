@@ -131,7 +131,7 @@ stat_fmt_tb <- function(mapping = NULL,
 
 # Defined here to avoid a note in check --as-cran as the imports from 'dplyr'
 # are not seen when the function is defined in-line in the ggproto object.
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #'
 #' @format NULL
 #' @usage NULL
@@ -228,7 +228,7 @@ fmt_tb_compute_group_fun <- function(data,
   data
 }
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export

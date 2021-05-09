@@ -9,7 +9,7 @@ options(warnPartialMatchArgs = FALSE,
 eval_flag <- FALSE  # evaluate all code chunks
 
 ## ---- message=FALSE-----------------------------------------------------------
-library(ggpextra)
+library(ggpp)
 library(ggrepel)
 library(tibble)
 library(dplyr)
@@ -18,7 +18,7 @@ library(dplyr)
 old_theme <- theme_set(theme_bw())
 
 ## ---- message=FALSE-----------------------------------------------------------
-library(ggpextra)
+library(ggpp)
 theme_set(theme_bw() + theme(panel.grid = element_blank()))
 
 ## -----------------------------------------------------------------------------
@@ -183,7 +183,7 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
 ## -----------------------------------------------------------------------------
 file.name <- 
   system.file("extdata", "Isoquercitin.png", 
-              package = "ggpextra", mustWork = TRUE)
+              package = "ggpp", mustWork = TRUE)
 Isoquercitin <- magick::image_read(file.name)
 grobs.tb <- tibble(x = c(0, 10, 20, 40), y = c(4, 5, 6, 9),
                    width = c(0.05, 0.05, 0.01, 1),
@@ -232,7 +232,7 @@ ggplot(my.cars, aes(wt, mpg, label = name)) +
 ## -----------------------------------------------------------------------------
 file.name <- 
   system.file("extdata", "Robinin.png", 
-              package = "ggpextra", mustWork = TRUE)
+              package = "ggpp", mustWork = TRUE)
 Robinin <- magick::image_read(file.name)
 
 set.seed(123456)

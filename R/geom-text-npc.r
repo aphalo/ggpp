@@ -136,7 +136,7 @@ geom_text_npc <- function(mapping = NULL, data = NULL,
   )
 }
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export

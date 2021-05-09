@@ -85,7 +85,7 @@ geom_x_margin_arrow <- function(mapping = NULL, data = NULL,
   )
 }
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export
@@ -202,7 +202,7 @@ geom_y_margin_arrow <- function(mapping = NULL, data = NULL,
   )
 }
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export

@@ -116,7 +116,7 @@ geom_quadrant_lines <- function(mapping = NULL, data = NULL,
   )
 }
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export
@@ -202,7 +202,7 @@ geom_vhlines <- function(mapping = NULL, data = NULL,
   )
 }
 
-#' @rdname ggpextra-ggproto
+#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export
