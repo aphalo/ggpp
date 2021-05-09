@@ -120,7 +120,6 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
   geom_point() +
   theme_bw()
 
-
 ## -----------------------------------------------------------------------------
 tb.pm <- tibble(Parameter = c("frac(beta[1], a^2)", "frac(beta[2], a^3)"),
                 Value = c("10^2.4", "10^3.532"))
