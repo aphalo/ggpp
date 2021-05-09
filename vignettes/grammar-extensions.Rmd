@@ -461,7 +461,6 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
        colour = "Engine cylinders\n(number)") +
   geom_point() +
   theme_bw()
-
 ```
 
 Parsed text, using plot math syntax is supported in the table, with

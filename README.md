@@ -10,58 +10,16 @@ status](https://github.com/aphalo/ggpp/workflows/R-CMD-check/badge.svg)](https:/
 
 ## Purpose
 
-Package ‘**ggpp**’ (Grammar Extensions to ‘ggplot2’) is a set of
-extensions to R package ‘ggplot2’ (&gt;= 3.0.0). New geoms support
-insets plots, tables and grobs as insets using a syntax consistent with
-the grammar of graphics. The grammar is also extended to support native
-plot coordinates (npc) so that annotations can be easily positioned
-using new geometries and scales. New position functions facilitate the
-labelling of observations by nudging labels away or towards curves or a
-focal virtual centre. New variations of `"outward"` and `"inward"`
-justification complement the new types of nudge.
+Package ‘**ggpp**’ provides a set of building blocks that extend the
+Grammar of Graphics implemented in package ‘ggplot2’ (&gt;= 3.0.0). New
+geoms support insets in plots, marginal marks and the use of native plot
+coordinates (npc). Position functions implement new approaches to
+nudging, especially useful together with `geom_text_repel()` and
+`geom_label_repel()`.
 
 ## Extended Grammar of graphics
 
-The position of annotations within the plotting area depends in most
-cases on graphic design considerations rather than on properties such as
-the range of values in the data being plotted. In particular, the
-location within the plotting area of large annotation objects like
-model-fit summaries, location maps, plots, and tables needs usually to
-be set independently of the `x` and `y` scales, re-scaling or any
-transformations. To acknowledge this, the Grammar of Graphics is here
-expanded by supporting *x* and *y* positions expressed in ‘grid’ “npc”
-units in the range 0..1. This is implemented with new
-(pseudo-)aesthetics *npcx* and *npcy* and their corresponding scales,
-plus geometries and a revised `annotate()` function. The new aesthetics
-function in “parallel” with the *x* and *y* aesthetics used for plotting
-data. The advantage of this approach is that the syntax used for
-annotations becomes identical to that used for plotting data and that
-these geoms *cleanly* support facets in a way consistent with the rest
-of the grammar.
-
-## Aesthetics and scales
-
-Scales `scale_npcx_continuous()` and `scale_npcy_continuous()` and the
-corresponding new aesthetics `npcx` and `npcy` make it possible to add
-graphic elements and text to plots using coordinates expressed in `npc`
-units for the location within the plotting area.
-
-Scales `scale_x_logFC()` and `scale_y_logFC()` are suitable for plotting
-of log fold change data. Scales `scale_x_Pvalue()`, `scale_y_Pvalue()`,
-`scale_x_FDR()` and `scale_y_FDR()` are suitable for plotting *p*-values
-and adjusted *p*-values or false discovery rate (FDR). Default arguments
-are suitable for volcano and quadrant plots as used for transcriptomics,
-metabolomics and similar data.
-
-Scales `scale_colour_outcome()`, `scale_fill_outcome()` and
-`scale_shape_outcome()` and functions `outome2factor()`,
-`threshold2factor()`, `xy_outcomes2factor()` and
-`xy_thresholds2factor()` used together make it easy to map ternary
-numeric outputs and logical binary outcomes to color, fill and shape
-aesthetics. Default arguments are suitable for volcano, quadrant and
-other plots as used for genomics, metabolomics and similar data.
-
-## Geometries
+### Geometries
 
 Geometries `geom_table()`, `geom_plot()` and `geom_grob()` make it
 possible to add inset tables, inset plots, and arbitrary ‘grid’
@@ -83,7 +41,14 @@ and horizontal reference lines within a single layer.
 Geometry `geom_text_linked()` connects text drawn at a nudged position
 to the original position, usually that of a point being labelled.
 
-## Statistics
+### Aesthetics and scales
+
+Scales `scale_npcx_continuous()` and `scale_npcy_continuous()` and the
+corresponding new aesthetics `npcx` and `npcy` make it possible to add
+graphic elements and text to plots using coordinates expressed in `npc`
+units for the location within the plotting area.
+
+### Statistics
 
 Statistic `stat_fmt_tb()` helps with the formatting of tables to be
 plotted with `geom_table()`.
@@ -117,35 +82,75 @@ and original *x* and *y* coordinates.
 ## History
 
 This package is a “spin-off” from package ‘ggpmisc’ containing
-extensions to the grammar originally written for use wihtin ‘ggpmisc’
-but which are of general usefulness. As ‘ggpmisc’ has grown in size,
-spliting it into two packages seems the best option. Package ‘ggpmisc’
-will remain as a “loader” of the packages into which it is being split.
+extensions to the grammar originally written for use wihtin ‘ggpmisc’.
+As ‘ggpmisc’ has grown in size, spliting it into two packages seems the
+best option. For the time being, package ‘ggpmisc’ will import and
+re-export visible defintions from ‘ggpp’.
 
 ## Examples
 
 ``` r
 library(ggpp)
 library(ggrepel)
+library(dplyr)
 ```
 
-A plot with an inset plot.
+A plot with an inset table.
+
+``` r
+mtcars %>%
+  group_by(cyl) %>%
+  summarize(wt = mean(wt), mpg = mean(mpg)) %>%
+  ungroup() %>%
+  mutate(wt = sprintf("%.2f", wt),
+         mpg = sprintf("%.1f", mpg)) -> tb
+
+df <- tibble(x = 5.45, y = 34, tb = list(tb))
+
+ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+  geom_point() +
+  geom_table(data = df, aes(x = x, y = y, label = tb))
+```
+
+![](man/figures/README-readme-03-1.png)<!-- -->
+
+A plot with an inset plot. With the inset plot positioned using native
+plot coordinates (npc) and using keywords insted of numerical values in
+the range 0..1 which are also accepted.
 
 ``` r
 p <- ggplot(mtcars, aes(factor(cyl), mpg, colour = factor(cyl))) +
   stat_boxplot() +
-  labs(y = NULL) +
+  labs(y = NULL, x = "Engine cylinders (number)") +
   theme_bw(9) + theme(legend.position = "none")
 
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
-  geom_point() +
+  geom_point(show.legend = FALSE) +
   annotate("plot_npc", npcx = "left", npcy = "bottom", label = p) +
   expand_limits(y = 0, x = 0)
 ```
 
-![](man/figures/README-readme-06-1.png)<!-- -->
+![](man/figures/README-readme-06-1.png)<!-- --> Marginal markings
 
-## Installation
+``` r
+data.tb <- mtcars %>%
+  group_by(cyl) %>%
+  summarise(wt = mean(wt), mpg = mean(mpg))
+
+ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+  geom_x_margin_arrow(data = data.tb,
+                      aes(xintercept = wt, color = factor(cyl)),
+                      arrow.length = 0.05) +
+  geom_y_margin_arrow(data = data.tb,
+                      aes(yintercept = mpg, color = factor(cyl)),
+                      arrow.length = 0.05) +
+  annotate("plot_npc", npcx = "right", npcy = "top", 
+           label = p + theme(axis.title.y = element_blank())) +
+  expand_limits(y = 10) +
+  geom_point(show.legend = FALSE) 
+```
+
+![](man/figures/README-unnamed-chunk-1-1.png)<!-- --> \#\# Installation
 
 Installation of the most recent stable version from CRAN:
 
