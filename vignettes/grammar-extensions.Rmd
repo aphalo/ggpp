@@ -1,6 +1,6 @@
 ---
 title: "Extensions to the Grammar of Graphics"
-subtitle: "Data labels are not annotations"
+subtitle: "Package 'ggpp' `r packageVersion('ggpp')` "
 author: "Pedro J. Aphalo"
 date: "`r Sys.Date()`"
 output: 
