@@ -10,6 +10,7 @@
 #'   in npc units.
 #' @param margin.npc numeric [0..1] The margin added towards the nearest
 #'   plotting area edge when converting character coordinates into npc.
+#' @param each.len integer The number of steps per group.
 #'
 #' @return A numeric vector with values in the range [0..1] representing
 #'   npc coordinates.
@@ -18,7 +19,7 @@
 #'
 #' @export
 #'
-compute_npcx <- function(x, group = 1L, h.step = 0.1, margin.npc = 0.05) {
+compute_npcx <- function(x, group = 1L, h.step = 0.1, margin.npc = 0.05, each.len = 1) {
   group <- abs(group)
   if (is.factor(x)) {
     x <- as.character(x)
@@ -33,8 +34,14 @@ compute_npcx <- function(x, group = 1L, h.step = 0.1, margin.npc = 0.05) {
              NA_real_)
     x <- unname(map[x])
   }
-  if (any(group > 1L) && h.step != 0) {
-    x <- x + (group - 1L) * h.step * ifelse(x < 0.5, 1, -1)
+  expanded.group <- integer()
+  for (i in seq_along(group)) {
+    temp <- seq(from = 1, by = 1, length.out = each.len) +
+      (group[i] - 1) * each.len
+    expanded.group <- c(expanded.group, temp)
+  }
+  if (any(expanded.group > 0L) && h.step != 0) {
+    x <- x + (expanded.group - 1) * h.step * ifelse(x < 0.5, 1, -1)
   }
   x <- ifelse(x > 1, 1, x)
   x <- ifelse(x < 0, 0, x)
@@ -45,7 +52,7 @@ compute_npcx <- function(x, group = 1L, h.step = 0.1, margin.npc = 0.05) {
 #'
 #' @export
 #'
-compute_npcy <- function(y, group = 1L, v.step = 0.1, margin.npc = 0.05) {
+compute_npcy <- function(y, group = 1L, v.step = 0.1, margin.npc = 0.05, each.len = 1) {
   group <- abs(group)
   if (is.factor(y)) {
     y <- as.character(y)
@@ -60,8 +67,14 @@ compute_npcy <- function(y, group = 1L, v.step = 0.1, margin.npc = 0.05) {
              NA_real_)
     y <- unname(map[y])
   }
-  if (any(group > 1L) && v.step != 0) {
-    y <- y + (group - 1L) * v.step * ifelse(y < 0.5, 1, -1)
+  expanded.group <- integer()
+  for (i in seq_along(group)) {
+    temp <- seq(from = 1, by = 1, length.out = each.len) +
+      (group[i] - 1) * each.len
+    expanded.group <- c(expanded.group, temp)
+  }
+  if (any(expanded.group > 1L) && v.step != 0) {
+    y <- y + (expanded.group - 1L) * v.step * ifelse(y < 0.5, 1, -1)
   }
   y <- ifelse(y > 1, 1, y)
   y <- ifelse(y < 0, 0, y)

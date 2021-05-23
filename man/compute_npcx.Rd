@@ -5,9 +5,9 @@
 \alias{compute_npcy}
 \title{Compute npc coordinates}
 \usage{
-compute_npcx(x, group = 1L, h.step = 0.1, margin.npc = 0.05)
+compute_npcx(x, group = 1L, h.step = 0.1, margin.npc = 0.05, each.len = 1)
 
-compute_npcy(y, group = 1L, v.step = 0.1, margin.npc = 0.05)
+compute_npcy(y, group = 1L, v.step = 0.1, margin.npc = 0.05, each.len = 1)
 }
 \arguments{
 \item{x, y}{numeric or character vector of coordinates.}
@@ -20,6 +20,8 @@ in npc units.}
 
 \item{margin.npc}{numeric [0..1] The margin added towards the nearest
 plotting area edge when converting character coordinates into npc.}
+
+\item{each.len}{integer The number of steps per group.}
 }
 \value{
 A numeric vector with values in the range [0..1] representing
