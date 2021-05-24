@@ -45,14 +45,17 @@ near future*.
     with arrows radiating out of the origin. (The `"outward"` and
     `"inward"` justification implemented in 'ggplot2' is relative to the
     middle of the $x$ or $y$ scales.)
+-   Revise `compute_npcx()` and `compute_npcy()` to support multiple
+    steps per group (needed in 'ggpmisc').
 -   Fix problem related to `"outward"` and `"inward"` justification of
     text labels when `angle` aesthetic takes values \< -45 or \> 45
     degrees. This code change alters how old plots are rendered if text
     labels have been rotated by more than 45 degrees.
--   [ggplot2, ggrepel] The problem with angle is a "feature" in
+-   ['ggplot2', 'ggrepel'] The problem with angle was a "bug" in
     'ggplot2' also present in 'ggrepel'. A pull request for
-    `ggplot2::geom_text()` has been submitted. This is now in the
-    'ggplot2' 3.3.4 milestone.
+    `ggplot2::geom_text()` has been submitted and merged. This is now in
+    the 'ggplot2' 3.3.4 milestone retaining consistent behaviour between
+    'ggplot2', 'ggrepel', 'ggpp' and 'ggpmisc'.
 
 # ggpmisc 0.3.9
 
