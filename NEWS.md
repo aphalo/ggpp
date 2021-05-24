@@ -40,7 +40,7 @@ near future*.
     example strings like `"outward_0.5"` , `"inward_3e5"` or
     `"outward_-3e-2"` are supported. This should be useful when manual
     tweaking is desired. As special cases `"outward_0"` and `"inward_0"`
-    apply jsutification outward and inward with respect to the origin.
+    apply justification outward and inward with respect to the origin.
     This should be useful for biplots used for PCA and similar cases
     with arrows radiating out of the origin. (The `"outward"` and
     `"inward"` justification implemented in 'ggplot2' is relative to the
