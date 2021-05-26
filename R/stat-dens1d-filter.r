@@ -53,8 +53,8 @@
 #' @param na.rm	a logical value indicating whether NA values should be stripped
 #'   before the computation proceeds.
 #'
-#' @return A copy of \code{data} with a subset of the rows retained based on
-#'   the filtering criterion.
+#' @return A plot layer instance. Using as output \code{data} a subset of the
+#'   rows in input \code{data} retained based on a 1D filtering criterion.
 #'
 #' @seealso \code{\link[stats]{density}} used internally.
 #'

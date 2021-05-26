@@ -26,6 +26,8 @@
 #' @note To use the original definition of \code{annotate()} after loading
 #'   package 'ggpmisc', use \code{ggplot2::annotate()}.
 #'
+#' @return A plot layer instance.
+#'
 #' @export
 #'
 #' @examples

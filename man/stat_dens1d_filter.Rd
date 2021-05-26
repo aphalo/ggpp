@@ -108,8 +108,8 @@ define both data and aesthetics and shouldn't inherit behaviour from the
 default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 }
 \value{
-A copy of \code{data} with a subset of the rows retained based on
-  the filtering criterion.
+A plot layer instance. Using as output \code{data} a subset of the
+  rows in input \code{data} retained based on a 1D filtering criterion.
 }
 \description{
 \code{stat_dens1d_filter} Filters-out/filters-in observations in

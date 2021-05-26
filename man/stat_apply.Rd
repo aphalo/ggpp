@@ -101,6 +101,10 @@ default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 can include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
 }
+\value{
+A plot layer instance. Using as output \code{data} the in input
+  \code{data} after application of a function.
+}
 \description{
 \code{stat_apply_group} and \code{stat_apply_panel} apply functions to data.
 In most cases one should simply use transformations through scales or summary

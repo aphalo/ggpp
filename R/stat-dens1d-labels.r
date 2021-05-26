@@ -61,12 +61,12 @@
 #' @param na.rm	a logical value indicating whether NA values should be stripped
 #'   before the computation proceeds.
 #'
-#' @return A copy of \code{data} with a subset of the rows retained based on
-#'   the filtering criterion.
-#'
 #' @seealso \code{\link[stats]{density}} used internally.
 #'
 #' @family statistics returning a subset of data
+#'
+#' @return A plot layer instance. Using as output \code{data} the input
+#'   \code{data} after value substitution based on a 1D the filtering criterion.
 #'
 #' @examples
 #'

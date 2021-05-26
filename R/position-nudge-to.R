@@ -16,6 +16,8 @@
 #' @details The new `x` or `y` replace the original ones, while the original
 #'   coordinates are returned in `x_orig` and `y_orig`.
 #'
+#' @return A \code{"Position"} object.
+#'
 #' @seealso [ggplot::position_nudge()], [ggrepel::position_nudge_repel()].
 #'
 #' @export

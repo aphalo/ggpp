@@ -9,6 +9,8 @@
 #' @param ... Other arguments passed on to `continuous_scale()`
 #' @name scale_continuous_npc
 #'
+#' @return A \code{"Scale"} object.
+#'
 #' @export
 #'
 scale_npcx_continuous <- function(...) {

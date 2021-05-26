@@ -45,6 +45,9 @@ of the observations. By default, grouping is obeyed when both of the
 variables mapped to _x_ and _y_ are continuous numeric and ignored
 otherwise.}
 }
+\value{
+A \code{"Position"} object.
+}
 \description{
 `position_nudge_center()` is generally useful for adjusting the position of
 labels or text, both on a discrete or continuous scale. In contrast to

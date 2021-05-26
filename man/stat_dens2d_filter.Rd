@@ -90,8 +90,9 @@ can include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
 }
 \value{
-A copy of \code{data} with a subset of the rows retained based on
-  a 2D-density-based filtering criterion.
+A plot layer instance. Using as output \code{data} a subset of the
+  rows in input \code{data} retained based on a 2D-density-based filtering
+  criterion.
 }
 \description{
 \code{stat_dens2d_filter} Filters-out/filters-in observations in

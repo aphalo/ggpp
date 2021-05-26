@@ -57,6 +57,9 @@ than combining with them. This is most useful for helper functions that
 define both data and aesthetics and shouldn't inherit behaviour from the
 default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 }
+\value{
+A plot layer instance.
+}
 \description{
 \code{geom_plot} and \code{geom_plot_npc} add ggplot objects as insets to the
 base ggplot, using syntax similar to that of

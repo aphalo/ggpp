@@ -67,6 +67,8 @@
 #'   \code{\link[ggplot2]{annotation_custom}} directly when adding inset plots
 #'   as annotations.
 #'
+#' @return A plot layer instance.
+#'
 #' @references The idea of implementing a \code{geom_custom()} for grobs has
 #'   been discussed as an issue at
 #'   \url{https://github.com/tidyverse/ggplot2/issues/1399}.

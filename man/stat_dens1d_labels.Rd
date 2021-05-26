@@ -90,8 +90,8 @@ define both data and aesthetics and shouldn't inherit behaviour from the
 default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 }
 \value{
-A copy of \code{data} with a subset of the rows retained based on
-  the filtering criterion.
+A plot layer instance. Using as output \code{data} the input
+  \code{data} after value substitution based on a 1D the filtering criterion.
 }
 \description{
 \code{stat_dens1d_labels()} Sets values mapped to the

@@ -38,6 +38,8 @@
 #'
 #' @family Geometries for marginal annotations in ggplots
 #'
+#' @return A plot layer instance.
+#'
 #' @export
 #' @examples
 #' p <- ggplot(mtcars, aes(wt, mpg)) +

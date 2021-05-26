@@ -67,6 +67,9 @@
 #'   shown includes also values mapped to aesthetics, like \code{label} in the
 #'   example.
 #'
+#' @return A plot layer instance. Using as output \code{data} the counts of
+#'   observations per plot quadrant.
+#'
 #' @family Functions for quadrant and volcano plots
 #'
 #' @export

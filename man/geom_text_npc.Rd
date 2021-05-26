@@ -82,6 +82,9 @@ default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 \item{check_overlap}{If `TRUE`, text that overlaps previous text in the same
 layer will not be plotted.}
 }
+\value{
+A plot layer instance.
+}
 \description{
 `geom_text_npc()` adds text directly to the plot. `geom_label_npc()` draws a
 rectangle behind the text, making it easier to read. The difference is that x

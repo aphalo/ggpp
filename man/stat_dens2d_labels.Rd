@@ -75,9 +75,8 @@ define both data and aesthetics and shouldn't inherit behaviour from the
 default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 }
 \value{
-A copy of \code{data} with none, some or possibly all values for
-  aesthetic \code{label} replaced by the value of \code{label.fill} based
-  on a 2D-density-based filtering criterion.
+A plot layer instance. Using as output \code{data} the input
+  \code{data} after value substitution based on a 2D the filtering criterion.
 }
 \description{
 \code{stat_dens2d_labels()} Sets values mapped to the

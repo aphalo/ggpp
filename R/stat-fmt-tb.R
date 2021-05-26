@@ -49,8 +49,9 @@
 #'   list mapped to \code{label} and containing a single tibble per row
 #'   in \code{data}.
 #'
-#' @return The returned value is a copy code{data} in which the data frames mapped
-#'    to \code{label} have been modified.
+#' @return A plot layer instance. Using as output \code{data} a copy of the
+#'   input \code{data} in which the data frames mapped to \code{label} have been
+#'   modified.
 #'
 #' @export
 #'

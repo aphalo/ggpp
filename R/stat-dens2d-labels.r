@@ -52,9 +52,8 @@
 #' @param na.rm	a logical value indicating whether NA values should be stripped
 #'   before the computation proceeds.
 #'
-#' @return A copy of \code{data} with none, some or possibly all values for
-#'   aesthetic \code{label} replaced by the value of \code{label.fill} based
-#'   on a 2D-density-based filtering criterion.
+#' @return A plot layer instance. Using as output \code{data} the input
+#'   \code{data} after value substitution based on a 2D the filtering criterion.
 #'
 #' @seealso \code{\link[MASS]{kde2d}} used internally.
 #'

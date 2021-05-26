@@ -34,6 +34,9 @@ otherwise.}
 \item{line_nudge}{A positive multiplier >= 1, increasing nudging
 away from the curve or line compared to nudging from points.}
 }
+\value{
+A \code{"Position"} object.
+}
 \description{
 `position_nudge_line` is generally useful for adjusting the starting
 position of labels or text to be repelled while preserving the original

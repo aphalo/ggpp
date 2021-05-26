@@ -74,6 +74,9 @@ than combining with them. This is most useful for helper functions that
 define both data and aesthetics and shouldn't inherit behaviour from the
 default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 }
+\value{
+A plot layer instance.
+}
 \description{
 Small arrows on plot margins can supplement a 2d display with annotations.
 Arrows can be used to highligth specific values along a margin. The geometries

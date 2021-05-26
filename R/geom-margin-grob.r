@@ -39,6 +39,8 @@
 #'
 #' @family Geometries for marginal annotations in ggplots
 #'
+#' @return A plot layer instance.
+#'
 #' @export
 #'
 #' @examples

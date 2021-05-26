@@ -58,6 +58,9 @@
 #' Answers question "R ggplot on-the-fly calculation by grouping variable" at
 #' \url{https://stackoverflow.com/questions/51412522}.
 #'
+#' @return A plot layer instance. Using as output \code{data} the in input
+#'   \code{data} after application of a function.
+#'
 #' @examples
 #' library(gginnards)
 #' set.seed(123456)

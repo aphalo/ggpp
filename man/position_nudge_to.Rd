@@ -11,6 +11,9 @@ position_nudge_to(x = NULL, y = NULL)
 vector of length 1, or of the same length as rows there are in `data`.
 The default, `NULL`, leaves the original coordinates unchanged.}
 }
+\value{
+A \code{"Position"} object.
+}
 \description{
 `position_nudge_to()` is generally useful for adjusting the position of
 labels or text, both on a discrete or continuous scale. This version from

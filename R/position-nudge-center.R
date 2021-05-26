@@ -62,6 +62,8 @@
 #'
 #' @seealso [ggplot2::position_nudge()], [ggrepel::position_nudge_repel()].
 #'
+#' @return A \code{"Position"} object.
+#'
 #' @export
 #'
 #' @examples

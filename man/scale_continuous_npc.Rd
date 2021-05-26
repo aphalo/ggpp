@@ -13,6 +13,9 @@ scale_npcy_continuous(...)
 \arguments{
 \item{...}{Other arguments passed on to `continuous_scale()`}
 }
+\value{
+A \code{"Scale"} object.
+}
 \description{
 `scale_npcx_continuous()` and `scale_npcy_continuous()` are
 scales for continuous npcx and npcy aesthetics expressed in "npc" units.

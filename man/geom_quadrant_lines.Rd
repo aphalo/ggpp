@@ -67,6 +67,9 @@ default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 can include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
 }
+\value{
+A plot layer instance.
+}
 \description{
 \code{geom_vhlines()} adds in a single layer both vertical and horizontal
 guide lines. Can be thought of as a convenience function that helps with

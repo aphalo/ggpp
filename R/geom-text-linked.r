@@ -74,6 +74,8 @@
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
 #'
+#' @return A plot layer instance.
+#'
 #' @export
 #'
 #' @examples

@@ -62,6 +62,10 @@ default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 can include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
 }
+\value{
+A plot layer instance. Using as output \code{data} the counts of
+  observations per plot quadrant.
+}
 \description{
 \code{stat_quadrant_counts()} counts the number of observations in each
 quadrant of a plot panel. By default it adds a text label to the far corner

@@ -48,6 +48,8 @@
 #' @seealso \code{\link[ggplot2]{geom_abline}}, the topic where
 #'   \code{geom_vline()} and \code{geom_hline()} are described.
 #'
+#' @return A plot layer instance.
+#'
 #' @export
 #'
 #' @examples

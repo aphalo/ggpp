@@ -71,6 +71,9 @@
 #' @seealso \code{\link[ggplot2]{geom_text}}
 #'
 #' @rdname geom_text_npc
+#'
+#' @return A plot layer instance.
+#'
 #' @export
 #' @examples
 #'

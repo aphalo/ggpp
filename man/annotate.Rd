@@ -36,6 +36,9 @@ or size = 3. They may also be parameters to the paired geom/stat.}
 \item{na.rm}{logical If \code{FALSE}, the default, missing values are removed
 with a warning. If TRUE, missing values are silently removed.}
 }
+\value{
+A plot layer instance.
+}
 \description{
 A revised version of \code{annotate()} from package 'ggplot2' adding support
 for \code{npcx} and \code{npcy} position aesthetics, allowing use of the

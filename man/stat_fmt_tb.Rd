@@ -72,8 +72,9 @@ can include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
 }
 \value{
-The returned value is a copy code{data} in which the data frames mapped
-   to \code{label} have been modified.
+A plot layer instance. Using as output \code{data} a copy of the
+  input \code{data} in which the data frames mapped to \code{label} have been
+  modified.
 }
 \description{
 \code{stat_fmt_tb} selects, reorders and/or renames columns and

@@ -115,6 +115,8 @@
 #'
 #' @family geometries adding layers with insets
 #'
+#' @return A plot layer instance.
+#'
 #' @export
 #'
 #' @examples
