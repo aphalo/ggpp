@@ -46,6 +46,9 @@ fractional calendar years.}
 found in the data, ggplot will look for it in this environment. It defaults
 to using the environment in which \code{ggplot()} is called.}
 }
+\value{
+A \code{"ggplot"} object.
+}
 \description{
 \code{ggplot()} initializes a ggplot object. It can be used to
 declare the input spectral object for a graphic and to optionally specify the

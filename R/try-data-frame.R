@@ -181,6 +181,8 @@ try_tibble <- function(x,
 #'   found in the data, ggplot will look for it in this environment. It defaults
 #'   to using the environment in which \code{ggplot()} is called.
 #'
+#' @return A \code{"ggplot"} object.
+#'
 #' @export
 #' @examples
 #' library(ggplot2)
