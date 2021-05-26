@@ -9,12 +9,13 @@ Authors@R:
     person("Kamil", "Slowikowski", role = "ctb")
     )
 Maintainer: Pedro J. Aphalo <pedro.aphalo@helsinki.fi>
-Description: Extensions to 'ggplot2' respecting the grammar of graphics
-    paradigm. Geom: "table", "plot" and "grob" add insets to plots
-    using native data coordinates, while "table_npc", "plot_npc" and "grob_npc"
-    do the same using "npc" coordinates through new aesthetics "npcx" and "npcy". 
-    Statistics: select observations based on 2D density. Positions: radial 
-    nudging away from a center point and nudging away from a line or curve.
+Description: Extensions to 'ggplot2' respecting the grammar of graphics 
+    paradigm. Geomas: geom_table(), geom_plot() and geom_grob() add insets to 
+    plots using native data coordinates, while geom_table_npc(), geom_plot_npc()
+    and geom_grob_npc() do the same using "npc" coordinates through new 
+    aesthetics "npcx" and "npcy". Statistics: select observations based on 2D 
+    density. Positions: radial nudging away from a center point and nudging away
+    from a line or curve.
 License: GPL (>= 2)
 LazyLoad: TRUE
 ByteCompile: TRUE
