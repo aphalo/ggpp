@@ -268,6 +268,119 @@ position_nudge_line <- function(x = NA_real_,
   )
 }
 
+# Defined here to avoid a note in check --as-cran as the import from 'polynom'
+# is not seen when the function is defined in-line in the ggproto object.
+#' @rdname ggpp-ggproto
+#'
+#' @format NULL
+#' @usage NULL
+#'
+quant_compute_panel <- function(data, params, scales) {
+  x_orig <- data$x
+  y_orig <- data$y
+  # set parameter defaults that depend on the scale
+  x_range <- scales$x$dimension()
+  y_range <- scales$y$dimension()
+  x_spread <- x_range[2] - x_range[1]
+  y_spread <- y_range[2] - y_range[1]
+  xy.range.ratio <- x_spread / y_spread
+
+  if (all(is.na(params$x)) & all(is.na(params$y))) {
+    params$x <- params$xy_relative[1] * x_spread
+    params$y <- params$xy_relative[2] * y_spread
+  } else if (xor(all(is.na(params$x)), all(is.na(params$y)))) {
+    if (is.na(params$x)) {
+      params$x <- params$y * xy.range.ratio
+    } else {
+      params$y <- params$x / xy.range.ratio
+    }
+  }
+
+  if (params$method == "auto") {
+    if (nrow(data) < 5) {
+      params$method <- "lm"
+    } else {
+      params$method <- "spline"
+    }
+  }
+
+  # compute lines or curves and their derivatives
+  if (params$method == "abline") {
+    if (is.numeric(params$abline) && length(params$abline) == 2) {
+      curve <- params$abline[1] + params$abline[2] * data$x
+      # ensure same length in all cases
+      sm.deriv <- rep(params$abline[2], nrow(data))
+    } else {
+      stop("'abline' should be a numeric vector of length 2")
+    }
+  } else if (params$method %in% c("lm", "spline")) {
+    # we need to handle grouping by ourselves as compute_group does not work
+    curve <- sm.deriv <- numeric(nrow(data))
+    for (group in unique(data$group)) {
+      in.grp <- data$group == group
+      if (nrow(data[in.grp, ]) < 4 || params$method == "lm") {
+        mf <- stats::lm(formula = params$formula, data = data[in.grp, ])
+        curve[in.grp] <- stats::predict(mf)
+        coef.poly <- polynom::polynomial(stats::coefficients(mf))
+        deriv.poly <- stats::deriv(coef.poly)
+        sm.deriv[in.grp] <- stats::predict(deriv.poly, data[in.grp, "x"])
+        if (params$method != "lm") {
+          message("Fitting a linear regression as n < 4")
+        }
+      } else if (params$method == "spline") {
+        sm.spline <- stats::smooth.spline(data[in.grp, "x"], data[in.grp, "y"])
+        curve[in.grp] <- stats::predict(sm.spline, x = data[in.grp, "x"], deriv = 0)$y
+        sm.deriv[in.grp] <- stats::predict(sm.spline, x = data[in.grp, "x"], deriv = 1)$y
+      }
+    }
+  } else {
+    stop("Method \"", params$method, "\"not recognized")
+  }
+
+  # compute x and y nudge for each point
+  # By changing the sign we ensure consistent positions in opposite slopes
+  angle.rotation <- ifelse(sm.deriv > 0, -0.5 * pi, +0.5 * pi)
+  # scaling is needed to conpute the angle on the plot
+  angle <- atan2(sm.deriv * xy.range.ratio, 1) + angle.rotation
+  x_nudge <- params$x * cos(angle) * ifelse(sm.deriv > 0, -1, +1)
+  y_nudge <- params$y * sin(angle) * ifelse(sm.deriv > 0, -1, +1)
+
+  if (params$direction == "split") {
+    # sign depends on position relative to the line or curve
+    x_nudge <- ifelse(data$y >= curve, x_nudge, -x_nudge)
+    y_nudge <- ifelse(data$y >= curve, y_nudge, -y_nudge)
+  } else if (params$direction != "none") {
+    warning("Ignoring unrecognized direction \"", params$direction, "\".")
+  }
+
+  if (params$line_nudge > 1) {
+    # nudging further away from line or curve than from points
+    adj_y_nudge <- y_nudge * params$line_nudge - (data$y - curve)
+    adj_x_nudge <- x_nudge * adj_y_nudge / y_nudge
+    y_nudge <- ifelse(sign(y_nudge) == sign(adj_y_nudge) &
+                        abs(y_nudge) < abs(adj_y_nudge),
+                      adj_y_nudge,
+                      y_nudge)
+    x_nudge <- ifelse(sign(y_nudge) == sign(adj_y_nudge) &
+                        abs(x_nudge) >= abs(adj_x_nudge),
+                      adj_x_nudge,
+                      x_nudge)
+  }
+  # transform only the dimensions for which new coordinates exist
+  if (any(params$x != 0)) {
+    if (any(params$y != 0)) {
+      data <- transform_position(data, function(x) x + x_nudge, function(y) y + y_nudge)
+    } else {
+      data <- transform_position(data, function(x) x + x_nudge, NULL)
+    }
+  } else if (any(params$y != 0)) {
+    data <- transform_position(data, NULL, function(y) y + y_nudge)
+  }
+  data$x_orig <- x_orig
+  data$y_orig <- y_orig
+  data
+}
+
 #' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
@@ -297,110 +410,5 @@ PositionNudgeLine <-
       )
     },
 
-    compute_panel = function(data, params, scales) {
-
-      x_orig <- data$x
-      y_orig <- data$y
-      # set parameter defaults that depend on the scale
-      x_range <- scales$x$dimension()
-      y_range <- scales$y$dimension()
-      x_spread <- x_range[2] - x_range[1]
-      y_spread <- y_range[2] - y_range[1]
-      xy.range.ratio <- x_spread / y_spread
-
-      if (all(is.na(params$x)) & all(is.na(params$y))) {
-        params$x <- params$xy_relative[1] * x_spread
-        params$y <- params$xy_relative[2] * y_spread
-      } else if (xor(all(is.na(params$x)), all(is.na(params$y)))) {
-        if (is.na(params$x)) {
-          params$x <- params$y * xy.range.ratio
-        } else {
-          params$y <- params$x / xy.range.ratio
-        }
-      }
-
-      if (params$method == "auto") {
-        if (nrow(data) < 5) {
-          params$method <- "lm"
-        } else {
-          params$method <- "spline"
-        }
-      }
-
-      # compute lines or curves and their derivatives
-      if (params$method == "abline") {
-        if (is.numeric(params$abline) && length(params$abline) == 2) {
-          curve <- params$abline[1] + params$abline[2] * data$x
-          # ensure same length in all cases
-          sm.deriv <- rep(params$abline[2], nrow(data))
-        } else {
-          stop("'abline' should be a numeric vector of length 2")
-        }
-      } else if (params$method %in% c("lm", "spline")) {
-        # we need to handle grouping by ourselves as compute_group does not work
-        curve <- sm.deriv <- numeric(nrow(data))
-        for (group in unique(data$group)) {
-          in.grp <- data$group == group
-          if (nrow(data[in.grp, ]) < 4 || params$method == "lm") {
-            mf <- lm(formula = params$formula, data = data[in.grp, ])
-            curve[in.grp] <- predict(mf)
-            coef.poly <- polynom::polynomial(coef(mf))
-            deriv.poly <- deriv(coef.poly)
-            sm.deriv[in.grp] <- predict(deriv.poly, data[in.grp, "x"])
-            if (params$method != "lm") {
-              message("Fitting a linear regression as n < 4")
-            }
-          } else if (params$method == "spline") {
-            sm.spline <- smooth.spline(data[in.grp, "x"], data[in.grp, "y"])
-            curve[in.grp] <- predict(sm.spline, x = data[in.grp, "x"], deriv = 0)$y
-            sm.deriv[in.grp] <- predict(sm.spline, x = data[in.grp, "x"], deriv = 1)$y
-          }
-        }
-      } else {
-        stop("Method \"", params$method, "\"not recognized")
-      }
-
-      # compute x and y nudge for each point
-      # By changing the sign we ensure consistent positions in opposite slopes
-      angle.rotation <- ifelse(sm.deriv > 0, -0.5 * pi, +0.5 * pi)
-      # scaling is needed to conpute the angle on the plot
-      angle <- atan2(sm.deriv * xy.range.ratio, 1) + angle.rotation
-      x_nudge <- params$x * cos(angle) * ifelse(sm.deriv > 0, -1, +1)
-      y_nudge <- params$y * sin(angle) * ifelse(sm.deriv > 0, -1, +1)
-
-      if (params$direction == "split") {
-        # sign depends on position relative to the line or curve
-        x_nudge <- ifelse(data$y >= curve, x_nudge, -x_nudge)
-        y_nudge <- ifelse(data$y >= curve, y_nudge, -y_nudge)
-      } else if (params$direction != "none") {
-        warning("Ignoring unrecognized direction \"", params$direction, "\".")
-      }
-
-      if (params$line_nudge > 1) {
-        # nudging further away from line or curve than from points
-        adj_y_nudge <- y_nudge * params$line_nudge - (data$y - curve)
-        adj_x_nudge <- x_nudge * adj_y_nudge / y_nudge
-        y_nudge <- ifelse(sign(y_nudge) == sign(adj_y_nudge) &
-                            abs(y_nudge) < abs(adj_y_nudge),
-                          adj_y_nudge,
-                          y_nudge)
-        x_nudge <- ifelse(sign(y_nudge) == sign(adj_y_nudge) &
-                            abs(x_nudge) >= abs(adj_x_nudge),
-                          adj_x_nudge,
-                          x_nudge)
-      }
-      # transform only the dimensions for which new coordinates exist
-      if (any(params$x != 0)) {
-        if (any(params$y != 0)) {
-          data <- transform_position(data, function(x) x + x_nudge, function(y) y + y_nudge)
-        } else {
-          data <- transform_position(data, function(x) x + x_nudge, NULL)
-        }
-      } else if (any(params$y != 0)) {
-        data <- transform_position(data, NULL, function(y) y + y_nudge)
-      }
-      data$x_orig <- x_orig
-      data$y_orig <- y_orig
-      data
-    }
+    compute_panel = quant_compute_panel
   )

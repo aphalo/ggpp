@@ -32,6 +32,7 @@
 \alias{GeomLinkedText}
 \alias{GeomTextNpc}
 \alias{PositionNudgeCenter}
+\alias{quant_compute_panel}
 \alias{PositionNudgeLine}
 \alias{PositionNudgeTo}
 \alias{stat_apply_fun}
