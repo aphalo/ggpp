@@ -4,6 +4,12 @@ editor_options:
     wrap: 72
 ---
 
+# ggpp 0.4.1
+
+Update `compute_just2D()` and `compute_just()` to work with any value
+for the `angle` aesthetic, as in the accepted version of the pull
+request in 'ggplot2'.
+
 # ggpp 0.4.0
 
 This new package is the result of splitting package 'ggpmisc' into two
