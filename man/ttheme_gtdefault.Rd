@@ -34,7 +34,7 @@ ttheme_gtbw(
   base_colour = "black",
   base_family = "",
   parse = FALSE,
-  padding = unit(c(0.8, 0.6), "char"),
+  padding = unit(c(1, 0.6), "char"),
   ...
 )
 
