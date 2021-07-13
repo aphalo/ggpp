@@ -270,7 +270,11 @@ gtb_draw_panel_fun <-
     for (row.idx in seq_len(nrow(data))) {
       # if needed, construct the table theme
       if (is.function(table.theme)) {
-        table.x <- if(table.hjust == 0.5) 0.5 else table.hjust * 0.8 + 0.1
+      # tableGrob puts all the padding on the same side unless just = 0.5
+      # this makes it difficult to compute a suitable value for table.x
+      # without knowing the width of the column. The code here at least
+      # ensures that whatever its length the whole text is always displayed.
+        table.x <- table.hjust
         if (is.na(data$fill[[row.idx]])) {
           core.params <-
             list(fg_params = list(hjust = table.hjust, x = table.x))
@@ -687,7 +691,7 @@ ttheme_gtbw <- function (base_size = 10,
                          base_colour = "black",
                          base_family = "",
                          parse = FALSE,
-                         padding = unit(c(0.8, 0.6), "char"),
+                         padding = unit(c(1, 0.6), "char"),
                          ...)
 {
   core <-
