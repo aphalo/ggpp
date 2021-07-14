@@ -140,7 +140,7 @@ data.tb <-
                                        ylim = c(13, 21)) +
                        labs(x = NULL, y = NULL) +
                        theme_bw(8) +
-                       scale_colour_discrete(guide = FALSE)))
+                       scale_colour_discrete(guide = "none")))
 
 ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
   geom_plot(data = data.tb, aes(x, y, label = plot)) +
@@ -153,7 +153,7 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
 p <- ggplot(mpg, aes(factor(cyl), hwy, fill = factor(cyl))) +
   stat_summary(geom = "col", fun = mean, width = 2/3) +
   labs(x = "Number of cylinders", y = NULL, title = "Means") +
-  scale_fill_discrete(guide = FALSE)
+  scale_fill_discrete(guide = "none")
 
 data.tb <- tibble(x = 7, y = 44, 
                   plot = list(p +
@@ -170,7 +170,7 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
 #  p <- ggplot(mpg, aes(factor(cyl), hwy, fill = factor(cyl))) +
 #    stat_summary(geom = "col", fun = mean, width = 2/3) +
 #    labs(x = "Number of cylinders", y = NULL, title = "Means") +
-#    scale_fill_discrete(guide = FALSE)
+#    scale_fill_discrete(guide = "none")
 #  
 #  ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
 #    annotate("plot", x = 7, y = 44, label = p + theme_bw(8)) +

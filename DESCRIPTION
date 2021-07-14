@@ -1,8 +1,8 @@
 Package: ggpp
 Type: Package
 Title: Grammar Extensions to 'ggplot2'
-Version: 0.4.0.9001
-Date: 2021-07-13
+Version: 0.4.1
+Date: 2021-07-14
 Authors@R:
     c(
     person("Pedro J.", "Aphalo", email = "pedro.aphalo@helsinki.fi", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3385-972X")),
@@ -27,7 +27,6 @@ Imports:
     grid,
     rlang (>= 0.4.7),
     magrittr (>= 1.5),
-    generics (>= 0.1.0),
     glue (>= 1.4.2),
     gridExtra (>= 2.3),
     scales (>= 1.1.1),

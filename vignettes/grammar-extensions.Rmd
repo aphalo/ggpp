@@ -265,7 +265,7 @@ you are dealing with data labels or data points.
 ## Positioning data labels
 
 Nudging is normally used to displace text labels so that they do not
-overlap the points or lines representing the data being labeled. Two
+overlap the points or lines representing the data being labelled. Two
 enhanced versions of `position_nudge()` are provided,
 `position_nudge_center()` and `position_nudge_line()`. These functions
 make it possible to apply nudging that varies automatically according to
@@ -279,7 +279,7 @@ connecting the original position to the nudged position.
 
 ## Highlighting data features
 
-If maxima or minima are to be labeled in a plot, this can be automated
+If maxima or minima are to be labelled in a plot, this can be automated
 so that the feature and its labelling is automated. This is possible
 with `stat_peaks()` and `stat_valleys()`. Marginal annotations with
 symbols and vertical and horizontal lines can be used to highlight
@@ -291,7 +291,7 @@ summary values or events/conditions. The *geoms*
 
 ## Local density of observations
 
-There are to aspects to this: highlighting with colours dense or sparse
+There are two aspects to this: highlighting with colours dense or sparse
 regions, or using density to decide which observations to label. In this
 cases we can use `stat_dens1d_labels()` and `stat_dens2d_labels()`,
 `stat_dens1d_filter()` and `stat_dens2d_filter()`, and
@@ -299,7 +299,7 @@ cases we can use `stat_dens1d_labels()` and `stat_dens2d_labels()`,
 
 ## Summary statistics
 
-With some types of data it is common to compute summary per quadrant,
+With some types of data it is common to compute a summary per quadrant,
 rather than based on a prior grouping. The *stat*
 `stat_quadrant_counts()` can de used to annotate plots with the number
 of observations in each quadrant. `stat_summary_xy()` is similar to
@@ -352,16 +352,16 @@ vignette.
 
 By default, `time` is of class `Date` or of class `POSIXct` depending on
 how time is stored in the time series object. On-the-fly coversion of
-`time` to `numeric` is possible (shown in the second example below).
+`time` to `numeric` is also possible (shown in the second example below).
 
 ```{r}
 class(lynx)
 ggplot(lynx) + geom_line()
 ```
 
-Whether the class variable `time`affects the scale used by default as
-well as the formatting of values when converted to character strings or
-printed.
+The class of variable `time`, mapped to the _x_ aesthetic, affects the scale
+used by default as well as the formatting of values when converted to character
+strings or printed. Here we force its conversion to `numeric`.
 
 ```{r}
 ggplot(lynx, as.numeric = FALSE) + geom_line()
@@ -369,29 +369,31 @@ ggplot(lynx, as.numeric = FALSE) + geom_line()
 
 ## Geometries
 
-Three of the geometries described below allow the addition of plot
-layers containing insets. Insets can be plots, tables, bitmaps, or grid
-objects. Insets can be also added as annotations. Using for `data` a
-tibble with a list column containing data frames or tibbles allows like
-any other geom, the use of grouping, multiple insets per panel,
-faceting with different tables per panel, and different number of insets in each
-panel, i.e., individual tables added to a plot with `geom_table` behave
-similarly to individual `character` values added with `geom_text`.
+Three of the geometries described below allow the addition of plot layers
+containing insets. Insets can be plots, tables, bitmaps, or grid objects. Insets
+can be also added as annotations. Using for `data` a tibble with a list column
+containing data frames or tibbles allows like any other geom, the use of
+grouping, multiple insets per panel, faceting with different tables per panel,
+and different number of insets in each panel, i.e., individual tables added to a
+plot with `geom_table` behave similarly to individual `character` values added
+with `geom_text`.
 
 Other geometries also described in this section support the use of native plot
 coordinates for positioning elements in the plotting area. Obviously these
 geometries are not meant to be used to display data, but instead they make it
-possible to add annotations to plots consistently across data sets and varying
-scales used.
+possible to add annotations to plots consistently across data sets even when
+using scales with varying limits.
 
 ### geom_table() and stat_fmt_table()
 
 The *geometry* `geom_table()` plots a data frame or tibble, nested in a
 tibble passed as data argument, using *aesthetics* `x` and `y` for
 positioning, and `label` for the list of data frames containing the data
-for the tables. The tables are created as a 'grid' grobs and added as
+for the tables. The tables are created as 'grid' grobs and added as
 usual to the ggplot object. In contrast to "standard" geoms, this geom
-by default does not inherit the globally mapped aesthetics.
+by default does not inherit the globally mapped aesthetics. Tables are
+always added at their native sizes, which can be altered by changing the `size`
+of the text in them.
 
 ```{r}
 tb <- mpg %>%
@@ -405,7 +407,7 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
   geom_point() 
 ```
 
-In plots with a single panel it is easier to use `annotate()` to add
+In plots with a single panel it can be easier to use `annotate()` to add
 inset tables, giving the same plot as above. In this case single data
 frames, ggplots or grobs do not need to be wrapped in a list, although
 lists are also supported.
@@ -420,18 +422,17 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
   geom_point() 
 ```
 
-Table themes are supported through parameter `table.theme` and if
-variables or constants are mapped to the `colour`, `fill`, `size`,
-`family`, aesthetics they override the corresponding theme settings. The
-display of `rownames` and `colnames` can be enabled or disable through
-parameter `table.rownames` and `table.colnames` and the horizontal
-justification of text in the core of the table through parameter
-`table.hjust`.
+Table themes are supported through parameter `table.theme` and if variables or
+constants are mapped to the `colour`, `fill`, `size`, or `family`, aesthetics
+they override the corresponding default theme settings. The display of
+`rownames` and `colnames` can be enabled or disable through parameter
+`table.rownames` and `table.colnames` and the horizontal justification of text
+in the core of the table through parameter `table.hjust`.
 
 Parameter `table.theme` accepts as arguments `NULL` for use of the
 current default, a `ttheme` constructor function such as those defined
 in package 'gridExtra', or the variations on them defined in this
-package. The current default can be set with function `ttheme_set()`.
+package. The active default can be set with function `ttheme_set()`.
 
 ```{r}
 ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
@@ -463,12 +464,13 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
   theme_bw()
 ```
 
-Parsed text, using plot math syntax is supported in the table, with
-fall-back to plain text in case of parsing errors, on a cell by cell
-basis. Here we plot the MPG for city traffic and we can see that the
-plotting area expands to include the coordinates at which the table is
-anchored. Justification is by default set to `"inward"` which ensures
-that the table is fully within the plotting region.
+Parsed text, using plot math syntax is supported in the table, with fall-back to
+plain text in case of parsing errors, on a cell by cell basis (see `tableGrob()`
+in package 'gridExtra' for details, as this function is used to build the
+table). Here we plot the MPG for city traffic and we can see that the plotting
+area expands to include the coordinates at which the table is anchored.
+Justification is by default set to `"inward"` which ensures that the table is
+fully within the plotting region.
 
 ```{r}
 tb.pm <- tibble(Parameter = c("frac(beta[1], a^2)", "frac(beta[2], a^3)"),
@@ -480,11 +482,12 @@ ggplot(mpg, aes(displ, cty)) +
   theme_bw()
 ```
 
-As implemented, there is no limitation to the number of insets, and
-faceting is respected. If the base plot shows a map, multiple small
-tables could be superimposed on different countries or regions. The size
-of the insets is set relative to the main plot, so the combined plot can
-be scaled.
+As implemented, there is no limitation to the number of insets, and faceting is
+respected. If the base plot shows a map, multiple small tables could be
+superimposed on different countries or regions. The size of the table inset is
+given by the _size_ aesthetic, so like for `geom_text()` it is independent of
+the `ggplot2::theme()` and controlled by the `table.theme` directly or
+indirectly through the _size_ aesthetic.
 
 Please see section **Normalised Parent Coordinates** below for a
 description of `geom_table_npc()`.
@@ -499,7 +502,7 @@ different in each panel. It is also possible to inset more than one plot
 in a single call simply by creating a tibble with multiple rows.
 
 Behind the scenes, one Grob is created for each plot to be inset. The
-conversion is done with `ggplotGrob()` and the Grobs added the main
+conversion is done with `ggplotGrob()` and the Grobs added to the main
 ggplot object.
 
 As an example we produce a plot where the inset plot is a zoomed-in
@@ -519,7 +522,7 @@ data.tb <-
                                        ylim = c(13, 21)) +
                        labs(x = NULL, y = NULL) +
                        theme_bw(8) +
-                       scale_colour_discrete(guide = FALSE)))
+                       scale_colour_discrete(guide = "none")))
 
 ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
   geom_plot(data = data.tb, aes(x, y, label = plot)) +
@@ -538,7 +541,7 @@ inset table.
 p <- ggplot(mpg, aes(factor(cyl), hwy, fill = factor(cyl))) +
   stat_summary(geom = "col", fun = mean, width = 2/3) +
   labs(x = "Number of cylinders", y = NULL, title = "Means") +
-  scale_fill_discrete(guide = FALSE)
+  scale_fill_discrete(guide = "none")
 
 data.tb <- tibble(x = 7, y = 44, 
                   plot = list(p +
@@ -552,7 +555,7 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
   theme_bw()
 ```
 
-The same plot as above can be created using `annotate()` but be aware
+The same plot as above can be created using `annotate()`, but be aware
 that when using facets in 'ggplot2' annotations are identical in all
 panels.
 
@@ -560,7 +563,7 @@ panels.
 p <- ggplot(mpg, aes(factor(cyl), hwy, fill = factor(cyl))) +
   stat_summary(geom = "col", fun = mean, width = 2/3) +
   labs(x = "Number of cylinders", y = NULL, title = "Means") +
-  scale_fill_discrete(guide = FALSE)
+  scale_fill_discrete(guide = "none")
 
 ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
   annotate("plot", x = 7, y = 44, label = p + theme_bw(8)) +
@@ -570,25 +573,26 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
   theme_bw()
 ```
 
-As implemented, there is no limitation to the number of insets, and
-faceting is respected. If the base plot shows a map or a bitmap,
-multiple small plots could be superimposed on different countries or
-regions. The size of the insets is set relative to the main plot, so the
-combined plot can be scaled. A possible unintuitive but useful feature,
-is that the theme is linked to each plot.
+As implemented, there is no limitation to the number of insets, and faceting is
+respected. If the base plot shows a map or a bitmap, multiple small plots could
+be superimposed on different countries or regions. The size of the insets is
+controlled by the `vp.width` and `vp.height` aesthetics as a fraction of the
+main plot's plotting region. Consequently, the insets are scaled together with
+the main plot. A possible unintuitive but useful feature, is that the theme is
+linked to each plot.
 
 Please see section **Normalised Parent Coordinates** below for a
 description of `geom_plot_npc()`.
 
 ### geom_grob()
 
-The `geom_grob()` *geometry* plots grobs (graphical objects as created
-with 'grid'), nested in a tibble passed as data argument, using
-*aesthetics* `x` and `y` for positioning, and `label` for the Grob
-object. While `geom_table()` and `geom_plot()` take as values to plot
-tibbles or data frames, and ggplots, respectively, and convert them into
-Grobs before adding them to the plot, `geom_grob()` expects Grobs ready
-to be rendered.
+The `geom_grob()` *geometry* plots grobs (graphical objects as created with
+'grid'), nested in a tibble passed as data argument, using *aesthetics* `x` and
+`y` for positioning, and `label` for the Grob object. While `geom_table()` and
+`geom_plot()` take as values mapped to the `label` aesthetics tibbles or data
+frames, and ggplots, respectively, and convert them into Grobs, `geom_grob()`
+expects Grobs ready to be rendered. This means that any Grob created using
+'grid' or its extenssions can be added as a data label to a ggplot.
 
 ```{r}
 file.name <- 
@@ -612,15 +616,14 @@ ggplot() +
  theme_bw(12)
 ```
 
-As shown above for inset tables and inset plots, it is also possible to
-use `annotate()` with Grobs. The next example insets a single `Grob`.
-Here we reuse the bitmap `Isoquercitin` read in the previous example.
-The Grob is contained in a viewport. Here setting `width = 1` ("npc"
-units) when creating the `Grob` from the bitmap ensures that the bitmap
-fills the width of the viewport (to ensure that the inset is not
-distorted, set only one of `width` or `height`). The argument to
-`vp.width` or `vp.height`, also in "npc" units, determines the size of
-the `Grob` relative to the size of the plotting area.
+As shown above for inset tables and inset plots, it is also possible to use
+`annotate()` with Grobs. The next example insets a single `Grob`. Here we reuse
+the bitmap `Isoquercitin` read in the previous example. The Grob is contained in
+a viewport. Here setting `width = 1` ("npc" units) when creating the `Grob` from
+the bitmap ensures that the bitmap fills the width of the viewport (to ensure
+that the inset is not distorted, set only one of `width` or `height`). The
+argument to `vp.width` or `vp.height`, also in "npc" units, determines the size
+of the `Grob` relative to the size of the plotting area.
 
 ```{r, eval=eval_flag}
 ggplot() +
@@ -630,16 +633,16 @@ ggplot() +
 ```
 
 `geom_grob()` is designed thinking that its main use will in graphical
-annotations, although one could use it for infographics with multiple
-copies of each grob, this would go against the grammar of graphics. In
-this implementation grobs cannot be mapped to an aesthetic through a
-scale.
+annotations, although one could use it for infographics with multiple copies of
+each grob, this would go against the grammar of graphics. In this implementation
+grobs cannot be mapped to an aesthetic through a scale.
 
-As implemented, there is no limitation to the number of insets and
-faceting is respected. If the base plot shows a map or a bitmap,
-multiple simple grobs (e.g. national flags) could be superimposed on
-different countries. The size of the insets is set relative to the main
-plot, so the combined plot can be scaled.
+As implemented, there is no limitation to the number of insets and faceting is
+respected. If the base plot shows a map or a bitmap, multiple simple grobs (e.g.
+national flags) could be superimposed on different countries. The size of the
+insets is controlled by the `vp.width` and `vp.height` aesthetics as a fraction
+of the main plot's plotting region. Consequently, the insets are scaled together
+with the main plot.
 
 Please see section **Normalised Parent Coordinates** below for a
 description of `geom_grob_npc()`.
@@ -662,14 +665,14 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
 ### geom_text_linked()
 
 With package 'ggrepel' we have become used to easily add text and labels linked
-to the labeled observations or points by a line segment or arrow. However,
+to the labelled observations or points by a line segment or arrow. However,
 sometimes a plot has few text labels and repulsion is unnecessary. In such
 cases nudging or dodging may be enough, or even preferable so as to achieve
 consistency.
 
 We can achieve this with `geom_text_linked()` together with a suitable position
 function that retains the original _x_ and _y_ coordinates of the point. We
-currently provide two different, and flexible nudge functions described in
+currently provide three different nudge functions described in
 a later section. One of them is used by default providing the same default
 behaviour as `geom_text()` from 'ggplot2' but drawing linking segments if
 nudging is set to a value different to the default of zero.
@@ -694,22 +697,22 @@ ggplot(my.cars, aes(wt, mpg, label = name)) +
 
 ### Normalised Parent Coordinates
 
-R's 'grid' package defines several units that can be used to describe
-the locations of plot elements. In 'ggplot2' the *x* and *y* aesthetics
-are directly mapped to `"native"` or data units. For consistent location
-of **annotations** with respect to the plotting area we need to rely on
-`"npc"` which are expressed relative to the size of the grid viewport.
-The plotting area in a ggplot is implemented as viewport and support for
-`"npc"` coordinates is relatively easy to implement.
+R's 'grid' package defines several units that can be used to describe the
+locations of plot elements. In 'ggplot2' the *x* and *y* aesthetics are directly
+mapped to `"native"` or data units. For consistent location of **annotations**
+with respect to the plotting area we need to rely on `"npc"` which are expressed
+relative to the size of the grid viewport. The plotting area in a ggplot is
+implemented as a 'grid' viewport and support for `"npc"` coordinates is
+relatively easy to implement.
 
-To support `"npc"` positions we have implemented *scales* for two new
-*aesthetics*, `npcx` and `npcy`. These are very simple continuous scales
-which do not support any transformation or changes to their limits, both
-of which would be meaningless for `"npc"` units. Variables mapped to
-these aesthetics can be either numerical with values in the range zero
-to one or character. A limited set of strings are recognised and
-converted to `"npc"` units: `"bottom"`, `"center"`, `"top"`, `"left"`,
-`"middle"`, `"right"` (`"centre"` is a synonym for `"center"`).
+To support `"npc"` positions we have implemented *scales* for two new (pseudo)
+*aesthetics*, `npcx` and `npcy`. These are very simple continuous scales which
+do not support any transformation or changes to their limits, both of which
+would be meaningless for `"npc"` units. Variables mapped to these aesthetics can
+be either numerical with values in the range zero to one or character. A limited
+set of strings are recognised and converted to `"npc"` units: `"bottom"`,
+`"center"`, `"top"`, `"left"`, `"middle"`, `"right"` (`"centre"` is a synonym
+for `"center"`).
 
 To make these scales useful we need also to define *geometries* that use
 these new aesthetics. Package 'ggpp' currently provides
@@ -730,7 +733,7 @@ the ranges of the data mapped to the *x* and *y* aesthetics. When
 writing scripts or functions that may be applied to different data sets
 these new *aesthetics* help by keeping the code concise and reusable.
 These *geometries* are used by default by several of the statistics
-described in later sections.
+described in later sections and those defined in package 'ggpmisc'.
 
 As an example let's imagine that we want to add the structure of a
 metabolite to a plot. Its position has nothing to do with the data
@@ -739,8 +742,8 @@ coordinates. The big practical advantage is that this also allows to
 keep this part of the plot definition independent of the data being
 plotted, giving a major advantage in the case of plots with facets with
 free scale limits. This example can be easily adapted to
-`geom_plot_npc()` where a ggplot should mapped to `label`, and to
-`geom_table_npc()` where a data frame should be mapped to `label`.
+`geom_plot_npc()` where a list of ggplots is mapped to `label`, and to
+`geom_table_npc()` where a list of data frame is mapped to `label`.
 
 We produce the example plot by first constructing a tibble to contain
 the grob and the coordinate data, and then map these variables to
@@ -1249,7 +1252,7 @@ All the new position functions save the original coordinates to allow linking
 the nudged objects, usually text labels, to be linked to the original
 position. Linking is supported by `geom_text_linked()` from this package and
 by `geom_text_repel()` and `geom_label_repel()` from 'ggrepel' 
-(in the future)>= 0.9.2). They can be also used with all other geoms as the
+(in the future >= 0.9.2). They can be also used with all other geoms as the
 nudged coordinates are returned in the same way as by other 'ggplot2'
 position functions, but other geoms will ignore the original positions stored
 in `data`.
