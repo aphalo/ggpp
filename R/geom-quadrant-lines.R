@@ -81,11 +81,15 @@
 #'   geom_point() +
 #'   theme_bw()
 #'
-geom_quadrant_lines <- function(mapping = NULL, data = NULL,
-                                stat = "identity", position = "identity",
+geom_quadrant_lines <- function(mapping = NULL,
+                                data = NULL,
+                                stat = "identity",
+                                position = "identity",
                                 pool.along = "none",
-                                xintercept = 0, yintercept = 0,
-                                na.rm = FALSE, show.legend = FALSE,
+                                xintercept = 0,
+                                yintercept = 0,
+                                na.rm = FALSE,
+                                show.legend = FALSE,
                                 inherit.aes = FALSE, ...) {
 
   stopifnot(pool.along %in% c("none", "x", "y"))
@@ -95,8 +99,8 @@ geom_quadrant_lines <- function(mapping = NULL, data = NULL,
   if (!is.null(xintercept) && !is.null(yintercept)) {
     data <- as.data.frame(list(xintercept = xintercept,
                                yintercept = yintercept))
-    mapping <- aes(xintercept = xintercept,
-                   yintercept = yintercept)
+    mapping <- ggplot2::aes(xintercept = xintercept,
+                            yintercept = yintercept)
     show.legend <- FALSE
   } else if (xor(missing(xintercept), missing(yintercept))) {
     stop("Arguments should be passed either to none or both of 'xintrecept' and 'yintercept'")
@@ -123,50 +127,51 @@ geom_quadrant_lines <- function(mapping = NULL, data = NULL,
 #' @usage NULL
 #' @export
 GeomQuadrantLines <-
-  ggproto("GeomQuadrantLines", Geom,
-          draw_panel = function(data, panel_params, coord, pool.along = "none") {
-            ranges <- coord$backtransform_range(panel_params)
-            data.hline <- data.vline <- data
+  ggplot2::ggproto(
+    "GeomQuadrantLines", Geom,
+    draw_panel = function(data, panel_params, coord, pool.along = "none") {
+      ranges <- coord$backtransform_range(panel_params)
+      data.hline <- data.vline <- data
 
-            if (!grepl("y", x = pool.along, ignore.case = TRUE)) {
-              data.hline$x    <- ranges$x[1]
-              data.hline$xend <- ranges$x[2]
-              data.hline$y    <- data$yintercept[1]
-              data.hline$yend <- data$yintercept[1]
-            }
+      if (!grepl("y", x = pool.along, ignore.case = TRUE)) {
+        data.hline[["x"]]    <- ranges[["x"]][1]
+        data.hline[["xend"]] <- ranges[["x"]][2]
+        data.hline[["y"]]    <- data[["yintercept"]][1]
+        data.hline[["yend"]] <- data[["yintercept"]][1]
+      }
 
-            if (!grepl("x", x = pool.along, ignore.case = TRUE)) {
-              data.vline$x    <- data$xintercept[1]
-              data.vline$xend <- data$xintercept[1]
-              data.vline$y    <- ranges$y[1]
-              data.vline$yend <- ranges$y[2]
-            }
+      if (!grepl("x", x = pool.along, ignore.case = TRUE)) {
+        data.vline[["x"]]    <- data[["xintercept"]][1]
+        data.vline[["xend"]] <- data[["xintercept"]][1]
+        data.vline[["y"]]    <- ranges[["y"]][1]
+        data.vline[["yend"]] <- ranges[["y"]][2]
+      }
 
-            # discard infinite values
-            # other off-range values still respect oob
-            #
-            data.hline <- data.hline[is.finite(data.hline$y)]
-            data.vline <- data.vline[is.finite(data.vline$x)]
+      # discard infinite values
+      # other off-range values still respect oob
+      #
+      data.hline <- data.hline[is.finite(data.hline[["y"]])]
+      data.vline <- data.vline[is.finite(data.vline[["x"]])]
 
-            data <- switch(tolower(pool.along),
-                           none = rbind(data.hline, data.vline),
-                           x = data.hline,
-                           y = data.vline,
-                           data[NULL, ]
-                           )
+      data <- switch(tolower(pool.along),
+                     none = rbind(data.hline, data.vline),
+                     x = data.hline,
+                     y = data.vline,
+                     data[NULL, ]
+      )
 
-            ggplot2::GeomSegment$draw_panel(unique(data), panel_params, coord)
+      ggplot2::GeomSegment$draw_panel(unique(data), panel_params, coord)
 
-          },
+    },
 
-          default_aes = aes(colour = "black",
-                            size = 0.5,
-                            linetype = "dashed",
-                            alpha = NA),
-          required_aes = c("xintercept", "yintercept"),
-          non_missing_aes = c("size", "linetype", "colour"),
+    default_aes = ggplot2::aes(colour = "black",
+                               size = 0.5,
+                               linetype = "dashed",
+                               alpha = NA),
+    required_aes = c("xintercept", "yintercept"),
+    non_missing_aes = c("size", "linetype", "colour"),
 
-          draw_key = draw_key_path
+    draw_key = draw_key_path
   )
 
 #' @rdname geom_quadrant_lines
@@ -182,8 +187,8 @@ geom_vhlines <- function(mapping = NULL, data = NULL,
   if (!is.null(xintercept) && !is.null(yintercept)) {
     data <- as.data.frame(list(xintercept = xintercept,
                                yintercept = yintercept))
-    mapping <- aes(xintercept = xintercept,
-                   yintercept = yintercept)
+    mapping <- ggplot2::aes(xintercept = xintercept,
+                            yintercept = yintercept)
     show.legend <- FALSE
   } else if (xor(missing(xintercept), missing(yintercept))) {
     stop("Arguments should be passed either to none or both of 'xintrecept' and 'yintercept'")
@@ -209,30 +214,34 @@ geom_vhlines <- function(mapping = NULL, data = NULL,
 #' @usage NULL
 #' @export
 GeomVHLines <-
-  ggproto("GeomVHLines", Geom,
-          draw_panel = function(data, panel_params, coord) {
-            ranges <- coord$backtransform_range(panel_params)
-            data.hline <- data.vline <- data
+  ggplot2::ggproto(
+    "GeomVHLines", Geom,
+    draw_panel = function(data, panel_params, coord) {
+      ranges <- coord$backtransform_range(panel_params)
+      data.hline <- data.vline <- data
 
-            data.hline$x    <- ranges$x[1]
-            data.hline$xend <- ranges$x[2]
-            data.hline$y    <- data$yintercept
-            data.hline$yend <- data$yintercept
+      data.hline[["x"]]    <- ranges[["x"]][1]
+      data.hline[["xend"]] <- ranges[["x"]][2]
+      data.hline[["y"]]    <- data[["yintercept"]][1]
+      data.hline[["yend"]] <- data[["yintercept"]][1]
 
-            data.vline$x    <- data$xintercept
-            data.vline$xend <- data$xintercept
-            data.vline$y    <- ranges$y[1]
-            data.vline$yend <- ranges$y[2]
+      data.vline[["x"]]    <- data[["xintercept"]][1]
+      data.vline[["xend"]] <- data[["xintercept"]][1]
+      data.vline[["y"]]    <- ranges[["y"]][1]
+      data.vline[["yend"]] <- ranges[["y"]][2]
 
-            data <- rbind(data.hline, data.vline)
+      data <- rbind(data.hline, data.vline)
 
-            ggplot2::GeomSegment$draw_panel(unique(data), panel_params, coord)
+      ggplot2::GeomSegment$draw_panel(unique(data), panel_params, coord)
 
-          },
+    },
 
-          default_aes = aes(colour = "black", size = 0.5, linetype = 1, alpha = NA),
-          required_aes = c("xintercept", "yintercept"),
-          non_missing_aes = c("size", "linetype", "colour"),
+    default_aes = ggplot2::aes(colour = "black",
+                               size = 0.5,
+                               linetype = 1,
+                               alpha = NA),
+    required_aes = c("xintercept", "yintercept"),
+    non_missing_aes = c("size", "linetype", "colour"),
 
-          draw_key = draw_key_path
+    draw_key = draw_key_path
   )
