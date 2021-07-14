@@ -94,12 +94,17 @@ implemented in package 'ggplot2'.
 
 ## Annotations in 'ggplot2'
 
+The plotting of data using package 'ggplot2' is described by Wickham 
+(2016) and several other books. Chapter 7 in Aphalo (2020) not only describes
+the grammar used by 'ggplot2' but also several extensions to it, including 
+those provided by packages 'ggpp' and 'ggpmisc'.
+
 In *The Layered Grammar of Graphics* (Wickham 2000) as implemented in
-package 'ggplot2' (Wickham et al. 2016) annotations are "second class"
+package 'ggplot2' (Wickham 2016) annotations are "second class"
 features. As layers they behave differently than data layers: Only
 constant values can be mapped to aesthetics and do no support faceting
-into panels. In escence `annotate()` disconnects the resulting plot
-elements from the data source and facetting, but not from the scales
+into panels. In essence `annotate()` disconnects the resulting plot
+elements from the data source and faceting, but not from the scales
 used to graphically display the data values.
 
 From the data visualization perspective the main practical and
@@ -329,6 +334,9 @@ aesthetics values remains consistent across all plot elements
 representing data.
 
 ## List of references
+
+Aphalo, Pedro J. (2020) _Learn R: As a Language._ The R Series. Boca Raton and
+London: Chapman and Hall/CRC Press. ISBN: 978-0-367-18253-3. 350 pp.
 
 Koponen, J; Hildén, J. (2019) *Data visualization handbook*. Aalto ARTS
 books, Espoo. ISBN 978-952-60-7449-8.

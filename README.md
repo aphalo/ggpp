@@ -14,8 +14,8 @@ Package ‘**ggpp**’ provides a set of building blocks that extend the
 Grammar of Graphics implemented in package ‘ggplot2’ (&gt;= 3.0.0). New
 geoms support insets in plots, marginal marks and the use of native plot
 coordinates (npc). Position functions implement new approaches to
-nudging, especially useful together with `geom_text_repel()` and
-`geom_label_repel()`.
+nudging usable with any geometry, but especially useful together with
+`geom_text_linked()`, `geom_text_repel()` and `geom_label_repel()`.
 
 ## Extended Grammar of graphics
 
@@ -167,11 +167,16 @@ devtools::install_github("aphalo/ggpp")
 
 ## Documentation
 
-HTML documentation is available at
-(<https://docs.r4photobiology.info/ggpp/>), including a *User Guide*.
+HTML documentation for the package, including help pages and the *User
+Guide*, is available at (<https://docs.r4photobiology.info/ggpp/>).
 
 News about updates are regularly posted at
 (<https://www.r4photobiology.info/>).
+
+Chapter 7 in Aphalo (2020) explains both basic concepts of the gramamr
+of graphics as implemented in ‘ggplot2’ as well as extensions to this
+grammar including several of those made available by packages ‘ggpp’ and
+‘ggpmisc’.
 
 ## Contributing
 
@@ -187,6 +192,12 @@ publications, please cite according to:
 ``` r
 citation("ggpp")
 ```
+
+## References
+
+Aphalo, Pedro J. (2020) *Learn R: As a Language.* The R Series. Boca
+Raton and London: Chapman and Hall/CRC Press. ISBN: 978-0-367-18253-3.
+350 pp.
 
 ## License
 
