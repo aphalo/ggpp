@@ -11,8 +11,8 @@ for the `angle` aesthetic, as in the accepted version of the pull
 request in 'ggplot2'.
 
 Fix bug in `geom_table()` that would cause text left or right justified
-to be clipped when the text in a cell was very long. (Cell padding still
-needs improvement.)
+to be clipped when the text in a cell was very long (reported by
+*dryguy*). (Cell padding still needs improvement.)
 
 # ggpp 0.4.0
 
