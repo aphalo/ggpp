@@ -1,17 +1,22 @@
 #' Apply a function to x or y values
 #'
+#' \code{stat_summary_xy()} and \code{stat_centroid()} are similar to
+#' \code{ggplot2::stat_summary()} but summarize both \code{x} and \code{y}
+#' values in parallel in the same plot layer.
+#'
 #' \code{stat_apply_group} and \code{stat_apply_panel} apply functions to data.
 #' In most cases one should simply use transformations through scales or summary
-#' functions through \code{stat_summary()}. There are some computations that are
-#' not scale transformations but are not usual summaries either, the number of
-#' data values does not decrease. It is always possible to precompute quantities
-#' like cumulative sums or running medians, and for normalizations it can be
-#' convenient to apply such functions on-the-fly to ensure that grouping is
-#' consistent between computations and aesthetics. One particularity of these
-#' statistics is that they can apply simultaneously different functions to
-#' \code{x} values and to \code{y} values when needed. In contrast
-#' \code{\link[ggplot2]{geom_smooth}} applies a function that takes both
-#' \code{x} and \code{y} values as arguments.
+#' functions such as \code{ggplot2::stat_summary()}, \code{stat_summary_xy()} or
+#' \code{stat_centroid()}. There are some computations that are not scale
+#' transformations but are not usual summaries either, as the number of data
+#' values does not decrease to one row per group. It is always possible to
+#' precompute quantities like cumulative sums or running medians, and for
+#' normalizations it can be convenient to apply such functions on-the-fly to
+#' ensure that grouping is consistent between computations and aesthetics. One
+#' particularity of these statistics is that they can apply simultaneously
+#' different functions to \code{x} values and to \code{y} values when needed. In
+#' contrast to these statistics, \code{\link[ggplot2]{geom_smooth}} applies a
+#' function that takes both \code{x} and \code{y} values as arguments.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}}. Only needs to be set at the layer level if you
@@ -34,24 +39,35 @@
 #' @param na.rm	a logical value indicating whether NA values should be stripped
 #'   before the computation proceeds.
 #' @param .fun.x,.fun.y,.fun function to be applied or the name of the function
-#'   to be applied as a character string. One and only one of these parameters
-#'   should be passed a non-null argument.
+#'   to be applied as a character string.
 #' @param .fun.x.args,.fun.y.args,.fun.args additional arguments to be passed to
 #'   the function as a named list.
 #'
-#' @details The function(s) to be applied is expected to be vectorized and to
-#'   return a vector of (almost) the same length. The vector mapped to the x or
-#'   y aesthetic is passed as the first positional argument to the call. The
-#'   function must accept as first argument a vector or list that matches the
+#' @details These four statistics are very similar and are implemented using the
+#'   same internal function. They differ on whether this function is applied by
+#'   group or by panel, and whether they return a single or multiple rows of
 #'   data.
 #'
-#' @note This stat is at early stages of development and its interface may
-#'   change at any time.
+#' @return A data frame with the same variables as in the input, with either a
+#'    single or multiple rows, with the values of x and y variables replaced by
+#'    the values returned by the applied functions, or possibly filled if no
+#'    function was supplied or available by default.
+#'
+#' @note The applied function(s) must accept as first argument a vector that
+#'   matches the variables mapped to \code{x} and \code{y} aesthetics. For
+#'   \code{stat_summary_xy()} and \code{stat_centroid()} the function(s) to be
+#'   applied is/are expected to return a vector of length
+#'   1, while for \code{stat_apply_group} and \code{stat_apply_panel} the
+#'   vectors returned by the functions applied to \code{x} and \code{y} must
+#'   return vectors of exactly the same length. When only one of
+#'   \code{.fun.x} or \code{.fun.y} are passed a function as argument, and the
+#'   returned value is shorter than the data, the values of the other variable
+#'   in the returned data are filled with the median.
 #'
 #' @section Computed variables: One of x or y or both x and y replaced by the
-#'   vector returned by the corresponding applied function.
-#'   \describe{ \item{x}{x-value as returned by
-#'   \code{.fun.x}} \item{y}{y-value as returned by \code{.fun.y}} }
+#'   vector returned by the corresponding applied function. \describe{
+#'   \item{x}{x-value as returned by \code{.fun.x}} \item{y}{y-value as returned
+#'   by \code{.fun.y}} }
 #'
 #' @references
 #'
@@ -68,11 +84,41 @@
 #'                     Y = runif(40),
 #'                     category = rep(c("A","B"), each = 20))
 #'
-#' # make sure row are ordered for X as we will use functions that rely on this
+#' # make sure rows are ordered for X as we will use functions that rely on this
 #' my.df <- my.df[order(my.df[["X"]]), ]
 #'
+#' # Centroid
 #' ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-#'   stat_apply_group(.fun.y = cumsum)
+#'   stat_centroid(shape = "cross", size = 6) +
+#'   geom_point()
+#'
+#' ggplot(my.df, aes(x = X, y = Y, colour = category)) +
+#'   stat_centroid(geom = "rug", size = 1.5, .fun = median) +
+#'   geom_point()
+#'
+#' ggplot(my.df, aes(x = X, y = Y, colour = category)) +
+#'   stat_centroid(geom = "text", aes(label = category)) +
+#'   geom_point()
+#'
+#' # quantiles
+#' ggplot(my.df, aes(x = X, y = Y, colour = category)) +
+#'   geom_point() +
+#'   stat_apply_group(geom = "rug", .fun.y = quantile, .fun.x = quantile)
+#'
+#' my.probs <- c(0.25, 0.5, 0.75)
+#' ggplot(my.df, aes(x = X, y = Y, colour = category)) +
+#'   geom_point() +
+#'   stat_apply_group(geom = "hline",
+#'                    aes(yintercept = after_stat(y)),
+#'                    .fun.y = quantile,
+#'                    .fun.y.args = list(probs = my.probs))#'
+#'
+#' ggplot(my.df, aes(x = X, y = Y, colour = category)) +
+#'   geom_point() +
+#'   stat_apply_group(geom = "debug",
+#'                    .fun.x = function(x) {rep_len(min(x), 3L)},
+#'                    .fun.y = quantile,
+#'                    .fun.y.args = list(probs = my.probs))
 #'
 #' # Use of geom_debug() to inspect the computed values
 #' ggplot(my.df, aes(x = X, y = Y, colour = category)) +
@@ -118,22 +164,32 @@
 stat_apply_group <- function(mapping = NULL,
                              data = NULL,
                              geom = "line",
-                             .fun.x = function(x) {x},
+                             .fun.x = NULL,
                              .fun.x.args = list(),
-                             .fun.y = function(y) {y},
+                             .fun.y = NULL,
                              .fun.y.args = list(),
                              position = "identity",
                              na.rm = FALSE,
                              show.legend = FALSE,
                              inherit.aes = TRUE,
                              ...) {
+  .fun.x.null <- is.null(.fun.x)
+  if (.fun.x.null) {
+    .fun.x <- function(x) {x}
+  }
+  .fun.y.null <- is.null(.fun.y)
+  if (.fun.x.null) {
+    .fun.y <- function(x) {x}
+  }
   ggplot2::layer(
     stat = StatApplyGroup, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(.fun.x = .fun.x,
                   .fun.x.args = .fun.x.args,
+                  .fun.x.null = .fun.x.null,
                   .fun.y = .fun.y,
                   .fun.y.args = .fun.y.args,
+                  .fun.y.null = .fun.y.null,
                   na.rm = na.rm,
                   single.row = FALSE,
                   ...)
@@ -147,21 +203,31 @@ stat_apply_group <- function(mapping = NULL,
 stat_apply_panel <- function(mapping = NULL,
                              data = NULL,
                              geom = "line",
-                             .fun.x = function(x) {x},
+                             .fun.x = NULL,
                              .fun.x.args = list(),
-                             .fun.y = function(y) {y},
+                             .fun.y = NULL,
                              .fun.y.args = list(),
                              position = "identity",
                              na.rm = FALSE,
                              show.legend = FALSE,
                              inherit.aes = TRUE, ...) {
+  .fun.x.null <- is.null(.fun.x)
+  if (.fun.x.null) {
+    .fun.x <- function(x) {x}
+  }
+  .fun.y.null <- is.null(.fun.y)
+  if (.fun.x.null) {
+    .fun.y <- function(x) {x}
+  }
   ggplot2::layer(
     stat = StatApplyPanel, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(.fun.x = .fun.x,
                   .fun.x.args = .fun.x.args,
+                  .fun.x.null = .fun.x.null,
                   .fun.y = .fun.y,
                   .fun.y.args = .fun.y.args,
+                  .fun.y.null = .fun.y.null,
                   na.rm = na.rm,
                   single.row = FALSE,
                   ...)
@@ -177,8 +243,9 @@ stat_apply_panel <- function(mapping = NULL,
 #'
 stat_apply_fun <- function(data,
                            scales,
-                           .fun.x, .fun.x.args,
-                           .fun.y, .fun.y.args,
+                           .fun.x, .fun.x.args, .fun.x.null,
+                           .fun.y, .fun.y.args, .fun.y.null,
+                           .fun.filler = stats::median,
                            single.row) {
 
   #  Fill with NAs if returned vector is too short
@@ -206,6 +273,18 @@ stat_apply_fun <- function(data,
     args <- c(unname(data["y"]), .fun.y.args)
     new.data[["y"]] <- fill2length(do.call(.fun.y, args = args),
                                    nrow = nrow(new.data))
+  }
+  if (.fun.x.null) {
+    selector <- !is.na(new.data[["y"]])
+    new.data <- new.data[selector, ]
+    new.data[["x"]] <- .fun.filler(data[["x"]])
+  } else if (.fun.y.null) {
+    selector <- !is.na(new.data[["x"]])
+    new.data <- new.data[selector, ]
+    new.data[["y"]] <- .fun.filler(data[["y"]])
+  } else {
+    selector <- !is.na(new.data[["x"]]) | !is.na(new.data[["y"]])
+    new.data <- new.data[selector, ]
   }
   new.data
 }
@@ -265,22 +344,32 @@ StatApplyPanel <-
 stat_summary_xy <- function(mapping = NULL,
                             data = NULL,
                             geom = "point",
-                            .fun.x = function(x) {x},
+                            .fun.x = NULL,
                             .fun.x.args = list(),
-                            .fun.y = function(y) {y},
+                            .fun.y = NULL,
                             .fun.y.args = list(),
                             position = "identity",
                             na.rm = FALSE,
                             show.legend = FALSE,
                             inherit.aes = TRUE,
                             ...) {
+  .fun.x.null <- is.null(.fun.x)
+  if (.fun.x.null) {
+    .fun.x <- function(x) {x}
+  }
+  .fun.y.null <- is.null(.fun.y)
+  if (.fun.x.null) {
+    .fun.y <- function(x) {x}
+  }
   ggplot2::layer(
     stat = StatApplyGroup, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(.fun.x = .fun.x,
                   .fun.x.args = .fun.x.args,
+                  .fun.x.null = .fun.x.null,
                   .fun.y = .fun.y,
                   .fun.y.args = .fun.y.args,
+                  .fun.y.null = .fun.y.null,
                   na.rm = na.rm,
                   single.row = TRUE,
                   ...)
@@ -301,13 +390,18 @@ stat_centroid <- function(mapping = NULL,
                           show.legend = FALSE,
                           inherit.aes = TRUE,
                           ...) {
+  if (is.null(.fun)) {
+    .fun <- mean
+  }
   ggplot2::layer(
     stat = StatApplyGroup, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(.fun.x = .fun,
                   .fun.x.args = .fun.args,
+                  .fun.x.null = FALSE,
                   .fun.y = .fun,
                   .fun.y.args = .fun.args,
+                  .fun.y.null = FALSE,
                   na.rm = na.rm,
                   single.row = TRUE,
                   ...)

@@ -4,15 +4,29 @@ editor_options:
     wrap: 72
 ---
 
+# ggpp 0.4.2
+
+-   Update `stat_apply_group()` and `stat_apply_panel()` to support
+    summary functions like `quantile()` that return vectors with more
+    than one value but shorter than the original number of observations.
+
+-   Update `stat_summary_xy()`, `stat_apply_group()` and
+    `stat_apply_panel()` to behave better when only one of the two
+    summary functions is supplied by the user.
+
+-   Fix bug in `stat_centroid()`, `stat_summary_xy()`,
+    `stat_apply_group()` and `stat_apply_panel()` resulting in the
+    return of NA values instead of a data frame with fewer rows.
+
 # ggpp 0.4.1
 
-Update `compute_just2D()` and `compute_just()` to work with any value
-for the `angle` aesthetic, as in the accepted version of the pull
-request in 'ggplot2'.
+-   Update `compute_just2D()` and `compute_just()` to work with any
+    value for the `angle` aesthetic, as in the accepted version of the
+    pull request in 'ggplot2'.
 
-Fix bug in `geom_table()` that would cause text left or right justified
-to be clipped when the text in a cell was very long (reported by
-*dryguy*). (Cell padding still needs improvement.)
+-   Fix bug in `geom_table()` that would cause text left or right
+    justified to be clipped when the text in a cell was very long
+    (reported by *dryguy*). (Cell padding still needs improvement.)
 
 # ggpp 0.4.0
 
