@@ -101,60 +101,66 @@ can include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
 }
 \value{
-A data frame with the same variables as in the input, with either a
-   single or multiple rows, with the values of x and y variables replaced by
-   the values returned by the applied functions, or possibly filled if no
-   function was supplied or available by default.
+A data frame with the same variables as the data input, with either a
+  single or multiple rows, with the values of \code{x} and \code{y} variables replaced by
+  the values returned by the applied functions, or possibly filled if no
+  function was supplied or available by default. If the applied function
+  returns a named vector, the names are copied into columns \code{x.names}
+  and/or \code{y.names}.
 
-A plot layer instance. Using as output \code{data} the in input
-  \code{data} after application of a function.
+  \describe{
+  \item{x}{x-value as returned by \code{.fun.x}, with names removed}
+  \item{y}{y-value as returned by \code{.fun.y}, with names removed}
+  \item{x.names}{if the x-value returned by \code{.fun.x} is named, these names}
+  \item{y.names}{if the y-value returned by \code{.fun.y} is named, these names}
+  }
 }
 \description{
 \code{stat_summary_xy()} and \code{stat_centroid()} are similar to
 \code{ggplot2::stat_summary()} but summarize both \code{x} and \code{y}
-values in parallel in the same plot layer.
+values in the same plot layer. This makes it possible to highight the actual
+location of the centroid with \code{geom_point()}, \code{geom_text()}, and
+similar geometries. Instead, if we use \code{geom_rug()} they are only a
+convenience avoiding the need to add two separate layers and flipping one of
+them using \code{orientation = "y"}.
 }
 \details{
 \code{stat_apply_group} and \code{stat_apply_panel} apply functions to data.
-In most cases one should simply use transformations through scales or summary
-functions such as \code{ggplot2::stat_summary()}, \code{stat_summary_xy()} or
-\code{stat_centroid()}. There are some computations that are not scale
-transformations but are not usual summaries either, as the number of data
-values does not decrease to one row per group. It is always possible to
-precompute quantities like cumulative sums or running medians, and for
-normalizations it can be convenient to apply such functions on-the-fly to
-ensure that grouping is consistent between computations and aesthetics. One
-particularity of these statistics is that they can apply simultaneously
+When possible it is preferable to use transformations through scales or
+summary functions such as \code{ggplot2::stat_summary()},
+\code{stat_summary_xy()} or \code{stat_centroid()}. There are some
+computations that are not scale transformations but are not usual summaries
+either, as the number of data values does not decrease all the way to one row
+per group. A typical case for a summary is the computation of quantiles. For
+transformations are cumulative ones, e.g., using \code{cumsum()},
+\code{runmed()} and similar functions. Obviously, it is always possible to
+apply such functions to the data before plotting and passing them to a single
+layer function. However, it can be useful to apply such functions on-the-fly
+to ensure that grouping is consistent between computations and aesthetics.
+One particularity of these statistics is that they can apply simultaneously
 different functions to \code{x} values and to \code{y} values when needed. In
 contrast to these statistics, \code{\link[ggplot2]{geom_smooth}} applies a
 function that takes both \code{x} and \code{y} values as arguments.
 
 These four statistics are very similar and are implemented using the
-  same internal function. They differ on whether this function is applied by
+  same internal function. They differ on whether the function(s) is(are) applied by
   group or by panel, and whether they return a single or multiple rows of
   data.
 }
 \note{
 The applied function(s) must accept as first argument a vector that
-  matches the variables mapped to \code{x} and \code{y} aesthetics. For
+  matches the variables mapped to \code{x} or \code{y} aesthetics. For
   \code{stat_summary_xy()} and \code{stat_centroid()} the function(s) to be
-  applied is/are expected to return a vector of length
-  1, while for \code{stat_apply_group} and \code{stat_apply_panel} the
-  vectors returned by the functions applied to \code{x} and \code{y} must
-  return vectors of exactly the same length. When only one of
-  \code{.fun.x} or \code{.fun.y} are passed a function as argument, and the
-  returned value is shorter than the data, the values of the other variable
-  in the returned data are filled with the median.
+  applied is(are) expected to return a vector of length 1, while for
+  \code{stat_apply_group} and \code{stat_apply_panel} the vectors returned by
+  the two functions applied to \code{x} and \code{y}, respectively, must
+  return vectors of exactly the same length. When only one of \code{.fun.x}
+  or \code{.fun.y} are passed a function as argument, and the returned value
+  is shorter than the data, the values of the other variable in the returned
+  data are filled with their median. If other values are desired, they can be
+  set by means a function.
 }
-\section{Computed variables}{
- One of x or y or both x and y replaced by the
-  vector returned by the corresponding applied function. \describe{
-  \item{x}{x-value as returned by \code{.fun.x}} \item{y}{y-value as returned
-  by \code{.fun.y}} }
-}
-
 \examples{
-library(gginnards)
 set.seed(123456)
 my.df <- data.frame(X = rep(1:20,2),
                     Y = runif(40),
@@ -181,25 +187,25 @@ ggplot(my.df, aes(x = X, y = Y, colour = category)) +
   geom_point() +
   stat_apply_group(geom = "rug", .fun.y = quantile, .fun.x = quantile)
 
+ggplot(my.df, aes(x = X, y = Y)) +
+  geom_point() +
+  stat_apply_group(geom = "rug", sides = "lr", color = "darkred",
+                   .fun.y = quantile) +
+  stat_apply_group(geom = "text", hjust = "right", color = "darkred",
+                   .fun.y = quantile,
+                   .fun.x = function(x) {rep(22, 5)},
+                   mapping = aes(label = after_stat(y.names))) +
+                   expand_limits(x = 21)
+
 my.probs <- c(0.25, 0.5, 0.75)
 ggplot(my.df, aes(x = X, y = Y, colour = category)) +
   geom_point() +
   stat_apply_group(geom = "hline",
                    aes(yintercept = after_stat(y)),
                    .fun.y = quantile,
-                   .fun.y.args = list(probs = my.probs))#'
-
-ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-  geom_point() +
-  stat_apply_group(geom = "debug",
-                   .fun.x = function(x) {rep_len(min(x), 3L)},
-                   .fun.y = quantile,
                    .fun.y.args = list(probs = my.probs))
 
-# Use of geom_debug() to inspect the computed values
-ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-  stat_apply_group(.fun.y = cumsum, geom = "debug")
-
+# cummulative summaries
 ggplot(my.df, aes(x = X, y = Y, colour = category)) +
   stat_apply_group(.fun.y = cummax)
 
@@ -210,6 +216,7 @@ ggplot(my.df, aes(x = X, y = Y, colour = category)) +
 ggplot(my.df, aes(x = X, y = Y, colour = category)) +
   stat_apply_group(.fun.y = diff, na.rm = TRUE)
 
+# Running summaries
 ggplot(my.df, aes(x = X, y = Y, colour = category)) +
   geom_point() +
   stat_apply_group(.fun.y = runmed, .fun.y.args = list(k = 5))
@@ -218,23 +225,23 @@ ggplot(my.df, aes(x = X, y = Y, colour = category)) +
 ggplot(my.df, aes(x = X, y = Y, colour = category)) +
   stat_apply_group(.fun.y = function(x) {(x - min(x)) / (max(x) - min(x))})
 
-# Joint rescaling for whole panel
-ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-  stat_apply_panel(.fun.y = function(x) {(x - min(x)) / (max(x) - min(x))})
+# inspecting the returned data
+library(gginnards)
 
-# Centroid
 ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-  stat_centroid(shape = "cross", size = 6) +
-  geom_point()
+  stat_apply_group(.fun.y = cumsum, geom = "debug")
 
-# Centroid
 ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-  stat_centroid(geom = "text", aes(label = category)) +
-  geom_point()
+  geom_point() +
+  stat_apply_group(geom = "debug",
+                   .fun.x = quantile,
+                   .fun.x.args = list(probs = my.probs),
+                   .fun.y = quantile,
+                   .fun.y.args = list(probs = my.probs))
 
 }
 \references{
-Answers question "R ggplot on-the-fly calculation by grouping variable" at
+Answers to question "R ggplot on-the-fly calculation by grouping variable" at
 \url{https://stackoverflow.com/questions/51412522}.
 }
 \concept{summary stats}
