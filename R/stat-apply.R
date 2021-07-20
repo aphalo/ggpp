@@ -8,7 +8,7 @@
 #' convenience avoiding the need to add two separate layers and flipping one of
 #' them using \code{orientation = "y"}.
 #'
-#' \code{stat_apply_group} and \code{stat_apply_panel} apply functions to data.
+#' \code{stat_apply_group} applies functions to data.
 #' When possible it is preferable to use transformations through scales or
 #' summary functions such as \code{ggplot2::stat_summary()},
 #' \code{stat_summary_xy()} or \code{stat_centroid()}. There are some
@@ -50,36 +50,41 @@
 #' @param .fun.x.args,.fun.y.args,.fun.args additional arguments to be passed to
 #'   the function as a named list.
 #'
-#' @details These four statistics are very similar and are implemented using the
-#'   same internal function. They differ on whether the function(s) is(are) applied by
-#'   group or by panel, and whether they return a single or multiple rows of
-#'   data.
+#' @details These four statistics are similar. They differ on whether they
+#'   return a single or multiple rows of data per group.
 #'
 #' @return A data frame with the same variables as the data input, with either a
-#'   single or multiple rows, with the values of \code{x} and \code{y} variables replaced by
-#'   the values returned by the applied functions, or possibly filled if no
-#'   function was supplied or available by default. If the applied function
-#'   returns a named vector, the names are copied into columns \code{x.names}
-#'   and/or \code{y.names}.
+#'   single or multiple rows, with the values of \code{x} and \code{y} variables
+#'   replaced by the values returned by the applied functions, or possibly
+#'   filled with \code{NA} if no function was supplied or available by default.
+#'   If the applied function returns a named vector, the names are copied into
+#'   columns \code{x.names} and/or \code{y.names}. If the summary function
+#'   applied returns a one row data frame, it will be column bound keeping
+#'   the column names, but overwritting columns x and/or y with y from the
+#'   summary data frame. In the names returned by \code{.fun.x} the letter
+#'   "y" is replaced by "x". These allows the use of the same functions as in
+#'   \code{ggplot2::stat_summary()}.
 #'
 #'   \describe{
 #'   \item{x}{x-value as returned by \code{.fun.x}, with names removed}
 #'   \item{y}{y-value as returned by \code{.fun.y}, with names removed}
 #'   \item{x.names}{if the x-value returned by \code{.fun.x} is named, these names}
 #'   \item{y.names}{if the y-value returned by \code{.fun.y} is named, these names}
+#'   \item{xmin, xmax}{values returned by \code{.fun.x} under these names, if present}
+#'   \item{ymin, ymax}{values returned by \code{.fun.y} under these names, if present}
+#'   \item{<other>}{additional values as returned by \code{.fun.y} under other names}
 #'   }
 #'
 #' @note The applied function(s) must accept as first argument a vector that
 #'   matches the variables mapped to \code{x} or \code{y} aesthetics. For
 #'   \code{stat_summary_xy()} and \code{stat_centroid()} the function(s) to be
-#'   applied is(are) expected to return a vector of length 1, while for
-#'   \code{stat_apply_group} and \code{stat_apply_panel} the vectors returned by
-#'   the two functions applied to \code{x} and \code{y}, respectively, must
-#'   return vectors of exactly the same length. When only one of \code{.fun.x}
-#'   or \code{.fun.y} are passed a function as argument, and the returned value
-#'   is shorter than the data, the values of the other variable in the returned
-#'   data are filled with their median. If other values are desired, they can be
-#'   set by means a function.
+#'   applied is(are) expected to return a vector of length 1 or a data frame
+#'   with only one row. For \code{stat_apply_group} the vectors returned by the
+#'   the functions applied to \code{x} and \code{y} must be of exactly the same
+#'   length. When only one of \code{.fun.x} or \code{.fun.y} are passed a
+#'   function as argument, the other variable in the returned data is filled
+#'   with \code{NA_real_}. If other values are desired, they can be set by means
+#'   of a user-defined function.
 #'
 ##' @references
 #'
@@ -119,7 +124,7 @@
 #'                    .fun.y = quantile) +
 #'   stat_apply_group(geom = "text", hjust = "right", color = "darkred",
 #'                    .fun.y = quantile,
-#'                    .fun.x = function(x) {rep(22, 5)},
+#'                    .fun.x = function(x) {rep(22, 5)}, # set x to 22
 #'                    mapping = aes(label = after_stat(y.names))) +
 #'                    expand_limits(x = 21)
 #'
@@ -153,6 +158,12 @@
 #'
 #' # inspecting the returned data
 #' library(gginnards)
+#'
+#' ggplot(my.df, aes(x = X, y = Y, colour = category)) +
+#'   stat_centroid(.fun = mean_se, geom = "debug")
+#'
+#' ggplot(my.df, aes(x = X, y = Y, colour = category)) +
+#'   stat_summary_xy(.fun.y = mean_se, geom = "debug")
 #'
 #' ggplot(my.df, aes(x = X, y = Y, colour = category)) +
 #'   stat_apply_group(.fun.y = cumsum, geom = "debug")
@@ -214,44 +225,6 @@ stat_apply_group <- function(mapping = NULL,
 #'
 #' @export
 #'
-stat_apply_panel <- function(mapping = NULL,
-                             data = NULL,
-                             geom = "line",
-                             .fun.x = NULL,
-                             .fun.x.args = list(),
-                             .fun.y = NULL,
-                             .fun.y.args = list(),
-                             position = "identity",
-                             na.rm = FALSE,
-                             show.legend = FALSE,
-                             inherit.aes = TRUE, ...) {
-  .fun.x.null <- is.null(.fun.x)
-  if (.fun.x.null) {
-    .fun.x <- function(x) {x}
-  }
-  .fun.y.null <- is.null(.fun.y)
-  if (.fun.y.null) {
-    .fun.y <- function(x) {x}
-  }
-  ggplot2::layer(
-    stat = StatApplyPanel, data = data, mapping = mapping, geom = geom,
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(.fun.x = .fun.x,
-                  .fun.x.args = .fun.x.args,
-                  .fun.x.null = .fun.x.null,
-                  .fun.y = .fun.y,
-                  .fun.y.args = .fun.y.args,
-                  .fun.y.null = .fun.y.null,
-                  na.rm = na.rm,
-                  single.row = FALSE,
-                  ...)
-  )
-}
-
-#' @rdname stat_apply
-#'
-#' @export
-#'
 stat_summary_xy <- function(mapping = NULL,
                             data = NULL,
                             geom = "point",
@@ -269,7 +242,7 @@ stat_summary_xy <- function(mapping = NULL,
     .fun.x <- function(x) {x}
   }
   .fun.y.null <- is.null(.fun.y)
-  if (.fun.x.null) {
+  if (.fun.y.null) {
     .fun.y <- function(x) {x}
   }
   ggplot2::layer(
@@ -335,21 +308,18 @@ stat_apply_fun <- function(data,
                            scales,
                            .fun.x, .fun.x.args, .fun.x.null,
                            .fun.y, .fun.y.args, .fun.y.null,
-                           .fun.filler = stats::median,
                            single.row) {
 
   if (single.row) {
     stat_apply_fun_rw(data,
                       scales,
                       .fun.x, .fun.x.args, .fun.x.null,
-                      .fun.y, .fun.y.args, .fun.y.null,
-                      .fun.filler = stats::median)
+                      .fun.y, .fun.y.args, .fun.y.null)
   } else {
     stat_apply_fun_vc(data,
                       scales,
                       .fun.x, .fun.x.args, .fun.x.null,
-                      .fun.y, .fun.y.args, .fun.y.null,
-                      .fun.filler = stats::median)
+                      .fun.y, .fun.y.args, .fun.y.null)
   }
 }
 
@@ -363,8 +333,7 @@ stat_apply_fun <- function(data,
 stat_apply_fun_vc <- function(data,
                               scales,
                               .fun.x, .fun.x.args, .fun.x.null,
-                              .fun.y, .fun.y.args, .fun.y.null,
-                              .fun.filler = stats::median) {
+                              .fun.y, .fun.y.args, .fun.y.null) {
 
   #  Fill with NAs if returned vector is too short
   fill2length <- function(x, nrow) {
@@ -373,7 +342,7 @@ stat_apply_fun_vc <- function(data,
 
   force(data)
   new.data <- data
-  if (!is.null(.fun.x)) {
+  if (!.fun.x.null) {
     args <- c(unname(data["x"]), .fun.x.args)
     new.x <- do.call(.fun.x, args = args)
     if (!is.null(names(new.x))) {
@@ -384,7 +353,7 @@ stat_apply_fun_vc <- function(data,
     new.data[["x"]] <-
       fill2length(new.x, nrow = nrow(new.data))
   }
-  if (!is.null(.fun.y)) {
+  if (!.fun.y.null) {
     args <- c(unname(data["y"]), .fun.y.args)
     new.y <- do.call(.fun.y, args = args)
     if (!is.null(names(new.y))) {
@@ -400,14 +369,14 @@ stat_apply_fun_vc <- function(data,
     new.data <- new.data[selector, ]
     # cummulative summaries and diff() can shorten the vector by one
     if (nrow(data) - nrow(new.data) > 2L) {
-      new.data[["x"]] <- .fun.filler(data[["x"]])
+      new.data[["x"]] <- NA_real_
     }
   } else if (.fun.y.null) {
     selector <- !is.na(new.data[["x"]])
     new.data <- new.data[selector, ]
     # cummulative summaries and diff() can shorten the vector by one
     if (nrow(data) - nrow(new.data) > 2L) {
-      new.data[["y"]] <- .fun.filler(data[["y"]])
+      new.data[["y"]] <- NA_real_
     }
   } else {
     selector <- !is.na(new.data[["x"]]) | !is.na(new.data[["y"]])
@@ -426,13 +395,7 @@ stat_apply_fun_vc <- function(data,
 stat_apply_fun_rw <- function(data,
                               scales,
                               .fun.x, .fun.x.args, .fun.x.null,
-                              .fun.y, .fun.y.args, .fun.y.null,
-                              .fun.filler = stats::median) {
-
-  #  Fill with NAs if returned vector is too short
-  fill2length <- function(x, nrow) {
-    c(x, rep(NA_real_, nrow - length(x)))
-  }
+                              .fun.y, .fun.y.args, .fun.y.null) {
 
   force(data)
   new.data <- data[1, ]
@@ -443,20 +406,21 @@ stat_apply_fun_rw <- function(data,
     warning("Non-unique values in columns: ",
             setdiff(names(data)[!unique_value_cols], c("x", "y")))
   }
-  new.data[ , !unique_value_cols] <- NA
+  new.data[ , !unique_value_cols] <- NA_real_
 
-  if (!is.null(.fun.x)) {
+  if (!.fun.x.null) {
     args <- c(unname(data["x"]), .fun.x.args)
     new.x <- do.call(.fun.x, args = args)
-    stopifnot((is.data.frame(new.x) && nrow(new.x) == 1L) ||
-                 (is.vector(new.x) && length(new.x) == 1L))
-    if (is.vector(new.x) && length(new.x) == 1L) {
+    if (is.null(new.x)) {
+      stop("'new.x' is NULL.")
+    }
+    if (is.vector(new.x) && (length(new.x) == 1L)) {
       if(!is.null(names(new.x))) {
         new.data[["x.names"]] <- names(new.x)
         new.x <- unname(new.x)
       }
       new.data[["x"]] <- new.x
-    } else if (is.data.frame(new.x) && nrow(new.x) == 1L) {
+    } else if (is.data.frame(new.x) && (nrow(new.x) == 1L)) {
       # functions like mean_se() return columns y, ymin and ymax.
       names(new.x) <- gsub("y", "x", names(new.x))
       if ("x" %in% names(new.x)) {
@@ -465,27 +429,36 @@ stat_apply_fun_rw <- function(data,
       } else {
         new.data <- cbind(new.data, new.x)
       }
+    } else {
+      warning("Object of class '", class(new.x),
+              "' with names '", names(new.x),
+              "' from '.fun.x', is incompatible.")
     }
   }
 
-  if (!is.null(.fun.y)) {
+  if (!.fun.y.null) {
     args <- c(unname(data["y"]), .fun.y.args)
     new.y <- do.call(.fun.y, args = args)
-    stopifnot((is.data.frame(new.y) && nrow(new.y) == 1L) ||
-                (is.vector(new.y) && length(new.y) == 1L))
-    if (is.vector(new.y) && length(new.y) == 1L) {
+    if (is.null(new.y)) {
+      stop("'new.y' is NULL.")
+    }
+    if (is.vector(new.y) && (length(new.y) == 1L)) {
       if(!is.null(names(new.y))) {
         new.data[["y.names"]] <- names(new.y)
         new.y <- unname(new.y)
       }
       new.data[["y"]] <- new.y
-    } else if (is.data.frame(new.y) && nrow(new.y) == 1L) {
+    } else if (is.data.frame(new.y) && (nrow(new.y) == 1L)) {
       if ("y" %in% names(new.y)) {
         new.data <- cbind(new.data[ , setdiff(names(new.data), "y")],
                           new.y)
       } else {
         new.data <- cbind(new.data, new.y)
       }
+    } else {
+      warning("Object of class '", class(new.y),
+              "' with names '", names(new.y),
+              "' from '.fun.y', is incompatible.")
     }
   }
 
@@ -513,20 +486,6 @@ stat_apply_fun_rw <- function(data,
 StatApplyGroup <-
   ggplot2::ggproto("StatApplyGroup", ggplot2::Stat,
                    compute_group = stat_apply_fun,
-                   required_aes = c("x", "y")
-  )
-
-#'
-#' @name Stats
-#' @rdname ggpp-ggproto
-#' @format NULL
-#' @usage NULL
-#' @export
-#' @seealso \code{\link[ggplot2]{ggplot2-ggproto}}
-#' @keywords internal
-StatApplyPanel <-
-  ggplot2::ggproto("StatApplyPanel", ggplot2::Stat,
-                   compute_panel = stat_apply_fun,
                    required_aes = c("x", "y")
   )
 

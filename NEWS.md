@@ -6,17 +6,24 @@ editor_options:
 
 # ggpp 0.4.2
 
--   Update `stat_apply_group()` and `stat_apply_panel()` to support
-    summary functions like `quantile()` that return vectors with more
-    than one value but shorter than the original number of observations.
+-   Update `stat_apply_group()` to support summary functions like
+    `quantile()` that return vectors with more than one value but
+    shorter than the original number of observations.
 
--   Update `stat_summary_xy()`, `stat_apply_group()` and
-    `stat_apply_panel()` to behave better when only one of the two
-    summary functions is supplied by the user.
+-   Update `stat_summary_xy()` and `stat_apply_group()` to return `NA`
+    when one of `.fun.x` or `.fun.y` are not passed an argument.
 
--   Fix bug in `stat_centroid()`, `stat_summary_xy()`,
-    `stat_apply_group()` and `stat_apply_panel()` resulting in the
-    return of NA values instead of a data frame with fewer rows.
+-   Update `stat_summary_xy()` and `stat_centroid()` to support
+    functions that return a one row data frame, like those defined in
+    'ggplot2' to be passed as argument to parameter `fun.data` of
+    `ggplot2::stat_summary()`, such as `mean_se`, `mean_cl_boot` , etc.
+
+-   Fix bug in `stat_centroid()`, `stat_summary_xy()` and
+    `stat_apply_group()` resulting in the return of a long data frame
+    with `NA` values instead of a data frame with fewer rows.
+
+-   Remove `stat_apply_panel()` , as it was redundant. Grouping can be
+    modified per layer when needed.
 
 # ggpp 0.4.1
 

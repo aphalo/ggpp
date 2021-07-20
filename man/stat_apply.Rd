@@ -2,27 +2,11 @@
 % Please edit documentation in R/stat-apply.R
 \name{stat_apply_group}
 \alias{stat_apply_group}
-\alias{stat_apply_panel}
 \alias{stat_summary_xy}
 \alias{stat_centroid}
 \title{Apply a function to x or y values}
 \usage{
 stat_apply_group(
-  mapping = NULL,
-  data = NULL,
-  geom = "line",
-  .fun.x = NULL,
-  .fun.x.args = list(),
-  .fun.y = NULL,
-  .fun.y.args = list(),
-  position = "identity",
-  na.rm = FALSE,
-  show.legend = FALSE,
-  inherit.aes = TRUE,
-  ...
-)
-
-stat_apply_panel(
   mapping = NULL,
   data = NULL,
   geom = "line",
@@ -102,17 +86,25 @@ can include aesthetics whose values you want to set, not map. See
 }
 \value{
 A data frame with the same variables as the data input, with either a
-  single or multiple rows, with the values of \code{x} and \code{y} variables replaced by
-  the values returned by the applied functions, or possibly filled if no
-  function was supplied or available by default. If the applied function
-  returns a named vector, the names are copied into columns \code{x.names}
-  and/or \code{y.names}.
+  single or multiple rows, with the values of \code{x} and \code{y} variables
+  replaced by the values returned by the applied functions, or possibly
+  filled with \code{NA} if no function was supplied or available by default.
+  If the applied function returns a named vector, the names are copied into
+  columns \code{x.names} and/or \code{y.names}. If the summary function
+  applied returns a one row data frame, it will be column bound keeping
+  the column names, but overwritting columns x and/or y with y from the
+  summary data frame. In the names returned by \code{.fun.x} the letter
+  "y" is replaced by "x". These allows the use of the same functions as in
+  \code{ggplot2::stat_summary()}.
 
   \describe{
   \item{x}{x-value as returned by \code{.fun.x}, with names removed}
   \item{y}{y-value as returned by \code{.fun.y}, with names removed}
   \item{x.names}{if the x-value returned by \code{.fun.x} is named, these names}
   \item{y.names}{if the y-value returned by \code{.fun.y} is named, these names}
+  \item{xmin, xmax}{values returned by \code{.fun.x} under these names, if present}
+  \item{ymin, ymax}{values returned by \code{.fun.y} under these names, if present}
+  \item{<other>}{additional values as returned by \code{.fun.y} under other names}
   }
 }
 \description{
@@ -125,7 +117,7 @@ convenience avoiding the need to add two separate layers and flipping one of
 them using \code{orientation = "y"}.
 }
 \details{
-\code{stat_apply_group} and \code{stat_apply_panel} apply functions to data.
+\code{stat_apply_group} applies functions to data.
 When possible it is preferable to use transformations through scales or
 summary functions such as \code{ggplot2::stat_summary()},
 \code{stat_summary_xy()} or \code{stat_centroid()}. There are some
@@ -142,23 +134,20 @@ different functions to \code{x} values and to \code{y} values when needed. In
 contrast to these statistics, \code{\link[ggplot2]{geom_smooth}} applies a
 function that takes both \code{x} and \code{y} values as arguments.
 
-These four statistics are very similar and are implemented using the
-  same internal function. They differ on whether the function(s) is(are) applied by
-  group or by panel, and whether they return a single or multiple rows of
-  data.
+These four statistics are similar. They differ on whether they
+  return a single or multiple rows of data per group.
 }
 \note{
 The applied function(s) must accept as first argument a vector that
   matches the variables mapped to \code{x} or \code{y} aesthetics. For
   \code{stat_summary_xy()} and \code{stat_centroid()} the function(s) to be
-  applied is(are) expected to return a vector of length 1, while for
-  \code{stat_apply_group} and \code{stat_apply_panel} the vectors returned by
-  the two functions applied to \code{x} and \code{y}, respectively, must
-  return vectors of exactly the same length. When only one of \code{.fun.x}
-  or \code{.fun.y} are passed a function as argument, and the returned value
-  is shorter than the data, the values of the other variable in the returned
-  data are filled with their median. If other values are desired, they can be
-  set by means a function.
+  applied is(are) expected to return a vector of length 1 or a data frame
+  with only one row. For \code{stat_apply_group} the vectors returned by the
+  the functions applied to \code{x} and \code{y} must be of exactly the same
+  length. When only one of \code{.fun.x} or \code{.fun.y} are passed a
+  function as argument, the other variable in the returned data is filled
+  with \code{NA_real_}. If other values are desired, they can be set by means
+  of a user-defined function.
 }
 \examples{
 set.seed(123456)
@@ -193,7 +182,7 @@ ggplot(my.df, aes(x = X, y = Y)) +
                    .fun.y = quantile) +
   stat_apply_group(geom = "text", hjust = "right", color = "darkred",
                    .fun.y = quantile,
-                   .fun.x = function(x) {rep(22, 5)},
+                   .fun.x = function(x) {rep(22, 5)}, # set x to 22
                    mapping = aes(label = after_stat(y.names))) +
                    expand_limits(x = 21)
 
@@ -227,6 +216,12 @@ ggplot(my.df, aes(x = X, y = Y, colour = category)) +
 
 # inspecting the returned data
 library(gginnards)
+
+ggplot(my.df, aes(x = X, y = Y, colour = category)) +
+  stat_centroid(.fun = mean_se, geom = "debug")
+
+ggplot(my.df, aes(x = X, y = Y, colour = category)) +
+  stat_summary_xy(.fun.y = mean_se, geom = "debug")
 
 ggplot(my.df, aes(x = X, y = Y, colour = category)) +
   stat_apply_group(.fun.y = cumsum, geom = "debug")

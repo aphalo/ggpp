@@ -40,7 +40,6 @@
 \alias{stat_apply_fun_rw}
 \alias{Stats}
 \alias{StatApplyGroup}
-\alias{StatApplyPanel}
 \alias{StatDens1dFilter}
 \alias{StatDens1dFilterG}
 \alias{StatDens1dLabels}
@@ -64,8 +63,6 @@ fields. To create a new type of Stat object, you typically will want to
 implement one or more of the following:
 }
 \seealso{
-\code{\link[ggplot2]{ggplot2-ggproto}}
-
 \code{\link[ggplot2]{ggplot2-ggproto}}
 }
 \keyword{datasets}
