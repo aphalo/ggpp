@@ -6,12 +6,21 @@ editor_options:
 
 # ggpp 0.4.2
 
+The initial implementation and user interface of three *apply*
+statistics first introduced in 'ggpmisc' 0.3.6 has been revised to
+expand their usefulness and to make them less error-prone, while the
+fourth one is now defunct. **Note:** The default argument for `geom`
+in`stat_centroid()` is likely to change in the near future. Otherwise,
+the three statistics can be considered now stable.
+
 -   Update `stat_apply_group()` to support summary functions like
     `quantile()` that return vectors with more than one value but
     shorter than the original number of observations.
 
 -   Update `stat_summary_xy()` and `stat_apply_group()` to return `NA`
-    when one of `.fun.x` or `.fun.y` are not passed an argument.
+    in `x` and/or `y` when `.fun.x` or `.fun.y` are not passed an
+    argument. This is a code breaking change with respect to the
+    previous (unstable) version.
 
 -   Update `stat_summary_xy()` and `stat_centroid()` to support
     functions that return a one row data frame, like those defined in
@@ -171,7 +180,7 @@ near future*.
     `stat_dens1d_labels()` does.
 -   Revise documentation including the *User Guide*.
 
-# ggpmisc 0.3.6
+# miscast 0.3.6
 
 -   Override `ggplot2::annotate()` adding support for aesthetics `npcx`
     and `npcy`.

@@ -2,11 +2,13 @@
 #'
 #' \code{stat_summary_xy()} and \code{stat_centroid()} are similar to
 #' \code{ggplot2::stat_summary()} but summarize both \code{x} and \code{y}
-#' values in the same plot layer. This makes it possible to highight the actual
-#' location of the centroid with \code{geom_point()}, \code{geom_text()}, and
-#' similar geometries. Instead, if we use \code{geom_rug()} they are only a
-#' convenience avoiding the need to add two separate layers and flipping one of
-#' them using \code{orientation = "y"}.
+#' values in the same plot layer. Differently to \code{stat_summary()} no
+#' grouping based on data \code{values} is done; the grouping respected is that
+#' already present based on mappings to aesthetics. This makes it possible to
+#' highlight the actual location of the centroid with \code{geom_point()},
+#' \code{geom_text()}, and similar geometries. Instead, if we use
+#' \code{geom_rug()} they are only a convenience avoiding the need to add two
+#' separate layers and flipping one of them using \code{orientation = "y"}.
 #'
 #' \code{stat_apply_group} applies functions to data.
 #' When possible it is preferable to use transformations through scales or
@@ -79,14 +81,18 @@
 #'   matches the variables mapped to \code{x} or \code{y} aesthetics. For
 #'   \code{stat_summary_xy()} and \code{stat_centroid()} the function(s) to be
 #'   applied is(are) expected to return a vector of length 1 or a data frame
-#'   with only one row. For \code{stat_apply_group} the vectors returned by the
+#'   with only one row, as \code{mean_se()}, \code{mean_cl_normal()}
+#'   \code{mean_cl_boot()}, \code{mean_sdl()} and \code{median_hilow()} from
+#'   'ggplot2' do.
+#'
+#'   For \code{stat_apply_group} the vectors returned by the
 #'   the functions applied to \code{x} and \code{y} must be of exactly the same
 #'   length. When only one of \code{.fun.x} or \code{.fun.y} are passed a
 #'   function as argument, the other variable in the returned data is filled
 #'   with \code{NA_real_}. If other values are desired, they can be set by means
 #'   of a user-defined function.
 #'
-##' @references
+#' @references
 #'
 #' Answers to question "R ggplot on-the-fly calculation by grouping variable" at
 #' \url{https://stackoverflow.com/questions/51412522}.
@@ -138,23 +144,27 @@
 #'
 #' # cummulative summaries
 #' ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-#'   stat_apply_group(.fun.y = cummax)
+#'   stat_apply_group(.fun.x = function(x) {x},
+#'                    .fun.y = cummax)
 #'
 #' ggplot(my.df, aes(x = X, y = Y, colour = category)) +
 #'   stat_apply_group(.fun.x = cumsum, .fun.y = cumsum)
 #'
 #' # diff returns a shorter vector by 1 for each group
 #' ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-#'   stat_apply_group(.fun.y = diff, na.rm = TRUE)
+#'   stat_apply_group(.fun.x = function(x) {x[-1L]},
+#'                    .fun.y = diff, na.rm = TRUE)
 #'
 #' # Running summaries
 #' ggplot(my.df, aes(x = X, y = Y, colour = category)) +
 #'   geom_point() +
-#'   stat_apply_group(.fun.y = runmed, .fun.y.args = list(k = 5))
+#'   stat_apply_group(.fun.x = function(x) {x},
+#'                    .fun.y = runmed, .fun.y.args = list(k = 5))
 #'
 #' # Rescaling per group
 #' ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-#'   stat_apply_group(.fun.y = function(x) {(x - min(x)) / (max(x) - min(x))})
+#'   stat_apply_group(.fun.x = function(x) {x},
+#'                    .fun.y = function(x) {(x - min(x)) / (max(x) - min(x))})
 #'
 #' # inspecting the returned data
 #' library(gginnards)
@@ -267,7 +277,7 @@ stat_summary_xy <- function(mapping = NULL,
 stat_centroid <- function(mapping = NULL,
                           data = NULL,
                           geom = "point",
-                          .fun = mean,
+                          .fun = NULL,
                           .fun.args = list(),
                           position = "identity",
                           na.rm = FALSE,
@@ -275,7 +285,7 @@ stat_centroid <- function(mapping = NULL,
                           inherit.aes = TRUE,
                           ...) {
   if (is.null(.fun)) {
-    .fun <- mean
+    .fun <- ggplot2::mean_se
   }
   ggplot2::layer(
     stat = StatApplyGroup,
@@ -308,15 +318,29 @@ stat_apply_fun <- function(data,
                            scales,
                            .fun.x, .fun.x.args, .fun.x.null,
                            .fun.y, .fun.y.args, .fun.y.null,
-                           single.row) {
+                           single.row,
+                           na.rm = FALSE) {
+
+  new.data <- data[1, ]
+  unique_value_cols <-
+    sapply(data, function(x) {length(unique(x)) == 1L})
+
+  if (sum(!unique_value_cols) > 2L) {
+    bad.vars <-
+      setdiff(names(data)[!unique_value_cols], c("x", "y"))
+    warning("Non-unique values in columns: ", bad.vars)
+    new.data[ , bad.vars] <- NA
+  }
 
   if (single.row) {
     stat_apply_fun_rw(data,
+                      new.data,
                       scales,
                       .fun.x, .fun.x.args, .fun.x.null,
                       .fun.y, .fun.y.args, .fun.y.null)
   } else {
     stat_apply_fun_vc(data,
+                      new.data,
                       scales,
                       .fun.x, .fun.x.args, .fun.x.null,
                       .fun.y, .fun.y.args, .fun.y.null)
@@ -331,57 +355,58 @@ stat_apply_fun <- function(data,
 #' @usage NULL
 #'
 stat_apply_fun_vc <- function(data,
+                              new.data,
                               scales,
                               .fun.x, .fun.x.args, .fun.x.null,
                               .fun.y, .fun.y.args, .fun.y.null) {
 
-  #  Fill with NAs if returned vector is too short
-  fill2length <- function(x, nrow) {
-    c(x, rep(NA_real_, nrow - length(x)))
-  }
-
-  force(data)
-  new.data <- data
   if (!.fun.x.null) {
     args <- c(unname(data["x"]), .fun.x.args)
     new.x <- do.call(.fun.x, args = args)
-    if (!is.null(names(new.x))) {
-      new.data[["x.names"]] <-
-        fill2length(names(new.x), nrow = nrow(new.data))
-      new.x <- unname(new.x)
-    }
-    new.data[["x"]] <-
-      fill2length(new.x, nrow = nrow(new.data))
+    stopifnot(is.numeric(new.x))
+    x.names <- names(new.x)
   }
+
   if (!.fun.y.null) {
     args <- c(unname(data["y"]), .fun.y.args)
     new.y <- do.call(.fun.y, args = args)
-    if (!is.null(names(new.y))) {
-      new.data[["y.names"]] <-
-        fill2length(names(new.y), nrow = nrow(new.data))
-      new.y <- unname(new.y)
-    }
-    new.data[["y"]] <-
-      fill2length(new.y, nrow = nrow(new.data))
+    stopifnot(is.numeric(new.y))
+    y.names <- names(new.y)
   }
-  if (.fun.x.null) {
-    selector <- !is.na(new.data[["y"]])
-    new.data <- new.data[selector, ]
-    # cummulative summaries and diff() can shorten the vector by one
-    if (nrow(data) - nrow(new.data) > 2L) {
-      new.data[["x"]] <- NA_real_
-    }
+
+  if (.fun.x.null && .fun.y.null) {
+    new.data[["y"]] <- NA_real_
+    new.data[["y"]] <- NA_real_
   } else if (.fun.y.null) {
-    selector <- !is.na(new.data[["x"]])
-    new.data <- new.data[selector, ]
-    # cummulative summaries and diff() can shorten the vector by one
-    if (nrow(data) - nrow(new.data) > 2L) {
-      new.data[["y"]] <- NA_real_
+    new.data <- new.data[rep(1L, length(new.x)), ]
+    new.data[["x"]] <- new.x
+    new.data[["y"]] <- NA_real_
+    if (!is.null(x.names)) {
+      new.data[["x.names"]] <- x.names
+    }
+  } else if (.fun.x.null) {
+    new.data <- new.data[rep(1L, length(new.y)), ]
+    new.data[["x"]] <- NA_real_
+    new.data[["y"]] <- new.y
+    if (!is.null(y.names)) {
+      new.data[["y.names"]] <- y.names
+    }
+  } else if (length(new.x) == length(new.y)) {
+    new.data <- new.data[rep(1L, length(new.y)), ]
+    new.data[["x"]] <- new.x
+    new.data[["y"]] <- new.y
+    if (!is.null(x.names)) {
+      new.data[["x.names"]] <- x.names
+    }
+    if (!is.null(y.names)) {
+      new.data[["y.names"]] <- y.names
     }
   } else {
-    selector <- !is.na(new.data[["x"]]) | !is.na(new.data[["y"]])
-    new.data <- new.data[selector, ]
+    warning("x and y summaries of different length!")
+    new.data[["y"]] <- NA_real_
+    new.data[["y"]] <- NA_real_
   }
+
   new.data
 }
 
@@ -393,20 +418,10 @@ stat_apply_fun_vc <- function(data,
 #' @usage NULL
 #'
 stat_apply_fun_rw <- function(data,
+                              new.data,
                               scales,
                               .fun.x, .fun.x.args, .fun.x.null,
                               .fun.y, .fun.y.args, .fun.y.null) {
-
-  force(data)
-  new.data <- data[1, ]
-  unique_value_cols <-
-    sapply(data, function(x) {length(unique(x)) == 1L})
-
-  if (sum(!unique_value_cols) > 2L) {
-    warning("Non-unique values in columns: ",
-            setdiff(names(data)[!unique_value_cols], c("x", "y")))
-  }
-  new.data[ , !unique_value_cols] <- NA_real_
 
   if (!.fun.x.null) {
     args <- c(unname(data["x"]), .fun.x.args)
@@ -486,6 +501,7 @@ stat_apply_fun_rw <- function(data,
 StatApplyGroup <-
   ggplot2::ggproto("StatApplyGroup", ggplot2::Stat,
                    compute_group = stat_apply_fun,
-                   required_aes = c("x", "y")
+                   required_aes = c("x", "y"),
+                   extra_params = c("na.rm")
   )
 

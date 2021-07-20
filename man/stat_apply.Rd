@@ -40,7 +40,7 @@ stat_centroid(
   mapping = NULL,
   data = NULL,
   geom = "point",
-  .fun = mean,
+  .fun = NULL,
   .fun.args = list(),
   position = "identity",
   na.rm = FALSE,
@@ -110,11 +110,13 @@ A data frame with the same variables as the data input, with either a
 \description{
 \code{stat_summary_xy()} and \code{stat_centroid()} are similar to
 \code{ggplot2::stat_summary()} but summarize both \code{x} and \code{y}
-values in the same plot layer. This makes it possible to highight the actual
-location of the centroid with \code{geom_point()}, \code{geom_text()}, and
-similar geometries. Instead, if we use \code{geom_rug()} they are only a
-convenience avoiding the need to add two separate layers and flipping one of
-them using \code{orientation = "y"}.
+values in the same plot layer. Differently to \code{stat_summary()} no
+grouping based on data \code{values} is done; the grouping respected is that
+already present based on mappings to aesthetics. This makes it possible to
+highlight the actual location of the centroid with \code{geom_point()},
+\code{geom_text()}, and similar geometries. Instead, if we use
+\code{geom_rug()} they are only a convenience avoiding the need to add two
+separate layers and flipping one of them using \code{orientation = "y"}.
 }
 \details{
 \code{stat_apply_group} applies functions to data.
@@ -142,7 +144,11 @@ The applied function(s) must accept as first argument a vector that
   matches the variables mapped to \code{x} or \code{y} aesthetics. For
   \code{stat_summary_xy()} and \code{stat_centroid()} the function(s) to be
   applied is(are) expected to return a vector of length 1 or a data frame
-  with only one row. For \code{stat_apply_group} the vectors returned by the
+  with only one row, as \code{mean_se()}, \code{mean_cl_normal()}
+  \code{mean_cl_boot()}, \code{mean_sdl()} and \code{median_hilow()} from
+  'ggplot2' do.
+
+  For \code{stat_apply_group} the vectors returned by the
   the functions applied to \code{x} and \code{y} must be of exactly the same
   length. When only one of \code{.fun.x} or \code{.fun.y} are passed a
   function as argument, the other variable in the returned data is filled
@@ -196,23 +202,27 @@ ggplot(my.df, aes(x = X, y = Y, colour = category)) +
 
 # cummulative summaries
 ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-  stat_apply_group(.fun.y = cummax)
+  stat_apply_group(.fun.x = function(x) {x},
+                   .fun.y = cummax)
 
 ggplot(my.df, aes(x = X, y = Y, colour = category)) +
   stat_apply_group(.fun.x = cumsum, .fun.y = cumsum)
 
 # diff returns a shorter vector by 1 for each group
 ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-  stat_apply_group(.fun.y = diff, na.rm = TRUE)
+  stat_apply_group(.fun.x = function(x) {x[-1L]},
+                   .fun.y = diff, na.rm = TRUE)
 
 # Running summaries
 ggplot(my.df, aes(x = X, y = Y, colour = category)) +
   geom_point() +
-  stat_apply_group(.fun.y = runmed, .fun.y.args = list(k = 5))
+  stat_apply_group(.fun.x = function(x) {x},
+                   .fun.y = runmed, .fun.y.args = list(k = 5))
 
 # Rescaling per group
 ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-  stat_apply_group(.fun.y = function(x) {(x - min(x)) / (max(x) - min(x))})
+  stat_apply_group(.fun.x = function(x) {x},
+                   .fun.y = function(x) {(x - min(x)) / (max(x) - min(x))})
 
 # inspecting the returned data
 library(gginnards)

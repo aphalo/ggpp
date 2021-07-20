@@ -344,9 +344,8 @@ ggplot(my.data, aes(x, y, colour = group)) +
 
 ## -----------------------------------------------------------------------------
 ggplot(Orange, aes(age, circumference, colour = Tree)) +
-  stat_apply_group(.fun.y = function(x) {c(NA, diff(x))}, na.rm = TRUE) +
-  coord_cartesian(xlim = c(420, NA))
-  
+  stat_apply_group(.fun.x = function(x) {x[-1L]},
+                   .fun.y = diff)
 
 ## -----------------------------------------------------------------------------
 random_string <- function(len = 3) {

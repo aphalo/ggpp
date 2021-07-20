@@ -863,9 +863,8 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
 
 It can be useful to mark the centroid of a group of observations with a
 point or with a label. By default `stat_centroid()` applies function
-`mean()` to both `x` and `y` by group. If all the values mapped to
-`label` within each group are identical, this value is copied to the
-returned `data`.
+`mean_se()` to both `x` and `y` by group. If the value mapped to
+an aesthetics across rows within each group is unique this value is copied to the returned `data`.
 
 ```{r}
 ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
@@ -959,25 +958,22 @@ ggplot(my.data, aes(x, y, colour = group)) +
   facet_wrap(~group)
 ```
 
-### stat_apply_group and stat_apply_panel
+### stat_apply_group
 
-These statistics apply a function to `x` and `y` data. The function is
-expected to return a vector of the same length as its input. It is
-usually better to apply such functions through mappings using `aes()`
-when they are independent of grouping or to use a transformation for the
-scale. However, when grouping is important, these statistics solve a
-problem that would otherwise require pre-computation of the data. Here
-we plot the difference in circumference between dates for each tree. (As
-the vector returned by `diff()` is one element shorter than its input,
-we prepend `NA`.) However, scale limits are not recomputed and modifying
-them would exclude observations. Consequently, in this case we need to
-manualy set the limit in `coord_cartesian()`.
+This statistic applies functions to `x` and `y` data. The function(s) supplied as argument are expected to return a numeric vector. Both functions should return vectors of the same length. When possible it is
+usually better to apply functions through mappings using `aes()`
+when they are independent of grouping, or to use a transformation for the
+scale. However, when grouping is important, these statistics make it possible
+to avoid pre-computation of the data for a layer. 
+
+Here we plot the difference in trunck circumference between dates for each tree.
+(As the vector returned by `diff()` is one element shorter than its input, we
+delete the first value of `x` in `.fun.x`.).
 
 ```{r}
 ggplot(Orange, aes(age, circumference, colour = Tree)) +
-  stat_apply_group(.fun.y = function(x) {c(NA, diff(x))}, na.rm = TRUE) +
-  coord_cartesian(xlim = c(420, NA))
-  
+  stat_apply_group(.fun.x = function(x) {x[-1L]},
+                   .fun.y = diff)
 ```
 
 ### stat_dens2d_labels() and stat_dens2d_filter()
@@ -1339,10 +1335,10 @@ ggplot(df, aes(x, y, label = l)) +
 ### position_nudge_center()
 
 Function `position_nudge_center()` can nudge radially away from a focal point if
-both `x` and `y` are passed as arguments, or towards opposite sides
-of a boundary line if only one of `x` or `y` is passed an argument.
-By default, the "center" is the centroid computed using `mean()`, but other
-functions or numeric values can be passed to override it. 
+both `x` and `y` are passed as arguments, or towards opposite sides of a
+boundary line if only one of `x` or `y` is passed an argument. By default, the
+"center" is the centroid computed using `mean()`, but other functions or numeric
+values can be passed to override it.
 
 ```{r}
 set.seed(84532)
