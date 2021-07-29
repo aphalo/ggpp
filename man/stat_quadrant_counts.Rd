@@ -109,7 +109,7 @@ This statistic can be used to automatically count observations in
 }
 
 \examples{
-library(gginnards)
+
 # generate artificial data
 set.seed(4321)
 x <- 1:100
@@ -121,14 +121,20 @@ ggplot(my.data, aes(x, y)) +
   stat_quadrant_counts()
 
 # We use geom_debug() to see the computed values
-ggplot(my.data, aes(x, y)) +
-  geom_point() +
-  stat_quadrant_counts(geom = "debug")
+
+gginnards.installed <- requireNamespace("gginnards", quietly = TRUE)
+if (gginnards.installed) {
+  library(gginnards)
+
+  ggplot(my.data, aes(x, y)) +
+    geom_point() +
+    stat_quadrant_counts(geom = "debug")
+}
 
 ggplot(my.data, aes(x, y)) +
-  geom_point() +
-  stat_quadrant_counts(aes(label = sprintf("\%i observations", stat(count)))) +
-  expand_limits(y = 12.7)
+ geom_point() +
+ stat_quadrant_counts(aes(label = sprintf("\%i observations", stat(count)))) +
+ expand_limits(y = 12.7)
 
 ggplot(my.data, aes(x, y)) +
   geom_quadrant_lines(colour = "blue", xintercept = 50, yintercept = 10) +

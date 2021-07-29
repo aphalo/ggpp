@@ -23,18 +23,21 @@ options(warnPartialMatchArgs = FALSE,
         tibble.print.max = 4,
         tibble.print.min = 4,
         dplyr.summarise.inform = FALSE)
-eval_flag <- FALSE  # evaluate all code chunks
+eval_all <- FALSE  # if TRUE evaluate all code chunks
 ```
 
 ## Preliminaries
 
-We load all the packages used in the examples.
+We load all the packages used in the examples, if installed, and set flags to
+skip examples if they are not available.
 
 ```{r, message=FALSE}
 library(ggpp)
-library(ggrepel)
 library(tibble)
 library(dplyr)
+eval_ggrepel <- requireNamespace("ggrepel", quietly = TRUE)
+if (eval_ggrepel) library(ggrepel)
+eval_magick <- requireNamespace("magick", quietly = TRUE)
 ```
 
 As we will use text and labels on the plotting area we change the
@@ -349,6 +352,9 @@ Wickham H. (2016) *ggplot2*. Springer International Publishing. ISBN
 
 # Examples
 
+Some of the examples below are evaluated only if packages 'ggrepel',
+and 'magick' are available.
+
 ## ggplot methods
 
 `ggplot()` methods for classes `"ts"` and `"xts"` automate plotting of
@@ -420,7 +426,7 @@ inset tables, giving the same plot as above. In this case single data
 frames, ggplots or grobs do not need to be wrapped in a list, although
 lists are also supported.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 tb <- mpg %>%
   group_by(cyl) %>%
   summarise(hwy = median(hwy), cty = median(cty))
@@ -567,7 +573,7 @@ The same plot as above can be created using `annotate()`, but be aware
 that when using facets in 'ggplot2' annotations are identical in all
 panels.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 p <- ggplot(mpg, aes(factor(cyl), hwy, fill = factor(cyl))) +
   stat_summary(geom = "col", fun = mean, width = 2/3) +
   labs(x = "Number of cylinders", y = NULL, title = "Means") +
@@ -602,7 +608,7 @@ frames, and ggplots, respectively, and convert them into Grobs, `geom_grob()`
 expects Grobs ready to be rendered. This means that any Grob created using
 'grid' or its extenssions can be added as a data label to a ggplot.
 
-```{r}
+```{r, eval=eval_magick}
 file.name <- 
   system.file("extdata", "Isoquercitin.png", 
               package = "ggpp", mustWork = TRUE)
@@ -633,7 +639,7 @@ that the inset is not distorted, set only one of `width` or `height`). The
 argument to `vp.width` or `vp.height`, also in "npc" units, determines the size
 of the `Grob` relative to the size of the plotting area.
 
-```{r, eval=eval_flag}
+```{r, eval=(eval_all && eval_magick)}
 ggplot() +
   annotate("grob", x = 1, y = 3, vp.width = 0.5,
            label = grid::rasterGrob(image = Isoquercitin, width = 1)) +
@@ -759,7 +765,7 @@ aesthetics using `aes()`. In the example the tibble has a single row,
 but this is not a requirement. In this respect these geoms behave as
 normal geoms, with facets also supported.
 
-```{r}
+```{r, eval=eval_magick}
 file.name <- 
   system.file("extdata", "Robinin.png", 
               package = "ggpp", mustWork = TRUE)
@@ -785,7 +791,7 @@ ggplot(data.tb, aes(x, y)) +
 Alternatively, we can pass constant values to `geom_grob_npc()` to
 obtain the same plot. This approach can be handy in simple cases.
 
-```{r, eval=eval_flag}
+```{r, eval=(eval_all && eval_magick)}
 ggplot(data.tb, aes(x, y)) +
   geom_grob_npc(label = list(grid::rasterGrob(image = Robinin, width = 1)), 
                 npcx = 0.02, npcy = 0.95,
@@ -798,7 +804,7 @@ We can also use `annotate()` if the annotation should be the same for
 all panels, or if we have a single figure panel. In this case there is
 no need to wrap a single `grob` in a list.
 
-```{r, eval=eval_flag}
+```{r, eval=(eval_all && eval_magick)}
 ggplot(data.tb, aes(x, y)) +
   annotate("grob_npc", label = grid::rasterGrob(image = Robinin, width = 1), 
                 npcx = 0.02, npcy = 0.95, vp.width = 1/2, vp.height = 1/4) +
@@ -918,7 +924,7 @@ ggplot(my.data, aes(x, y)) +
 Pooling quadrants along the *x*-axis. (`pool.along = "y"` pools along
 *y*.)
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 ggplot(my.data, aes(x, y)) +
   geom_quadrant_lines(colour = "red", pool.along = "x") +
   stat_quadrant_counts(colour = "red", pool.along = "x") +
@@ -937,7 +943,7 @@ ggplot(my.data, aes(x, y)) +
 
 Annotation of only specific quadrants.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 ggplot(my.data, aes(x, y)) +
   geom_quadrant_lines(colour = "red") +
   stat_quadrant_counts(colour = "red", quadrants = c(2, 4)) +
@@ -1026,7 +1032,7 @@ ggplot(data = d, aes(x, y)) +
 
 Keep at most 50 observations.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 ggplot(data = d, aes(x, y)) +
   geom_point() +
   stat_dens2d_filter(keep.fraction = 1/4, keep.number = 50, colour = "red")
@@ -1034,7 +1040,7 @@ ggplot(data = d, aes(x, y)) +
 
 Keep always 50 observations.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 ggplot(data = d, aes(x, y)) +
   geom_point() +
   stat_dens2d_filter(keep.fraction = 1, keep.number = 50, colour = "red")
@@ -1043,7 +1049,7 @@ ggplot(data = d, aes(x, y)) +
 Highlighting 1/4 of the observations by under-plotting with larger black
 points.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 ggplot(data = d, aes(x, y, colour = group)) +
    stat_dens2d_filter(keep.fraction = 0.25,
                       size = 3,
@@ -1090,7 +1096,7 @@ geom used requires a `label` aesthetic.
 
 Label 1/10 of observations from lowest density areas of the plot panels.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 ggplot(data = d, aes(x, y, label = lab, colour = group)) +
   stat_dens2d_labels(keep.fraction = 1/10, 
                      hjust = "outward", vjust = "outward") +
@@ -1101,7 +1107,7 @@ Using the geoms from package 'ggrepel' avoids clashes among labels or on
 top of data points. This works with versions 0.6.0 and newer of
 'ggrepel'. One example with `geom_text_repel` follows.
 
-```{r}
+```{r, eval=eval_ggrepel}
 ggplot(data = d, aes(x, y, label = lab, colour = group)) +
   geom_point() +
   stat_dens2d_labels(geom = "text_repel", 
@@ -1130,7 +1136,7 @@ and transparency, the occlusion can remain easily unnoticed with
 `geom_label` and `geom_label_repel`. We keep `geom_point` as the topmost
 layer to ensure that all observations are visible.
 
-```{r, eval=eval_flag}
+```{r, eval=(eval_all && eval_ggrepel)}
 ggplot(data = d, aes(x, y, label = lab, colour = group)) +
   stat_dens2d_labels(geom = "label_repel", 
                      keep.fraction = 0.2, 
@@ -1190,7 +1196,7 @@ ggplot(data = d, aes(x, y)) +
 We repeat the example above, we highlight 1/4 of observations, but now
 from lowest density region along the *y* axis of the plot panel.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 ggplot(data = d, aes(x, y)) +
   geom_point() +
   stat_dens1d_filter(keep.fraction = 0.25,
@@ -1218,7 +1224,7 @@ geom used requires a `label` aesthetic.
 Label 1/10 of observations from lowest density regions along *x* in the
 plot panel. Normally a repulsive geom is most useful.
 
-```{r}
+```{r, eval=eval_ggrepel}
 ggplot(data = d, aes(x, y, label = lab, colour = group)) +
   geom_point() +
   stat_dens1d_labels(geom = "text_repel")
@@ -1226,7 +1232,7 @@ ggplot(data = d, aes(x, y, label = lab, colour = group)) +
 
 Similarly along the *y* axis.
 
-```{r, eval=eval_flag}
+```{r, eval=(eval_all && eval_ggrepel)}
 ggplot(data = d, aes(x, y, label = lab, colour = group)) +
   geom_point() +
   stat_dens1d_labels(geom = "text_repel", orientation = "y")
@@ -1295,13 +1301,13 @@ ggplot(df, aes(x, y, label = l)) +
 As this is also the default position function of this geometry, the code below
 is equivalent.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
   geom_text_linked(nudge_x = 0.1, nudge_y = 0.15, hjust = -0.8, vjust = 0.2)
 ```
 
-```{r}
+```{r, eval=eval_ggrepel}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
   geom_text_repel(position = position_nudge_keep(x = 0.15, y = 0.2))
@@ -1374,7 +1380,7 @@ ggplot(df, aes(x, y, label = l)) +
 We can override the default center coordinates by passing numeric values to
 `center_x` and/or `center_y`.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
   geom_text(position = position_nudge_center(x = 0.1,
@@ -1385,7 +1391,7 @@ ggplot(df, aes(x, y, label = l)) +
 We can override the default center coordinates computed with `mean()` by passing
 as argument a different function.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
   geom_text(position = position_nudge_center(x = 0.1,
@@ -1403,7 +1409,7 @@ ggplot(df, aes(x, y, label = l)) +
                                              direction = "radial"))
 ```
 
-```{r}
+```{r, eval=eval_ggrepel}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
   geom_text_repel(position = position_nudge_center(x = 0.1,
@@ -1510,7 +1516,7 @@ ggplot(df, aes(x, y, label = l)) +
 Negative values passed as arguments to `x` and `y` correspond to labels
 below and outside the curve.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
   geom_line(linetype = "dotted") +
@@ -1538,7 +1544,7 @@ When fitting a polynomial, `"lm"` should be the argument passed to
 as argument to `formula`.
 *Currently no other methods are implemented in* `position_nudge_line()`.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 ggplot(df, aes(x, yy, label = l)) +
   geom_point() +
   stat_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE)) +
@@ -1550,7 +1556,7 @@ ggplot(df, aes(x, yy, label = l)) +
                                            direction = "split"))
 ```
 
-```{r, eval=eval_flag}
+```{r, eval=(eval_all && eval_ggrepel)}
 ggplot(df, aes(x, yy, label = l)) +
   geom_point() +
   stat_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE)) +
@@ -1581,7 +1587,7 @@ ggplot(df, aes(x, y, label = l, color = group)) +
 
 One needs to ensure that grouping is in effect in the geoms with nudging.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 ggplot(df, aes(x, y, label = l, color = group, group = group)) +
   geom_line(linetype = "dotted") +
   geom_text() +
@@ -1594,7 +1600,7 @@ ggplot(df, aes(x, y, label = l, color = group, group = group)) +
 
 Facets are also supported.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 ggplot(df, aes(x, y, label = l)) +
   geom_line(linetype = "dotted") +
   geom_point() +
@@ -1634,7 +1640,7 @@ observations in the denser region of the plot. Although here we first
 plot all data points and later overplot the selected ones this is not
 necessary.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 ggplot(data = make_data_tbl(300), aes(x, y)) +
   geom_point() +
   stat_dens2d_filter(colour = "red", 
@@ -1645,7 +1651,7 @@ ggplot(data = make_data_tbl(300), aes(x, y)) +
 Here we highlight the observations split in three group equal groups,
 each of a different density of observations.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 ggplot(data = make_data_tbl(300), aes(x, y)) +
   geom_point() +
   stat_dens2d_filter(colour = "red", 
@@ -1658,7 +1664,7 @@ ggplot(data = make_data_tbl(300), aes(x, y)) +
 The algorithm seems to work well also with other distributions, in this
 example the uniform distribution.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 ggplot(data = make_data_tbl(300, rfun = runif), aes(x, y)) +
   geom_point() +
   stat_dens2d_filter(colour = "red", keep.fraction = 1/2)
@@ -1666,7 +1672,7 @@ ggplot(data = make_data_tbl(300, rfun = runif), aes(x, y)) +
 
 One example with the gamma distribution, which is asymmetric.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 ggplot(data = make_data_tbl(300, rfun = rgamma, shape = 2), 
        aes(x, y)) +
   geom_point() +
@@ -1699,7 +1705,7 @@ head(austres.df, 4)
 
 This second example is for a series of yearly values.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 class(lynx)
 lynx.df <- try_tibble(lynx)
 class(lynx.df)
@@ -1717,7 +1723,7 @@ head(lynx.df, 3)
 In addition we can convert the POSIXct values into numeric values in
 calendar years plus a decimal fraction.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 lynx_n.df <- try_tibble(lynx, "year", as.numeric = TRUE)
 lapply(lynx_n.df, "class")
 head(lynx_n.df, 3)
@@ -1728,26 +1734,26 @@ head(lynx_n.df, 3)
 `try_tibble()` attempts to handle gracefully objects that are not time
 series.
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 try_tibble(1:5)
 ```
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 try_tibble(letters[1:5])
 ```
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 try_tibble(factor(letters[1:5]))
 ```
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 try_tibble(list(x = rep(1,5), y = 1:5))
 ```
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 try_tibble(data.frame(x = rep(1,5), y = 1:5))
 ```
 
-```{r, eval=eval_flag}
+```{r, eval=eval_all}
 try_tibble(matrix(1:10, ncol = 2))
 ```

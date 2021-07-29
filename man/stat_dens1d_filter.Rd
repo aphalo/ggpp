@@ -122,11 +122,10 @@ A plot layer instance. Using as output \code{data} a subset of the
 }
 \examples{
 
-library(ggrepel)
-
-random_string <- function(len = 6) {
-paste(sample(letters, len, replace = TRUE), collapse = "")
-}
+random_string <-
+  function(len = 6) {
+    paste(sample(letters, len, replace = TRUE), collapse = "")
+  }
 
 # Make random data.
 set.seed(1001)
@@ -207,9 +206,14 @@ ggplot(data = d, aes(x, y, label = lab, colour = group)) +
   stat_dens1d_filter(geom = "text", hjust = "outward")
 
 # repulsive labels with ggrepel::geom_text_repel()
-ggplot(data = d, aes(x, y, label = lab, colour = group)) +
-  geom_point() +
-  stat_dens1d_filter(geom = "text_repel")
+ggrepel.installed <- requireNamespace("ggrepel", quietly = TRUE)
+if (ggrepel.installed) {
+  library(ggrepel)
+
+  ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+    geom_point() +
+    stat_dens1d_filter(geom = "text_repel")
+}
 
 }
 \seealso{

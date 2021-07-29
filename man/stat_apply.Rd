@@ -225,24 +225,26 @@ ggplot(my.df, aes(x = X, y = Y, colour = category)) +
                    .fun.y = function(x) {(x - min(x)) / (max(x) - min(x))})
 
 # inspecting the returned data
-library(gginnards)
+if (requireNamespace("gginnards", quietly = TRUE)) {
+  library(gginnards)
 
-ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-  stat_centroid(.fun = mean_se, geom = "debug")
+  ggplot(my.df, aes(x = X, y = Y, colour = category)) +
+    stat_centroid(.fun = mean_se, geom = "debug")
 
-ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-  stat_summary_xy(.fun.y = mean_se, geom = "debug")
+  ggplot(my.df, aes(x = X, y = Y, colour = category)) +
+    stat_summary_xy(.fun.y = mean_se, geom = "debug")
 
-ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-  stat_apply_group(.fun.y = cumsum, geom = "debug")
+  ggplot(my.df, aes(x = X, y = Y, colour = category)) +
+    stat_apply_group(.fun.y = cumsum, geom = "debug")
 
-ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-  geom_point() +
-  stat_apply_group(geom = "debug",
-                   .fun.x = quantile,
-                   .fun.x.args = list(probs = my.probs),
-                   .fun.y = quantile,
+  ggplot(my.df, aes(x = X, y = Y, colour = category)) +
+    geom_point() +
+    stat_apply_group(geom = "debug",
+                    .fun.x = quantile,
+                    .fun.x.args = list(probs = my.probs),
+                    .fun.y = quantile,
                    .fun.y.args = list(probs = my.probs))
+}
 
 }
 \references{
