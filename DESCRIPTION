@@ -1,8 +1,8 @@
 Package: ggpp
 Type: Package
 Title: Grammar Extensions to 'ggplot2'
-Version: 0.4.1.9001
-Date: 2021-07-29
+Version: 0.4.2
+Date: 2021-07-30
 Authors@R:
     c(
     person("Pedro J.", "Aphalo", email = "pedro.aphalo@helsinki.fi", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3385-972X")),
@@ -41,7 +41,7 @@ Imports:
 Suggests:
     knitr (>= 1.29),
     rmarkdown (>= 2.3),
-    gginnards(>= 0.0.3),
+    gginnards(>= 0.1.0),
     ggrepel (>= 0.9.1),
     magick (>= 2.6.0)
 URL: https://docs.r4photobiology.info/ggpp/, 
