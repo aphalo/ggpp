@@ -29,7 +29,7 @@
 \alias{GeomTable}
 \alias{gtbnpc_draw_panel_fun}
 \alias{GeomTableNpc}
-\alias{GeomLinkedText}
+\alias{GeomTextLinked}
 \alias{GeomTextNpc}
 \alias{PositionNudgeCenter}
 \alias{quant_compute_panel}

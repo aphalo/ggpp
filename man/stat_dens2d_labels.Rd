@@ -97,9 +97,10 @@ A plot layer instance. Using as output \code{data} the input
 }
 \examples{
 
-random_string <- function(len = 6) {
-paste(sample(letters, len, replace = TRUE), collapse = "")
-}
+random_string <-
+  function(len = 6) {
+    paste(sample(letters, len, replace = TRUE), collapse = "")
+  }
 
 # Make random data.
 set.seed(1001)
@@ -114,6 +115,15 @@ d <- tibble::tibble(
 ggplot(data = d, aes(x, y, label = lab)) +
   geom_point() +
   stat_dens2d_labels()
+
+ggplot(data = d, aes(x, y, label = lab)) +
+  geom_point() +
+  stat_dens2d_labels(geom = "text_linked",
+                     position = position_nudge_center(x = 0.1, y = 0.1,
+                                                      center_x = mean,
+                                                      center_y = mean),
+                     vjust = "outward_mean", hjust = "outward_mean") +
+  expand_limits(x = c(-4, 4.5))
 
 ggrepel.installed <- requireNamespace("ggrepel", quietly = TRUE)
 if (ggrepel.installed) {

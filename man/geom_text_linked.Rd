@@ -183,7 +183,7 @@ p +
 p +
   geom_text_linked() +
   annotate(
-    "linked_text", label = "plot mpg vs. wt",
+    "text_linked", label = "plot mpg vs. wt",
     x = 2, y = 15, size = 3, colour = "red"
   )  +
  expand_limits(x = c(1.5, 6))

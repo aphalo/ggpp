@@ -141,6 +141,7 @@ df <- data.frame(
   y.chr = c("bottom", "top", "bottom", "top", "middle"),
   text = c("bottom-left", "top-left", "bottom-right", "top-right", "center-middle")
 )
+
 ggplot(df) +
   geom_text_npc(aes(npcx = x, npcy = y, label = text))
 
