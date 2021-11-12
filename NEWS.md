@@ -4,6 +4,10 @@ editor_options:
     wrap: 72
 ---
 
+# ggpp 0.4.3
+
+- Update the vignette
+
 # ggpp 0.4.2
 
 The initial implementation and user interface of three *apply*
@@ -88,10 +92,10 @@ near future*.
 -   Revise `compute_npcx()` and `compute_npcy()` to support multiple
     steps per group (needed in 'ggpmisc').
 -   Fix problem related to `"outward"` and `"inward"` justification of
-    text labels when `angle` aesthetic takes values \< -45 or \> 45
+    text labels when `angle` aesthetic takes values \< -45 or > 45
     degrees. This code change alters how old plots are rendered if text
     labels have been rotated by more than 45 degrees.
--   ['ggplot2', 'ggrepel'] The problem with angle was a "bug" in
+-   \['ggplot2', 'ggrepel'\] The problem with angle was a "bug" in
     'ggplot2' also present in 'ggrepel'. A pull request for
     `ggplot2::geom_text()` has been submitted and merged. This is now in
     the 'ggplot2' 3.3.4 milestone retaining consistent behaviour between
@@ -102,7 +106,7 @@ near future*.
 -   Update the documentation of `geom_plot()`.
 -   Revise handling of rounding for $R^2$ and $P$-value in
     `stat_poly_eq()`.
--   [**Under development!**] Link repositioned text to its original
+-   \[**Under development!**\] Link repositioned text to its original
     position with a segment or arrow: `geom_linked_text()`. Except for
     the drawing of segments or arrows this new *geometry* behaves as
     `ggplot2::geom_text()` . *Note:* Segments and arrows are drawn only
@@ -198,7 +202,7 @@ near future*.
 # ggpmisc 0.3.4
 
 -   Add support for p.value.label and f.value.label to `stat_poly_eq()`.
--   Update to track deprecations in 'ggplot2' (\>= 3.3.0).
+-   Update to track deprecations in 'ggplot2' (>= 3.3.0).
 
 # ggpmisc 0.3.3
 
@@ -210,7 +214,7 @@ near future*.
 This version implements some new features and fixes bugs in the features
 introduced in version 0.3.1, please do rise an issue if you notice any
 remaining bugs! Some reported weaknesses in the documentation have been
-addressed. This updated version depends on 'ggplot2' (\>= 3.2.1).
+addressed. This updated version depends on 'ggplot2' (>= 3.2.1).
 
 -   Add support for *volcano* and *quadrant* *plots* of outcomes.
 
@@ -262,7 +266,7 @@ differences in the positions of labels used as annotations. The many new
 features may still have some bugs, please do rise an issue if you notice
 one!
 
-Version requiring 'ggplot2' (\>= 3.1.0).
+Version requiring 'ggplot2' (>= 3.1.0).
 
 Add new geometries, several of them accepting *x* and *y* in *npc* units
 through the new aesthetics `npcx` and `npcy`, allowing positioning
@@ -301,12 +305,12 @@ of annotate().
 
 # ggpmisc 0.3.0
 
-Version requiring 'ggplot2' (\>= 3.0.0), now in CRAN. **Low level
+Version requiring 'ggplot2' (>= 3.0.0), now in CRAN. **Low level
 manipulation and debug methods and functions moved to new package
 'gginnards' available through CRAN.**
 
--   Remove debug stats and geoms -\> 'gginnards'.
--   Remove layer manipulation functions -\> 'gginnards'.
+-   Remove debug stats and geoms -> 'gginnards'.
+-   Remove layer manipulation functions -> 'gginnards'.
 -   Add support for "weight" aesthetic in `stat_poly_eq()` (fixing bug
     reported by S.Al-Khalidi).
 -   Add support for column selection and renaming to `stat_fit_tb()`.
@@ -321,12 +325,12 @@ manipulation and debug methods and functions moved to new package
 Non-CRAN version with additional functionality, but requiring the
 development version of 'ggplot2'.
 
--   Track code breaking change in 'ggplot2' commit \#2620 (2018-05-17).
+-   Track code breaking change in 'ggplot2' commit #2620 (2018-05-17).
 
 # ggpmisc 0.2.17.9900
 
 Non-CRAN version with additional functionality, but requiring the
-development version of 'ggplot2' \>= 2.2.1.9000 (\>= commit of
+development version of 'ggplot2' \>= 2.2.1.9000 (>= commit of
 2017-02-09) from Github. Visit
 
 -   `geom_table()`, a geom for adding a layer containing one or more

@@ -6,13 +6,7 @@
 \alias{ggpp-package}
 \title{ggpp: Grammar Extensions to 'ggplot2'}
 \description{
-Extensions to 'ggplot2' respecting the grammar of graphics 
-    paradigm. Geomas: geom_table(), geom_plot() and geom_grob() add insets to 
-    plots using native data coordinates, while geom_table_npc(), geom_plot_npc()
-    and geom_grob_npc() do the same using "npc" coordinates through new 
-    aesthetics "npcx" and "npcy". Statistics: select observations based on 2D 
-    density. Positions: radial nudging away from a center point and nudging away
-    from a line or curve.
+Extensions to 'ggplot2' respecting the grammar of graphics paradigm. Geomas: geom_table(), geom_plot() and geom_grob() add insets to plots using native data coordinates, while geom_table_npc(), geom_plot_npc() and geom_grob_npc() do the same using "npc" coordinates through new aesthetics "npcx" and "npcy". Statistics: select observations based on 2D density. Positions: radial nudging away from a center point and nudging away from a line or curve.
 }
 \details{
 Package 'ggpp' provides functions that extend the grammar of

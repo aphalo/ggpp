@@ -12,7 +12,8 @@ eval_all <- FALSE  # if TRUE evaluate all code chunks
 library(ggpp)
 library(tibble)
 library(dplyr)
-eval_ggrepel <- requireNamespace("ggrepel", quietly = TRUE)
+eval_ggrepel <- requireNamespace("ggrepel", quietly = TRUE) &&
+  packageVersion("ggrepel") > "0.9.1"
 if (eval_ggrepel) library(ggrepel)
 eval_magick <- requireNamespace("magick", quietly = TRUE)
 
@@ -458,93 +459,148 @@ ggplot(data = d, aes(x, y, label = lab, colour = group)) +
 ## -----------------------------------------------------------------------------
 set.seed(84532)
 df <- data.frame(
-  x = rnorm(10),
-  y = rnorm(10, 2, 2),
-  l = letters[1:10]
-)
-
-## -----------------------------------------------------------------------------
-ggplot(df, aes(x, y, label = l)) +
-  geom_point() +
-  geom_text(position = position_nudge_keep(x = 0.1, y = 0.15))
-
-## -----------------------------------------------------------------------------
-ggplot(df, aes(x, y, label = l)) +
-  geom_point() +
-  geom_text_linked(position = position_nudge_keep(x = 0.1, y = 0.15),
-                   hjust = -0.8, vjust = 0.2)
-
-## ---- eval=eval_all-----------------------------------------------------------
-#  ggplot(df, aes(x, y, label = l)) +
-#    geom_point() +
-#    geom_text_linked(nudge_x = 0.1, nudge_y = 0.15, hjust = -0.8, vjust = 0.2)
-
-## ---- eval=eval_ggrepel-------------------------------------------------------
-ggplot(df, aes(x, y, label = l)) +
-  geom_point() +
-  geom_text_repel(position = position_nudge_keep(x = 0.15, y = 0.2))
-
-## -----------------------------------------------------------------------------
-set.seed(84532)
-df <- data.frame(
-  x = rnorm(8),
-  y = rnorm(8, 2, 2),
-  l = letters[1:8]
-)
-
-## -----------------------------------------------------------------------------
-ggplot(df, aes(x, y, label = l)) +
-  geom_point() +
-  geom_text(position = position_nudge_to(y = 6))
-
-## -----------------------------------------------------------------------------
-set.seed(84532)
-df <- data.frame(
   x = rnorm(20),
   y = rnorm(20, 2, 2),
-  l = sample(letters[1:6], 20, replace = TRUE)
+  l = paste("label:", letters[1:20])
 )
 
-## -----------------------------------------------------------------------------
-ggplot(df, aes(x, y, label = l)) +
-  geom_point() +
-  geom_text(position = position_nudge_center(x = 0.1,
-                                             y = 0.15,
-                                             direction = "split"))
-
-## -----------------------------------------------------------------------------
-ggplot(df, aes(x, y, label = l)) +
-  geom_point() +
-  geom_text(position = position_nudge_center(x = 0.1,
-                                             direction = "split"))
-
-## ---- eval=eval_all-----------------------------------------------------------
-#  ggplot(df, aes(x, y, label = l)) +
-#    geom_point() +
-#    geom_text(position = position_nudge_center(x = 0.1,
-#                                               center_x = 1,
-#                                               direction = "split"))
-
-## ---- eval=eval_all-----------------------------------------------------------
-#  ggplot(df, aes(x, y, label = l)) +
-#    geom_point() +
-#    geom_text(position = position_nudge_center(x = 0.1,
-#                                               center_x = median,
-#                                               direction = "split"))
-
-## -----------------------------------------------------------------------------
-ggplot(df, aes(x, y, label = l)) +
-  geom_point() +
-  geom_text(position = position_nudge_center(x = 0.1,
-                                             y = 0.3,
-                                             direction = "radial"))
 
 ## ---- eval=eval_ggrepel-------------------------------------------------------
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
-  geom_text_repel(position = position_nudge_center(x = 0.1,
-                                                   y = 0.3,
-                                                   direction = "radial"))
+  geom_text_repel(position = 
+                    position_nudge_keep(x = 0.3),
+                    min.segment.length = 0, max.iter = 0)
+
+## ---- eval=eval_ggrepel-------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_repel(position = position_nudge(x = 0.3),
+                  min.segment.length = 0, 
+                  max.iter = 0)
+
+## -----------------------------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text(position = position_nudge(x = 0.3))
+
+## ---- eval=eval_ggrepel-------------------------------------------------------
+ggplot(df, aes(x, y, label = ifelse(x < 1, "", l) )) +
+  geom_point() +
+  geom_text_repel(position = 
+                    position_nudge_to(x = 2.3),
+                  min.segment.length = 0,
+                  segment.color = "red",
+                  arrow = arrow(length = unit(0.015, "npc")),
+                  direction = "y",
+                  hjust = "left") +
+  expand_limits(x = 3)
+
+## -----------------------------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point(color = "red", size = 3) +
+  geom_text(position = position_nudge_to(y = -2.5), 
+            size = 3,
+            color = "red",
+            angle = 90,
+            hjust = 0,
+            check_overlap = TRUE) +
+  geom_rug(sides = "b", length = unit(0.02, "npc"), color = "red")
+
+## ---- eval=eval_ggrepel-------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_repel(position = 
+                    position_nudge_center(x = 0.3, center_x = 0),
+                    min.segment.length = 0, max.iter = 0)
+
+## ---- eval=eval_ggrepel-------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_repel(position = 
+                    position_nudge_center(x = 0.3,
+                                          direction = "split"),
+                  min.segment.length = 0)
+
+## ---- eval=eval_ggrepel-------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_repel(position = 
+                    position_nudge_center(x = 0.3,
+                                          center_x = 1,
+                                          direction = "split"),
+                  min.segment.length = 0)
+
+## ---- eval=eval_ggrepel-------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_repel(position = 
+                    position_nudge_center(x = 0.3,
+                                          center_x = median,
+                                          direction = "split"),
+                  min.segment.length = 0)
+
+## ---- eval=eval_ggrepel-------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_repel(position = 
+                    position_nudge_center(x = 0.3,
+                                          center_x = function(x) {
+                                            quantile(x, 
+                                                     probs = 1/4, 
+                                                     names = FALSE)
+                                          },
+                                          direction = "split"),
+                  min.segment.length = 0)
+
+## ---- eval=eval_ggrepel-------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_repel(angle = 90,
+                  position = 
+                    position_nudge_center(y = 0.1,
+                                          direction = "split"))
+
+## ---- eval=eval_ggrepel-------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_repel(position = 
+                    position_nudge_center(x = 0.1,
+                                          y = 0.15,
+                                          direction = "split"))
+
+## ---- eval=eval_ggrepel-------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_repel(position = 
+                    position_nudge_center(x = 0.25,
+                                          y = 0.4,
+                                          direction = "radial"),
+                  min.segment.length = 0)
+
+## ---- eval=eval_ggrepel-------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_repel(position = 
+                    position_nudge_center(x = 0.15,
+                                          y = 0.3,
+                                          center_x = 0,
+                                          center_y = 0,
+                                          direction = "radial"),
+                  min.segment.length = 0,
+                  hjust = "outward", vjust = "outward")
+
+## ---- eval=eval_ggrepel-------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_repel(position = 
+                    position_nudge_center(x = 0.2,
+                                          center_x = 0,
+                                          direction = "split"),
+                  aes(hjust = ifelse(x < 0, 1, 0)),
+                  direction = "y",
+                  min.segment.length = 0) +
+  expand_limits(x = c(-3, 3))
 
 ## -----------------------------------------------------------------------------
 set.seed(16532)
@@ -557,19 +613,19 @@ df <- data.frame(
 )
 
 ## -----------------------------------------------------------------------------
-ggplot(df, aes(x, -3 * x, label = l)) +
+ggplot(df, aes(x, 2 * x, label = l)) +
   geom_point() +
-  geom_abline(intercept = 0, slope = -3, linetype = "dotted") +
+  geom_abline(intercept = 0, slope = 2, linetype = "dotted") +
   geom_text(position = position_nudge_line(x = -0.5, y = -0.8))
 
 ## -----------------------------------------------------------------------------
 ggplot(subset(df, x >= 0), aes(x, yyy)) +
   geom_point() +
-  stat_smooth(method = "lm", formula = y ~ x) +
+  stat_smooth(method = "lm") +
   geom_text(aes(label = l),
             vjust = "center", hjust = "center",
             position = position_nudge_line(x = 0, y = 1.2,
-                                           method = "lm", formula = y ~ x,
+                                           method = "lm",
                                            direction = "split"))
 
 ## -----------------------------------------------------------------------------
@@ -579,7 +635,7 @@ ggplot(subset(df, x >= 0), aes(y, yy)) +
   geom_text(aes(label = l),
             position = position_nudge_line(method = "lm",
                                            x = 3, y = 3, 
-                                           line_nudge = 2.8,
+                                           line_nudge = 2.5,
                                            direction = "split"))
 
 ## -----------------------------------------------------------------------------
@@ -597,42 +653,57 @@ ggplot(df, aes(x, y, label = l)) +
   geom_line(linetype = "dotted") +
   geom_text(position = position_nudge_line(x = 0.6, y = 6))
 
-## ---- eval=eval_all-----------------------------------------------------------
-#  ggplot(df, aes(x, y, label = l)) +
-#    geom_point() +
-#    geom_line(linetype = "dotted") +
-#    geom_text(position = position_nudge_line(x = -0.6, y = -6))
+## -----------------------------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_line(linetype = "dotted") +
+  geom_text(position = position_nudge_line(x = -0.6, y = -6))
 
 ## -----------------------------------------------------------------------------
 ggplot(df, aes(x, yy, label = l)) +
   geom_point() +
-  stat_smooth(formula = y ~ x, method = "loess") +
+  stat_smooth() +
   geom_text(aes(y = yy, label = l),
             position = position_nudge_line(x = 0.6, 
                                            y = 6,
                                            direction = "split"))
 
-## ---- eval=eval_all-----------------------------------------------------------
-#  ggplot(df, aes(x, yy, label = l)) +
-#    geom_point() +
-#    stat_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE)) +
-#    geom_text(aes(y = yy, label = l),
-#              position = position_nudge_line(method = "lm",
-#                                             x = 0.6,
-#                                             y = 6,
-#                                             formula = y ~ poly(x, 2, raw = TRUE),
-#                                             direction = "split"))
+## ---- eval=eval_ggrepel-------------------------------------------------------
+ggplot(df, aes(x, yy, label = l)) +
+  geom_point() +
+  stat_smooth() +
+  geom_label_repel(aes(y = yy, label = paste("point", l)),
+            position = position_nudge_line(x = 0.6, 
+                                           y = 6,
+                                           direction = "split"),
+            min.segment.length = 0)
 
-## ---- eval=(eval_all && eval_ggrepel)-----------------------------------------
-#  ggplot(df, aes(x, yy, label = l)) +
-#    geom_point() +
-#    stat_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE)) +
-#    geom_text_repel(aes(y = yy, label = l),
-#                    position = position_nudge_line(method = "lm",
-#                                                   x = 0.6,
-#                                                   y = 6,
-#                                                   formula = y ~ poly(x, 2, raw = TRUE),
-#                                                   direction = "split"))
+## -----------------------------------------------------------------------------
+ggplot(df, aes(x, yy, label = l)) +
+  geom_point() +
+  stat_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE)) +
+  geom_text(aes(y = yy, label = l),
+            position = position_nudge_line(method = "lm",
+                                           x = 0.5, 
+                                           y = 5,
+                                           formula = y ~ poly(x, 2, raw = TRUE),
+                                           direction = "split"))
+
+## ---- eval=eval_ggrepel-------------------------------------------------------
+ggplot(df, aes(x, yy, label = l)) +
+  geom_point() +
+  stat_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE)) +
+  geom_text_repel(aes(y = yy, label = l),
+                  box.padding = 0.5,
+                  min.segment.length = Inf)
+
+## ---- eval=eval_ggrepel-------------------------------------------------------
+ggplot(df, aes(x, yy, label = l)) +
+  geom_point() +
+  stat_smooth() +
+  geom_label_repel(aes(y = yy, label = paste("point", l)),
+                  box.padding = 0.5,
+                  min.segment.length = 0)
 
 ## -----------------------------------------------------------------------------
 df <- data.frame(x = rep(1:10, 2),
@@ -643,30 +714,31 @@ df <- data.frame(x = rep(1:10, 2),
 ## -----------------------------------------------------------------------------
 ggplot(df, aes(x, y, label = l, color = group)) +
   geom_line(linetype = "dotted") +
-  geom_point() +
+  geom_text() +
   geom_text(position = position_nudge_line(x = 0.25, y = 1)) +
+  geom_text(position = position_nudge_line(x = -0.25, y = -1)) +
   coord_equal(ratio = 0.5)
 
-## ---- eval=eval_all-----------------------------------------------------------
-#  ggplot(df, aes(x, y, label = l, color = group, group = group)) +
-#    geom_line(linetype = "dotted") +
-#    geom_text() +
-#    geom_text(color = "red",
-#              position = position_nudge_line(x = 1, y = 1)) +
-#    geom_text(color = "blue",
-#              position = position_nudge_line(x = -1, y = -1)) +
-#    coord_equal()
+## -----------------------------------------------------------------------------
+ggplot(df, aes(x, y, label = l, color = group, group = group)) +
+  geom_line(linetype = "dotted") +
+  geom_text() +
+  geom_text(color = "red",
+            position = position_nudge_line(x = 1, y = 1)) +
+  geom_text(color = "blue",
+            position = position_nudge_line(x = -1, y = -1)) +
+  coord_equal()
 
-## ---- eval=eval_all-----------------------------------------------------------
-#  ggplot(df, aes(x, y, label = l)) +
-#    geom_line(linetype = "dotted") +
-#    geom_point() +
-#    geom_text(position = position_nudge_line(x = 1, y = 1),
-#              color = "red") +
-#    geom_text(position = position_nudge_line(x = -1, y = -1),
-#              color = "blue") +
-#    facet_wrap(~group) +
-#    coord_equal(ratio = 1)
+## -----------------------------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_line(linetype = "dotted") +
+  geom_text() +
+  geom_text(position = position_nudge_line(x = 1, y = 1),
+            color = "red") +
+  geom_text(position = position_nudge_line(x = -1, y = -1),
+            color = "blue") +
+  facet_wrap(~group) +
+  coord_equal(ratio = 1)
 
 ## -----------------------------------------------------------------------------
 make_data_tbl <- function(nrow = 100, rfun = rnorm, ...) {
