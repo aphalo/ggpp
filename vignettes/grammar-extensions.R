@@ -496,15 +496,17 @@ ggplot(df, aes(x, y, label = ifelse(x < 1, "", l) )) +
                   hjust = "left") +
   expand_limits(x = 3)
 
-## -----------------------------------------------------------------------------
+## ---- eval=eval_ggrepel-------------------------------------------------------
 ggplot(df, aes(x, y, label = l)) +
   geom_point(color = "red", size = 3) +
-  geom_text(position = position_nudge_to(y = -2.5), 
-            size = 3,
-            color = "red",
-            angle = 90,
-            hjust = 0,
-            check_overlap = TRUE) +
+  geom_text_repel(position = position_nudge_to(y = -2.5), 
+                  size = 3,
+                  color = "red",
+                  angle = 90,
+                  hjust = 0,
+                  box.padding = 0.1,
+                  segment.color = NA,
+                  direction = "x") +
   geom_rug(sides = "b", length = unit(0.02, "npc"), color = "red")
 
 ## ---- eval=eval_ggrepel-------------------------------------------------------

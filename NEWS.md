@@ -6,7 +6,7 @@ editor_options:
 
 # ggpp 0.4.3
 
-- Update the vignette
+-   Update the vignette.
 
 # ggpp 0.4.2
 

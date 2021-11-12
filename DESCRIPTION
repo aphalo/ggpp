@@ -42,7 +42,7 @@ Suggests:
     knitr (>= 1.29),
     rmarkdown (>= 2.3),
     gginnards(>= 0.1.0),
-    ggrepel (> 0.9.1),
+    ggrepel (>= 0.9.1),
     magick (>= 2.6.0)
 URL: https://docs.r4photobiology.info/ggpp/, 
      https://github.com/aphalo/ggpp
