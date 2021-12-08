@@ -23,6 +23,10 @@
 #'   position, or the width of a single element?.
 #' @param x,y Amount of vertical and horizontal distance to move. A numeric
 #'   vector of length 1, or of the same length as rows there are in `data`,
+#' @param direction One of "none" or "split". A value of "none"
+#'   replicates the behavior of [ggplot2::position_nudge]. At the moment
+#'   "split" changes the sign of the nudge at zero, which is suiatble for column
+#'   plots with negative slices.
 #'
 #' @seealso [ggplot2::position_nudge()], [ggrepel::position_nudge_repel()].
 #'
@@ -66,6 +70,11 @@ position_dodge_and_nudge <- function(width = 1,
   ggplot2::ggproto(NULL, PositionDodgeAndNudge,
           x = x,
           y = y,
+          .fun = switch(direction,
+                        none = I,
+                        split = sign,
+                        center = sign,
+                        sign),
           width = width,
           preserve = match.arg(preserve)
   )
@@ -82,7 +91,7 @@ PositionDodgeAndNudge <-
 
           setup_params = function(self, data) {
             c(
-              list(nudge_x = self$x, nudge_y = self$y),
+              list(nudge_x = self$x, nudge_y = self$y, .fun = self$.fun),
               ggplot2::ggproto_parent(ggplot2::PositionDodge, self)$setup_params(data)
             )
           },
@@ -97,17 +106,17 @@ PositionDodgeAndNudge <-
             if (any(params$nudge_x != 0)) {
               if (any(params$nudge_y != 0)) {
                 data <- ggplot2::transform_position(data,
-                                                    function(x) x + params$nudge_x * .fun(x),
-                                                    function(y) y + params$nudge_y * .fun(y))
+                                                    function(x) x + params$nudge_x * params$.fun(x),
+                                                    function(y) y + params$nudge_y * params$.fun(y))
               } else {
                 data <- ggplot2::transform_position(data,
-                                                    function(x) x + params$nudge_x * .fun(x),
+                                                    function(x) x + params$nudge_x * params$.fun(x),
                                                     NULL)
               }
             } else if (any(params$nudge_y != 0)) {
               data <- ggplot2::transform_position(data,
                                                   function(x) x,
-                                                  function(y) y + params$nudge_y * .fun(y))
+                                                  function(y) y + params$nudge_y * params$.fun(y))
             }
             # add original position
             data$x_orig <- x_orig

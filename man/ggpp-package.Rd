@@ -6,7 +6,7 @@
 \alias{ggpp-package}
 \title{ggpp: Grammar Extensions to 'ggplot2'}
 \description{
-Extensions to 'ggplot2' respecting the grammar of graphics paradigm. Geomas: geom_table(), geom_plot() and geom_grob() add insets to plots using native data coordinates, while geom_table_npc(), geom_plot_npc() and geom_grob_npc() do the same using "npc" coordinates through new aesthetics "npcx" and "npcy". Statistics: select observations based on 2D density. Positions: radial nudging away from a center point and nudging away from a line or curve.
+Extensions to 'ggplot2' respecting the grammar of graphics paradigm. Geometries: geom_table(), geom_plot() and geom_grob() add insets to plots using native data coordinates, while geom_table_npc(), geom_plot_npc() and geom_grob_npc() do the same using "npc" coordinates through new aesthetics "npcx" and "npcy". Statistics: select observations based on 2D density. Positions: radial nudging away from a center point and nudging away from a line or curve; combined stacking and nudging; combined dodging and nudging.
 }
 \details{
 Package 'ggpp' provides functions that extend the grammar of
@@ -60,7 +60,8 @@ Useful links:
 
 Other contributors:
 \itemize{
-  \item Kamil Slowikowski [contributor]
+  \item Kamil Slowikowski (\href{https://orcid.org/0000-0002-2843-6370}{ORCID}) [contributor]
+  \item Michal Krassowski (\href{https://orcid.org/0000-0002-9638-7785}{ORCID}) [contributor]
 }
 
 }
