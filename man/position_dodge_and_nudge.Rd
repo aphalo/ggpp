@@ -11,14 +11,17 @@ position_dodge_and_nudge(
   preserve = c("total", "single"),
   x = 0,
   y = 0,
-  direction = "none"
+  direction = "split"
 )
 
 position_dodge2_and_nudge(
   width = 1,
   preserve = c("total", "single"),
+  padding = 0.1,
+  reverse = FALSE,
   x = 0,
-  y = 0
+  y = 0,
+  direction = "none"
 )
 }
 \arguments{
@@ -32,10 +35,16 @@ position, or the width of a single element?.}
 \item{x, y}{Amount of vertical and horizontal distance to move. A numeric
 vector of length 1, or of the same length as rows there are in `data`,}
 
-\item{direction}{One of "none" or "split". A value of "none"
-replicates the behavior of [ggplot2::position_nudge]. At the moment
-"split" changes the sign of the nudge at zero, which is suiatble for column
-plots with negative slices.}
+\item{direction}{One of "none" or "split". A value of "none" replicates the
+behavior of [ggplot2::position_nudge]. At the moment "split" changes the
+sign of the nudge at zero, which is suiatble for column plots with negative
+slices.}
+
+\item{padding}{Padding between elements at the same position. Elements are
+shrunk by this proportion to allow space between them. Defaults to 0.1.}
+
+\item{reverse}{If TRUE, will reverse the default stacking order. This is
+useful if you're rotating both the plot and legend.}
 }
 \value{
 A \code{"Position"} object.
@@ -57,8 +66,8 @@ when the desire is only to have access to both the original and nudged
 coordinates.
 }
 \examples{
-df <- data.frame(x1 = c("a", "a", "b", "b", "b"),
-                 x2 = c(1, 2, 1, 3, -1),
+df <- data.frame(x1 = c(1, 2, 1, 3, -1),
+                 x2 = c("a", "a", "b", "b", "b"),
                  grp = c("some long name", "other name", "some name",
                          "another name", "some long name"))
 
@@ -69,10 +78,11 @@ ggplot(data = df, aes(x1, x2, group = grp)) +
   geom_vline(xintercept = 0) +
   geom_text(
     aes(label = grp),
-    position = position_dodge_and_nudge(y = 0.1)) +
+    position = position_dodge_and_nudge(x = 0.09),
+    angle = 90) +
   theme(legend.position = "none")
 
-ggplot(data = df, aes(x1, x2, group = grp)) +
+ggplot(data = df, aes(x2, x1, group = grp)) +
   geom_col(aes(fill = grp), width = 0.75,
            position = position_dodge(width = 0.75)) +
   geom_vline(xintercept = 0) +

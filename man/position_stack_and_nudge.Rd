@@ -4,7 +4,13 @@
 \alias{position_stack_and_nudge}
 \title{Combined positions stack and nudge}
 \usage{
-position_stack_and_nudge(vjust = 1, reverse = FALSE, x = 0, y = 0)
+position_stack_and_nudge(
+  vjust = 1,
+  reverse = FALSE,
+  x = 0,
+  y = 0,
+  direction = "none"
+)
 }
 \arguments{
 \item{vjust}{Vertical adjustment for geoms that have a position (like points
@@ -16,6 +22,11 @@ useful if you're rotating both the plot and legend.}
 
 \item{x, y}{Amount of vertical and horizontal distance to move. A numeric
 vector of length 1, or of the same length as rows there are in `data`,}
+
+\item{direction}{One of "none" or "split". A value of "none" replicates the
+behavior of [ggplot2::position_nudge]. At the moment "split" changes the
+sign of the nudge at zero, which is suiatble for column plots with negative
+slices.}
 }
 \value{
 A \code{"Position"} object.
@@ -37,8 +48,8 @@ when the desire is only to have access to both the original and nudged
 coordinates.
 }
 \examples{
-df <- data.frame(x1 = c("a", "a", "b", "b", "b"),
-                 x2 = c(1, 2, 1, 3, -1),
+df <- data.frame(x1 = c(1, 2, 1, 3, -1),
+                 x2 = c("a", "a", "b", "b", "b"),
                  grp = c("some long name", "other name", "some name",
                          "another name", "some long name"))
 

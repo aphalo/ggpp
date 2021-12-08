@@ -21,12 +21,16 @@
 #'   geoms. See the examples.
 #' @param preserve Should dodging preserve the total width of all elements at a
 #'   position, or the width of a single element?.
+#' @param padding Padding between elements at the same position. Elements are
+#'   shrunk by this proportion to allow space between them. Defaults to 0.1.
+#' @param reverse If TRUE, will reverse the default stacking order. This is
+#'   useful if you're rotating both the plot and legend.
 #' @param x,y Amount of vertical and horizontal distance to move. A numeric
 #'   vector of length 1, or of the same length as rows there are in `data`,
-#' @param direction One of "none" or "split". A value of "none"
-#'   replicates the behavior of [ggplot2::position_nudge]. At the moment
-#'   "split" changes the sign of the nudge at zero, which is suiatble for column
-#'   plots with negative slices.
+#' @param direction One of "none" or "split". A value of "none" replicates the
+#'   behavior of [ggplot2::position_nudge]. At the moment "split" changes the
+#'   sign of the nudge at zero, which is suiatble for column plots with negative
+#'   slices.
 #'
 #' @seealso [ggplot2::position_nudge()], [ggrepel::position_nudge_repel()].
 #'
@@ -38,8 +42,8 @@
 #'   Pedro J. Aphalo.
 #'
 #' @examples
-#' df <- data.frame(x1 = c("a", "a", "b", "b", "b"),
-#'                  x2 = c(1, 2, 1, 3, -1),
+#' df <- data.frame(x1 = c(1, 2, 1, 3, -1),
+#'                  x2 = c("a", "a", "b", "b", "b"),
 #'                  grp = c("some long name", "other name", "some name",
 #'                          "another name", "some long name"))
 #'
@@ -50,10 +54,11 @@
 #'   geom_vline(xintercept = 0) +
 #'   geom_text(
 #'     aes(label = grp),
-#'     position = position_dodge_and_nudge(y = 0.1)) +
+#'     position = position_dodge_and_nudge(x = 0.09),
+#'     angle = 90) +
 #'   theme(legend.position = "none")
 #'
-#' ggplot(data = df, aes(x1, x2, group = grp)) +
+#' ggplot(data = df, aes(x2, x1, group = grp)) +
 #'   geom_col(aes(fill = grp), width = 0.75,
 #'            position = position_dodge(width = 0.75)) +
 #'   geom_vline(xintercept = 0) +
@@ -66,12 +71,12 @@ position_dodge_and_nudge <- function(width = 1,
                                      preserve = c("total", "single"),
                                      x = 0,
                                      y = 0,
-                                     direction = "none") {
+                                     direction = "split") {
   ggplot2::ggproto(NULL, PositionDodgeAndNudge,
           x = x,
           y = y,
           .fun = switch(direction,
-                        none = I,
+                        none = function(x) {1},
                         split = sign,
                         center = sign,
                         sign),

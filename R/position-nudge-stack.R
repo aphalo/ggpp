@@ -23,6 +23,10 @@
 #'   useful if you're rotating both the plot and legend.
 #' @param x,y Amount of vertical and horizontal distance to move. A numeric
 #'   vector of length 1, or of the same length as rows there are in `data`,
+#' @param direction One of "none" or "split". A value of "none" replicates the
+#'   behavior of [ggplot2::position_nudge]. At the moment "split" changes the
+#'   sign of the nudge at zero, which is suiatble for column plots with negative
+#'   slices.
 #'
 #' @seealso [ggplot2::position_nudge()], [ggrepel::position_nudge_repel()].
 #'
@@ -34,8 +38,8 @@
 #'   (revised by Pedro J. Aphalo)
 #'
 #' @examples
-#' df <- data.frame(x1 = c("a", "a", "b", "b", "b"),
-#'                  x2 = c(1, 2, 1, 3, -1),
+#' df <- data.frame(x1 = c(1, 2, 1, 3, -1),
+#'                  x2 = c("a", "a", "b", "b", "b"),
 #'                  grp = c("some long name", "other name", "some name",
 #'                          "another name", "some long name"))
 #'
@@ -81,10 +85,16 @@
 position_stack_and_nudge <- function(vjust = 1,
                                      reverse = FALSE,
                                      x = 0,
-                                     y = 0) {
+                                     y = 0,
+                                     direction = "none") {
   ggplot2::ggproto(NULL, PositionStackAndNudge,
           x = x,
           y = y,
+          .fun = switch(direction,
+                        none = function(x) {1},
+                        split = sign,
+                        center = sign,
+                        sign),
           vjust = vjust,
           reverse = reverse
   )
@@ -101,7 +111,7 @@ PositionStackAndNudge <-
 
           setup_params = function(self, data) {
             c(
-              list(x = self$x, y = self$y),
+              list(nudge_x = self$x, nudge_y = self$y, .fun = self$.fun),
               ggplot2::ggproto_parent(ggplot2::PositionStack, self)$setup_params(data)
             )
           },
@@ -113,14 +123,20 @@ PositionStackAndNudge <-
             x_orig <- data$x
             y_orig <- data$y
             # transform only the dimensions for which non-zero nudging is requested
-            if (any(params$x != 0)) {
-              if (any(params$y != 0)) {
-                data <- ggplot2::transform_position(data, function(x) x + params$x, function(y) y + params$y)
+            if (any(params$nudge_x != 0)) {
+              if (any(params$nudge_y != 0)) {
+                data <- ggplot2::transform_position(data,
+                                                    function(x) x + params$nudge_x * params$.fun(x),
+                                                    function(y) y + params$nudge_y * params$.fun(y))
               } else {
-                data <- ggplot2::transform_position(data, function(x) x + params$x, NULL)
+                data <- ggplot2::transform_position(data,
+                                                    function(x) x + params$nudge_x * params$.fun(x),
+                                                    NULL)
               }
-            } else if (any(params$y != 0)) {
-              data <- ggplot2::transform_position(data, function(x) x, function(y) y + params$y)
+            } else if (any(params$nudge_y != 0)) {
+              data <- ggplot2::transform_position(data,
+                                                  function(x) x,
+                                                  function(y) y + params$nudge_y * params$.fun(y))
             }
             # add original position
             data$x_orig <- x_orig
