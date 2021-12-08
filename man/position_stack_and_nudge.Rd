@@ -23,10 +23,10 @@ useful if you're rotating both the plot and legend.}
 \item{x, y}{Amount of vertical and horizontal distance to move. A numeric
 vector of length 1, or of the same length as rows there are in `data`,}
 
-\item{direction}{One of "none" or "split". A value of "none" replicates the
-behavior of [ggplot2::position_nudge]. At the moment "split" changes the
-sign of the nudge at zero, which is suiatble for column plots with negative
-slices.}
+\item{direction}{One of "none", "split", "split.x" or "split.y". A value of
+"none" replicates the behavior of [ggplot2::position_nudge]. At the moment
+"split" changes the sign of the nudge at zero, which is suiatble for column
+plots with negative slices.}
 }
 \value{
 A \code{"Position"} object.

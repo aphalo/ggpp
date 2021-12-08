@@ -11,7 +11,7 @@ position_dodge_and_nudge(
   preserve = c("total", "single"),
   x = 0,
   y = 0,
-  direction = "split"
+  direction = "none"
 )
 
 position_dodge2_and_nudge(
@@ -35,10 +35,10 @@ position, or the width of a single element?.}
 \item{x, y}{Amount of vertical and horizontal distance to move. A numeric
 vector of length 1, or of the same length as rows there are in `data`,}
 
-\item{direction}{One of "none" or "split". A value of "none" replicates the
-behavior of [ggplot2::position_nudge]. At the moment "split" changes the
-sign of the nudge at zero, which is suiatble for column plots with negative
-slices.}
+\item{direction}{One of "none", "split", "split.x" or "split.y". A value of
+"none" replicates the behavior of [ggplot2::position_nudge]. At the moment
+"split" changes the sign of the nudge at zero, which is suiatble for column
+plots with negative slices.}
 
 \item{padding}{Padding between elements at the same position. Elements are
 shrunk by this proportion to allow space between them. Defaults to 0.1.}
@@ -78,7 +78,8 @@ ggplot(data = df, aes(x1, x2, group = grp)) +
   geom_vline(xintercept = 0) +
   geom_text(
     aes(label = grp),
-    position = position_dodge_and_nudge(x = 0.09),
+    position = position_dodge_and_nudge(x = 0.09,
+                                        direction = "split"),
     angle = 90) +
   theme(legend.position = "none")
 
@@ -88,7 +89,9 @@ ggplot(data = df, aes(x2, x1, group = grp)) +
   geom_vline(xintercept = 0) +
   geom_text(
     aes(label = grp),
-    position = position_dodge_and_nudge(y = 0.1, width = 0.75)) +
+    position = position_dodge_and_nudge(y = 0.1,
+                                        direction = "split",
+                                        width = 0.75)) +
   theme(legend.position = "none")
 
 }

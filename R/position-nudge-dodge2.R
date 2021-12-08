@@ -12,11 +12,20 @@ position_dodge2_and_nudge <- function(width = 1,
   ggplot2::ggproto(NULL, PositionDodgeAndNudge,
           x = x,
           y = y,
-          .fun = switch(direction,
-                        none = function(x) {1},
-                        split = sign,
-                        center = sign,
-                        sign),
+          .fun_x = switch(direction,
+                          none = function(x) {1},
+                          split = sign,
+                          split.y = function(x) {1},
+                          split.x = sign,
+                          center = sign,
+                          function(x) {1}),
+          .fun_y = switch(direction,
+                          none = function(x) {1},
+                          split = sign,
+                          split.x = function(x) {1},
+                          split.y = sign,
+                          center = sign,
+                          function(x) {1}),
           width = width,
           preserve = match.arg(preserve),
           padding = padding,
@@ -35,7 +44,8 @@ PositionDodgeAndNudge <-
 
           setup_params = function(self, data) {
             c(
-              list(nudge_x = self$x, nudge_y = self$y, .fun = self$.fun),
+              list(nudge_x = self$x, nudge_y = self$y,
+                   .fun_x = self$.fun_x, .fun_y = self$.fun_y),
               ggplot2::ggproto_parent(ggplot2::PositionDodge2, self)$setup_params(data)
             )
           },
@@ -50,17 +60,17 @@ PositionDodgeAndNudge <-
             if (any(params$nudge_x != 0)) {
               if (any(params$nudge_y != 0)) {
                 data <- ggplot2::transform_position(data,
-                                                    function(x) x + params$nudge_x * params$.fun(x),
-                                                    function(y) y + params$nudge_y * params$.fun(y))
+                                                    function(x) x + params$nudge_x * params$.fun_x(x),
+                                                    function(y) y + params$nudge_y * params$.fun_y(y))
               } else {
                 data <- ggplot2::transform_position(data,
-                                                    function(x) x + params$nudge_x * params$.fun(x),
+                                                    function(x) x + params$nudge_x * params$.fun_x(x),
                                                     NULL)
               }
             } else if (any(params$nudge_y != 0)) {
               data <- ggplot2::transform_position(data,
                                                   function(x) x,
-                                                  function(y) y + params$nudge_y * params$.fun(y))
+                                                  function(y) y + params$nudge_y * params$.fun_y(y))
             }
             # add original position
             data$x_orig <- x_orig
