@@ -11,7 +11,7 @@ status](https://github.com/aphalo/ggpp/workflows/R-CMD-check/badge.svg)](https:/
 ## Purpose
 
 Package ‘**ggpp**’ provides a set of building blocks that extend the
-Grammar of Graphics implemented in package ‘ggplot2’ (&gt;= 3.0.0). New
+Grammar of Graphics implemented in package ‘ggplot2’ (>= 3.0.0). New
 geoms support insets in plots, marginal marks and the use of native plot
 coordinates (npc). Position functions implement new approaches to
 nudging usable with any geometry, but especially useful together with
@@ -150,7 +150,7 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point(show.legend = FALSE) 
 ```
 
-![](man/figures/README-unnamed-chunk-1-1.png)<!-- --> \#\# Installation
+![](man/figures/README-unnamed-chunk-1-1.png)<!-- --> ## Installation
 
 Installation of the most recent stable version from CRAN:
 

@@ -40,6 +40,8 @@ reference:
     - position_nudge_to
     - position_nudge_center
     - position_nudge_line
+    - position_dodge_and_nudge
+    - position_stack_and_nudge
   - title: Plot creation
     desc: Additional ggplot methods
     contents:
