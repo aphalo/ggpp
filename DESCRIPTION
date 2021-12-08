@@ -1,21 +1,23 @@
 Package: ggpp
 Type: Package
 Title: Grammar Extensions to 'ggplot2'
-Version: 0.4.2.9000
-Date: 2021-11-11
+Version: 0.4.2.9001
+Date: 2021-12-08
 Authors@R:
     c(
     person("Pedro J.", "Aphalo", email = "pedro.aphalo@helsinki.fi", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3385-972X")),
-    person("Kamil", "Slowikowski", role = "ctb")
+    person("Kamil", "Slowikowski", role = "ctb"), comment = c(ORCID = "0000-0002-2843-6370")),
+    person("Michał", "Krassowski", role = "ctb"), comment = c(ORCID = "0000-0002-9638-7785"))
     )
 Maintainer: Pedro J. Aphalo <pedro.aphalo@helsinki.fi>
 Description: Extensions to 'ggplot2' respecting the grammar of graphics 
-    paradigm. Geomas: geom_table(), geom_plot() and geom_grob() add insets to 
+    paradigm. Geometries: geom_table(), geom_plot() and geom_grob() add insets to 
     plots using native data coordinates, while geom_table_npc(), geom_plot_npc()
     and geom_grob_npc() do the same using "npc" coordinates through new 
     aesthetics "npcx" and "npcy". Statistics: select observations based on 2D 
     density. Positions: radial nudging away from a center point and nudging away
-    from a line or curve.
+    from a line or curve; combined stacking and nudging; combined dodging and
+    nudging.
 License: GPL (>= 2)
 LazyLoad: TRUE
 ByteCompile: TRUE

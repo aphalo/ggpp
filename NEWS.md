@@ -6,6 +6,9 @@ editor_options:
 
 # ggpp 0.4.3
 
+-   Add functions `position_stack_and_nudge()`,
+    `position_dodge_and_nudge()` and `position_dodge2_and_nudge()` based
+    on code by M. Krassowski.
 -   Update the vignette.
 
 # ggpp 0.4.2

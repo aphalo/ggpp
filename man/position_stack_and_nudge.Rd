@@ -2,20 +2,20 @@
 % Please edit documentation in R/position-nudge-stack.R
 \name{position_stack_and_nudge}
 \alias{position_stack_and_nudge}
-\title{Combined positions nudge and stack}
+\title{Combined positions stack and nudge}
 \usage{
-position_stack_and_nudge(x = 0, y = 0, vjust = 1, reverse = FALSE)
+position_stack_and_nudge(vjust = 1, reverse = FALSE, x = 0, y = 0)
 }
 \arguments{
-\item{x, y}{Amount of vertical and horizontal distance to move. A numeric
-vector of length 1, or of the same length as rows there are in `data`,}
-
 \item{vjust}{Vertical adjustment for geoms that have a position (like points
 or lines), not a dimension (like bars or areas). Set to 0 to align with the
 bottom, 0.5 for the middle, and 1 (the default) for the top.}
 
 \item{reverse}{If TRUE, will reverse the default stacking order. This is
 useful if you're rotating both the plot and legend.}
+
+\item{x, y}{Amount of vertical and horizontal distance to move. A numeric
+vector of length 1, or of the same length as rows there are in `data`,}
 }
 \value{
 A \code{"Position"} object.
@@ -37,12 +37,13 @@ when the desire is only to have access to both the original and nudged
 coordinates.
 }
 \examples{
-df <- data.frame(y = c("a", "a", "b", "b", "b"),
-                 x = c(1, 2, 1, 3, -1),
+df <- data.frame(x1 = c("a", "a", "b", "b", "b"),
+                 x2 = c(1, 2, 1, 3, -1),
                  grp = c("some long name", "other name", "some name",
                          "another name", "some long name"))
 
-ggplot(data = df, aes(x, y, group = grp)) +
+# Add labels to a horizontal column plot (stacked by default)
+ggplot(data = df, aes(x1, x2, group = grp)) +
   geom_col(aes(fill = grp), width=0.5) +
   geom_vline(xintercept = 0) +
   geom_text(
@@ -50,7 +51,8 @@ ggplot(data = df, aes(x, y, group = grp)) +
     position = position_stack_and_nudge(vjust = 0.5, y = 0.3)) +
   theme(legend.position = "none")
 
-ggplot(data = df, aes(y, x, group = grp)) +
+# Add labels to a vertical column plot (stacked by default)
+ggplot(data = df, aes(x2, x1, group = grp)) +
   geom_col(aes(fill = grp), width=0.5) +
   geom_vline(xintercept = 0) +
   geom_text(
@@ -59,7 +61,8 @@ ggplot(data = df, aes(y, x, group = grp)) +
     angle = 90) +
   theme(legend.position = "none")
 
-ggplot(data = df, aes(y, x, group = grp)) +
+# Add label at a fixed distance from the top of each column slice
+ggplot(data = df, aes(x2, x1, group = grp)) +
   geom_col(aes(fill = grp), width=0.5) +
   geom_vline(xintercept = 0) +
   geom_text(
@@ -67,7 +70,9 @@ ggplot(data = df, aes(y, x, group = grp)) +
     position = position_stack_and_nudge(vjust = 1, y = -0.2)) +
   theme(legend.position = "none")
 
-ggplot(data = df, aes(x, y, group = grp)) +
+# Use geom_text_linked(), geom_text_repel() or geom_label_repel() to link
+# label to labelled segment or object with an arrow
+ggplot(data = df, aes(x1, x2, group = grp)) +
   geom_col(aes(fill = grp), width=0.5) +
   geom_vline(xintercept = 0) +
   geom_text_linked(
@@ -81,6 +86,7 @@ ggplot(data = df, aes(x, y, group = grp)) +
 [ggplot2::position_nudge()], [ggrepel::position_nudge_repel()].
 
 Other position adjustments: 
+\code{\link{position_dodge_and_nudge}()},
 \code{\link{position_nudge_center}()},
 \code{\link{position_nudge_line}()},
 \code{\link{position_nudge_to}()}

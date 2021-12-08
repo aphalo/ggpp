@@ -1,4 +1,4 @@
-#' Combined positions nudge and stack
+#' Combined positions stack and nudge
 #'
 #' `position_stack_and_nudge()` is useful when labelling plots such as stacked
 #' bars, stacked columns, stacked lines, etc. In contrast to
@@ -16,13 +16,13 @@
 #'
 #' @family position adjustments
 #'
-#' @param x,y Amount of vertical and horizontal distance to move. A numeric
-#'   vector of length 1, or of the same length as rows there are in `data`,
 #' @param vjust Vertical adjustment for geoms that have a position (like points
 #'   or lines), not a dimension (like bars or areas). Set to 0 to align with the
 #'   bottom, 0.5 for the middle, and 1 (the default) for the top.
 #' @param reverse If TRUE, will reverse the default stacking order. This is
 #'   useful if you're rotating both the plot and legend.
+#' @param x,y Amount of vertical and horizontal distance to move. A numeric
+#'   vector of length 1, or of the same length as rows there are in `data`,
 #'
 #' @seealso [ggplot2::position_nudge()], [ggrepel::position_nudge_repel()].
 #'
@@ -34,12 +34,13 @@
 #'   (revised by Pedro J. Aphalo)
 #'
 #' @examples
-#' df <- data.frame(y = c("a", "a", "b", "b", "b"),
-#'                  x = c(1, 2, 1, 3, -1),
+#' df <- data.frame(x1 = c("a", "a", "b", "b", "b"),
+#'                  x2 = c(1, 2, 1, 3, -1),
 #'                  grp = c("some long name", "other name", "some name",
 #'                          "another name", "some long name"))
 #'
-#' ggplot(data = df, aes(x, y, group = grp)) +
+#' # Add labels to a horizontal column plot (stacked by default)
+#' ggplot(data = df, aes(x1, x2, group = grp)) +
 #'   geom_col(aes(fill = grp), width=0.5) +
 #'   geom_vline(xintercept = 0) +
 #'   geom_text(
@@ -47,7 +48,8 @@
 #'     position = position_stack_and_nudge(vjust = 0.5, y = 0.3)) +
 #'   theme(legend.position = "none")
 #'
-#' ggplot(data = df, aes(y, x, group = grp)) +
+#' # Add labels to a vertical column plot (stacked by default)
+#' ggplot(data = df, aes(x2, x1, group = grp)) +
 #'   geom_col(aes(fill = grp), width=0.5) +
 #'   geom_vline(xintercept = 0) +
 #'   geom_text(
@@ -56,7 +58,8 @@
 #'     angle = 90) +
 #'   theme(legend.position = "none")
 #'
-#' ggplot(data = df, aes(y, x, group = grp)) +
+#' # Add label at a fixed distance from the top of each column slice
+#' ggplot(data = df, aes(x2, x1, group = grp)) +
 #'   geom_col(aes(fill = grp), width=0.5) +
 #'   geom_vline(xintercept = 0) +
 #'   geom_text(
@@ -64,7 +67,9 @@
 #'     position = position_stack_and_nudge(vjust = 1, y = -0.2)) +
 #'   theme(legend.position = "none")
 #'
-#' ggplot(data = df, aes(x, y, group = grp)) +
+#' # Use geom_text_linked(), geom_text_repel() or geom_label_repel() to link
+#' # label to labelled segment or object with an arrow
+#' ggplot(data = df, aes(x1, x2, group = grp)) +
 #'   geom_col(aes(fill = grp), width=0.5) +
 #'   geom_vline(xintercept = 0) +
 #'   geom_text_linked(
@@ -73,7 +78,10 @@
 #'     vjust = "bottom") +
 #'   theme(legend.position = "none")
 #'
-position_stack_and_nudge <- function(x = 0, y = 0, vjust = 1, reverse = FALSE) {
+position_stack_and_nudge <- function(vjust = 1,
+                                     reverse = FALSE,
+                                     x = 0,
+                                     y = 0) {
   ggplot2::ggproto(NULL, PositionStackAndNudge,
           x = x,
           y = y,
@@ -98,9 +106,9 @@ PositionStackAndNudge <-
             )
           },
 
-          compute_layer = function(self, data, params, panel) {
+          compute_layer = function(self, data, params, layout) {
             # operate on the stacked positions (updated in August 2020)
-            data = ggplot2::ggproto_parent(ggplot2::PositionStack, self)$compute_layer(data, params, panel)
+            data = ggplot2::ggproto_parent(ggplot2::PositionStack, self)$compute_layer(data, params, layout)
 
             x_orig <- data$x
             y_orig <- data$y
