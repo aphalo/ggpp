@@ -50,6 +50,7 @@ ggplot(df, aes(x, y, label = label)) +
 
 Other position adjustments: 
 \code{\link{position_nudge_center}()},
-\code{\link{position_nudge_line}()}
+\code{\link{position_nudge_line}()},
+\code{\link{position_stack_and_nudge}()}
 }
 \concept{position adjustments}
