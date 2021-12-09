@@ -12,8 +12,8 @@ status](https://github.com/aphalo/ggpp/workflows/R-CMD-check/badge.svg)](https:/
 
 Package ‘**ggpp**’ provides a set of building blocks that extend the
 Grammar of Graphics implemented in package ‘ggplot2’ (>= 3.0.0). New
-geoms support insets in plots, marginal marks and the use of native plot
-coordinates (npc). Position functions implement new approaches to
+“geoms” support insets in plots, marginal marks and the use of native
+plot coordinates (npc). Position functions implement new approaches to
 nudging usable with any geometry, but especially useful together with
 `geom_text_linked()`, `geom_text_repel()` and `geom_label_repel()`.
 
@@ -58,42 +58,70 @@ Four statistics, `stat_dens2d_filter()`, `stat_dens2d_label()`,
 selective labelling of observations based on the local 2D density of
 observations in a panel. Another two statistics,
 `stat_dens1d_filter_g()` and `stat_dens1d_filter_g()` compute the
-density by group instead of by plot panel. These six stats are designed
-to work well together with `geom_text_repel()` and `geom_label_repel()`
-from package ‘ggrepel’.
+density by group instead of by plot panel. These six statistics are
+designed to work well together with `geom_text_repel()` and
+`geom_label_repel()` from package ‘ggrepel’.
 
-The statistics `stat_apply_panel()` and `stat_apply_group()` can be
-useful for applying arbitrary functions returning numeric vectors. They
-are specially useful with functions lime `cumsum()`, `cummax()` and
-`diff()`.
+The statistics `stat_apply_panel()` and `stat_apply_group()` are useful
+for applying arbitrary functions returning numeric vectors like
+`cumsum()`, `cummax()` and `diff()`. Statistics `stat_centroid()` and
+`stat_summary_xy()` allow computation of summaries on both *x* and *y*
+and passing them to a geom.
 
 ## Position functions
 
-New position functions implementing different flavours of nudging are
+Position functions implementing different flavours of nudging are
 provided: `position_nudge_keep()`, `position_nudge_to()`,
 `position_nudge_center()` and `position_nudge_line()`. These last two
 functions make it possible to apply nudging that varies automatically
 according to the relative position of points with respect to arbitrary
 points or lines, or with respect to a polynomial or smoothing spline
-fitted on-the-fly to the the observations. In contrast to
-`ggplot2::position_nudge()` all these functions return the repositioned
-and original *x* and *y* coordinates.
+fitted on-the-fly to the the observations.
+
+Position functions `position_stack_and_nudge()`,
+`position_stack_and_dodge()` and `position_stack_and_dodge2()` each
+combines the roles of two *position* functions. They make it possible to
+easily nudge labels in plot layers that use stacking or dodging.
+
+In contrast to `ggplot2::position_nudge()` all these functions return
+the repositioned and original *x* and *y* coordinates. This makes them
+compatible with the repulsive geometries from package ‘ggrepel’ (>=
+0.9.1) as well as with `geom_text_linked()` from this package that draw
+segments or arrows connecting the original positions to the displaced
+positions. They remain backwards compatible and be used in all
+geometries that have a `position` formal parameter.
+
+## Justification
+
+Justifications `"outward_mean"`, `"inward_mean"`, `"outward_median"` and
+`"inward_median"` implementing outward and inward justification relative
+to the centroid of the data instead of to the center of the *x* or *y*
+scales. Justification outward or inward from an arbitrary origin is also
+supported.
 
 ## History
 
 This package is a “spin-off” from package ‘ggpmisc’ containing
 extensions to the grammar originally written for use wihtin ‘ggpmisc’.
-As ‘ggpmisc’ has grown in size, spliting it into two packages seems the
-best option. For the time being, package ‘ggpmisc’ will import and
-re-export visible defintions from ‘ggpp’.
+As ‘ggpmisc’ had grown in size, splitting it into two packages was
+necessary to easy development and maintenance and to facilitate imports
+into other packages. For the time being, package ‘ggpmisc’ imports and
+re-exports all visible definitions from ‘ggpp’.
 
 ## Examples
+
+The plots below exemplify some of the things that ‘ggpp’ makes possible
+or makes easier to code compared to ‘ggplot’ used by itself. Additional
+examples including several combining ‘ggpp’ and ‘ggrepel’ are provided
+in the package vignette.
 
 ``` r
 library(ggpp)
 library(ggrepel)
 library(dplyr)
 ```
+
+### Insets
 
 A plot with an inset table.
 
@@ -114,9 +142,11 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
 
 ![](man/figures/README-readme-03-1.png)<!-- -->
 
-A plot with an inset plot. With the inset plot positioned using native
-plot coordinates (npc) and using keywords insted of numerical values in
-the range 0..1 which are also accepted.
+A plot with an inset plot.
+
+Inset plot positioned using native plot coordinates (npc) and using
+keywords insted of numerical values in the range 0..1 which are also
+accepted.
 
 ``` r
 p <- ggplot(mtcars, aes(factor(cyl), mpg, colour = factor(cyl))) +
@@ -130,27 +160,52 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   expand_limits(y = 0, x = 0)
 ```
 
-![](man/figures/README-readme-06-1.png)<!-- --> Marginal markings
+![](man/figures/README-readme-06-1.png)<!-- -->
+
+### Centroids
+
+Means computed on-the-fly and shown as asterisks.
 
 ``` r
-data.tb <- mtcars %>%
-  group_by(cyl) %>%
-  summarise(wt = mean(wt), mpg = mean(mpg))
-
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
-  geom_x_margin_arrow(data = data.tb,
-                      aes(xintercept = wt, color = factor(cyl)),
-                      arrow.length = 0.05) +
-  geom_y_margin_arrow(data = data.tb,
-                      aes(yintercept = mpg, color = factor(cyl)),
-                      arrow.length = 0.05) +
-  annotate("plot_npc", npcx = "right", npcy = "top", 
-           label = p + theme(axis.title.y = element_blank())) +
-  expand_limits(y = 10) +
-  geom_point(show.legend = FALSE) 
+  geom_point() +
+  stat_centroid(shape = "asterisk", size = 6)
 ```
 
-![](man/figures/README-unnamed-chunk-1-1.png)<!-- --> ## Installation
+![](man/figures/README-unnamed-chunk-1-1.png)<!-- -->
+
+Medians computed on-the-fly displayed marginal arrows.
+
+``` r
+ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+  geom_point() +
+  stat_centroid(geom = "y_margin_arrow", .fun = median,
+                aes(yintercept = after_stat(y)), arrow.length = 0.05)
+```
+
+![](man/figures/README-unnamed-chunk-2-1.png)<!-- -->
+
+### Nudging and stacking combined
+
+``` r
+df <- data.frame(x1 = c(1, 2, 1, 3, -1),
+                 x2 = c("a", "a", "b", "b", "b"),
+                 grp = c("some long name", "other name", "some name",
+                         "another name", "a name"))
+
+# Add labels to a horizontal column plot (stacked by default)
+ggplot(data = df, aes(x2, x1, group = grp)) +
+  geom_col(aes(fill = grp), width=0.5) +
+  geom_hline(yintercept = 0) +
+  geom_text(
+    aes(label = grp),
+    position = position_stack_and_nudge(vjust = 1, y = -0.2)) +
+  theme(legend.position = "none")
+```
+
+![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
+
+## Installation
 
 Installation of the most recent stable version from CRAN:
 
