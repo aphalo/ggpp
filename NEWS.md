@@ -6,9 +6,31 @@ editor_options:
 
 # ggpp 0.4.3
 
+Based on issues raised in the GitHub repository of 'ggrepel' and the
+nudge functions added some time ago to package 'ggpp' it became obvious
+that nudging can help in achieving good repulsion outcomes without need
+of tailored repulsion algorithms for specific cases. Obviously
+developing new ggplot *position* functions is much easier than tweaking
+the repulsion algorithm. It is also clear that not being able to combine
+nudging with stack, jitter and dodge positions made difficult to produce
+some types of plots. One case is replacing a key or legend with direct
+labels to plot elements, which is important in plots aimed at audiences
+outside academia.
+
+In one of the issues an answer by M. Krassowski included code that
+provided an elegant and simple approach to implementing combined
+position functions without duplicating code already in 'ggplot2' but
+instead calling it. I edited this code and included it in the package.
+The design of these four functions is not yet final their interface may
+suffer some changes.
+
 -   Add functions `position_stack_and_nudge()`,
-    `position_dodge_and_nudge()` and `position_dodge2_and_nudge()` based
-    on code by M. Krassowski.
+    `position_jitter_and_nudge()`, `position_dodge_and_nudge()` and
+    `position_dodge2_and_nudge()` based on code by M. Krassowski for
+    `position_stack_and_nudge()`.
+-   Add `geom_point_linked()` and update `geom_text_linked()`. (This two
+    functions are under development, so their user interfaces may change
+    in the near future).
 -   Update the vignette.
 
 # ggpp 0.4.2

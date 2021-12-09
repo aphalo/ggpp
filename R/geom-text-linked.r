@@ -5,18 +5,19 @@
 #'   to the nudged text with a segment.
 #'
 #' @section Under development:
-#'   This is a very simple and preliminary version of a geom. I plan to add
+#'   This is preliminary version of the geom. I plan to add
 #'   features like padding around text and points. I aim to make use of the new
 #'   features of 'grid' in R >= 4.1.0 to keep the implementation as fast and
 #'   simple as possible. Currently this geom does all drawing using at most two
 #'   vectorized calls to 'grid' functions. As a temporary replacement of padding
 #'   around text one can use 'slightly out-of-range' numeric values for
-#'   justification as shown in the examples.
+#'   justification as shown in the examples. Aesthetics `segment.colour` and
+#'   `segment.alpha` are implemented, but `segment.linetype` not yet.
 #'
 #' @details Note that when you resize a plot, text labels stay the same size,
 #'   even though the size of the plot area changes. This happens because the
 #'   "width" and "height" of a text element are 0. Obviously, text labels do
-#'   have height and width, but they are physical units, not data units. For the
+#'   have height and width, but in physical units, not data units. For the
 #'   same reason, stacking and dodging text will not work by default, and axis
 #'   limits are not automatically expanded to include all text.
 #'
@@ -76,6 +77,9 @@
 #'
 #' @return A plot layer instance.
 #'
+#' @note You can alternativelt use [ggrepel::geom_label_repel], possibly
+#'   setting `max.iter = 0` to disable repulsion when needed.
+#'
 #' @export
 #'
 #' @examples
@@ -113,12 +117,13 @@
 #'   geom_text_linked(angle = 90,
 #'                    hjust = -0.04, nudge_y = 1,
 #'                    arrow = arrow(length = grid::unit(1.5, "mm"))) +
-#'   expand_limits(y = 40)
+#'   expand_limits(y = 30)
 #'
 #' # Add aesthetic mappings
 #' p +
 #'   geom_point() +
 #'   geom_text_linked(aes(colour = factor(cyl)),
+#'                    segment.colour = "black",
 #'                    angle = 90,
 #'                    hjust = -0.04, nudge_y = 1,
 #'                    arrow = arrow(length = grid::unit(1.5, "mm"))) +
@@ -256,9 +261,9 @@ GeomTextLinked <-
                       fontface = 1,
                       lineheight = 1.2,
                       segment.linetype = 1,
-                      segment.colour = NULL,
+                      segment.colour = "grey33",
                       segment.size = 0.5,
-                      segment.alpha = NULL
+                      segment.alpha = 1
                     ),
 
                     draw_panel = function(data, panel_params, coord, #panel_scales,
@@ -313,9 +318,8 @@ GeomTextLinked <-
                             x1 = data_orig$x,
                             y1 = data_orig$y,
                             arrow = arrow,
-                            gp = grid::gpar(col =
-                                              alpha(data$colour,
-                                                    data$alpha))),
+                            gp = grid::gpar(col = alpha(data$segment.colour,
+                                                        data$segment.alpha))),
                           grid::textGrob(
                             lab,
                             data$x, data$y, default.units = "native",

@@ -1,18 +1,33 @@
 #' Combined positions dodge and nudge
 #'
-#' `position_dodge_and_nudge()` is useful when labelling plots such as grouped
-#' bars, columns, etc. In contrast to [ggplot2::position_nudge],
-#' `position_dodge_and_nudge()` returns in `data` both the original coordinates
-#' and the nudged coordinates.
+#' `position_dodge_and_nudge()` combines into one function the action of
+#' [ggplot2::position_dodge] and [ggplot2::position_nudge] and
+#' `position_dodge2_and_nudge()` combines into one function the action of
+#' [ggplot2::position_dodge2] and [ggplot2::position_nudge]. They are useful
+#' when labelling plots such as grouped bars, columns, etc. and when adding
+#' dodged to text labels linked to observations plotted without dodge. It can
+#' replace other position functions as it is backwards compatible. Like all
+#' other position functions in 'ggpp' and 'ggrepel' it preserves the initial
+#' position to allow drawing of segments or arrow linking the original position
+#' to the displaced one.
 #'
-#' This position function is backwards compatible with [ggplot2::position_nudge]
-#' but extends it by adding support for stacking and for the repulsive
-#' geometries from package 'ggrepel'.
+#' @details The appled dodge is identical to that by [ggplot2::position_dodge]
+#'   while nudging is similar to that by [ggplot2::position_nudge].
 #'
-#' The wrapper `position_nudge_keep()` with exactly the same signature and
-#' behaviour as [ggplot2::position_nudge] provides an easier to remember name
-#' when the desire is only to have access to both the original and nudged
-#' coordinates.
+#' There are two posible uses for these functions. First they can be used
+#' to label dodged bars or boxplots. In this case, it is mandatory to use
+#' the same argument to `width` when passing
+#' `position_dodge()` to `geom_col()` and `position_dodge_and_nudge()` to
+#' `geom_text()` or `geom_label()` or their repulsive equivalents. Otherwise
+#' the arrows or segments will fail to connect to the labels. In other words
+#' jittering is computed twice. Jitter should be identical with the same
+#' arguments as `position_dodge_and_nudge()` as this last function simply call the
+#' same code from package 'ggplot2'.
+#'
+#' The second use is to dodge labels to be connected to elements that have not
+#' been jittered. The return of original positions instead of the dodged
+#' ones is achieved by passing `origin = "original"` instead of the default
+#' of `origin = "dodged".`
 #'
 #' @family position adjustments
 #'
@@ -31,6 +46,7 @@
 #'   "none" replicates the behavior of [ggplot2::position_nudge]. At the moment
 #'   "split" changes the sign of the nudge at zero, which is suiatble for column
 #'   plots with negative slices.
+#' @param returned.origin One of "original" or "dodged".
 #'
 #' @seealso [ggplot2::position_nudge()], [ggrepel::position_nudge_repel()].
 #'
@@ -74,7 +90,8 @@ position_dodge_and_nudge <- function(width = 1,
                                      preserve = c("total", "single"),
                                      x = 0,
                                      y = 0,
-                                     direction = "none") {
+                                     direction = "none",
+                                     returned.origin = "dodged") {
   ggplot2::ggproto(NULL, PositionDodgeAndNudge,
           x = x,
           y = y,
@@ -92,6 +109,7 @@ position_dodge_and_nudge <- function(width = 1,
                           split.y = sign,
                           center = sign,
                           function(x) {1}),
+          returned.origin = returned.origin,
           width = width,
           preserve = match.arg(preserve)
   )
@@ -109,17 +127,20 @@ PositionDodgeAndNudge <-
           setup_params = function(self, data) {
             c(
               list(nudge_x = self$x, nudge_y = self$y,
-                   .fun_x = self$.fun_x, .fun_y = self$.fun_y),
+                   .fun_x = self$.fun_x, .fun_y = self$.fun_y,
+                   returned.origin = self$returned.origin),
               ggplot2::ggproto_parent(ggplot2::PositionDodge, self)$setup_params(data)
             )
           },
 
           compute_layer = function(self, data, params, layout) {
+            x_orig <- data$x
+            y_orig <- data$y
             # operate on the dodged positions
             data = ggplot2::ggproto_parent(ggplot2::PositionDodge, self)$compute_layer(data, params, layout)
 
-            x_orig <- data$x
-            y_orig <- data$y
+            x_dodged <- data$x
+            y_dodged <- data$y
             # transform only the dimensions for which non-zero nudging is requested
             if (any(params$nudge_x != 0)) {
               if (any(params$nudge_y != 0)) {
@@ -137,8 +158,13 @@ PositionDodgeAndNudge <-
                                                   function(y) y + params$nudge_y * params$.fun_y(y))
             }
             # add original position
-            data$x_orig <- x_orig
-            data$y_orig <- y_orig
+            if (params$returned.origin == "dodged") {
+              data$x_orig <- x_dodged
+              data$y_orig <- y_dodged
+            } else {
+              data$x_orig <- x_orig
+              data$y_orig <- y_orig
+            }
 
             data
           },

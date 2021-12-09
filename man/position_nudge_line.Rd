@@ -245,6 +245,7 @@ ggplot(df, aes(x, y, label = l)) +
 
 Other position adjustments: 
 \code{\link{position_dodge_and_nudge}()},
+\code{\link{position_jitter_and_nudge}()},
 \code{\link{position_nudge_center}()},
 \code{\link{position_nudge_to}()},
 \code{\link{position_stack_and_nudge}()}

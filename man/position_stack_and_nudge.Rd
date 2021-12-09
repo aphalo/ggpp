@@ -98,6 +98,7 @@ ggplot(data = df, aes(x1, x2, group = grp)) +
 
 Other position adjustments: 
 \code{\link{position_dodge_and_nudge}()},
+\code{\link{position_jitter_and_nudge}()},
 \code{\link{position_nudge_center}()},
 \code{\link{position_nudge_line}()},
 \code{\link{position_nudge_to}()}

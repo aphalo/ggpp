@@ -11,7 +11,8 @@ position_dodge_and_nudge(
   preserve = c("total", "single"),
   x = 0,
   y = 0,
-  direction = "none"
+  direction = "none",
+  returned.origin = "dodged"
 )
 
 position_dodge2_and_nudge(
@@ -21,7 +22,8 @@ position_dodge2_and_nudge(
   reverse = FALSE,
   x = 0,
   y = 0,
-  direction = "none"
+  direction = "none",
+  returned.origin = "dodged"
 )
 }
 \arguments{
@@ -40,6 +42,8 @@ vector of length 1, or of the same length as rows there are in `data`,}
 "split" changes the sign of the nudge at zero, which is suiatble for column
 plots with negative slices.}
 
+\item{returned.origin}{One of "original" or "dodged".}
+
 \item{padding}{Padding between elements at the same position. Elements are
 shrunk by this proportion to allow space between them. Defaults to 0.1.}
 
@@ -50,20 +54,35 @@ useful if you're rotating both the plot and legend.}
 A \code{"Position"} object.
 }
 \description{
-`position_dodge_and_nudge()` is useful when labelling plots such as grouped
-bars, columns, etc. In contrast to [ggplot2::position_nudge],
-`position_dodge_and_nudge()` returns in `data` both the original coordinates
-and the nudged coordinates.
+`position_dodge_and_nudge()` combines into one function the action of
+[ggplot2::position_dodge] and [ggplot2::position_nudge] and
+`position_dodge2_and_nudge()` combines into one function the action of
+[ggplot2::position_dodge2] and [ggplot2::position_nudge]. They are useful
+when labelling plots such as grouped bars, columns, etc. and when adding
+dodged to text labels linked to observations plotted without dodge. It can
+replace other position functions as it is backwards compatible. Like all
+other position functions in 'ggpp' and 'ggrepel' it preserves the initial
+position to allow drawing of segments or arrow linking the original position
+to the displaced one.
 }
 \details{
-This position function is backwards compatible with [ggplot2::position_nudge]
-but extends it by adding support for stacking and for the repulsive
-geometries from package 'ggrepel'.
+The appled dodge is identical to that by [ggplot2::position_dodge]
+  while nudging is similar to that by [ggplot2::position_nudge].
 
-The wrapper `position_nudge_keep()` with exactly the same signature and
-behaviour as [ggplot2::position_nudge] provides an easier to remember name
-when the desire is only to have access to both the original and nudged
-coordinates.
+There are two posible uses for these functions. First they can be used
+to label dodged bars or boxplots. In this case, it is mandatory to use
+the same argument to `width` when passing
+`position_dodge()` to `geom_col()` and `position_dodge_and_nudge()` to
+`geom_text()` or `geom_label()` or their repulsive equivalents. Otherwise
+the arrows or segments will fail to connect to the labels. In other words
+jittering is computed twice. Jitter should be identical with the same
+arguments as `position_dodge_and_nudge()` as this last function simply call the
+same code from package 'ggplot2'.
+
+The second use is to dodge labels to be connected to elements that have not
+been jittered. The return of original positions instead of the dodged
+ones is achieved by passing `origin = "original"` instead of the default
+of `origin = "dodged".`
 }
 \examples{
 df <- data.frame(x1 = c(1, 2, 1, 3, -1),
@@ -99,6 +118,7 @@ ggplot(data = df, aes(x2, x1, group = grp)) +
 [ggplot2::position_nudge()], [ggrepel::position_nudge_repel()].
 
 Other position adjustments: 
+\code{\link{position_jitter_and_nudge}()},
 \code{\link{position_nudge_center}()},
 \code{\link{position_nudge_line}()},
 \code{\link{position_nudge_to}()},
