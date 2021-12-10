@@ -16,7 +16,7 @@ test_that("stacknudge", {
                                 position = position_stacknudge(vjust = 0.5, y = 0.3))
                               )
   vdiffr::expect_doppelganger("stack_nudge2",
-                              p + geom_text_linked(aes(label = grp),
+                              p + geom_text_s(aes(label = grp),
                                                    vjust = 0,
                                             position = position_stacknudge(vjust = 0.5, y = 0.3))
   )
@@ -55,7 +55,7 @@ test_that("dodgenudge", {
                                                                                 direction = "split"))
   )
   vdiffr::expect_doppelganger("dodge_nudge3",
-                              p + geom_text_linked(aes(label = grp),
+                              p + geom_text_s(aes(label = grp),
                                             hjust = 0,
                                             position = position_dodgenudge(width = 0.5, y = 0.2,
                                                                                 direction = "split"))
@@ -80,7 +80,7 @@ test_that("nudge_keep", {
     theme(legend.position = "none")
 
   vdiffr::expect_doppelganger("nudge_keep1",
-                              p + geom_text_linked(aes(label = grp),
+                              p + geom_text_s(aes(label = grp),
                                                    vjust = 0,
                                             position = position_nudge_keep(y = 0.12))
   )
@@ -195,13 +195,13 @@ test_that("nudge_to", {
   vdiffr::expect_doppelganger("nudge_to1",
                               ggplot(df, aes(x, y, label = label)) +
                                 geom_point() +
-                                geom_text_linked(position = position_nudge_to(y = 3),
+                                geom_text_s(position = position_nudge_to(y = 3),
                                                  vjust = 0)
   )
   vdiffr::expect_doppelganger("nudge_to2",
                               ggplot(df, aes(x, y, label = label)) +
                                 geom_point() +
-                                geom_text_linked(position = position_nudge_to(x = 6),
+                                geom_text_s(position = position_nudge_to(x = 6),
                                                  hjust = 0)
   )
 })

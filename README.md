@@ -38,8 +38,10 @@ and `geom_y_margin_point()` make it possible to add marks along the *x*
 and *y* axes. `geom_vhlines()` and `geom_quadrant_lines()` draw vertical
 and horizontal reference lines within a single layer.
 
-Geometry `geom_text_s()` connects text drawn at a nudged position
-to the original position, usually that of a point being labelled.
+Geometries `geom_text_s()`, `geom_point_s()`, `geom_table()`,
+`geom_plot()` and `geom_grob()` connect (by default) the plot elements
+added at a nudged position to the original position with a segment or
+arrow.
 
 ### Aesthetics and scales
 
@@ -78,18 +80,21 @@ according to the relative position of points with respect to arbitrary
 points or lines, or with respect to a polynomial or smoothing spline
 fitted on-the-fly to the the observations.
 
-Position functions `position_stacknudge()`,
-`position_stack_and_dodge()` and `position_stack_and_dodge2()` each
-combines the roles of two *position* functions. They make it possible to
-easily nudge labels in plot layers that use stacking or dodging.
+Position functions `position_stacknudge()`, `position_dodgenudge()` and
+`position_dodge2nudge()` each combines the roles of two *position*
+functions. They make it possible to easily nudge labels in plot layers
+that use stacking, dodging or jitter. Function `position_jitter_keep()`
+behaves like `ggplot2::position_jitter()` but keeps the original
+coordinates.
 
-In contrast to `ggplot2::position_nudge()` all these functions return
-the repositioned and original *x* and *y* coordinates. This makes them
-compatible with the repulsive geometries from package ‘ggrepel’ (>=
-0.9.1) as well as with `geom_text_s()` from this package that draw
-segments or arrows connecting the original positions to the displaced
-positions. They remain backwards compatible and be used in all
-geometries that have a `position` formal parameter.
+In contrast to `ggplot2::position_nudge()` all these position functions
+keep the original *x* and *y* coordinates when displacing them. This
+makes them compatible with the repulsive geometries from package
+‘ggrepel’ (>= 0.9.1) as well as with `geom_text_s()`, `geom_point_s()`,
+`geom_table()`, `geom_plot()` and `geom_grob()` from this package that
+draw segments or arrows connecting the original positions to the
+displaced positions. They remain backwards compatible and can be used in
+all geometries that have a `position` formal parameter.
 
 ## Justification
 

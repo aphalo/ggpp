@@ -11,6 +11,10 @@ geom_table(
   stat = "identity",
   position = "identity",
   ...,
+  nudge_x = 0,
+  nudge_y = 0,
+  add.segments = TRUE,
+  arrow = NULL,
   table.theme = NULL,
   table.rownames = FALSE,
   table.colnames = TRUE,
@@ -53,6 +57,16 @@ as a string.}
 \item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
 can include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
+
+\item{nudge_x, nudge_y}{Horizontal and vertical adjustments to nudge the
+starting position of each text label. The units for \code{nudge_x} and
+\code{nudge_y} are the same as for the data units on the x-axis and y-axis.}
+
+\item{add.segments}{logical Display connecting segments or arrows between
+original positions and displaced ones if both are available.}
+
+\item{arrow}{specification for arrow heads, as created by
+\code{\link[grid]{arrow}}}
 
 \item{table.theme}{NULL, list or function A gridExtra ttheme defintion, or
 a constructor for a ttheme or NULL for default.}
@@ -198,7 +212,11 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
              table.theme = ttheme_gtminimal) +
   theme_classic()
 
-df2 <- tibble(x = 5.45, y = c(34, 29, 24), cyl = c(4, 6, 8),
+df2 <- tibble(x = 5.45,
+              y = c(34, 29, 24),
+              x1 = c(2.29, 3.12, 4.00),
+              y1 = c(26.6, 19.7, 15.1),
+              cyl = c(4, 6, 8),
               tb = list(tb[1, 1:3], tb[2, 1:3], tb[3, 1:3]))
 
 # mapped aesthetics
@@ -207,6 +225,17 @@ ggplot(data = mtcars, mapping = aes(wt, mpg, color = factor(cyl))) +
   geom_table(data = df2,
              inherit.aes = TRUE,
              mapping = aes(x = x, y = y, label = tb))
+
+# nudging and segments
+ggplot(data = mtcars, mapping = aes(wt, mpg, color = factor(cyl))) +
+  geom_point(show.legend = FALSE) +
+  geom_table(data = df2,
+             inherit.aes = TRUE,
+             nudge_x = 0.7, nudge_y = 3,
+             vjust = 0.5, hjust = 0.5,
+             arrow = arrow(length = unit(0.5, "lines")),
+             mapping = aes(x = x1, y = y1, label = tb)) +
+  theme_classic()
 
 # Using native plot coordinates instead of data coordinates
 dfnpc <- tibble(x = 0.95, y = 0.95, tb = list(tb))

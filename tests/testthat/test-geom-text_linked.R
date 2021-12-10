@@ -1,4 +1,4 @@
-context("geom_text_linked")
+context("geom_text_s")
 
 test_that("text_linked_just", {
   df <- data.frame(
@@ -7,83 +7,83 @@ test_that("text_linked_just", {
     text = c("bottom-left", "bottom-right", "top-left", "top-right", "center")
   )
 
-  vdiffr::expect_doppelganger("geom_text_linked1",
+  vdiffr::expect_doppelganger("geom_text_s1",
                               ggplot(df, aes(x, y)) +
-                                geom_text_linked(aes(label = text))
+                                geom_text_s(aes(label = text))
   )
 
-  vdiffr::expect_doppelganger("geom_text_linked2",
+  vdiffr::expect_doppelganger("geom_text_s2",
                               ggplot(df, aes(x, y)) +
-                                geom_text_linked(aes(label = text), vjust = "inward", hjust = "inward")
+                                geom_text_s(aes(label = text), vjust = "inward", hjust = "inward")
   )
-  vdiffr::expect_doppelganger("geom_text_linked3",
+  vdiffr::expect_doppelganger("geom_text_s3",
                               ggplot(df, aes(x, y)) +
-                                geom_text_linked(aes(label = text), hjust = "inward", angle = 33)
+                                geom_text_s(aes(label = text), hjust = "inward", angle = 33)
   )
-  vdiffr::expect_doppelganger("geom_text_linked4",
+  vdiffr::expect_doppelganger("geom_text_s4",
                               ggplot(df, aes(x, y)) +
-                                geom_text_linked(aes(label = text), hjust = "inward", angle = 66)
+                                geom_text_s(aes(label = text), hjust = "inward", angle = 66)
   )
-  vdiffr::expect_doppelganger("geom_text_linked5",
+  vdiffr::expect_doppelganger("geom_text_s5",
                               ggplot(df, aes(x, y)) +
-                                geom_text_linked(aes(label = text), hjust = "inward", angle = 90)
+                                geom_text_s(aes(label = text), hjust = "inward", angle = 90)
   )
-  vdiffr::expect_doppelganger("geom_text_linked7",
+  vdiffr::expect_doppelganger("geom_text_s7",
                               ggplot(df, aes(x, y)) +
-                                geom_text_linked(aes(label = text), vjust = "inward", hjust = "inward", angle = 33)
+                                geom_text_s(aes(label = text), vjust = "inward", hjust = "inward", angle = 33)
   )
-  vdiffr::expect_doppelganger("geom_text_linked8",
+  vdiffr::expect_doppelganger("geom_text_s8",
                               ggplot(df, aes(x, y)) +
-                                geom_text_linked(aes(label = text), vjust = "inward", hjust = "inward", angle = 66)
+                                geom_text_s(aes(label = text), vjust = "inward", hjust = "inward", angle = 66)
   )
-  vdiffr::expect_doppelganger("geom_text_linked9",
+  vdiffr::expect_doppelganger("geom_text_s9",
                               ggplot(df, aes(x, y)) +
-                                geom_text_linked(aes(label = text), vjust = "inward", hjust = "inward", angle = 90)
+                                geom_text_s(aes(label = text), vjust = "inward", hjust = "inward", angle = 90)
   )
-  vdiffr::expect_doppelganger("geom_text_linked10",
+  vdiffr::expect_doppelganger("geom_text_s10",
                               ggplot(df, aes(x, y)) +
-                                geom_text_linked(aes(label = text), vjust = "inward", hjust = "inward", angle = 90)
+                                geom_text_s(aes(label = text), vjust = "inward", hjust = "inward", angle = 90)
   )
-  vdiffr::expect_doppelganger("geom_text_linked11",
+  vdiffr::expect_doppelganger("geom_text_s11",
                               ggplot(df, aes(x, y)) +
-                                geom_text_linked(aes(label = text), vjust = "inward_1.5", hjust = "inward_1.5")
+                                geom_text_s(aes(label = text), vjust = "inward_1.5", hjust = "inward_1.5")
   )
-  vdiffr::expect_doppelganger("geom_text_linked12",
+  vdiffr::expect_doppelganger("geom_text_s12",
                               ggplot(df, aes(x - 1.5, y - 1.5)) +
-                                geom_text_linked(aes(label = text), vjust = "inward_0.0", hjust = "inward_0.0")
+                                geom_text_s(aes(label = text), vjust = "inward_0.0", hjust = "inward_0.0")
   )
-  vdiffr::expect_doppelganger("geom_text_linked13",
+  vdiffr::expect_doppelganger("geom_text_s13",
                               ggplot(df, aes(x, y)) +
-                                geom_text_linked(aes(label = text), vjust = "inward_mean", hjust = "inward_mean")
+                                geom_text_s(aes(label = text), vjust = "inward_mean", hjust = "inward_mean")
   )
-  vdiffr::expect_doppelganger("geom_text_linked14",
+  vdiffr::expect_doppelganger("geom_text_s14",
                               ggplot(df, aes(x - 1.5, y - 1.5)) +
-                                geom_text_linked(aes(label = text), vjust = "inward_mean", hjust = "inward_mean")
+                                geom_text_s(aes(label = text), vjust = "inward_mean", hjust = "inward_mean")
   )
-  vdiffr::expect_doppelganger("geom_text_linked15",
+  vdiffr::expect_doppelganger("geom_text_s15",
                               ggplot(df, aes(x, y)) +
-                                geom_text_linked(aes(label = text), vjust = "inward_median", hjust = "inward_median")
+                                geom_text_s(aes(label = text), vjust = "inward_median", hjust = "inward_median")
   )
 
-  vdiffr::expect_doppelganger("geom_text_linked16",
+  vdiffr::expect_doppelganger("geom_text_s16",
                               ggplot(df, aes(x, y)) +
-                                geom_text_linked(aes(label = text), vjust = "outward", hjust = "outward")
+                                geom_text_s(aes(label = text), vjust = "outward", hjust = "outward")
   )
-  vdiffr::expect_doppelganger("geom_text_linked17",
+  vdiffr::expect_doppelganger("geom_text_s17",
                               ggplot(df, aes(x, y)) +
-                                geom_text_linked(aes(label = text), vjust = "outward_mean", hjust = "outward_mean")
+                                geom_text_s(aes(label = text), vjust = "outward_mean", hjust = "outward_mean")
   )
-  vdiffr::expect_doppelganger("geom_text_linked18",
+  vdiffr::expect_doppelganger("geom_text_s18",
                               ggplot(df, aes(x - 1.5, y - 1.5)) +
-                                geom_text_linked(aes(label = text), vjust = "outward_mean", hjust = "outward_mean")
+                                geom_text_s(aes(label = text), vjust = "outward_mean", hjust = "outward_mean")
   )
-  vdiffr::expect_doppelganger("geom_text_linked19",
+  vdiffr::expect_doppelganger("geom_text_s19",
                               ggplot(df, aes(x, y)) +
-                                geom_text_linked(aes(label = text), vjust = "outward_median", hjust = "outward_median")
+                                geom_text_s(aes(label = text), vjust = "outward_median", hjust = "outward_median")
   )
-  vdiffr::expect_doppelganger("geom_text_linked20",
+  vdiffr::expect_doppelganger("geom_text_s20",
                               ggplot(df, aes(x - 1.5, y - 1.5)) +
-                                geom_text_linked(aes(label = text), vjust = "outward_median", hjust = "outward_median")
+                                geom_text_s(aes(label = text), vjust = "outward_median", hjust = "outward_median")
   )
 
 })
@@ -93,10 +93,10 @@ test_that("text_linked_size", {
   my.cars <- datasets::mtcars[c(TRUE, FALSE, FALSE, FALSE), ]
   my.cars$name <- rownames(my.cars)
 
-  vdiffr::expect_doppelganger("geom_text_linked30",
+  vdiffr::expect_doppelganger("geom_text_s30",
                               ggplot(my.cars, aes(wt, mpg, label = name)) +
                                 geom_point() +
-                                geom_text_linked(aes(size = wt), nudge_x = -0.1, hjust = "right") +
+                                geom_text_s(aes(size = wt), nudge_x = -0.1, hjust = "right") +
                                 scale_radius(range = c(3,6)) + # override scale_area()
                                 expand_limits(x = c(1.8, 5.5))
   )

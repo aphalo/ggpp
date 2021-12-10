@@ -210,8 +210,8 @@ grob_draw_panel_fun <-
                            x1 = data_orig$x,
                            y1 = data_orig$y,
                            arrow = arrow,
-                           gp = grid::gpar(col = alpha(data$segment.colour,
-                                                       data$segment.alpha)),
+                           gp = grid::gpar(col = ggplot2::alpha(data$segment.colour,
+                                                                data$segment.alpha)),
                            name = "linking.segments.grob")
     }
 

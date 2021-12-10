@@ -17,20 +17,23 @@ some types of plots. One case is replacing a key or legend with direct
 labels to plot elements, which is important in plots aimed at audiences
 outside academia.
 
-In one of the issues an answer by M. Krassowski included code that
-provided an elegant and simple approach to implementing combined
-position functions without duplicating code already in 'ggplot2' but
-instead calling it. I edited this code and included it in the package.
-The design of these four functions is not yet final their interface may
-suffer some changes.
+In one of the issues in the GitHub repository of 'ggrepel' an answer by
+M. Krassowski included code that provided an elegant and simple approach
+to implementing combined position functions without duplicating code
+already in 'ggplot2' by instead calling methods of the parent class. I
+edited this code and included it in the package. The renaming of
+`geom_text_linked()` to `geom_text_s()` is code breaking but I am now
+fairly confident this shorter name is easy to remember with `s` for
+segment.
 
 -   Add functions `position_stacknudge()`, `position_jitternudge()`,
     `position_dodgenudge()` and `position_dodge2nudge()` based on code
     by M. Krassowski for `position_stack_and_nudge()`.
--   Add `geom_point_s()` and update `geom_text_s()` renamed from
-    `geom_text_linked()`.
--   Update `geom_grob()` to support plotting of segments when positions
-    change, e.g., with nudging.
+-   Add `geom_point_s()` and update `geom_text_s()` **renamed** from
+    `geom_text_linked()`. This is a ***code breaking change*** with
+    respect to the previous (unstable) version.
+-   Update `geom_plot()`, `geom_table()` and `geom_grob()` to support
+    plotting of segments when positions change, e.g., with nudging.
 -   Update the vignette.
 
 # ggpp 0.4.2
@@ -48,7 +51,7 @@ the three statistics can be considered now stable.
 
 -   Update `stat_summary_xy()` and `stat_apply_group()` to return `NA`
     in `x` and/or `y` when `.fun.x` or `.fun.y` are not passed an
-    argument. This is a code breaking change with respect to the
+    argument. This is a ***code breaking change*** with respect to the
     previous (unstable) version.
 
 -   Update `stat_summary_xy()` and `stat_centroid()` to support

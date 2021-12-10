@@ -44,6 +44,13 @@
 #'   than combining with them. This is most useful for helper functions that
 #'   define both data and aesthetics and shouldn't inherit behaviour from the
 #'   default plot specification, e.g. \code{\link[ggplot2]{borders}}.
+#' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
+#'   starting position of each text label. The units for \code{nudge_x} and
+#'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
+#' @param add.segments logical Display connecting segments or arrows between
+#'   original positions and displaced ones if both are available.
+#' @param arrow specification for arrow heads, as created by
+#'   \code{\link[grid]{arrow}}
 #'
 #' @details These geoms work only with tibbles as \code{data}, as they expects a
 #'   list of data frames or tibbles ("tb" objects) to be mapped to the
@@ -156,7 +163,11 @@
 #'              table.theme = ttheme_gtminimal) +
 #'   theme_classic()
 #'
-#' df2 <- tibble(x = 5.45, y = c(34, 29, 24), cyl = c(4, 6, 8),
+#' df2 <- tibble(x = 5.45,
+#'               y = c(34, 29, 24),
+#'               x1 = c(2.29, 3.12, 4.00),
+#'               y1 = c(26.6, 19.7, 15.1),
+#'               cyl = c(4, 6, 8),
 #'               tb = list(tb[1, 1:3], tb[2, 1:3], tb[3, 1:3]))
 #'
 #' # mapped aesthetics
@@ -165,6 +176,17 @@
 #'   geom_table(data = df2,
 #'              inherit.aes = TRUE,
 #'              mapping = aes(x = x, y = y, label = tb))
+#'
+#' # nudging and segments
+#' ggplot(data = mtcars, mapping = aes(wt, mpg, color = factor(cyl))) +
+#'   geom_point(show.legend = FALSE) +
+#'   geom_table(data = df2,
+#'              inherit.aes = TRUE,
+#'              nudge_x = 0.7, nudge_y = 3,
+#'              vjust = 0.5, hjust = 0.5,
+#'              arrow = arrow(length = unit(0.5, "lines")),
+#'              mapping = aes(x = x1, y = y1, label = tb)) +
+#'   theme_classic()
 #'
 #' # Using native plot coordinates instead of data coordinates
 #' dfnpc <- tibble(x = 0.95, y = 0.95, tb = list(tb))
@@ -176,6 +198,10 @@
 geom_table <- function(mapping = NULL, data = NULL,
                        stat = "identity", position = "identity",
                        ...,
+                       nudge_x = 0,
+                       nudge_y = 0,
+                       add.segments = TRUE,
+                       arrow = NULL,
                        table.theme = NULL,
                        table.rownames = FALSE,
                        table.colnames = TRUE,
@@ -184,6 +210,15 @@ geom_table <- function(mapping = NULL, data = NULL,
                        na.rm = FALSE,
                        show.legend = FALSE,
                        inherit.aes = FALSE) {
+
+  if (!missing(nudge_x) || !missing(nudge_y)) {
+    if (!missing(position)) {
+      rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")
+    }
+
+    position <- position_nudge_center(nudge_x, nudge_y)
+  }
+
   if (is.character(table.hjust)) {
     table.hjust <- switch(table.hjust,
                           left = 0,
@@ -192,7 +227,8 @@ geom_table <- function(mapping = NULL, data = NULL,
                           right = 1,
                           0.5)
   }
-  layer(
+
+  ggplot2::layer(
     data = data,
     mapping = mapping,
     stat = stat,
@@ -201,6 +237,8 @@ geom_table <- function(mapping = NULL, data = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
+      add.segments = add.segments,
+      arrow = arrow,
       table.theme = table.theme,
       table.rownames = table.rownames,
       table.colnames = table.colnames,
@@ -223,6 +261,8 @@ gtb_draw_panel_fun <-
   function(data,
            panel_params,
            coord,
+           add.segments = TRUE,
+           arrow = NULL,
            table.theme = NULL,
            table.rownames = FALSE,
            table.colnames = TRUE,
@@ -240,8 +280,15 @@ gtb_draw_panel_fun <-
       return(grid::nullGrob())
     }
 
+    add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
+
     # should be called only once!
     data <- coord$transform(data, panel_params)
+    if (add.segments) {
+      data_orig <- data.frame(x = data$x_orig, y = data$y_orig)
+      data_orig <- coord$transform(data_orig, panel_params)
+    }
+
     if (is.character(data$vjust)) {
       data$vjust <-
         compute_just2d(data = data,
@@ -266,6 +313,21 @@ gtb_draw_panel_fun <-
     }
 
     tb.grobs <- grid::gList()
+    idx.shift <- 0
+
+    # Draw segments first
+    if(add.segments) {
+      idx.shift <- idx.shift + 1
+      tb.grobs[[1L]] <-
+        grid::segmentsGrob(x0 = data$x,
+                           y0 = data$y,
+                           x1 = data_orig$x,
+                           y1 = data_orig$y,
+                           arrow = arrow,
+                           gp = grid::gpar(col = alpha(data$segment.colour,
+                                                       data$segment.alpha)),
+                           name = "linking.segments.grob")
+    }
 
     for (row.idx in seq_len(nrow(data))) {
       # if needed, construct the table theme
@@ -331,13 +393,10 @@ gtb_draw_panel_fun <-
       # give unique name to each table
       gtb$name <- paste("table", row.idx, sep = ".")
 
-      tb.grobs[[row.idx]] <- gtb
+      tb.grobs[[row.idx + idx.shift]] <- gtb
     }
 
-    grid.name <- paste("geom_table.panel",
-                       data$PANEL[row.idx], sep = ".")
-
-    grid::gTree(children = tb.grobs, name = grid.name)
+    grid::grobTree(children = tb.grobs)
   }
 
 #' @rdname ggpp-ggproto
@@ -345,14 +404,24 @@ gtb_draw_panel_fun <-
 #' @usage NULL
 #' @export
 GeomTable <-
-  ggproto("GeomTable", Geom,
+  ggplot2::ggproto("GeomTable", ggplot2::Geom,
           required_aes = c("x", "y", "label"),
 
-          default_aes = aes(
-            colour = NA, fill = NA,
-            size = 3.2, angle = 0, hjust = "inward",
-            vjust = "inward", alpha = 1, family = "", fontface = 1,
-            lineheight = 1.2
+          default_aes = ggplot2::aes(
+            colour = NA,
+            fill = NA,
+            size = 3.2,
+            angle = 0,
+            hjust = "inward",
+            vjust = "inward",
+            alpha = 1,
+            family = "",
+            fontface = 1,
+            lineheight = 1.2,
+            segment.linetype = 1,
+            segment.colour = "grey33",
+            segment.size = 0.5,
+            segment.alpha = 1
           ),
 
           draw_panel = gtb_draw_panel_fun,
@@ -383,7 +452,7 @@ geom_table_npc <- function(mapping = NULL, data = NULL,
                           right = 1,
                           0.5)
   }
-  layer(
+  ggplot2::layer(
     data = data,
     mapping = mapping,
     stat = stat,
@@ -513,10 +582,7 @@ gtbnpc_draw_panel_fun <-
       tb.grobs[[row.idx]] <- gtb
     }
 
-    grid.name <- paste("geom_table.panel",
-                       data$PANEL[row.idx], sep = ".")
-
-    grid::gTree(children = tb.grobs, name = grid.name)
+    grid::grobTree(children = tb.grobs)
   }
 
 #' @rdname ggpp-ggproto
@@ -524,10 +590,10 @@ gtbnpc_draw_panel_fun <-
 #' @usage NULL
 #' @export
 GeomTableNpc <-
-  ggproto("GeomTableNpc", Geom,
+  ggplot2::ggproto("GeomTableNpc", ggplot2::Geom,
           required_aes = c("npcx", "npcy", "label"),
 
-          default_aes = aes(
+          default_aes = ggplot2::aes(
             colour = NA, fill = NA,
             size = 3.2, angle = 0, hjust = "inward",
             vjust = "inward", alpha = 1, family = "", fontface = 1,

@@ -115,89 +115,90 @@ geom_point_s <- function(mapping = NULL, data = NULL,
 #' @format NULL
 #' @usage NULL
 #' @export
-GeomPointS <- ggplot2::ggproto("GeomPointS", Geom,
-                               required_aes = c("x", "y"),
-                               non_missing_aes = c("size", "shape", "colour"),
-                               default_aes = ggplot2::aes(
-                                 shape = 19,
-                                 colour = "black",
-                                 size = 1.5,
-                                 fill = NA,
-                                 alpha = NA,
-                                 stroke = 0.5,
-                                 segment.linetype = 1,
-                                 segment.colour = "grey33",
-                                 segment.size = 0.5,
-                                 segment.alpha = 1
-                               ),
+GeomPointS <-
+  ggplot2::ggproto("GeomPointS", Geom,
+                   required_aes = c("x", "y"),
+                   non_missing_aes = c("size", "shape", "colour"),
+                   default_aes = ggplot2::aes(
+                     shape = 19,
+                     colour = "black",
+                     size = 1.5,
+                     fill = NA,
+                     alpha = NA,
+                     stroke = 0.5,
+                     segment.linetype = 1,
+                     segment.colour = "grey33",
+                     segment.size = 0.5,
+                     segment.alpha = 1
+                   ),
 
-                               draw_panel = function(data,
-                                                     panel_params,
-                                                     coord,
-                                                     na.rm = FALSE,
-                                                     arrow = NULL,
-                                                     add.segments = FALSE) {
-                                 if (is.character(data$shape)) {
-                                   data$shape <- ggplot2::translate_shape_string(data$shape)
-                                 }
+                   draw_panel = function(data,
+                                         panel_params,
+                                         coord,
+                                         na.rm = FALSE,
+                                         arrow = NULL,
+                                         add.segments = FALSE) {
+                     if (is.character(data$shape)) {
+                       data$shape <- ggplot2::translate_shape_string(data$shape)
+                     }
 
-                                 if (nrow(data) == 0L) {
-                                   return(nullGrob())
-                                 }
+                     if (nrow(data) == 0L) {
+                       return(nullGrob())
+                     }
 
-                                 add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
+                     add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
 
-                                 coords <- coord$transform(data, panel_params)
-                                 if (add.segments) {
-                                   data_orig <- data.frame(x = data$x_orig, y = data$y_orig)
-                                   data_orig <- coord$transform(data_orig, panel_params)
-                                 }
+                     coords <- coord$transform(data, panel_params)
+                     if (add.segments) {
+                       data_orig <- data.frame(x = data$x_orig, y = data$y_orig)
+                       data_orig <- coord$transform(data_orig, panel_params)
+                     }
 
-                                 # create the grobs
-                                 if(add.segments) {
-                                   ggname("geom_point_s",
-                                          grid::grobTree(
-                                            grid::segmentsGrob(
-                                              x0 = data_orig$x,
-                                              y0 = data_orig$y,
-                                              x1 = coords$x,
-                                              y1 = coords$y,
-                                              arrow = arrow,
-                                              gp = grid::gpar(col = alpha(coords$segment.colour,
-                                                                          coords$segment.alpha))
-                                            ),
-                                            grid::pointsGrob(
-                                              coords$x, coords$y,
-                                              pch = coords$shape,
-                                              gp = gpar(
-                                                col = alpha(coords$colour, coords$alpha),
-                                                fill = alpha(coords$fill, coords$alpha),
-                                                # Stroke is added around the outside of the point
-                                                fontsize = coords$size * .pt + coords$stroke * .stroke / 2,
-                                                lwd = coords$stroke * .stroke / 2
-                                              )
-                                            )
-                                          )
-                                   )
-                                 } else {
-                                   ggname("geom_point_s",
-                                          grid::pointsGrob(
-                                            coords$x, coords$y,
-                                            pch = coords$shape,
-                                            gp = gpar(
-                                              col = alpha(coords$colour, coords$alpha),
-                                              fill = alpha(coords$fill, coords$alpha),
-                                              # Stroke is added around the outside of the point
-                                              fontsize = coords$size * .pt + coords$stroke * .stroke / 2,
-                                              lwd = coords$stroke * .stroke / 2
-                                            )
-                                          )
-                                   )
-                                 }
-                               },
+                     # create the grobs
+                     if(add.segments) {
+                       ggname("geom_point_s",
+                              grid::grobTree(
+                                grid::segmentsGrob(
+                                  x0 = data_orig$x,
+                                  y0 = data_orig$y,
+                                  x1 = coords$x,
+                                  y1 = coords$y,
+                                  arrow = arrow,
+                                  gp = grid::gpar(col = ggplot2::alpha(coords$segment.colour,
+                                                                       coords$segment.alpha))
+                                ),
+                                grid::pointsGrob(
+                                  coords$x, coords$y,
+                                  pch = coords$shape,
+                                  gp = gpar(
+                                    col = alpha(coords$colour, coords$alpha),
+                                    fill = alpha(coords$fill, coords$alpha),
+                                    # Stroke is added around the outside of the point
+                                    fontsize = coords$size * .pt + coords$stroke * .stroke / 2,
+                                    lwd = coords$stroke * .stroke / 2
+                                  )
+                                )
+                              )
+                       )
+                     } else {
+                       ggname("geom_point_s",
+                              grid::pointsGrob(
+                                coords$x, coords$y,
+                                pch = coords$shape,
+                                gp = gpar(
+                                  col = alpha(coords$colour, coords$alpha),
+                                  fill = alpha(coords$fill, coords$alpha),
+                                  # Stroke is added around the outside of the point
+                                  fontsize = coords$size * .pt + coords$stroke * .stroke / 2,
+                                  lwd = coords$stroke * .stroke / 2
+                                )
+                              )
+                       )
+                     }
+                   },
 
-                               draw_key = ggplot2::draw_key_point
-)
+                   draw_key = ggplot2::draw_key_point
+  )
 
 translate_shape_string <- function(shape_string) {
   # strings of length 0 or 1 are interpreted as symbols by grid
