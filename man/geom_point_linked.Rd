@@ -10,6 +10,8 @@ geom_point_linked(
   stat = "identity",
   position = "identity",
   ...,
+  nudge_x = 0,
+  nudge_y = 0,
   arrow = NULL,
   na.rm = FALSE,
   show.legend = NA,
@@ -39,6 +41,10 @@ call to a position adjustment function.}
   \code{colour = "red"} or \code{size = 3}. \item Other arguments to the
   layer, for example you override the default \code{stat} associated with the
   layer. \item Other arguments passed on to the stat. }}
+
+\item{nudge_x, nudge_y}{Horizontal and vertical adjustments to nudge the
+starting position of each text label. The units for \code{nudge_x} and
+\code{nudge_y} are the same as for the data units on the x-axis and y-axis.}
 
 \item{arrow}{specification for arrow heads, as created by
 \code{\link[grid]{arrow}}}

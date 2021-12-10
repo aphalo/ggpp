@@ -36,6 +36,11 @@
 #'   than combining with them. This is most useful for helper functions that
 #'   define both data and aesthetics and shouldn't inherit behaviour from the
 #'   default plot specification, e.g. \code{\link[ggplot2]{borders}}.
+#' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
+#'   starting position of each text label. The units for \code{nudge_x} and
+#'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
+#' @param arrow specification for arrow heads, as created by
+#'   \code{\link[grid]{arrow}}
 #'
 #' @details The "width" and "height" of an inset as for a text element are
 #'   0, so stacking and dodging inset plots will not work by default, and axis
@@ -84,12 +89,27 @@
 #'   geom_point(aes(colour = factor(cyl))) +
 #'   geom_grob(data = df, aes(x, y, label = grob))
 #'
+#' ggplot(data = mtcars, aes(wt, mpg)) +
+#'   geom_point(aes(colour = factor(cyl))) +
+#'   geom_grob_linked(data = df, aes(x, y, label = grob), nudge_x = 0.5)
+#'
 geom_grob <- function(mapping = NULL, data = NULL,
                       stat = "identity", position = "identity",
                       ...,
+                      nudge_x = 0,
+                      nudge_y = 0,
                       na.rm = FALSE,
                       show.legend = FALSE,
                       inherit.aes = FALSE) {
+
+  if (!missing(nudge_x) || !missing(nudge_y)) {
+    if (!missing(position)) {
+      rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")
+    }
+
+    position <- position_nudge_center(nudge_x, nudge_y)
+  }
+
   ggplot2::layer(
     data = data,
     mapping = mapping,
@@ -287,3 +307,4 @@ GeomGrobNpc <-
             grid::nullGrob()
           }
   )
+

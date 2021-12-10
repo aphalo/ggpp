@@ -32,6 +32,9 @@
 #'   \code{colour = "red"} or \code{size = 3}. \item Other arguments to the
 #'   layer, for example you override the default \code{stat} associated with the
 #'   layer. \item Other arguments passed on to the stat. }
+#' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
+#'   starting position of each text label. The units for \code{nudge_x} and
+#'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
 #'
@@ -61,10 +64,21 @@
 geom_point_linked <- function(mapping = NULL, data = NULL,
                               stat = "identity", position = "identity",
                               ...,
+                              nudge_x = 0,
+                              nudge_y = 0,
                               arrow = NULL,
                               na.rm = FALSE,
                               show.legend = NA,
                               inherit.aes = TRUE) {
+
+  if (!missing(nudge_x) || !missing(nudge_y)) {
+    if (!missing(position)) {
+      rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")
+    }
+
+    position <- position_nudge_center(nudge_x, nudge_y)
+  }
+
   layer(
     data = data,
     mapping = mapping,

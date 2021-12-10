@@ -229,7 +229,7 @@ function \code{\link[gridExtra]{tableGrob}} as it is used to
   construct the table.
 
 Other geometries adding layers with insets: 
-\code{\link{geom_grob}()},
+\code{\link{geom_grob_linked}()},
 \code{\link{geom_plot}()}
 }
 \concept{geometries adding layers with insets}
