@@ -84,7 +84,7 @@
 #'
 #' ggplot(data = d, aes(x, y, label = lab)) +
 #'   geom_point() +
-#'   stat_dens2d_labels(geom = "text_linked",
+#'   stat_dens2d_labels(geom = "text_s",
 #'                      position = position_nudge_center(x = 0.1, y = 0.1,
 #'                                                       center_x = mean,
 #'                                                       center_y = mean),

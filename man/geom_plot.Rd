@@ -11,6 +11,10 @@ geom_plot(
   stat = "identity",
   position = "identity",
   ...,
+  nudge_x = 0,
+  nudge_y = 0,
+  add.segments = TRUE,
+  arrow = NULL,
   na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = FALSE
@@ -44,6 +48,16 @@ call to a position adjustment function.}
 \item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
 can include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
+
+\item{nudge_x, nudge_y}{Horizontal and vertical adjustments to nudge the
+starting position of each text label. The units for \code{nudge_x} and
+\code{nudge_y} are the same as for the data units on the x-axis and y-axis.}
+
+\item{add.segments}{logical Display connecting segments or arrows between
+original positions and displaced ones if both are available.}
+
+\item{arrow}{specification for arrow heads, as created by
+\code{\link[grid]{arrow}}}
 
 \item{na.rm}{If \code{FALSE} (the default), removes missing values with a
 warning.  If \code{TRUE} silently removes missing values.}
@@ -132,7 +146,8 @@ p <-
   ggplot(data = mtcars, mapping = aes(wt, mpg)) +
   geom_point()
 
-df <- tibble(x = 0.01, y = 0.01,
+df <- tibble(x = 0.01,
+             y = 0.01,
              plot = list(p +
                          coord_cartesian(xlim = c(3, 4),
                                          ylim = c(13, 16)) +
@@ -147,6 +162,21 @@ p +
   geom_plot_npc(data = df,
                 vp.width = 1/2, vp.height = 1/4,
                 aes(npcx = x, npcy = y, label = plot))
+
+p +
+  expand_limits(x = 0, y = 0) +
+  geom_plot_npc(data = df,
+                aes(npcx = x, npcy = y, label = plot),
+                vp.width = 1/4, vp.height = 1/4)
+
+p +
+  geom_plot(data = df,
+            aes(x = x + 3, y = y + 20, label = plot),
+            nudge_x = -1, nudge_y = - 7,
+            hjust = 0.5, vjust = 0.5,
+            arrow = arrow(length = unit(0.5, "lines")),
+            segment.colour = "red",
+            vp.width = 1/5, vp.height = 1/5)
 
 }
 \references{

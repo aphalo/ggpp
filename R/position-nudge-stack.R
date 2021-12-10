@@ -71,12 +71,12 @@
 #'     position = position_stacknudge(vjust = 1, y = -0.2)) +
 #'   theme(legend.position = "none")
 #'
-#' # Use geom_text_linked(), geom_text_repel() or geom_label_repel() to link
+#' # Use geom_text_s(), geom_text_repel() or geom_label_repel() to link
 #' # label to labelled segment or object with an arrow
 #' ggplot(data = df, aes(x1, x2, group = grp)) +
 #'   geom_col(aes(fill = grp), width=0.5) +
 #'   geom_vline(xintercept = 0) +
-#'   geom_text_linked(
+#'   geom_text_s(
 #'     aes(label = grp),
 #'     position = position_stacknudge(vjust = 0.5, y = 0.4),
 #'     vjust = "bottom") +

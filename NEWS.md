@@ -26,10 +26,11 @@ suffer some changes.
 
 -   Add functions `position_stacknudge()`, `position_jitternudge()`,
     `position_dodgenudge()` and `position_dodge2nudge()` based on code
-    by M. Krassowski for `position_stacknudge()`.
--   Add `geom_point_s()` and update `geom_text_linked()`. (This two
-    functions are under development, so their user interfaces may change
-    in the near future).
+    by M. Krassowski for `position_stack_and_nudge()`.
+-   Add `geom_point_s()` and update `geom_text_s()` renamed from
+    `geom_text_linked()`.
+-   Update `geom_grob()` to support plotting of segments when positions
+    change, e.g., with nudging.
 -   Update the vignette.
 
 # ggpp 0.4.2
@@ -86,7 +87,7 @@ inspecting them is an earlier spin-off from 'gpmisc'.
 
 Compared to 'ggpmisc' 0.3.9, the following changes have been introduced.
 New justification styles have being implemented to complement
-`position_nudge_center()` . They are supported in `geom_text_linked()`,
+`position_nudge_center()` . They are supported in `geom_text_s()`,
 `geom_plot()`, `geom_table()`, `geom_grob()` and `geom_marging_grob()`.
 In the current implementation all rows in `data` should contain the same
 `hjust` or `vjust` value when using the new types of justification

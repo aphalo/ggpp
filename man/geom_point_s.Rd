@@ -13,7 +13,7 @@ geom_point_s(
   nudge_x = 0,
   nudge_y = 0,
   arrow = NULL,
-  add.segments = FALSE,
+  add.segments = TRUE,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -85,7 +85,13 @@ ggplot(mpg[1:20, ],
        aes(cyl, hwy, label = drv)) +
   geom_point_s(position = position_nudge_keep(x = 0.2),
                color = "red",
-               add.segments = TRUE,
+               segment.colour = "brown") +
+  geom_point_s()
+
+ggplot(mpg[1:20, ],
+       aes(cyl, hwy, label = drv)) +
+  geom_point_s(position = position_nudge_keep(x = 0.2),
+               color = "red",
                segment.colour = "brown") +
   geom_point_s()
 
@@ -95,7 +101,6 @@ ggplot(mpg[1:50, ],
                                                seed = 456,
                                                nudge.from = "jittered",
                                                returned.origin = "original"),
-               add.segments = TRUE,
                color = "red",
                arrow = grid::arrow(length = grid::unit(0.4, "lines"))) +
   geom_point_s()

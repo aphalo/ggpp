@@ -93,20 +93,23 @@
 #' library(tibble)
 #' df <- tibble(x = 2, y = 15, grob = list(grid::circleGrob(r = 0.2)))
 #'
+#' # without nudging no segments are drawn
 #' ggplot(data = mtcars, aes(wt, mpg)) +
 #'   geom_point(aes(colour = factor(cyl))) +
 #'   geom_grob(data = df, aes(x, y, label = grob))
 #'
+#' # with nudging segments are drawn
 #' ggplot(data = mtcars, aes(wt, mpg)) +
 #'   geom_point(aes(colour = factor(cyl))) +
 #'   geom_grob(data = df, aes(x, y, label = grob),
 #'             nudge_x = 0.5,
-#'             add.segments = TRUE,
 #'             segment.colour = "red")
 #'
+#' # with nudging plotting of segments can be disabled
 #' ggplot(data = mtcars, aes(wt, mpg)) +
 #'   geom_point(aes(colour = factor(cyl))) +
 #'   geom_grob(data = df, aes(x, y, label = grob),
+#'             add.segments = FALSE,
 #'             nudge_x = 0.5)
 #'
 geom_grob <- function(mapping = NULL,
@@ -116,7 +119,7 @@ geom_grob <- function(mapping = NULL,
                       ...,
                       nudge_x = 0,
                       nudge_y = 0,
-                      add.segments = FALSE,
+                      add.segments = TRUE,
                       arrow = NULL,
                       na.rm = FALSE,
                       show.legend = FALSE,
@@ -157,7 +160,7 @@ grob_draw_panel_fun <-
            panel_params,
            coord,
            na.rm = FALSE,
-           add.segments,
+           add.segments = TRUE,
            arrow = NULL) {
 
     if (nrow(data) == 0) {
@@ -199,7 +202,7 @@ grob_draw_panel_fun <-
     idx.shift <- 0
 
     # Draw segments first
-    if(add.segments) {
+    if (add.segments) {
       idx.shift <- idx.shift + 1
       user.grobs[[1L]] <-
         grid::segmentsGrob(x0 = data$x,
@@ -230,11 +233,6 @@ grob_draw_panel_fun <-
 
       user.grobs[[row.idx + idx.shift]] <- userGrob
     }
-
-    grid.name <- paste("geom_grob.panel",
-                       data$PANEL[row.idx], sep = ".")
-    grid.name <- c(grid.name, "geom_grob.panel.segments")
-
 
     grid::grobTree(children = user.grobs)
 

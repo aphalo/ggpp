@@ -43,6 +43,13 @@
 #'   than combining with them. This is most useful for helper functions that
 #'   define both data and aesthetics and shouldn't inherit behaviour from the
 #'   default plot specification, e.g. \code{\link[ggplot2]{borders}}.
+#' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
+#'   starting position of each text label. The units for \code{nudge_x} and
+#'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
+#' @param add.segments logical Display connecting segments or arrows between
+#'   original positions and displaced ones if both are available.
+#' @param arrow specification for arrow heads, as created by
+#'   \code{\link[grid]{arrow}}
 #'
 #' @section Known problem!: In some cases when explicit coordinates are added
 #'   to the inner plot, it may be also necessary to add explicitly coordinates
@@ -95,7 +102,8 @@
 #'   ggplot(data = mtcars, mapping = aes(wt, mpg)) +
 #'   geom_point()
 #'
-#' df <- tibble(x = 0.01, y = 0.01,
+#' df <- tibble(x = 0.01,
+#'              y = 0.01,
 #'              plot = list(p +
 #'                          coord_cartesian(xlim = c(3, 4),
 #'                                          ylim = c(13, 16)) +
@@ -111,13 +119,41 @@
 #'                 vp.width = 1/2, vp.height = 1/4,
 #'                 aes(npcx = x, npcy = y, label = plot))
 #'
+#' p +
+#'   expand_limits(x = 0, y = 0) +
+#'   geom_plot_npc(data = df,
+#'                 aes(npcx = x, npcy = y, label = plot),
+#'                 vp.width = 1/4, vp.height = 1/4)
+#'
+#' p +
+#'   geom_plot(data = df,
+#'             aes(x = x + 3, y = y + 20, label = plot),
+#'             nudge_x = -1, nudge_y = - 7,
+#'             hjust = 0.5, vjust = 0.5,
+#'             arrow = arrow(length = unit(0.5, "lines")),
+#'             segment.colour = "red",
+#'             vp.width = 1/5, vp.height = 1/5)
+#'
 geom_plot <- function(mapping = NULL, data = NULL,
-                       stat = "identity", position = "identity",
-                       ...,
-                       na.rm = FALSE,
-                       show.legend = FALSE,
-                       inherit.aes = FALSE) {
-  layer(
+                      stat = "identity", position = "identity",
+                      ...,
+                      nudge_x = 0,
+                      nudge_y = 0,
+                      add.segments = TRUE,
+                      arrow = NULL,
+                      na.rm = FALSE,
+                      show.legend = FALSE,
+                      inherit.aes = FALSE) {
+
+  if (!missing(nudge_x) || !missing(nudge_y)) {
+    if (!missing(position)) {
+      rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")
+    }
+
+    position <- position_nudge_center(nudge_x, nudge_y)
+  }
+
+  ggplot2::layer(
     data = data,
     mapping = mapping,
     stat = stat,
@@ -126,6 +162,8 @@ geom_plot <- function(mapping = NULL, data = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
+      add.segments = add.segments,
+      arrow = arrow,
       na.rm = na.rm,
       ...
     )
@@ -138,21 +176,32 @@ geom_plot <- function(mapping = NULL, data = NULL,
 #' @usage NULL
 #'
 gplot_draw_panel_fun <-
-  function(data, panel_params, coord,
+  function(data,
+           panel_params,
+           coord,
+           add.segments = TRUE,
+           arrow = NULL,
            na.rm = FALSE) {
 
     if (nrow(data) == 0) {
       return(grid::nullGrob())
     }
 
-    if (!is.ggplot(data$label[[1]])) {
+    if (!ggplot2::is.ggplot(data$label[[1]])) {
       warning("Skipping as object mapped to 'label' is not",
               " a list of \"gg\" or \"ggplot\" objects.")
       return(grid::nullGrob())
     }
 
+    add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
+
     # should be called only once!
     data <- coord$transform(data, panel_params)
+    if (add.segments) {
+      data_orig <- data.frame(x = data$x_orig, y = data$y_orig)
+      data_orig <- coord$transform(data_orig, panel_params)
+    }
+
     if (is.character(data$vjust)) {
       data$vjust <-
         compute_just2d(data = data,
@@ -171,16 +220,31 @@ gplot_draw_panel_fun <-
     }
 
     plot.grobs <- grid::gList()
+    idx.shift <- 0
+
+    # Draw segments first
+    if(add.segments) {
+      idx.shift <- idx.shift + 1
+      plot.grobs[[1L]] <-
+        grid::segmentsGrob(x0 = data$x,
+                           y0 = data$y,
+                           x1 = data_orig$x,
+                           y1 = data_orig$y,
+                           arrow = arrow,
+                           gp = grid::gpar(col = alpha(data$segment.colour,
+                                                       data$segment.alpha)),
+                           name = "linking.segments.grob")
+    }
 
     for (row.idx in seq_len(nrow(data))) {
       plotGrob <-
-        ggplotGrob(x = data$label[[row.idx]])
+        ggplot2::ggplotGrob(x = data$label[[row.idx]])
 
       plotGrob$vp <-
-        grid::viewport(x = unit(data$x[row.idx], "native"),
-                       y = unit(data$y[row.idx], "native"),
-                       width = unit(data$vp.width[row.idx], "npc"),
-                       height = unit(data$vp.height[row.idx], "npc"),
+        grid::viewport(x = grid::unit(data$x[row.idx], "native"),
+                       y = grid::unit(data$y[row.idx], "native"),
+                       width = grid::unit(data$vp.width[row.idx], "npc"),
+                       height = grid::unit(data$vp.height[row.idx], "npc"),
                        just = c(data$hjust[row.idx],
                                 data$vjust[row.idx]),
                        angle = data$angle[row.idx],
@@ -191,13 +255,10 @@ gplot_draw_panel_fun <-
       # give unique name to each plot
       plotGrob$name <- paste("inset.plot", row.idx, sep = ".")
 
-      plot.grobs[[row.idx]] <- plotGrob
+      plot.grobs[[row.idx + idx.shift]] <- plotGrob
     }
 
-    grid.name <- paste("geom_plot.panel",
-                       data$PANEL[row.idx], sep = ".")
-
-    grid::gTree(children = plot.grobs, name = grid.name)
+    grid::gTree(children = plot.grobs, name = "geom_plot.panel")
   }
 
 #' @rdname ggpp-ggproto
@@ -205,10 +266,10 @@ gplot_draw_panel_fun <-
 #' @usage NULL
 #' @export
 GeomPlot <-
-  ggproto("GeomPlot", Geom,
+  ggplot2::ggproto("GeomPlot", ggplot2::Geom,
           required_aes = c("x", "y", "label"),
 
-          default_aes = aes(
+          default_aes = ggplot2::aes(
             colour = "black",
             angle = 0,
             hjust = "inward",
@@ -217,7 +278,11 @@ GeomPlot <-
             family = "",
             fontface = 1,
             vp.width = 0.4,
-            vp.height = 0.4
+            vp.height = 0.4,
+            segment.linetype = 1,
+            segment.colour = "grey33",
+            segment.size = 0.5,
+            segment.alpha = 1
           ),
 
           draw_panel = gplot_draw_panel_fun,
@@ -235,7 +300,7 @@ geom_plot_npc <- function(mapping = NULL, data = NULL,
                           na.rm = FALSE,
                           show.legend = FALSE,
                           inherit.aes = FALSE) {
-  layer(
+  ggplot2::layer(
     data = data,
     mapping = mapping,
     stat = stat,
@@ -282,12 +347,12 @@ gplotnpc_draw_panel_fun <-
 
     for (row.idx in seq_len(nrow(data))) {
       plotGrob <-
-        ggplotGrob(x = data$label[[row.idx]])
+        ggplot2::ggplotGrob(x = data$label[[row.idx]])
 
-      plotGrob$vp <- grid::viewport(x = unit(data$npcx[row.idx], "native"),
-                                    y = unit(data$npcy[row.idx], "native"),
-                                    width = unit(data$vp.width[row.idx], "npc"),
-                                    height = unit(data$vp.height[row.idx], "npc"),
+      plotGrob$vp <- grid::viewport(x = grid::unit(data$npcx[row.idx], "native"),
+                                    y = grid::unit(data$npcy[row.idx], "native"),
+                                    width = grid::unit(data$vp.width[row.idx], "npc"),
+                                    height = grid::unit(data$vp.height[row.idx], "npc"),
                                     just = c(data$hjust[row.idx],
                                              data$vjust[row.idx]),
                                     angle = data$angle[row.idx],
@@ -312,10 +377,10 @@ gplotnpc_draw_panel_fun <-
 #' @usage NULL
 #' @export
 GeomPlotNpc <-
-  ggproto("GeomPlotNpc", Geom,
+  ggplot2::ggproto("GeomPlotNpc", ggplot2::Geom,
           required_aes = c("npcx", "npcy", "label"),
 
-          default_aes = aes(
+          default_aes = ggplot2::aes(
             colour = "black", angle = 0, hjust = "inward",
             vjust = "inward", alpha = NA, family = "", fontface = 1,
             vp.width = 0.4, vp.height = 0.4

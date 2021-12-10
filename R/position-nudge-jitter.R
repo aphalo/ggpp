@@ -85,7 +85,7 @@
 #' ggplot(mpg[1:20, ],
 #'        aes(cyl, hwy, label = drv)) +
 #'   geom_point(position = jitter) +
-#'   geom_text_linked(position = jitter_nudge)
+#'   geom_text_s(position = jitter_nudge)
 #'
 #' jitter_nudge <- position_jitternudge(width = 0.3, height = 2,
 #'                                      seed = 123, x = -0.4,
@@ -94,7 +94,7 @@
 #' ggplot(mpg[1:20, ],
 #'        aes(cyl, hwy, label = drv)) +
 #'   geom_point(position = jitter) +
-#'   geom_text_linked(position = jitter_nudge)
+#'   geom_text_s(position = jitter_nudge)
 #'
 #' jitter <- position_jitter(width = 0, height = 2, seed = 123)
 #'
@@ -105,7 +105,7 @@
 #' ggplot(mpg[1:20, ],
 #'        aes(cyl, hwy, label = drv)) +
 #'   geom_point(position = jitter) +
-#'   geom_text_linked(position = jitter_nudge)
+#'   geom_text_s(position = jitter_nudge)
 #'
 #' jitter_nudge <- position_jitternudge(width = 0, height = 2,
 #'                                      seed = 123, x = 0.4,
@@ -114,7 +114,7 @@
 #' ggplot(mpg[1:20, ],
 #'        aes(cyl, hwy, label = drv)) +
 #'   geom_point(position = jitter) +
-#'   geom_text_linked(position = jitter_nudge)
+#'   geom_text_s(position = jitter_nudge)
 #'
 #' # No nudge, show how points have moved with jitter
 #'

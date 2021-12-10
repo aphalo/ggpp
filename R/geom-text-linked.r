@@ -1,6 +1,6 @@
 #' @title Linked Text
 #'
-#' @description Text geoms are useful for labelling plots. `geom_text_linked()`
+#' @description Text geoms are useful for labelling plots. `geom_text_s()`
 #'   adds text to the plot and for nudged positions links the original location
 #'   to the nudged text with a segment.
 #'
@@ -72,6 +72,8 @@
 #' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
 #'   starting position of each text label. The units for \code{nudge_x} and
 #'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
+#' @param add.segments logical Display connecting segments or arrows between
+#'   original positions and displaced ones if both are available.
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
 #'
@@ -89,68 +91,69 @@
 #' p <- ggplot(my.cars, aes(wt, mpg, label = name))
 #'
 #' # default behavior is as for geon_text()
-#' p + geom_text_linked()
+#' p + geom_text_s()
 #' # Avoid overlaps
-#' p + geom_text_linked(check_overlap = TRUE)
+#' p + geom_text_s(check_overlap = TRUE)
 #' # Change size of the label
-#' p + geom_text_linked(size = 2.5)
+#' p + geom_text_s(size = 2.5)
 #'
 #' # Use nudging
 #' p +
 #'   geom_point() +
-#'   geom_text_linked(hjust = -0.04, nudge_x = 0.12) +
+#'   geom_text_s(hjust = -0.04, nudge_x = 0.12) +
 #'   expand_limits(x = 6.2)
 #' p +
 #'   geom_point() +
-#'   geom_text_linked(hjust = -0.04, nudge_x = 0.12,
+#'   geom_text_s(hjust = -0.04, nudge_x = 0.12,
 #'   arrow = arrow(length = grid::unit(1.5, "mm"))) +
 #'   expand_limits(x = 6.2)
 #' p +
 #'   geom_point() +
-#'   geom_text_linked(vjust = -0.5, nudge_y = 0.5)
+#'   geom_text_s(vjust = -0.5, nudge_y = 0.5)
 #' p +
 #'   geom_point() +
-#'   geom_text_linked(angle = 90,
-#'                    hjust = -0.04, nudge_y = 1,
-#'                    arrow = arrow(length = grid::unit(1.5, "mm")),
-#'                    segment.colour = "red") +
+#'   geom_text_s(angle = 90,
+#'               hjust = -0.04, nudge_y = 1,
+#'               arrow = arrow(length = grid::unit(1.5, "mm")),
+#'               segment.colour = "red") +
 #'   expand_limits(y = 30)
 #'
 #' # Add aesthetic mappings and adjust arrows
 #' p +
 #'   geom_point() +
-#'   geom_text_linked(aes(colour = factor(cyl)),
-#'                    segment.colour = "black",
-#'                    angle = 90,
-#'                    hjust = -0.04, nudge_y = 1,
-#'                    arrow = arrow(angle = 20,
-#'                                  length = grid::unit(1.5, "mm"),
-#'                                  ends = "first",
-#'                                  type = "closed"),
-#'                    show.legend = FALSE) +
+#'   geom_text_s(aes(colour = factor(cyl)),
+#'               segment.colour = "black",
+#'               angle = 90,
+#'               hjust = -0.04, nudge_y = 1,
+#'               arrow = arrow(angle = 20,
+#'                             length = grid::unit(1.5, "mm"),
+#'                             ends = "first",
+#'                             type = "closed"),
+#'               show.legend = FALSE) +
 #'   scale_colour_discrete(l = 40) + # luminance, make colours darker
 #'   expand_limits(y = 40)
 #'
 #' # Scale height of text, rather than sqrt(height)
 #' p +
 #'   geom_point() +
-#'   geom_text_linked(aes(size = wt), nudge_x = -0.1, hjust = "right") +
+#'   geom_text_s(aes(size = wt), nudge_x = -0.1, hjust = "right") +
 #'   scale_radius(range = c(3,6)) + # override scale_area()
 #'     expand_limits(x = c(1.8, 5.5))
 #'
-geom_text_linked <- function(mapping = NULL,
-                             data = NULL,
-                             stat = "identity",
-                             position = "identity",
-                             ...,
-                             parse = FALSE,
-                             nudge_x = 0,
-                             nudge_y = 0,
-                             arrow = NULL,
-                             check_overlap = FALSE,
-                             na.rm = FALSE,
-                             show.legend = NA,
-                             inherit.aes = TRUE)
+geom_text_s <- function(mapping = NULL,
+                        data = NULL,
+                        stat = "identity",
+                        position = "identity",
+                        ...,
+                        parse = FALSE,
+                        nudge_x = 0,
+                        nudge_y = 0,
+                        add.segments = TRUE,
+                        arrow = NULL,
+                        check_overlap = FALSE,
+                        na.rm = FALSE,
+                        show.legend = NA,
+                        inherit.aes = TRUE)
 {
   if (!missing(nudge_x) || !missing(nudge_y)) {
     if (!missing(position)) {
@@ -164,12 +167,13 @@ geom_text_linked <- function(mapping = NULL,
     data = data,
     mapping = mapping,
     stat = stat,
-    geom = GeomTextLinked,
+    geom = GeomTextS,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
       parse = parse,
+      add.segments = add.segments,
       arrow = arrow,
       nudge_x = nudge_x,
       nudge_y = nudge_y,
@@ -184,111 +188,112 @@ geom_text_linked <- function(mapping = NULL,
 #' @format NULL
 #' @usage NULL
 #' @export
-GeomTextLinked <-
-  ggplot2::ggproto("GeomTextLinked", ggplot2::Geom,
-                    required_aes = c("x", "y", "label"),
+GeomTextS <-
+  ggplot2::ggproto("GeomTextS", ggplot2::Geom,
+                   required_aes = c("x", "y", "label"),
 
-                    default_aes = ggplot2::aes(
-                      colour = "black",
-                      size = 3.88,
-                      angle = 0,
-                      hjust = 0.5,
-                      vjust = 0.5,
-                      alpha = NA,
-                      family = "",
-                      fontface = 1,
-                      lineheight = 1.2,
-                      segment.linetype = 1,
-                      segment.colour = "grey33",
-                      segment.size = 0.5,
-                      segment.alpha = 1
-                    ),
+                   default_aes = ggplot2::aes(
+                     colour = "black",
+                     size = 3.88,
+                     angle = 0,
+                     hjust = 0.5,
+                     vjust = 0.5,
+                     alpha = NA,
+                     family = "",
+                     fontface = 1,
+                     lineheight = 1.2,
+                     segment.linetype = 1,
+                     segment.colour = "grey33",
+                     segment.size = 0.5,
+                     segment.alpha = 1
+                   ),
 
-                    draw_panel = function(data, panel_params, coord, #panel_scales,
-                                          parse = FALSE,
-                                          na.rm = FALSE, check_overlap = FALSE,
-                                          arrow = NULL,
-                                          nudge_x = 0,
-                                          nudge_y = 0) {
+                   draw_panel = function(data, panel_params, coord, #panel_scales,
+                                         parse = FALSE,
+                                         na.rm = FALSE, check_overlap = FALSE,
+                                         add.segments = TRUE,
+                                         arrow = NULL,
+                                         nudge_x = 0,
+                                         nudge_y = 0) {
 
-                      add.links <- all(c("x_orig", "y_orig") %in% colnames(data))
+                     add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
 
-                      data$label <- as.character(data$label)
-                      data <- subset(data, !is.na(label) & label != "")
-                      if (nrow(data) == 0L) {
-                        return(nullGrob())
-                      }
+                     data$label <- as.character(data$label)
+                     data <- subset(data, !is.na(label) & label != "")
+                     if (nrow(data) == 0L) {
+                       return(nullGrob())
+                     }
 
-                      lab <- data$label
-                      if (parse) {
-                        lab <- parse_safe(lab)
-                      }
+                     lab <- data$label
+                     if (parse) {
+                       lab <- parse_safe(lab)
+                     }
 
-                      data <- coord$transform(data, panel_params)
-                      if (add.links) {
-                        data_orig <- data.frame(x = data$x_orig, y = data$y_orig)
-                        data_orig <- coord$transform(data_orig, panel_params)
-                      }
+                     data <- coord$transform(data, panel_params)
+                     if (add.segments) {
+                       data_orig <- data.frame(x = data$x_orig, y = data$y_orig)
+                       data_orig <- coord$transform(data_orig, panel_params)
+                     }
 
-                      if (is.character(data$vjust)) {
-                        data$vjust <-
-                          compute_just2d(data = data,
-                                         coord = coord,
-                                         panel_params = panel_params,
-                                         just = data$vjust,
-                                         a = "y", b = "x")
-                      }
-                      if (is.character(data$hjust)) {
-                        data$hjust <-
-                          compute_just2d(data = data,
-                                         coord = coord,
-                                         panel_params = panel_params,
-                                         just = data$hjust,
-                                         a = "x", b = "y")
-                      }
+                     if (is.character(data$vjust)) {
+                       data$vjust <-
+                         compute_just2d(data = data,
+                                        coord = coord,
+                                        panel_params = panel_params,
+                                        just = data$vjust,
+                                        a = "y", b = "x")
+                     }
+                     if (is.character(data$hjust)) {
+                       data$hjust <-
+                         compute_just2d(data = data,
+                                        coord = coord,
+                                        panel_params = panel_params,
+                                        just = data$hjust,
+                                        a = "x", b = "y")
+                     }
 
-                      if(add.links) {
-                        # create the grobs
-                        grid::grobTree(
-                          grid::segmentsGrob(
-                            x0 = data$x,
-                            y0 = data$y,
-                            x1 = data_orig$x,
-                            y1 = data_orig$y,
-                            arrow = arrow,
-                            gp = grid::gpar(col = alpha(data$segment.colour,
-                                                        data$segment.alpha))),
-                          grid::textGrob(
-                            lab,
-                            data$x, data$y, default.units = "native",
-                            hjust = data$hjust, vjust = data$vjust,
-                            rot = data$angle,
-                            gp = gpar(
-                              col = alpha(data$colour, data$alpha),
-                              fontsize = data$size * .pt,
-                              fontfamily = data$family,
-                              fontface = data$fontface,
-                              lineheight = data$lineheight
-                            ),
-                            check.overlap = check_overlap
-                          ))
-                      } else {
-                        grid::textGrob(
-                          lab,
-                          data$x, data$y, default.units = "native",
-                          hjust = data$hjust, vjust = data$vjust,
-                          rot = data$angle,
-                          gp = gpar(
-                            col = alpha(data$colour, data$alpha),
-                            fontsize = data$size * .pt,
-                            fontfamily = data$family,
-                            fontface = data$fontface,
-                            lineheight = data$lineheight
-                          ),
-                          check.overlap = check_overlap
-                        )
-                      }
-                    },
+                     if(add.segments) {
+                       # create the grobs
+                       grid::grobTree(
+                         grid::segmentsGrob(
+                           x0 = data$x,
+                           y0 = data$y,
+                           x1 = data_orig$x,
+                           y1 = data_orig$y,
+                           arrow = arrow,
+                           gp = grid::gpar(col = alpha(data$segment.colour,
+                                                       data$segment.alpha))),
+                         grid::textGrob(
+                           lab,
+                           data$x, data$y, default.units = "native",
+                           hjust = data$hjust, vjust = data$vjust,
+                           rot = data$angle,
+                           gp = gpar(
+                             col = alpha(data$colour, data$alpha),
+                             fontsize = data$size * .pt,
+                             fontfamily = data$family,
+                             fontface = data$fontface,
+                             lineheight = data$lineheight
+                           ),
+                           check.overlap = check_overlap
+                         ))
+                     } else {
+                       grid::textGrob(
+                         lab,
+                         data$x, data$y, default.units = "native",
+                         hjust = data$hjust, vjust = data$vjust,
+                         rot = data$angle,
+                         gp = gpar(
+                           col = alpha(data$colour, data$alpha),
+                           fontsize = data$size * .pt,
+                           fontfamily = data$family,
+                           fontface = data$fontface,
+                           lineheight = data$lineheight
+                         ),
+                         check.overlap = check_overlap
+                       )
+                     }
+                   },
 
                    draw_key = draw_key_text
   )

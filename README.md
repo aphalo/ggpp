@@ -15,7 +15,7 @@ Grammar of Graphics implemented in package ‘ggplot2’ (>= 3.0.0). New
 “geoms” support insets in plots, marginal marks and the use of native
 plot coordinates (npc). Position functions implement new approaches to
 nudging usable with any geometry, but especially useful together with
-`geom_text_linked()`, `geom_text_repel()` and `geom_label_repel()`.
+`geom_text_s()`, `geom_text_repel()` and `geom_label_repel()`.
 
 ## Extended Grammar of graphics
 
@@ -38,7 +38,7 @@ and `geom_y_margin_point()` make it possible to add marks along the *x*
 and *y* axes. `geom_vhlines()` and `geom_quadrant_lines()` draw vertical
 and horizontal reference lines within a single layer.
 
-Geometry `geom_text_linked()` connects text drawn at a nudged position
+Geometry `geom_text_s()` connects text drawn at a nudged position
 to the original position, usually that of a point being labelled.
 
 ### Aesthetics and scales
@@ -86,7 +86,7 @@ easily nudge labels in plot layers that use stacking or dodging.
 In contrast to `ggplot2::position_nudge()` all these functions return
 the repositioned and original *x* and *y* coordinates. This makes them
 compatible with the repulsive geometries from package ‘ggrepel’ (>=
-0.9.1) as well as with `geom_text_linked()` from this package that draw
+0.9.1) as well as with `geom_text_s()` from this package that draw
 segments or arrows connecting the original positions to the displaced
 positions. They remain backwards compatible and be used in all
 geometries that have a `position` formal parameter.

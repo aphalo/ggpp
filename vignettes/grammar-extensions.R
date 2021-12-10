@@ -223,7 +223,7 @@ my.cars$name <- rownames(my.cars)
 my.cars <- my.cars[order(my.cars$wt), ]
 ggplot(my.cars, aes(wt, mpg, label = name)) +
   geom_point() +
-  geom_text_linked(aes(colour = factor(cyl)),
+  geom_text_s(aes(colour = factor(cyl)),
                    angle = 90,
                    hjust = 1.04, nudge_y = -1, 
                    nudge_x = c(0, 0, -0.05, +0.05, 0, 0 ,0, 0),

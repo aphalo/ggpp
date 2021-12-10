@@ -13,7 +13,7 @@ geom_grob(
   ...,
   nudge_x = 0,
   nudge_y = 0,
-  add.segments = FALSE,
+  add.segments = TRUE,
   arrow = NULL,
   na.rm = FALSE,
   show.legend = FALSE,
@@ -134,20 +134,23 @@ The "width" and "height" of an inset grob as for a text element are
 library(tibble)
 df <- tibble(x = 2, y = 15, grob = list(grid::circleGrob(r = 0.2)))
 
+# without nudging no segments are drawn
 ggplot(data = mtcars, aes(wt, mpg)) +
   geom_point(aes(colour = factor(cyl))) +
   geom_grob(data = df, aes(x, y, label = grob))
 
+# with nudging segments are drawn
 ggplot(data = mtcars, aes(wt, mpg)) +
   geom_point(aes(colour = factor(cyl))) +
   geom_grob(data = df, aes(x, y, label = grob),
             nudge_x = 0.5,
-            add.segments = TRUE,
             segment.colour = "red")
 
+# with nudging plotting of segments can be disabled
 ggplot(data = mtcars, aes(wt, mpg)) +
   geom_point(aes(colour = factor(cyl))) +
   geom_grob(data = df, aes(x, y, label = grob),
+            add.segments = FALSE,
             nudge_x = 0.5)
 
 }
