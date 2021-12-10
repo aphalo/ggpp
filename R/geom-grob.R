@@ -1,18 +1,18 @@
 #' Inset graphical objects
 #'
-#' \code{geom_grob} and \code{geom_grob_npc} add a Grob as inset to the ggplot
-#' using syntax similar to that of \code{\link[ggplot2]{geom_label}}.In most
-#' respects they behave as any other ggplot geometry: a layer con contain
-#' multiple tables and faceting works as usual.
+#' \code{geom_grob} and \code{geom_grob_npc} add Grobs as insets to the ggplot
+#' using syntax similar to that of \code{\link[ggplot2]{geom_text}}. In most
+#' respects they behave as any other ggplot geometry: ther add a layer
+#' containing one or more grobs and faceting works as usual.
 #'
-#' @section Alignment: You can modify table alignment with the \code{vjust} and
+#' @section Alignment: You can modify gron alignment with the \code{vjust} and
 #'   \code{hjust} aesthetics. These can either be a number between 0
 #'   (right/bottom) and 1 (top/left) or a character ("left", "middle", "right",
 #'   "bottom", "center", "top").
 #'
 #' @section Inset size: You can modify inset plot size with the \code{vp.width}
-#'   and \code{vp.height} aesthetics. These can be a number between 0 (smallest
-#'   posisble inset) and 1 (whole plotting area width or height). The default
+#'   and \code{vp.height} aesthetics. These can take a number between 0 (smallest
+#'   possible inset) and 1 (whole plotting area width or height). The default
 #'   value for for both of these aesthetics is 1/3.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
@@ -39,34 +39,41 @@
 #' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
 #'   starting position of each text label. The units for \code{nudge_x} and
 #'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
+#' @param add.segments logical Display connecting segments or arrows between
+#'   original positions and displaced ones if both are available.
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
 #'
-#' @details The "width" and "height" of an inset as for a text element are
-#'   0, so stacking and dodging inset plots will not work by default, and axis
-#'   limits are not automatically expanded to include all inset plots.
-#'   Obviously, insets do have height and width, but they are physical units,
-#'   not data units. The amount of space they occupy on the main plot is not
-#'   constant in data units of the base plot: when you modify scale limits,
-#'   inset plots stay the same size relative to the physical size of the base
-#'   plot.
+#' @details The "width" and "height" of an inset grob as for a text element are
+#'   seen as zero by ggplot. However, their size is respected when plotted. The
+#'   amount of space the grobs on the main plot is not constant in data units of
+#'   the base plot: when you modify scale limits, inset grobs stay the same size
+#'   relative to the physical size of the base plot. They do scale when the
+#'   output size of the plot changes, e.g., when zooming. Axis limits are not
+#'   automatically expanded to include inset grobs in whole but only their x and
+#'   y coordinates.
 #'
-#' @note These geoms work only with tibbles as \code{data}, as they expects a list
-#'   of graphics objects ("grob") to be mapped to the \code{label} aesthetic.
+#'   Position functions, including all nudge funcrions in this package are
+#'   supported, as well as drawing of connecting segments. However, stacking and
+#'   dodging of inset grobs will not usually work as for they do for plot
+#'   elements with non-zero size.
+#'
+#'   These geoms work only with tibbles as \code{data}, as they expect a list of
+#'   graphics objects ("grob") to be mapped to the \code{label} aesthetic.
 #'   Aesthetics mappings in the inset plot are independent of those in the base
 #'   plot.
 #'
 #'   In the case of \code{geom_grob()}, \code{x} and \code{y} aesthetics
 #'   determine the position of the whole inset grob, similarly to that of a text
 #'   label, justification is interpreted as indicating the position of the grob
-#'   with respect to the $x$ and $y$ coordinates in the data, and \code{angle}
-#'   is used to rotate the plot as a whole.
+#'   with respect to its $x$ and $y$ coordinates in the data, and \code{angle}
+#'   is used to rotate the grob as a whole.
 #'
-#'   In the case of \code{geom_grob_npc()}, \code{npcx} and \code{npcy} aesthetics
-#'   determine the position of the whole inset plot, similarly to that of a text
-#'   label, justification is interpreted as indicating the position of the grob
-#'   with respect to the $x$ and $y$ coordinates in "npc" units, and \code{angle}
-#'   is used to rotate the plot as a whole.
+#'   In the case of \code{geom_grob_npc()}, \code{npcx} and \code{npcy}
+#'   aesthetics determine the position of the inset grob. As for text labels,
+#'   justification is interpreted as indicating the position of the grob with
+#'   respect to the $x$ and $y$ coordinates in "npc" units, and \code{angle} is
+#'   used to rotate the plot as a whole.
 #'
 #'   \strong{\code{annotate()} cannot be used with \code{geom = "grob"}}. Use
 #'   \code{\link[ggplot2]{annotation_custom}} directly when adding inset plots
@@ -85,19 +92,32 @@
 #' @examples
 #' library(tibble)
 #' df <- tibble(x = 2, y = 15, grob = list(grid::circleGrob(r = 0.2)))
+#'
 #' ggplot(data = mtcars, aes(wt, mpg)) +
 #'   geom_point(aes(colour = factor(cyl))) +
 #'   geom_grob(data = df, aes(x, y, label = grob))
 #'
 #' ggplot(data = mtcars, aes(wt, mpg)) +
 #'   geom_point(aes(colour = factor(cyl))) +
-#'   geom_grob_linked(data = df, aes(x, y, label = grob), nudge_x = 0.5)
+#'   geom_grob(data = df, aes(x, y, label = grob),
+#'             nudge_x = 0.5,
+#'             add.segments = TRUE,
+#'             segment.colour = "red")
 #'
-geom_grob <- function(mapping = NULL, data = NULL,
-                      stat = "identity", position = "identity",
+#' ggplot(data = mtcars, aes(wt, mpg)) +
+#'   geom_point(aes(colour = factor(cyl))) +
+#'   geom_grob(data = df, aes(x, y, label = grob),
+#'             nudge_x = 0.5)
+#'
+geom_grob <- function(mapping = NULL,
+                      data = NULL,
+                      stat = "identity",
+                      position = "identity",
                       ...,
                       nudge_x = 0,
                       nudge_y = 0,
+                      add.segments = FALSE,
+                      arrow = NULL,
                       na.rm = FALSE,
                       show.legend = FALSE,
                       inherit.aes = FALSE) {
@@ -119,6 +139,8 @@ geom_grob <- function(mapping = NULL, data = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
+      add.segments = add.segments,
+      arrow = arrow,
       na.rm = na.rm,
       ...
     )
@@ -131,8 +153,12 @@ geom_grob <- function(mapping = NULL, data = NULL,
 #' @usage NULL
 #'
 grob_draw_panel_fun <-
-  function(data, panel_params, coord,
-           na.rm = FALSE) {
+  function(data,
+           panel_params,
+           coord,
+           na.rm = FALSE,
+           add.segments,
+           arrow = NULL) {
 
     if (nrow(data) == 0) {
       return(grid::nullGrob())
@@ -143,8 +169,15 @@ grob_draw_panel_fun <-
       return(grid::nullGrob())
     }
 
+    add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
+
     # should be called only once!
     data <- coord$transform(data, panel_params)
+    if (add.segments) {
+      data_orig <- data.frame(x = data$x_orig, y = data$y_orig)
+      data_orig <- coord$transform(data_orig, panel_params)
+    }
+
     if (is.character(data$vjust)) {
       data$vjust <-
         compute_just2d(data = data,
@@ -163,6 +196,21 @@ grob_draw_panel_fun <-
     }
 
     user.grobs <- grid::gList()
+    idx.shift <- 0
+
+    # Draw segments first
+    if(add.segments) {
+      idx.shift <- idx.shift + 1
+      user.grobs[[1L]] <-
+        grid::segmentsGrob(x0 = data$x,
+                           y0 = data$y,
+                           x1 = data_orig$x,
+                           y1 = data_orig$y,
+                           arrow = arrow,
+                           gp = grid::gpar(col = alpha(data$segment.colour,
+                                                       data$segment.alpha)),
+                           name = "linking.segments.grob")
+    }
 
     for (row.idx in 1:nrow(data)) {
       userGrob <- data$label[[row.idx]]
@@ -180,13 +228,16 @@ grob_draw_panel_fun <-
       # give unique name to each grob
       userGrob$name <- paste("inset.grob", row.idx, sep = ".")
 
-      user.grobs[[row.idx]] <- userGrob
+      user.grobs[[row.idx + idx.shift]] <- userGrob
     }
 
     grid.name <- paste("geom_grob.panel",
                        data$PANEL[row.idx], sep = ".")
+    grid.name <- c(grid.name, "geom_grob.panel.segments")
 
-    grid::gTree(children = user.grobs, name = grid.name)
+
+    grid::grobTree(children = user.grobs)
+
   }
 
 #' @rdname ggpp-ggproto
@@ -195,25 +246,32 @@ grob_draw_panel_fun <-
 #' @export
 GeomGrob <-
   ggplot2::ggproto("GeomGrob", ggplot2::Geom,
-          required_aes = c("x", "y", "label"),
+                   required_aes = c("x", "y", "label"),
 
-          default_aes = ggplot2::aes(
-            colour = "black", angle = 0, hjust = 0.5,
-            vjust = 0.5, alpha = NA, family = "", fontface = 1,
-            vp.width = 1/5, vp.height = 1/5
-          ),
+                   default_aes = ggplot2::aes(
+                     colour = "black", angle = 0, hjust = 0.5,
+                     vjust = 0.5, alpha = NA, family = "", fontface = 1,
+                     vp.width = 1/5, vp.height = 1/5,
+                     segment.linetype = 1,
+                     segment.colour = "grey33",
+                     segment.size = 0.5,
+                     segment.alpha = 1
+                   ),
 
-          draw_panel = grob_draw_panel_fun,
-          draw_key = function(...) {
-            grid::nullGrob()
-          }
+                   draw_panel = grob_draw_panel_fun,
+
+                   draw_key = function(...) {
+                     grid::nullGrob()
+                   }
   )
 
 #' @rdname geom_grob
 #' @export
 #'
-geom_grob_npc <- function(mapping = NULL, data = NULL,
-                          stat = "identity", position = "identity",
+geom_grob_npc <- function(mapping = NULL,
+                          data = NULL,
+                          stat = "identity",
+                          position = "identity",
                           ...,
                           na.rm = FALSE,
                           show.legend = FALSE,
@@ -294,17 +352,17 @@ grobnpc_draw_panel_fun <-
 #' @export
 GeomGrobNpc <-
   ggplot2::ggproto("GeomGrobNpc", ggplot2::Geom,
-          required_aes = c("npcx", "npcy", "label"),
+                   required_aes = c("npcx", "npcy", "label"),
 
-          default_aes = ggplot2::aes(
-            colour = "black", angle = 0, hjust = "inward",
-            vjust = "inward", alpha = NA, family = "", fontface = 1,
-            vp.width = 1/5, vp.height = 1/5
-          ),
+                   default_aes = ggplot2::aes(
+                     colour = "black", angle = 0, hjust = "inward",
+                     vjust = "inward", alpha = NA, family = "", fontface = 1,
+                     vp.width = 1/5, vp.height = 1/5
+                   ),
 
-          draw_panel = grobnpc_draw_panel_fun,
-          draw_key = function(...) {
-            grid::nullGrob()
-          }
+                   draw_panel = grobnpc_draw_panel_fun,
+                   draw_key = function(...) {
+                     grid::nullGrob()
+                   }
   )
 

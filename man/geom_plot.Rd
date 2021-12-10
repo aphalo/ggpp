@@ -156,7 +156,7 @@ The idea of implementing a \code{geom_custom()} for grobs has
 }
 \seealso{
 Other geometries adding layers with insets: 
-\code{\link{geom_grob_linked}()},
+\code{\link{geom_grob}()},
 \code{\link{geom_table}()}
 }
 \concept{geometries adding layers with insets}

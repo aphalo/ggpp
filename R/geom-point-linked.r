@@ -1,7 +1,9 @@
-#' Points linked by a segment or arrow
+#' Points linked by a segment
 #'
-#' The "point_linked" geom is used to display displacement of points in
-#' scatterplots.
+#' The "point_s" geom provides a superset of the capabilities of geom "point"
+#' by allowing plotting of segments joining the original position of displaced
+#' observations to their current one. Displacements by position functions from
+#' packages 'ggpp' and 'ggrepel' are supported.
 #'
 #' @seealso [ggplot2::geom_point], [nudge_keep] and [nudge_to]
 #'
@@ -35,6 +37,8 @@
 #' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
 #'   starting position of each text label. The units for \code{nudge_x} and
 #'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
+#' @param add.segments logical Display connecting segments or arrows between
+#'   original positions and displaced ones if both are available.
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
 #'
@@ -42,34 +46,40 @@
 #' @export
 #' @examples
 #'
+#' # Same output as with geom_point()
 #' ggplot(mpg[1:20, ],
-#'        aes(cyl,
-#'            hwy,
-#'            label = drv)) +
-#'   geom_point_linked(position = position_nudge_keep(x = 0.2),
-#'                     color = "red", segment.colour = "brown") +
-#'   geom_point()
+#'        aes(cyl, hwy)) +
+#'   geom_point_s()
+#'
+#' ggplot(mpg[1:20, ],
+#'        aes(cyl, hwy, label = drv)) +
+#'   geom_point_s(position = position_nudge_keep(x = 0.2),
+#'                color = "red",
+#'                add.segments = TRUE,
+#'                segment.colour = "brown") +
+#'   geom_point_s()
 #'
 #' ggplot(mpg[1:50, ],
-#'        aes(cyl,
-#'            hwy,
-#'            label = drv)) +
-#'   geom_point_linked(position = position_jitter_and_nudge(width = 0.66, height = 2,
-#'                                                          seed = 456,
-#'                                                   nudge.from = "jittered",
-#'                                                   returned.origin = "original"),
-#'                     color = "red", arrow = grid::arrow(length = grid::unit(0.4, "lines"))) +
-#'   geom_point()
+#'        aes(cyl, hwy, label = drv)) +
+#'   geom_point_s(position = position_jitternudge(width = 0.66, height = 2,
+#'                                                seed = 456,
+#'                                                nudge.from = "jittered",
+#'                                                returned.origin = "original"),
+#'                add.segments = TRUE,
+#'                color = "red",
+#'                arrow = grid::arrow(length = grid::unit(0.4, "lines"))) +
+#'   geom_point_s()
 #'
-geom_point_linked <- function(mapping = NULL, data = NULL,
-                              stat = "identity", position = "identity",
-                              ...,
-                              nudge_x = 0,
-                              nudge_y = 0,
-                              arrow = NULL,
-                              na.rm = FALSE,
-                              show.legend = NA,
-                              inherit.aes = TRUE) {
+geom_point_s <- function(mapping = NULL, data = NULL,
+                         stat = "identity", position = "identity",
+                         ...,
+                         nudge_x = 0,
+                         nudge_y = 0,
+                         arrow = NULL,
+                         add.segments = FALSE,
+                         na.rm = FALSE,
+                         show.legend = NA,
+                         inherit.aes = TRUE) {
 
   if (!missing(nudge_x) || !missing(nudge_y)) {
     if (!missing(position)) {
@@ -83,11 +93,12 @@ geom_point_linked <- function(mapping = NULL, data = NULL,
     data = data,
     mapping = mapping,
     stat = stat,
-    geom = GeomPointLinked,
+    geom = GeomPointS,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
+      add.segments = add.segments,
       arrow = arrow,
       na.rm = na.rm,
       ...
@@ -99,87 +110,88 @@ geom_point_linked <- function(mapping = NULL, data = NULL,
 #' @format NULL
 #' @usage NULL
 #' @export
-GeomPointLinked <- ggplot2::ggproto("GeomPointLinked", Geom,
-  required_aes = c("x", "y"),
-  non_missing_aes = c("size", "shape", "colour"),
-  default_aes = ggplot2::aes(
-    shape = 19,
-    colour = "black",
-    size = 1.5,
-    fill = NA,
-    alpha = NA,
-    stroke = 0.5,
-    segment.linetype = 1,
-    segment.colour = "grey33",
-    segment.size = 0.5,
-    segment.alpha = 1
-  ),
+GeomPointS <- ggplot2::ggproto("GeomPointS", Geom,
+                               required_aes = c("x", "y"),
+                               non_missing_aes = c("size", "shape", "colour"),
+                               default_aes = ggplot2::aes(
+                                 shape = 19,
+                                 colour = "black",
+                                 size = 1.5,
+                                 fill = NA,
+                                 alpha = NA,
+                                 stroke = 0.5,
+                                 segment.linetype = 1,
+                                 segment.colour = "grey33",
+                                 segment.size = 0.5,
+                                 segment.alpha = 1
+                               ),
 
-  draw_panel = function(data,
-                        panel_params,
-                        coord,
-                        na.rm = FALSE,
-                        arrow = NULL) {
-    if (is.character(data$shape)) {
-      data$shape <- ggplot2::translate_shape_string(data$shape)
-    }
+                               draw_panel = function(data,
+                                                     panel_params,
+                                                     coord,
+                                                     na.rm = FALSE,
+                                                     arrow = NULL,
+                                                     add.segments = FALSE) {
+                                 if (is.character(data$shape)) {
+                                   data$shape <- ggplot2::translate_shape_string(data$shape)
+                                 }
 
-    if (nrow(data) == 0L) {
-      return(nullGrob())
-    }
+                                 if (nrow(data) == 0L) {
+                                   return(nullGrob())
+                                 }
 
-    add.links <- all(c("x_orig", "y_orig") %in% colnames(data))
+                                 add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
 
-    coords <- coord$transform(data, panel_params)
-    if (add.links) {
-      data_orig <- data.frame(x = data$x_orig, y = data$y_orig)
-      data_orig <- coord$transform(data_orig, panel_params)
-    }
+                                 coords <- coord$transform(data, panel_params)
+                                 if (add.segments) {
+                                   data_orig <- data.frame(x = data$x_orig, y = data$y_orig)
+                                   data_orig <- coord$transform(data_orig, panel_params)
+                                 }
 
-    # create the grobs
-    if(add.links) {
-      ggname("geom_point_linked",
-             grid::grobTree(
-               grid::segmentsGrob(
-                 x0 = data_orig$x,
-                 y0 = data_orig$y,
-                 x1 = coords$x,
-                 y1 = coords$y,
-                 arrow = arrow,
-                 gp = grid::gpar(col = alpha(coords$segment.colour,
-                                             coords$segment.alpha))
-               ),
-               grid::pointsGrob(
-                 coords$x, coords$y,
-                 pch = coords$shape,
-                 gp = gpar(
-                   col = alpha(coords$colour, coords$alpha),
-                   fill = alpha(coords$fill, coords$alpha),
-                   # Stroke is added around the outside of the point
-                   fontsize = coords$size * .pt + coords$stroke * .stroke / 2,
-                   lwd = coords$stroke * .stroke / 2
-                 )
-               )
-             )
-      )
-    } else {
-      ggname("geom_point_linked",
-             grid::pointsGrob(
-               coords$x, coords$y,
-               pch = coords$shape,
-               gp = gpar(
-                 col = alpha(coords$colour, coords$alpha),
-                 fill = alpha(coords$fill, coords$alpha),
-                 # Stroke is added around the outside of the point
-                 fontsize = coords$size * .pt + coords$stroke * .stroke / 2,
-                 lwd = coords$stroke * .stroke / 2
-               )
-             )
-      )
-    }
-  },
+                                 # create the grobs
+                                 if(add.segments) {
+                                   ggname("geom_point_s",
+                                          grid::grobTree(
+                                            grid::segmentsGrob(
+                                              x0 = data_orig$x,
+                                              y0 = data_orig$y,
+                                              x1 = coords$x,
+                                              y1 = coords$y,
+                                              arrow = arrow,
+                                              gp = grid::gpar(col = alpha(coords$segment.colour,
+                                                                          coords$segment.alpha))
+                                            ),
+                                            grid::pointsGrob(
+                                              coords$x, coords$y,
+                                              pch = coords$shape,
+                                              gp = gpar(
+                                                col = alpha(coords$colour, coords$alpha),
+                                                fill = alpha(coords$fill, coords$alpha),
+                                                # Stroke is added around the outside of the point
+                                                fontsize = coords$size * .pt + coords$stroke * .stroke / 2,
+                                                lwd = coords$stroke * .stroke / 2
+                                              )
+                                            )
+                                          )
+                                   )
+                                 } else {
+                                   ggname("geom_point_s",
+                                          grid::pointsGrob(
+                                            coords$x, coords$y,
+                                            pch = coords$shape,
+                                            gp = gpar(
+                                              col = alpha(coords$colour, coords$alpha),
+                                              fill = alpha(coords$fill, coords$alpha),
+                                              # Stroke is added around the outside of the point
+                                              fontsize = coords$size * .pt + coords$stroke * .stroke / 2,
+                                              lwd = coords$stroke * .stroke / 2
+                                            )
+                                          )
+                                   )
+                                 }
+                               },
 
-  draw_key = ggplot2::draw_key_point
+                               draw_key = ggplot2::draw_key_point
 )
 
 translate_shape_string <- function(shape_string) {

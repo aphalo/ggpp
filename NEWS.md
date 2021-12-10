@@ -24,11 +24,10 @@ instead calling it. I edited this code and included it in the package.
 The design of these four functions is not yet final their interface may
 suffer some changes.
 
--   Add functions `position_stack_and_nudge()`,
-    `position_jitter_and_nudge()`, `position_dodge_and_nudge()` and
-    `position_dodge2_and_nudge()` based on code by M. Krassowski for
-    `position_stack_and_nudge()`.
--   Add `geom_point_linked()` and update `geom_text_linked()`. (This two
+-   Add functions `position_stacknudge()`, `position_jitternudge()`,
+    `position_dodgenudge()` and `position_dodge2nudge()` based on code
+    by M. Krassowski for `position_stacknudge()`.
+-   Add `geom_point_s()` and update `geom_text_linked()`. (This two
     functions are under development, so their user interfaces may change
     in the near future).
 -   Update the vignette.

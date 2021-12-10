@@ -1,8 +1,8 @@
 #' Combined positions dodge and nudge
 #'
-#' `position_dodge_and_nudge()` combines into one function the action of
+#' `position_dodgenudge()` combines into one function the action of
 #' [ggplot2::position_dodge] and [ggplot2::position_nudge] and
-#' `position_dodge2_and_nudge()` combines into one function the action of
+#' `position_dodge2nudge()` combines into one function the action of
 #' [ggplot2::position_dodge2] and [ggplot2::position_nudge]. They are useful
 #' when labelling plots such as grouped bars, columns, etc. and when adding
 #' dodged to text labels linked to observations plotted without dodge. It can
@@ -17,11 +17,11 @@
 #' There are two posible uses for these functions. First they can be used
 #' to label dodged bars or boxplots. In this case, it is mandatory to use
 #' the same argument to `width` when passing
-#' `position_dodge()` to `geom_col()` and `position_dodge_and_nudge()` to
+#' `position_dodge()` to `geom_col()` and `position_dodgenudge()` to
 #' `geom_text()` or `geom_label()` or their repulsive equivalents. Otherwise
 #' the arrows or segments will fail to connect to the labels. In other words
 #' jittering is computed twice. Jitter should be identical with the same
-#' arguments as `position_dodge_and_nudge()` as this last function simply call the
+#' arguments as `position_dodgenudge()` as this last function simply call the
 #' same code from package 'ggplot2'.
 #'
 #' The second use is to dodge labels to be connected to elements that have not
@@ -70,8 +70,7 @@
 #'   geom_vline(xintercept = 0) +
 #'   geom_text(
 #'     aes(label = grp),
-#'     position = position_dodge_and_nudge(x = 0.09,
-#'                                         direction = "split"),
+#'     position = position_dodgenudge(x = 0.09, direction = "split"),
 #'     angle = 90) +
 #'   theme(legend.position = "none")
 #'
@@ -81,37 +80,37 @@
 #'   geom_vline(xintercept = 0) +
 #'   geom_text(
 #'     aes(label = grp),
-#'     position = position_dodge_and_nudge(y = 0.1,
-#'                                         direction = "split",
-#'                                         width = 0.75)) +
+#'     position = position_dodgenudge(y = 0.1,
+#'                                    direction = "split",
+#'                                    width = 0.75)) +
 #'   theme(legend.position = "none")
 #'
-position_dodge_and_nudge <- function(width = 1,
-                                     preserve = c("total", "single"),
-                                     x = 0,
-                                     y = 0,
-                                     direction = "none",
-                                     returned.origin = "dodged") {
+position_dodgenudge <- function(width = 1,
+                                preserve = c("total", "single"),
+                                x = 0,
+                                y = 0,
+                                direction = "none",
+                                returned.origin = "dodged") {
   ggplot2::ggproto(NULL, PositionDodgeAndNudge,
-          x = x,
-          y = y,
-          .fun_x = switch(direction,
-                        none = function(x) {1},
-                        split = sign,
-                        split.y = function(x) {1},
-                        split.x = sign,
-                        center = sign,
-                        function(x) {1}),
-          .fun_y = switch(direction,
-                          none = function(x) {1},
-                          split = sign,
-                          split.x = function(x) {1},
-                          split.y = sign,
-                          center = sign,
-                          function(x) {1}),
-          returned.origin = returned.origin,
-          width = width,
-          preserve = match.arg(preserve)
+                   x = x,
+                   y = y,
+                   .fun_x = switch(direction,
+                                   none = function(x) {1},
+                                   split = sign,
+                                   split.y = function(x) {1},
+                                   split.x = sign,
+                                   center = sign,
+                                   function(x) {1}),
+                   .fun_y = switch(direction,
+                                   none = function(x) {1},
+                                   split = sign,
+                                   split.x = function(x) {1},
+                                   split.y = sign,
+                                   center = sign,
+                                   function(x) {1}),
+                   returned.origin = returned.origin,
+                   width = width,
+                   preserve = match.arg(preserve)
   )
 }
 
@@ -121,55 +120,55 @@ position_dodge_and_nudge <- function(width = 1,
 #' @noRd
 PositionDodgeAndNudge <-
   ggplot2::ggproto("PositionDodgeAndNudge", ggplot2::PositionDodge,
-          x = 0,
-          y = 0,
+                   x = 0,
+                   y = 0,
 
-          setup_params = function(self, data) {
-            c(
-              list(nudge_x = self$x, nudge_y = self$y,
-                   .fun_x = self$.fun_x, .fun_y = self$.fun_y,
-                   returned.origin = self$returned.origin),
-              ggplot2::ggproto_parent(ggplot2::PositionDodge, self)$setup_params(data)
-            )
-          },
+                   setup_params = function(self, data) {
+                     c(
+                       list(nudge_x = self$x, nudge_y = self$y,
+                            .fun_x = self$.fun_x, .fun_y = self$.fun_y,
+                            returned.origin = self$returned.origin),
+                       ggplot2::ggproto_parent(ggplot2::PositionDodge, self)$setup_params(data)
+                     )
+                   },
 
-          compute_layer = function(self, data, params, layout) {
-            x_orig <- data$x
-            y_orig <- data$y
-            # operate on the dodged positions
-            data = ggplot2::ggproto_parent(ggplot2::PositionDodge, self)$compute_layer(data, params, layout)
+                   compute_layer = function(self, data, params, layout) {
+                     x_orig <- data$x
+                     y_orig <- data$y
+                     # operate on the dodged positions
+                     data = ggplot2::ggproto_parent(ggplot2::PositionDodge, self)$compute_layer(data, params, layout)
 
-            x_dodged <- data$x
-            y_dodged <- data$y
-            # transform only the dimensions for which non-zero nudging is requested
-            if (any(params$nudge_x != 0)) {
-              if (any(params$nudge_y != 0)) {
-                data <- ggplot2::transform_position(data,
-                                                    function(x) x + params$nudge_x * params$.fun_x(x),
-                                                    function(y) y + params$nudge_y * params$.fun_y(y))
-              } else {
-                data <- ggplot2::transform_position(data,
-                                                    function(x) x + params$nudge_x * params$.fun_x(x),
-                                                    NULL)
-              }
-            } else if (any(params$nudge_y != 0)) {
-              data <- ggplot2::transform_position(data,
-                                                  function(x) x,
-                                                  function(y) y + params$nudge_y * params$.fun_y(y))
-            }
-            # add original position
-            if (params$returned.origin == "dodged") {
-              data$x_orig <- x_dodged
-              data$y_orig <- y_dodged
-            } else {
-              data$x_orig <- x_orig
-              data$y_orig <- y_orig
-            }
+                     x_dodged <- data$x
+                     y_dodged <- data$y
+                     # transform only the dimensions for which non-zero nudging is requested
+                     if (any(params$nudge_x != 0)) {
+                       if (any(params$nudge_y != 0)) {
+                         data <- ggplot2::transform_position(data,
+                                                             function(x) x + params$nudge_x * params$.fun_x(x),
+                                                             function(y) y + params$nudge_y * params$.fun_y(y))
+                       } else {
+                         data <- ggplot2::transform_position(data,
+                                                             function(x) x + params$nudge_x * params$.fun_x(x),
+                                                             NULL)
+                       }
+                     } else if (any(params$nudge_y != 0)) {
+                       data <- ggplot2::transform_position(data,
+                                                           function(x) x,
+                                                           function(y) y + params$nudge_y * params$.fun_y(y))
+                     }
+                     # add original position
+                     if (params$returned.origin == "dodged") {
+                       data$x_orig <- x_dodged
+                       data$y_orig <- y_dodged
+                     } else {
+                       data$x_orig <- x_orig
+                       data$y_orig <- y_orig
+                     }
 
-            data
-          },
+                     data
+                   },
 
-          compute_panel = function(self, data, params, scales) {
-            ggplot2::ggproto_parent(PositionDodge, self)$compute_panel(data, params, scales)
-          }
+                   compute_panel = function(self, data, params, scales) {
+                     ggplot2::ggproto_parent(PositionDodge, self)$compute_panel(data, params, scales)
+                   }
   )

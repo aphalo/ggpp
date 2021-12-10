@@ -1,8 +1,8 @@
 #' Combined positions stack and nudge
 #'
-#' `position_stack_and_nudge()` is useful when labelling plots such as stacked
+#' `position_stacknudge()` is useful when labelling plots such as stacked
 #' bars, stacked columns, stacked lines, etc. In contrast to
-#' [ggplot2::position_nudge], `position_stack_and_nudge()` returns in `data`
+#' [ggplot2::position_nudge], `position_stacknudge()` returns in `data`
 #' both the original coordinates and the nudged coordinates.
 #'
 #' This position function is backwards compatible with [ggplot2::position_nudge]
@@ -49,7 +49,7 @@
 #'   geom_vline(xintercept = 0) +
 #'   geom_text(
 #'     aes(label = grp),
-#'     position = position_stack_and_nudge(vjust = 0.5, y = 0.3)) +
+#'     position = position_stacknudge(vjust = 0.5, y = 0.3)) +
 #'   theme(legend.position = "none")
 #'
 #' # Add labels to a vertical column plot (stacked by default)
@@ -58,7 +58,7 @@
 #'   geom_vline(xintercept = 0) +
 #'   geom_text(
 #'     aes(label = grp),
-#'     position = position_stack_and_nudge(vjust = 0.5, x = -0.3),
+#'     position = position_stacknudge(vjust = 0.5, x = -0.3),
 #'     angle = 90) +
 #'   theme(legend.position = "none")
 #'
@@ -68,7 +68,7 @@
 #'   geom_vline(xintercept = 0) +
 #'   geom_text(
 #'     aes(label = grp),
-#'     position = position_stack_and_nudge(vjust = 1, y = -0.2)) +
+#'     position = position_stacknudge(vjust = 1, y = -0.2)) +
 #'   theme(legend.position = "none")
 #'
 #' # Use geom_text_linked(), geom_text_repel() or geom_label_repel() to link
@@ -78,34 +78,34 @@
 #'   geom_vline(xintercept = 0) +
 #'   geom_text_linked(
 #'     aes(label = grp),
-#'     position = position_stack_and_nudge(vjust = 0.5, y = 0.4),
+#'     position = position_stacknudge(vjust = 0.5, y = 0.4),
 #'     vjust = "bottom") +
 #'   theme(legend.position = "none")
 #'
-position_stack_and_nudge <- function(vjust = 1,
-                                     reverse = FALSE,
-                                     x = 0,
-                                     y = 0,
-                                     direction = "none") {
+position_stacknudge <- function(vjust = 1,
+                                reverse = FALSE,
+                                x = 0,
+                                y = 0,
+                                direction = "none") {
   ggplot2::ggproto(NULL, PositionStackAndNudge,
-          x = x,
-          y = y,
-          .fun_x = switch(direction,
-                          none = function(x) {1},
-                          split = sign,
-                          split.y = function(x) {1},
-                          split.x = sign,
-                          center = sign,
-                          function(x) {1}),
-          .fun_y = switch(direction,
-                          none = function(x) {1},
-                          split = sign,
-                          split.x = function(x) {1},
-                          split.y = sign,
-                          center = sign,
-                          function(x) {1}),
-          vjust = vjust,
-          reverse = reverse
+                   x = x,
+                   y = y,
+                   .fun_x = switch(direction,
+                                   none = function(x) {1},
+                                   split = sign,
+                                   split.y = function(x) {1},
+                                   split.x = sign,
+                                   center = sign,
+                                   function(x) {1}),
+                   .fun_y = switch(direction,
+                                   none = function(x) {1},
+                                   split = sign,
+                                   split.x = function(x) {1},
+                                   split.y = sign,
+                                   center = sign,
+                                   function(x) {1}),
+                   vjust = vjust,
+                   reverse = reverse
   )
 }
 
@@ -115,47 +115,47 @@ position_stack_and_nudge <- function(vjust = 1,
 #' @noRd
 PositionStackAndNudge <-
   ggplot2::ggproto("PositionStackAndNudge", ggplot2::PositionStack,
-          x = 0,
-          y = 0,
+                   x = 0,
+                   y = 0,
 
-          setup_params = function(self, data) {
-            c(
-              list(nudge_x = self$x, nudge_y = self$y,
-                   .fun_x = self$.fun_x, .fun_y = self$.fun_y),
-              ggplot2::ggproto_parent(ggplot2::PositionStack, self)$setup_params(data)
-            )
-          },
+                   setup_params = function(self, data) {
+                     c(
+                       list(nudge_x = self$x, nudge_y = self$y,
+                            .fun_x = self$.fun_x, .fun_y = self$.fun_y),
+                       ggplot2::ggproto_parent(ggplot2::PositionStack, self)$setup_params(data)
+                     )
+                   },
 
-          compute_layer = function(self, data, params, layout) {
-            # operate on the stacked positions (updated in August 2020)
-            data = ggplot2::ggproto_parent(ggplot2::PositionStack, self)$compute_layer(data, params, layout)
+                   compute_layer = function(self, data, params, layout) {
+                     # operate on the stacked positions (updated in August 2020)
+                     data = ggplot2::ggproto_parent(ggplot2::PositionStack, self)$compute_layer(data, params, layout)
 
-            x_orig <- data$x
-            y_orig <- data$y
-            # transform only the dimensions for which non-zero nudging is requested
-            if (any(params$nudge_x != 0)) {
-              if (any(params$nudge_y != 0)) {
-                data <- ggplot2::transform_position(data,
-                                                    function(x) x + params$nudge_x * params$.fun_x(x),
-                                                    function(y) y + params$nudge_y * params$.fun_y(y))
-              } else {
-                data <- ggplot2::transform_position(data,
-                                                    function(x) x + params$nudge_x * params$.fun_x(x),
-                                                    NULL)
-              }
-            } else if (any(params$nudge_y != 0)) {
-              data <- ggplot2::transform_position(data,
-                                                  function(x) x,
-                                                  function(y) y + params$nudge_y * params$.fun_y(y))
-            }
-            # add original position
-            data$x_orig <- x_orig
-            data$y_orig <- y_orig
+                     x_orig <- data$x
+                     y_orig <- data$y
+                     # transform only the dimensions for which non-zero nudging is requested
+                     if (any(params$nudge_x != 0)) {
+                       if (any(params$nudge_y != 0)) {
+                         data <- ggplot2::transform_position(data,
+                                                             function(x) x + params$nudge_x * params$.fun_x(x),
+                                                             function(y) y + params$nudge_y * params$.fun_y(y))
+                       } else {
+                         data <- ggplot2::transform_position(data,
+                                                             function(x) x + params$nudge_x * params$.fun_x(x),
+                                                             NULL)
+                       }
+                     } else if (any(params$nudge_y != 0)) {
+                       data <- ggplot2::transform_position(data,
+                                                           function(x) x,
+                                                           function(y) y + params$nudge_y * params$.fun_y(y))
+                     }
+                     # add original position
+                     data$x_orig <- x_orig
+                     data$y_orig <- y_orig
 
-            data
-          },
+                     data
+                   },
 
-          compute_panel = function(self, data, params, scales) {
-            ggplot2::ggproto_parent(PositionStack, self)$compute_panel(data, params, scales)
-          }
+                   compute_panel = function(self, data, params, scales) {
+                     ggplot2::ggproto_parent(PositionStack, self)$compute_panel(data, params, scales)
+                   }
   )

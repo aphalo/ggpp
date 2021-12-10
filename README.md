@@ -78,7 +78,7 @@ according to the relative position of points with respect to arbitrary
 points or lines, or with respect to a polynomial or smoothing spline
 fitted on-the-fly to the the observations.
 
-Position functions `position_stack_and_nudge()`,
+Position functions `position_stacknudge()`,
 `position_stack_and_dodge()` and `position_stack_and_dodge2()` each
 combines the roles of two *position* functions. They make it possible to
 easily nudge labels in plot layers that use stacking or dodging.
@@ -199,7 +199,7 @@ ggplot(data = df, aes(x2, x1, group = grp)) +
   geom_hline(yintercept = 0) +
   geom_text(
     aes(label = grp),
-    position = position_stack_and_nudge(vjust = 1, y = -0.2)) +
+    position = position_stacknudge(vjust = 1, y = -0.2)) +
   theme(legend.position = "none")
 ```
 

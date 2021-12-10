@@ -1,6 +1,6 @@
 #' Combined positions jitter and nudge
 #'
-#' `position_jitter_and_nudge()` combines into one function the action of
+#' `position_jitternudge()` combines into one function the action of
 #' [ggplot2::position_jitter] and [ggplot2::position_nudge]. It is useful when
 #' labels to jittered plots and when adding jitter to text labels linked to
 #' points plotted without jitter. It can replace other position functions as
@@ -78,72 +78,62 @@
 #'
 #' jitter <- position_jitter(width = 0.3, height = 2, seed = 123)
 #'
-#' jitter_nudge <- position_jitter_and_nudge(width = 0.3, height = 2,
-#'                                           seed = 123, x = 0.4,
-#'                                           direction = "as.is",
-#'                                           nudge.from = "original.x")
+#' jitter_nudge <- position_jitternudge(width = 0.3, height = 2,
+#'                                      seed = 123, x = 0.4,
+#'                                      direction = "as.is",
+#'                                      nudge.from = "original.x")
 #' ggplot(mpg[1:20, ],
-#'        aes(cyl,
-#'            hwy,
-#'            label = drv)) +
+#'        aes(cyl, hwy, label = drv)) +
 #'   geom_point(position = jitter) +
 #'   geom_text_linked(position = jitter_nudge)
 #'
-#' jitter_nudge <- position_jitter_and_nudge(width = 0.3, height = 2,
-#'                                           seed = 123, x = -0.4,
-#'                                           direction = "as.is",
-#'                                           nudge.from = "original.x")
+#' jitter_nudge <- position_jitternudge(width = 0.3, height = 2,
+#'                                      seed = 123, x = -0.4,
+#'                                      direction = "as.is",
+#'                                      nudge.from = "original.x")
 #' ggplot(mpg[1:20, ],
-#'        aes(cyl,
-#'            hwy,
-#'            label = drv)) +
+#'        aes(cyl, hwy, label = drv)) +
 #'   geom_point(position = jitter) +
 #'   geom_text_linked(position = jitter_nudge)
 #'
 #' jitter <- position_jitter(width = 0, height = 2, seed = 123)
 #'
-#' jitter_nudge <- position_jitter_and_nudge(width = 0, height = 2,
-#'                                           seed = 123, x = 0.4,
-#'                                           direction = "split",
-#'                                           nudge.from = "original.x")
+#' jitter_nudge <- position_jitternudge(width = 0, height = 2,
+#'                                      seed = 123, x = 0.4,
+#'                                      direction = "split",
+#'                                      nudge.from = "original.x")
 #' ggplot(mpg[1:20, ],
-#'        aes(cyl,
-#'            hwy,
-#'            label = drv)) +
+#'        aes(cyl, hwy, label = drv)) +
 #'   geom_point(position = jitter) +
 #'   geom_text_linked(position = jitter_nudge)
 #'
-#' jitter_nudge <- position_jitter_and_nudge(width = 0, height = 2,
-#'                                           seed = 123, x = 0.4,
-#'                                           direction = "alternate",
-#'                                           nudge.from = "original.x")
+#' jitter_nudge <- position_jitternudge(width = 0, height = 2,
+#'                                      seed = 123, x = 0.4,
+#'                                      direction = "alternate",
+#'                                      nudge.from = "original.x")
 #' ggplot(mpg[1:20, ],
-#'        aes(cyl,
-#'            hwy,
-#'            label = drv)) +
+#'        aes(cyl, hwy, label = drv)) +
 #'   geom_point(position = jitter) +
 #'   geom_text_linked(position = jitter_nudge)
 #'
 #' # No nudge, show how points have moved with jitter
 #'
 #' ggplot(mpg[1:20, ],
-#'        aes(cyl,
-#'            hwy,
-#'            label = drv)) +
+#'        aes(cyl, hwy, label = drv)) +
 #'   geom_point() +
-#'   geom_point_linked(position =
+#'   geom_point_s(position =
 #'              position_jitter_keep(width = 0.3, height = 2, seed = 123),
 #'              color = "red",
 #'              arrow = grid::arrow(length = unit(0.4, "lines")))
 #'
-position_jitter_and_nudge <- function(width = NULL,
-                                     height = NULL,
-                                     seed = NA,
-                                     x = 0,
-                                     y = 0,
-                                     direction = "as.is",
-                                     nudge.from = "original",
-                                     returned.origin = "jittered") {
+position_jitternudge <- function(width = NULL,
+                                 height = NULL,
+                                 seed = NA,
+                                 x = 0,
+                                 y = 0,
+                                 direction = "as.is",
+                                 nudge.from = "original",
+                                 returned.origin = "jittered") {
 
   fixed.direction <-
     function(x) {1}
@@ -202,80 +192,80 @@ position_jitter_and_nudge <- function(width = NULL,
 #' @noRd
 PositionJitterAndNudge <-
   ggplot2::ggproto("PositionDodgeAndNudge", ggplot2::PositionJitter,
-          x = 0,
-          y = 0,
+                   x = 0,
+                   y = 0,
 
-          setup_params = function(self, data) {
-            c(
-              list(nudge_x = self$x, nudge_y = self$y,
-                   .fun_x = self$.fun_x, .fun_y = self$.fun_y,
-                   nudge.from = self$nudge.from, returned.origin = self$returned.origin),
-              ggplot2::ggproto_parent(ggplot2::PositionJitter, self)$setup_params(data)
-            )
-          },
+                   setup_params = function(self, data) {
+                     c(
+                       list(nudge_x = self$x, nudge_y = self$y,
+                            .fun_x = self$.fun_x, .fun_y = self$.fun_y,
+                            nudge.from = self$nudge.from, returned.origin = self$returned.origin),
+                       ggplot2::ggproto_parent(ggplot2::PositionJitter, self)$setup_params(data)
+                     )
+                   },
 
-          compute_layer = function(self, data, params, layout) {
-            x_orig <- data$x
-            y_orig <- data$y
+                   compute_layer = function(self, data, params, layout) {
+                     x_orig <- data$x
+                     y_orig <- data$y
 
-            # operate on the dodged positions
-            data = ggplot2::ggproto_parent(ggplot2::PositionJitter, self)$compute_layer(data, params, layout)
+                     # operate on the dodged positions
+                     data = ggplot2::ggproto_parent(ggplot2::PositionJitter, self)$compute_layer(data, params, layout)
 
-            x_jittered <- data$x
-            y_jittered <- data$y
-            if (params$nudge.from %in% c("original", "original.x", "jittered.y")) {
-              data$x <- x_orig
-            }
-            if (params$nudge.from %in% c("original", "original.y", "jittered.x")) {
-              data$y <- y_orig
-            }
+                     x_jittered <- data$x
+                     y_jittered <- data$y
+                     if (params$nudge.from %in% c("original", "original.x", "jittered.y")) {
+                       data$x <- x_orig
+                     }
+                     if (params$nudge.from %in% c("original", "original.y", "jittered.x")) {
+                       data$y <- y_orig
+                     }
 
-            # transform only the dimensions for which non-zero nudging is requested
-            if (any(params$nudge_x != 0)) {
-              if (any(params$nudge_y != 0)) {
-                data <- ggplot2::transform_position(data,
-                                                    function(x) x + params$nudge_x * params$.fun_x(x_jittered - x_orig),
-                                                    function(y) y + params$nudge_y * params$.fun_y(y_jittered - y_orig))
-              } else {
-                data <- ggplot2::transform_position(data,
-                                                    function(x) x + params$nudge_x * params$.fun_x(x_jittered - x_orig),
-                                                    NULL)
-              }
-            } else if (any(params$nudge_y != 0)) {
-              data <- ggplot2::transform_position(data,
-                                                  function(x) x,
-                                                  function(y) y + params$nudge_y * params$.fun_y(y_jittered - y_orig))
-            }
-            # add origin position (for connecting arrow or segment)
-            if (params$returned.origin == "jittered") {
-              data$x_orig <- x_jittered
-              data$y_orig <- y_jittered
-            } else {
-              data$x_orig <- x_orig
-              data$y_orig <- y_orig
-            }
+                     # transform only the dimensions for which non-zero nudging is requested
+                     if (any(params$nudge_x != 0)) {
+                       if (any(params$nudge_y != 0)) {
+                         data <- ggplot2::transform_position(data,
+                                                             function(x) x + params$nudge_x * params$.fun_x(x_jittered - x_orig),
+                                                             function(y) y + params$nudge_y * params$.fun_y(y_jittered - y_orig))
+                       } else {
+                         data <- ggplot2::transform_position(data,
+                                                             function(x) x + params$nudge_x * params$.fun_x(x_jittered - x_orig),
+                                                             NULL)
+                       }
+                     } else if (any(params$nudge_y != 0)) {
+                       data <- ggplot2::transform_position(data,
+                                                           function(x) x,
+                                                           function(y) y + params$nudge_y * params$.fun_y(y_jittered - y_orig))
+                     }
+                     # add origin position (for connecting arrow or segment)
+                     if (params$returned.origin == "jittered") {
+                       data$x_orig <- x_jittered
+                       data$y_orig <- y_jittered
+                     } else {
+                       data$x_orig <- x_orig
+                       data$y_orig <- y_orig
+                     }
 
-            data
-          },
+                     data
+                   },
 
-          compute_panel = function(self, data, params, scales) {
-            ggplot2::ggproto_parent(PositionJitter, self)$compute_panel(data, params, scales)
-          }
+                   compute_panel = function(self, data, params, scales) {
+                     ggplot2::ggproto_parent(PositionJitter, self)$compute_panel(data, params, scales)
+                   }
   )
 
-#' @rdname position_jitter_and_nudge
+#' @rdname position_jitternudge
 #'
 #' @export
 #'
 position_jitter_keep <- function(width = NULL,
                                  height = NULL,
                                  seed = NA) {
-  position_jitter_and_nudge(width = width,
-                            height = height,
-                            seed = seed,
-                            x = 0,
-                            y = 0,
-                            direction = "as.is",
-                            nudge.from = "jittered",
-                            returned.origin = "original")
+  position_jitternudge(width = width,
+                       height = height,
+                       seed = seed,
+                       x = 0,
+                       y = 0,
+                       direction = "as.is",
+                       nudge.from = "jittered",
+                       returned.origin = "original")
 }

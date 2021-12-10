@@ -15,7 +15,7 @@ reference:
     - annotate
     - geom_text_npc
     - geom_text_linked
-    - geom_point_linked
+    - geom_point_s
     - geom_x_margin_point
     - geom_x_margin_arrow
     - geom_x_margin_grob
@@ -41,9 +41,9 @@ reference:
     - position_nudge_to
     - position_nudge_center
     - position_nudge_line
-    - position_dodge_and_nudge
-    - position_stack_and_nudge
-    - position_jitter_and_nudge
+    - position_dodgenudge
+    - position_stacknudge
+    - position_jitternudge
   - title: Plot creation
     desc: Additional ggplot methods
     contents:

@@ -1,6 +1,6 @@
 context("positions")
 
-test_that("stack_and_nudge", {
+test_that("stacknudge", {
   df <- data.frame(x1 = c(1, 2, 1, 3, -1),
                    x2 = c("a", "a", "b", "b", "b"),
                    grp = c("some long name", "other name", "some name",
@@ -13,26 +13,26 @@ test_that("stack_and_nudge", {
 
   vdiffr::expect_doppelganger("stack_nudge1",
                               p + geom_text(aes(label = grp),
-                                position = position_stack_and_nudge(vjust = 0.5, y = 0.3))
+                                position = position_stacknudge(vjust = 0.5, y = 0.3))
                               )
   vdiffr::expect_doppelganger("stack_nudge2",
                               p + geom_text_linked(aes(label = grp),
                                                    vjust = 0,
-                                            position = position_stack_and_nudge(vjust = 0.5, y = 0.3))
+                                            position = position_stacknudge(vjust = 0.5, y = 0.3))
   )
   vdiffr::expect_doppelganger("stack_nudge3",
                               p + geom_text(aes(label = grp),
                                             hjust = 0,
-                                            position = position_stack_and_nudge(vjust = 0, x = 0.1))
+                                            position = position_stacknudge(vjust = 0, x = 0.1))
   )
   vdiffr::expect_doppelganger("stack_nudge4",
                               p + geom_text(aes(label = grp),
                                             hjust = 0, angle = 90,
-                                            position = position_stack_and_nudge(vjust = 0, x = 0.1, y = -0.21))
+                                            position = position_stacknudge(vjust = 0, x = 0.1, y = -0.21))
   )
 })
 
-test_that("dodge_and_nudge", {
+test_that("dodgenudge", {
   df <- data.frame(x1 = c(1, 2, 1, 3, -1),
                    x2 = c("a", "a", "b", "b", "b"),
                    grp = c("some long name", "other name", "some name",
@@ -47,23 +47,23 @@ test_that("dodge_and_nudge", {
 
   vdiffr::expect_doppelganger("dodge_nudge1",
                               p + geom_text(aes(label = grp),
-                                            position = position_dodge_and_nudge(width = 0.5, y = 0.1))
+                                            position = position_dodgenudge(width = 0.5, y = 0.1))
   )
   vdiffr::expect_doppelganger("dodge_nudge2",
                               p + geom_text(aes(label = grp),
-                                            position = position_dodge_and_nudge(width = 0.5, y = 0.1,
+                                            position = position_dodgenudge(width = 0.5, y = 0.1,
                                                                                 direction = "split"))
   )
   vdiffr::expect_doppelganger("dodge_nudge3",
                               p + geom_text_linked(aes(label = grp),
                                             hjust = 0,
-                                            position = position_dodge_and_nudge(width = 0.5, y = 0.2,
+                                            position = position_dodgenudge(width = 0.5, y = 0.2,
                                                                                 direction = "split"))
   )
   vdiffr::expect_doppelganger("dodge_nudge4",
                               p + geom_text(aes(label = grp),
                                             hjust = "center",
-                                            position = position_dodge_and_nudge(width = 0.5, y = -0.05,
+                                            position = position_dodgenudge(width = 0.5, y = -0.05,
                                                                                 direction = "split"))
   )
 })
