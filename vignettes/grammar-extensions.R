@@ -465,12 +465,19 @@ df <- data.frame(
 )
 
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## -----------------------------------------------------------------------------
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
-  geom_text_repel(position = 
-                    position_nudge_keep(x = 0.3),
-                    min.segment.length = 0, max.iter = 0)
+  geom_text_s(position = position_nudge_keep(x = 0.1),
+              hjust = "left") +
+  expand_limits(x = 2.5)
+
+## -----------------------------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_s(position = position_nudge_keep(x = 0.1),
+              hjust = "left", add.segments = FALSE) +
+  expand_limits(x = 2.5)
 
 ## ---- eval=eval_ggrepel-------------------------------------------------------
 ggplot(df, aes(x, y, label = l)) +
@@ -479,21 +486,25 @@ ggplot(df, aes(x, y, label = l)) +
                   min.segment.length = 0, 
                   max.iter = 0)
 
+## ---- eval=eval_ggrepel-------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_repel(position = position_nudge_keep(x = 0.3),
+                  min.segment.length = 0, max.iter = 0)
+
 ## -----------------------------------------------------------------------------
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
   geom_text(position = position_nudge(x = 0.3))
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## -----------------------------------------------------------------------------
 ggplot(df, aes(x, y, label = ifelse(x < 1, "", l) )) +
   geom_point() +
-  geom_text_repel(position = 
-                    position_nudge_to(x = 2.3),
-                  min.segment.length = 0,
-                  segment.color = "red",
-                  arrow = arrow(length = unit(0.015, "npc")),
-                  direction = "y",
-                  hjust = "left") +
+  geom_text_s(position = position_nudge_to(y = 2.3),
+              segment.color = "red",
+              arrow = arrow(length = unit(0.015, "npc")),
+              angle = 90,
+              hjust = "left") +
   expand_limits(x = 3)
 
 ## ---- eval=eval_ggrepel-------------------------------------------------------

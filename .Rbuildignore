@@ -11,3 +11,4 @@ data-raw
 ^README\.Rmd$
 ^build-binary-from-source.sh$
 ^\.github$
+^\.revdep$

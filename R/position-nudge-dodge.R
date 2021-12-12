@@ -46,7 +46,7 @@
 #'   "none" replicates the behavior of [ggplot2::position_nudge]. At the moment
 #'   "split" changes the sign of the nudge at zero, which is suiatble for column
 #'   plots with negative slices.
-#' @param returned.origin One of "original" or "dodged".
+#' @param returned.origin One of "original", "dodged" or "none".
 #'
 #' @seealso [ggplot2::position_nudge()], [ggrepel::position_nudge_repel()].
 #'
@@ -78,11 +78,10 @@
 #'   geom_col(aes(fill = grp), width = 0.75,
 #'            position = position_dodge(width = 0.75)) +
 #'   geom_vline(xintercept = 0) +
-#'   geom_text(
-#'     aes(label = grp),
-#'     position = position_dodgenudge(y = 0.1,
-#'                                    direction = "split",
-#'                                    width = 0.75)) +
+#'   geom_text(aes(label = grp),
+#'             position = position_dodgenudge(y = 0.1,
+#'                                            direction = "split",
+#'                                            width = 0.75)) +
 #'   theme(legend.position = "none")
 #'
 position_dodgenudge <- function(width = 1,
@@ -91,6 +90,12 @@ position_dodgenudge <- function(width = 1,
                                 y = 0,
                                 direction = "none",
                                 returned.origin = "dodged") {
+  # Ensure error message is triggered early
+  if (!returned.origin %in% c("original", "dodged", "none")) {
+    stop("Invalid 'returned.origin': ", returned.origin,
+         "expected: `\"original\", \"dodged\" or \"none\"")
+  }
+
   ggplot2::ggproto(NULL, PositionDodgeAndNudge,
                    x = x,
                    y = y,
@@ -160,7 +165,7 @@ PositionDodgeAndNudge <-
                      if (params$returned.origin == "dodged") {
                        data$x_orig <- x_dodged
                        data$y_orig <- y_dodged
-                     } else {
+                     } else if (params$returned.origin == "original") {
                        data$x_orig <- x_orig
                        data$y_orig <- y_orig
                      }
@@ -172,3 +177,31 @@ PositionDodgeAndNudge <-
                      ggplot2::ggproto_parent(PositionDodge, self)$compute_panel(data, params, scales)
                    }
   )
+
+#' @rdname position_dodgenudge
+#'
+#' @export
+#'
+position_dodge_keep <- function(width = 1,
+                                preserve = c("total", "single")) {
+  position_dodgenudge(width = width,
+                      preserve = preserve,
+                      x = 0,
+                      y = 0,
+                      direction = "as.is",
+                      returned.origin = "original")
+}
+
+#' @rdname position_dodgenudge
+#'
+#' @export
+#'
+position_dodge2_keep <- function(width = 1,
+                                preserve = c("total", "single")) {
+  position_dodge2nudge(width = width,
+                      preserve = preserve,
+                      x = 0,
+                      y = 0,
+                      direction = "as.is",
+                      returned.origin = "original")
+}

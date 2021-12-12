@@ -18,17 +18,28 @@ labels to plot elements, which is important in plots aimed at audiences
 outside academia.
 
 In one of the issues in the GitHub repository of 'ggrepel' an answer by
-M. Krassowski included code that provided an elegant and simple approach
-to implementing combined position functions without duplicating code
-already in 'ggplot2' by instead calling methods of the parent class. I
-edited this code and included it in the package. The renaming of
-`geom_text_linked()` to `geom_text_s()` is code breaking but I am now
-fairly confident this shorter name is easy to remember with `s` for
-segment.
+*M. Krassowski* included code that provided an elegant and simple
+approach to implementing combined position functions without duplicating
+code already in 'ggplot2' by instead calling methods of the parent
+class. I edited this code and included it in the package.
 
+Except for the position functions with names ending in `_keep`, for
+which *normal* counterparts exist, the *keeping* of the original
+position can be disabled by passing `returned.origin = "none"` when they
+are called.
+
+The renaming of `geom_text_linked()` to `geom_text_s()` is code breaking
+but I am now fairly confident this shorter name is easy to remember with
+`s` for segment.
+
+-   Add functions `position_stack_keep()`, `position_jitter_keep()`,
+    `position_dodge_keep()` and `position_dodge2_keep()`.
 -   Add functions `position_stacknudge()`, `position_jitternudge()`,
     `position_dodgenudge()` and `position_dodge2nudge()` based on code
     by M. Krassowski for `position_stack_and_nudge()`.
+-   Revise functions `position_nudge_to()`, `position_nudge_center()`
+    and `position_nudge_line()` adding support for disabling keeping of
+    the original positions.
 -   Add `geom_point_s()` and update `geom_text_s()` **renamed** from
     `geom_text_linked()`. This is a ***code breaking change*** with
     respect to the previous (unstable) version.
@@ -217,19 +228,20 @@ near future*.
 -   Override `ggplot2::annotate()` adding support for aesthetics `npcx`
     and `npcy`.
 -   Add `stat_summary_xy()` and `stat_centroid()`.
--   Revise `stat_poly_eq()` to support labeling of equations according
+-   Revise `stat_poly_eq()` to support labelling of equations according
     to group.
 -   Implement `output.type` `"markdown"` in `stat_poly_eq()` usable with
     `geom_richtext()` from package 'ggtext'.
 
 # ggpmisc 0.3.5
 
--   Add support for "table themes" to geom_table() and
+-   Add support for "table themes" to `geom_table()` and
     `geom_table_npc()`.
 
 # ggpmisc 0.3.4
 
--   Add support for p.value.label and f.value.label to `stat_poly_eq()`.
+-   Add support for `p.value.label` and `f.value.label` to
+    `stat_poly_eq()`.
 -   Update to track deprecations in 'ggplot2' (>= 3.3.0).
 
 # ggpmisc 0.3.3
@@ -391,7 +403,7 @@ CRAN version
 
 Add `stat_fit_tidy()` implemented using `broom::tidy()`. Makes it
 possible to add the fitted equation for any fitted model supported by
-package 'broom', as long as the user supplies within aes() the code to
+package 'broom', as long as the user supplies within `aes()` the code to
 build a label string. Update user guide.
 
 # ggpmisc 0.2.14
@@ -475,10 +487,10 @@ expressions.
     observations from a fitted model.
 
 -   Add `stat_fit_residuals()` for plotting residuals from a fitted
-    model on their own in plots matching plots of lm fits plotted with
-    stat_smooth() even with grouping or facets. This statistic currently
-    supports only `lm()` fits. By default geom "point" is used to plot
-    the residual from a fitted model.
+    model on their own in plots matching plots of `lm` fits plotted with
+    `stat_smooth()` even with grouping or facets. This statistic
+    currently supports only `lm()` fits. By default geom "point" is used
+    to plot the residual from a fitted model.
 
 -   Add preliminary version of `stat_fit_augment()`, which uses package
     'broom' for maximum flexibility in model function choice, to augment
@@ -490,9 +502,9 @@ expressions.
 -   Add pretty-printing of parameter values expressed in engineering
     notation in `stat_poly_eq()`.
 -   Add support for user-supplied label coordinates in `stat_poly_eq()`.
--   Improve `stat_debug_panel()` and stat_debug_group() so that they can
-    optionally print to the console a summary of the data received as
-    input.
+-   Improve `stat_debug_panel()` and `stat_debug_group()` so that they
+    can optionally print to the console a summary of the data received
+    as input.
 -   Add `geom_debug()`, a geom that summarizes its data input to the
     console, and produces no visible graphical output.
 
@@ -517,7 +529,7 @@ expressions.
 
 # ggpmisc 0.2.2
 
--   Add function try_data_frame() to convert R objects including time
+-   Add function `try_data_frame()` to convert R objects including time
     series objects of all classes accepted by `try.xts()` into data
     frames suitable for plotting with `ggplot()`.
 

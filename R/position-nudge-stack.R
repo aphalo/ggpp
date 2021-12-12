@@ -27,6 +27,7 @@
 #'   "none" replicates the behavior of [ggplot2::position_nudge]. At the moment
 #'   "split" changes the sign of the nudge at zero, which is suiatble for column
 #'   plots with negative slices.
+#' @param returned.origin One of "original", "stacked" or "none".
 #'
 #' @seealso [ggplot2::position_nudge()], [ggrepel::position_nudge_repel()].
 #'
@@ -38,6 +39,7 @@
 #'   (revised by Pedro J. Aphalo)
 #'
 #' @examples
+#'
 #' df <- data.frame(x1 = c(1, 2, 1, 3, -1),
 #'                  x2 = c("a", "a", "b", "b", "b"),
 #'                  grp = c("some long name", "other name", "some name",
@@ -86,7 +88,14 @@ position_stacknudge <- function(vjust = 1,
                                 reverse = FALSE,
                                 x = 0,
                                 y = 0,
-                                direction = "none") {
+                                direction = "none",
+                                returned.origin = "stacked") {
+  # Ensure error message is triggered early
+  if (!returned.origin %in% c("original", "stacked", "none")) {
+    stop("Invalid 'returned.origin': ", returned.origin,
+         "expected: `\"original\", \"stacked\" or \"none\"")
+  }
+
   ggplot2::ggproto(NULL, PositionStackAndNudge,
                    x = x,
                    y = y,
@@ -104,6 +113,7 @@ position_stacknudge <- function(vjust = 1,
                                    split.y = sign,
                                    center = sign,
                                    function(x) {1}),
+                   returned.origin = returned.origin,
                    vjust = vjust,
                    reverse = reverse
   )
@@ -121,17 +131,21 @@ PositionStackAndNudge <-
                    setup_params = function(self, data) {
                      c(
                        list(nudge_x = self$x, nudge_y = self$y,
-                            .fun_x = self$.fun_x, .fun_y = self$.fun_y),
+                            .fun_x = self$.fun_x, .fun_y = self$.fun_y,
+                            returned.origin = self$returned.origin),
                        ggplot2::ggproto_parent(ggplot2::PositionStack, self)$setup_params(data)
                      )
                    },
 
                    compute_layer = function(self, data, params, layout) {
-                     # operate on the stacked positions (updated in August 2020)
-                     data = ggplot2::ggproto_parent(ggplot2::PositionStack, self)$compute_layer(data, params, layout)
-
                      x_orig <- data$x
                      y_orig <- data$y
+
+                     # operate on the stacked positions (updated in August 2020)
+                     data = ggplot2::ggproto_parent(ggplot2::PositionStack, self)$compute_layer(data, params, layout)
+                     x_stacked <- data$x
+                     y_stacked <- data$y
+
                      # transform only the dimensions for which non-zero nudging is requested
                      if (any(params$nudge_x != 0)) {
                        if (any(params$nudge_y != 0)) {
@@ -148,9 +162,15 @@ PositionStackAndNudge <-
                                                            function(x) x,
                                                            function(y) y + params$nudge_y * params$.fun_y(y))
                      }
+
                      # add original position
-                     data$x_orig <- x_orig
-                     data$y_orig <- y_orig
+                     if (params$returned.origin == "stacked") {
+                       data$x_orig <- x_stacked
+                       data$y_orig <- y_stacked
+                     } else if (params$returned.origin == "original") {
+                       data$x_orig <- x_orig
+                       data$y_orig <- y_orig
+                     }
 
                      data
                    },
@@ -159,3 +179,17 @@ PositionStackAndNudge <-
                      ggplot2::ggproto_parent(PositionStack, self)$compute_panel(data, params, scales)
                    }
   )
+
+#' @rdname position_stacknudge
+#'
+#' @export
+#'
+position_stack_keep <- function(vjust = 1,
+                                reverse = FALSE) {
+  position_stacknudge(vjust = vjust,
+                      reverse = reverse,
+                      x = 0,
+                      y = 0,
+                      direction = "as.is",
+                      returned.origin = "original")
+}

@@ -3,6 +3,8 @@
 %   R/position-nudge-dodge2.R
 \name{position_dodgenudge}
 \alias{position_dodgenudge}
+\alias{position_dodge_keep}
+\alias{position_dodge2_keep}
 \alias{position_dodge2nudge}
 \title{Combined positions dodge and nudge}
 \usage{
@@ -14,6 +16,10 @@ position_dodgenudge(
   direction = "none",
   returned.origin = "dodged"
 )
+
+position_dodge_keep(width = 1, preserve = c("total", "single"))
+
+position_dodge2_keep(width = 1, preserve = c("total", "single"))
 
 position_dodge2nudge(
   width = 1,
@@ -42,7 +48,7 @@ vector of length 1, or of the same length as rows there are in `data`,}
 "split" changes the sign of the nudge at zero, which is suiatble for column
 plots with negative slices.}
 
-\item{returned.origin}{One of "original" or "dodged".}
+\item{returned.origin}{One of "original", "dodged" or "none".}
 
 \item{padding}{Padding between elements at the same position. Elements are
 shrunk by this proportion to allow space between them. Defaults to 0.1.}
@@ -105,11 +111,10 @@ ggplot(data = df, aes(x2, x1, group = grp)) +
   geom_col(aes(fill = grp), width = 0.75,
            position = position_dodge(width = 0.75)) +
   geom_vline(xintercept = 0) +
-  geom_text(
-    aes(label = grp),
-    position = position_dodgenudge(y = 0.1,
-                                   direction = "split",
-                                   width = 0.75)) +
+  geom_text(aes(label = grp),
+            position = position_dodgenudge(y = 0.1,
+                                           direction = "split",
+                                           width = 0.75)) +
   theme(legend.position = "none")
 
 }

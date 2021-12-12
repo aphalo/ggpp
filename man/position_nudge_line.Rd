@@ -12,7 +12,8 @@ position_nudge_line(
   method = NULL,
   formula = y ~ x,
   direction = NULL,
-  line_nudge = 1
+  line_nudge = 1,
+  returned.origin = "original"
 )
 }
 \arguments{
@@ -33,6 +34,8 @@ otherwise.}
 
 \item{line_nudge}{A positive multiplier >= 1, increasing nudging
 away from the curve or line compared to nudging from points.}
+
+\item{returned.origin}{One of "original" or "none".}
 }
 \value{
 A \code{"Position"} object.

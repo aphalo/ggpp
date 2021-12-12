@@ -89,13 +89,13 @@
 #' # selection, reordering and renaming by column position
 #' ggplot(my.df, aes(x, y, label = tbs)) +
 #'   stat_fmt_tb(tb.vars = c(group = 2, value = 1),
-#'                tb.rows = 1:3) +
+#'               tb.rows = 1:3) +
 #'   expand_limits(x = c(0,3), y = c(-2, 6))
 #'
 #' # selection and renaming, using partial matching to column name
 #' ggplot(my.df, aes(x, y, label = tbs)) +
 #'   stat_fmt_tb(tb.vars = c(value = "X", group = "Y"),
-#'                tb.rows = 1:3) +
+#'               tb.rows = 1:3) +
 #'   expand_limits(x = c(0,3), y = c(-2, 6))
 #'
 stat_fmt_tb <- function(mapping = NULL,

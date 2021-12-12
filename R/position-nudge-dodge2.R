@@ -10,6 +10,12 @@ position_dodge2nudge <- function(width = 1,
                                  y = 0,
                                  direction = "none",
                                  returned.origin = "dodged") {
+  # Ensure error message is triggered early
+  if (!returned.origin %in% c("original", "dodged", "none")) {
+    stop("Invalid 'returned.origin': ", returned.origin,
+         "expected: `\"original\", \"dodged\" or \"none\"")
+  }
+
   ggplot2::ggproto(NULL, PositionDodgeAndNudge,
                    x = x,
                    y = y,
@@ -81,7 +87,7 @@ PositionDodgeAndNudge <-
                      if (params$returned.origin == "dodged") {
                        data$x_orig <- x_dodged
                        data$y_orig <- y_dodged
-                     } else {
+                     } else if (params$returned.origin == "original") {
                        data$x_orig <- x_orig
                        data$y_orig <- y_orig
                      }
@@ -93,3 +99,6 @@ PositionDodgeAndNudge <-
                      ggplot2::ggproto_parent(PositionDodge2, self)$compute_panel(data, params, scales)
                    }
   )
+
+
+

@@ -1,45 +1,48 @@
 #' @title Linked Text
 #'
-#' @description Text geoms are useful for labelling plots. `geom_text_s()`
+#' @description Text geoms are most useful for labelling plots. `geom_text_s()`
 #'   adds text to the plot and for nudged positions links the original location
 #'   to the nudged text with a segment.
 #'
-#' @section Under development:
-#'   This is preliminary version of the geom. I plan to add
-#'   features like padding around text and points. I aim to make use of the new
-#'   features of 'grid' in R >= 4.1.0 to keep the implementation as fast and
-#'   simple as possible. Currently this geom does all drawing using at most two
-#'   vectorized calls to 'grid' functions. As a temporary replacement of padding
-#'   around text one can use 'slightly out-of-range' numeric values for
+#' @section Under development: This is preliminary version of the geom. I plan
+#'   to add features like padding around text and points. I aim to make use of
+#'   the new features of 'grid' in R >= 4.1.0 to keep the implementation as fast
+#'   and simple as possible. Currently this geom does all drawing using at most
+#'   two vectorized calls to 'grid' functions. As a temporary replacement of
+#'   padding around text one can use 'slightly out-of-range' numeric values for
 #'   justification as shown in the examples. Aesthetics `segment.colour` and
 #'   `segment.alpha` are implemented, but `segment.linetype` not yet.
 #'
-#' @details Note that when you resize a plot, text labels stay the same size,
-#'   even though the size of the plot area changes. This happens because the
-#'   "width" and "height" of a text element are 0. Obviously, text labels do
-#'   have height and width, but in physical units, not data units. For the
-#'   same reason, stacking and dodging text will not work by default, and axis
-#'   limits are not automatically expanded to include all text.
+#' @details Note that when you change the scale limits for x and/or y of a plot,
+#'   text labels stay the same size, as determined by the \code{size} aesthetic.
+#'   The actual size as seen in the plotted output is decided during the
+#'   rendering of the plot to a graphics device. Limits are expanded only to
+#'   include the anchor point of the labels because the "width" and "height" of
+#'   a text element are 0 (as seen by ggplot2). For the same reason, stacking
+#'   and dodging text will not work as they take place within 'ggplot2' before
+#'   the rendered size of text is known. Text labels do have height and width,
+#'   but in grid units, not data units.
 #'
-#'   By default this geom uses `position_nudge_center()` which is backwards
-#'   compatible with `position_nudge()` from 'ggplot2' but provides additional
-#'   control on the direction of the nudging. In contrast to `position_nudge()`,
-#'   `position_nudge_center()` and `position_nudge_line()` preserve the original
-#'   coordinates.
+#'   By default this geom uses \code{\link{position_nudge_center}} which is
+#'   backwards compatible with \code{\link[ggplot2]{position_nudge}} but
+#'   provides additional control on the direction of the nudging. In contrast to
+#'   \code{\link[ggplot2]{position_nudge}}, \code{\link{position_nudge_center}}
+#'   and all other position functions defined in packages 'ggpp' and 'ggrepel'
+#'   keep the original coordinates thus allowing the plotting of connecting
+#'   segments and arrows.
 #'
 #' @section Alignment: You can modify text alignment with the `vjust` and
 #'   `hjust` aesthetics. These can either be a number between 0 (right/bottom)
 #'   and 1 (top/left) or a character (`"left"`, `"middle"`, `"right"`,
-#'   `"bottom"`, `"center"`, `"top"`). There seevral two special alignments:
+#'   `"bottom"`, `"center"`, `"top"`). There several two special alignments:
 #'   `"inward"` and `"outward"`. Inward always aligns text towards the center of
 #'   the plotting area, and outward aligns it away from the center of the
 #'   plotting area. It tagged with `_mean` or `_median` the mean or median of
 #'   the data in the panel along the corresponding axis is used as center.
 #'
-#' @param mapping Set of aesthetic mappings created by
-#'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. If specified and
-#'   \code{inherit.aes = TRUE} (the default), is combined with the default
-#'   mapping at the top level of the plot. You only need to supply
+#' @param mapping Set of aesthetic mappings created by [ggplot2::aes]. If
+#'   specified and \code{inherit.aes = TRUE} (the default), is combined with the
+#'   default mapping at the top level of the plot. You only need to supply
 #'   \code{mapping} if there isn't a mapping defined for the plot.
 #' @param data A data frame. If specified, overrides the default data frame
 #'   defined at the top level of the plot.
@@ -79,8 +82,8 @@
 #'
 #' @return A plot layer instance.
 #'
-#' @note You can alternativelt use [ggrepel::geom_label_repel], possibly
-#'   setting `max.iter = 0` to disable repulsion when needed.
+#' @note You can alternatively use \code{\link[ggrepel]{geom_label_repel}},
+#'   possibly setting `max.iter = 0` to disable repulsion when needed.
 #'
 #' @export
 #'

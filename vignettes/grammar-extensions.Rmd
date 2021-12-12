@@ -28,8 +28,8 @@ eval_all <- FALSE  # if TRUE evaluate all code chunks
 
 ## Preliminaries
 
-We load all the packages used in the examples, if installed, and set flags to
-skip examples if they are not available.
+We load all the packages used in the examples, if installed, and set
+flags to skip examples if they are not available.
 
 ```{r, message=FALSE}
 library(ggpp)
@@ -70,7 +70,7 @@ labels* irrespective if the "labels" are textual or graphical, like
 icons and small plots and simple tables linked to data points or map
 features.
 
-According to Koponen and Hildén (2019), "[in a statistical chart]
+According to Koponen and Hildén (2019), "\[in a statistical chart\]
 annotations can be used to draw reader attention to relevant detail".
 These authors use as an example a text box in a plot to highlight a data
 point that is off-scale and has been "squeezed" to a position
@@ -98,18 +98,18 @@ implemented in package 'ggplot2'.
 
 ## Annotations in 'ggplot2'
 
-The plotting of data using package 'ggplot2' is described by Wickham 
-(2016) and several other books. Chapter 7 in Aphalo (2020) not only describes
-the grammar used by 'ggplot2' but also several extensions to it, including 
-those provided by packages 'ggpp' and 'ggpmisc'.
+The plotting of data using package 'ggplot2' is described by Wickham
+(2016) and several other books. Chapter 7 in Aphalo (2020) not only
+describes the grammar used by 'ggplot2' but also several extensions to
+it, including those provided by packages 'ggpp' and 'ggpmisc'.
 
 In *The Layered Grammar of Graphics* (Wickham 2000) as implemented in
 package 'ggplot2' (Wickham 2016) annotations are "second class"
 features. As layers they behave differently than data layers: Only
 constant values can be mapped to aesthetics and do no support faceting
 into panels. In essence `annotate()` disconnects the resulting plot
-elements from the data source and faceting, but not from the scales
-used to graphically display the data values.
+elements from the data source and faceting, but not from the scales used
+to graphically display the data values.
 
 From the data visualization perspective the main practical and
 conceptual difference between data labels and annotations is in the
@@ -128,10 +128,11 @@ annotations within a user-friendly syntax.
 ## Extending 'ggplot2'
 
 Based on this insight, a new approach to adding annotations and insets
-was implemented in package 'ggpmisc' (\>= 0.3.1) through two new *x* and
+was implemented in package 'ggpmisc' (>= 0.3.1) through two new *x* and
 *y* pseudo-aesthetics, *npcx* and *npcy*, and corresponding dumb scales
 and various geometries that make use of them. These scales and
-geometries were implemented as an extension to package 'ggplot2'.
+geometries were implemented as an extension to package 'ggplot2' and are
+in package 'ggpp'.
 
 Before showing how this works in practice, we load the package and set
 an uncluttered theme as default.
@@ -142,8 +143,8 @@ theme_set(theme_bw() + theme(panel.grid = element_blank()))
 ```
 
 Native plot coordinates have range 0..1. However, the "npc" geoms also
-recognize some positions by name with the same text strings as used for
-text justification in 'ggplot2'. The default justification is
+recognize some positions by name with the same character strings as used
+for text justification in 'ggplot2'. The default justification is
 `"inward"`, as this protects from clipping at the edges the plotting
 area irrespective the arguments passed to the `witdth` and `height`
 parameters of R's graphic devices.
@@ -166,7 +167,7 @@ The advantage of this approach becomes apparent when the limits of the
 function sets the scale limits based on the input data, in the absence
 of the extensions proposed here, setting annotations consistently within
 the plotting area becomes laborious. The example below, shows how the
-annotations remain at the desired position when the *y* scale limts are
+annotations remain at the desired position when the *y* scale limits are
 expanded.
 
 ```{r}
@@ -210,10 +211,10 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
 
 ```
 
-A simple example with facets, labeling of panels in a traditional way as
-requiered by some book and journal styles. In this case panel tags
-within the plotting are at same "npc" location with free scale limits in
-panels.
+A simple example with facets, labelling of panels in a traditional way
+as required by some book and journal styles. In this case panel tags are
+added within the plotting area at a consistent "npc" location with free
+scale limits in panels.
 
 ```{r}
 ggplot(mtcars, aes(wt, mpg)) +
@@ -230,38 +231,43 @@ ggplot(mtcars, aes(wt, mpg)) +
 ```
 
 This approach was first implemented in 'ggpmisc' version 0.3.1 released
-in April 2919. As of version \>= 0.3.8, the implementation can be
-considered fairly stable. However, this implementation is to an extent
+in April 2919. The implementation now in package 'ggpp' can be
+considered stable. However, this implementation is to an extent
 dependent on undocumented behaviour of 'ggplot2' functions, which means
-that future updates to 'ggplot2' can break this functionality.
+that future updates to 'ggplot2' could break this functionality.
 
 ## When to use annotations and when insets
 
-Package 'ggpp' adds support for various plot annotations and
-reference guides. It also adds support for some data labels related to
-data features. While developing these statistics, it became clear that
-expanding the grammar of graphics's support for annotations would
-simplify the code of these statistics considerably and also more cleanly
-separate the computations on data from the positioning of annotations.
+Package 'ggpmisc' adds support for various plot annotations and
+reference guides based on model fits and other statistics. It also adds
+support for some data labels related to data features. While developing
+these statistics in 'ggpmisc', it became clear that expanding the
+grammar of graphics's support for annotations would simplify the new
+code considerably and also more cleanly separate the computations on
+data from the positioning of annotations. These extensions to the
+grammar are now in 'ggpp'.
 
 **Table**. Geometries useful for data labels and annotations. Currently
 implemented *ordinary* geometries and their *npc* versions. The
 rightmost column shows the expected class of the objects mapped to the
 `label` aesthetic. When using `annotate()` to add a single plot, table
 or grob as an inset, enclosing them in a list is allowed, but not a
-requirement.
+requirement. All those geoms whose names are highlighted in *`italics`*
+support plotting of connecting segments or arrows when a the coordinates
+have been modified by a *position* function.
 
-| Data labels (data coordinates) | Annotations (npc)  | Mapped to `label` aesthetic |
-|--------------------------------|--------------------|-----------------------------|
-| `ggplot2::geom_text()`         | `geom_text_npc()`  | `character` vector          |
-| `ggplot2::geom_label()`        | `geom_label_npc()` | `character` vector          |
-| `ggrepel::geom_text_repel()`   |                    | `character` vector          |
-| `ggrepel::geom_label_repel()`  |                    | `character` vector          |
-| `ggplot2::geom_label()`        | `geom_label_npc()` | `character` vector          |
-| `geom_text_s()`           | _coming soon_      | `character` vector          |  
-| `geom_plot()`                  | `geom_plot_npc()`  | `list()` of `ggplot2::gg`   |
-| `geom_table()`                 | `geom_table_npc()` | `list()` of `data.frame`    |
-| `geom_grob()`                  | `geom_grob_npc()`  | `list()` of `grid::grob`    |
+| Data labels (data coordinates)   | Annotations (npc)  | Mapped to `label` aesthetic |
+|----------------------------------|--------------------|-----------------------------|
+| `ggplot2::geom_text()`           | `geom_text_npc()`  | `character` vector          |
+| `ggplot2::geom_label()`          | `geom_label_npc()` | `character` vector          |
+| *`ggrepe l::geom_text_repel()`*  |                    | `character` vector          |
+| *`ggrepel ::geom_label_repel()`* |                    | `character` vector          |
+| *`geom_text_s()`*                |                    | `character` vector          |
+| geom_label_s() (planned)         |                    | `character` vector          |
+| *`geom_point_s()`*               |                    | none                        |
+| *`geom_plot()`*                  | `geom_plot_npc()`  | `list()` of `ggplot2::gg`   |
+| *`geom_table()`*                 | `geom_table_npc()` | `list()` of `data.frame`    |
+| *`geom_grob()`*                  | `geom_grob_npc()`  | `list()` of `grid::grob`    |
 
 When adding an informative element to a plot, assess whether it is an
 *annotation* or a *data label*. To decide on the best approach, consider
@@ -282,9 +288,38 @@ the relative position of points with respect to arbitrary points or
 lines, or with respect to a polynomial or smoothing spline fitted
 on-the-fly to the the observations.
 
-These new position functions are compatible with 'ggrepel' (>= 0.9.2) and
-similarly to `position_nudge_repel()` support drawing segments or arrows
-connecting the original position to the nudged position.
+A limitation of 'ggplot2' is that only one position function can be used
+in a layer. This makes it difficult to add text labels to stacked or
+dodged bars or columns, or the labelling of points that have been
+jittered. The solution provided by 'ggpp' are wrappers on these position
+functions that add support for nudging.
+
+All these new position functions, instead of deleting the original
+positions, they rename the variables in `data` containing these
+coordinates. This makes it possible for geometries to draw connecting
+segments or arrows between old and new positions. These functions are
+backwards compatible and can be used in place of those from 'ggplot2'.
+The geometries from 'ggrepel' (> 0.9.1) and many of those from 'ggpp'
+can make use of the original coordinates kept in data.
+
+| Position (origin kept)                | Position (origin discarded)       |
+|---------------------------------------|-----------------------------------|
+| `position_nudge_keep()`               | `ggplot2::position_nudge()`       |
+| `ggrepel::postion_nudge_keep()`       | `ggplot2::position_nudge()`       |
+| `position_nudge_centre()`             |                                   |
+| `position_nudge_line()`               |                                   |
+| `position_jitter_keep()`              | `ggplot2::position_jitter()`      |
+| `position_dodge_keep()`               | `ggplot2::position_dodge()`       |
+| `position_dodge2_keep()`              | `ggplot2::position_dodge2()`      |
+| `position_stack_keep()`               | `ggplot2::position_stack()`       |
+| position_jitterdodge_keep() (planned) | `ggplot2::position_jitterdodge()` |
+| `position_jitternudge()`              |                                   |
+| `position_dodgenudge()`               |                                   |
+| `position_dodge2nudge()`              |                                   |
+| `position_stacknudge()`               |                                   |
+| position_jitterdodgenudge() (planned) |                                   |
+
+: Position functions
 
 ## Highlighting data features
 
@@ -328,19 +363,20 @@ exported.
 
 ## Thoughts for the future
 
-Although we have discussed only scales for *x* and *y* aesthetics, the
-same consideration applies to other aesthetics like *colour*. It seems
-generally useful to allow aesthetics to use a different scale for
-annotations than for data. Defining pseudo-aesthetics for annotations
-instead of allowing multiple scales for each aesthetic in a plot would
-add flexibility while still keeping the guarantee that the meaning of
-aesthetics values remains consistent across all plot elements
-representing data.
+Although we have discussed data independent scales only for *x* and *y*
+aesthetics, the same consideration applies to other aesthetics like
+*colour*. It seems generally useful to allow aesthetics to use a
+different scale for annotations than for data. Defining
+pseudo-aesthetics for annotations instead of allowing multiple scales
+for each aesthetic in a plot would add flexibility while still keeping
+the guarantee that the meaning of aesthetics' values remains consistent
+across all plot elements representing data.
 
 ## List of references
 
-Aphalo, Pedro J. (2020) _Learn R: As a Language._ The R Series. Boca Raton and
-London: Chapman and Hall/CRC Press. ISBN: 978-0-367-18253-3. 350 pp.
+Aphalo, Pedro J. (2020) *Learn R: As a Language.* The R Series. Boca
+Raton and London: Chapman and Hall/CRC Press. ISBN: 978-0-367-18253-3.
+350 pp.
 
 Koponen, J; Hildén, J. (2019) *Data visualization handbook*. Aalto ARTS
 books, Espoo. ISBN 978-952-60-7449-8.
@@ -353,8 +389,8 @@ Wickham H. (2016) *ggplot2*. Springer International Publishing. ISBN
 
 # Examples
 
-Some of the examples below are evaluated only if packages 'ggrepel',
-and 'magick' are available.
+Some of the examples below are evaluated only if packages 'ggrepel', and
+'magick' are available.
 
 ## ggplot methods
 
@@ -367,16 +403,18 @@ vignette.
 
 By default, `time` is of class `Date` or of class `POSIXct` depending on
 how time is stored in the time series object. On-the-fly coversion of
-`time` to `numeric` is also possible (shown in the second example below).
+`time` to `numeric` is also possible (shown in the second example
+below).
 
 ```{r}
 class(lynx)
 ggplot(lynx) + geom_line()
 ```
 
-The class of variable `time`, mapped to the _x_ aesthetic, affects the scale
-used by default as well as the formatting of values when converted to character
-strings or printed. Here we force its conversion to `numeric`.
+The class of variable `time`, mapped to the *x* aesthetic, affects the
+scale used by default as well as the formatting of values when converted
+to character strings or printed. Here we force its conversion to
+`numeric`.
 
 ```{r}
 ggplot(lynx, as.numeric = FALSE) + geom_line()
@@ -384,20 +422,20 @@ ggplot(lynx, as.numeric = FALSE) + geom_line()
 
 ## Geometries
 
-Three of the geometries described below allow the addition of plot layers
-containing insets. Insets can be plots, tables, bitmaps, or grid objects. Insets
-can be also added as annotations. Using for `data` a tibble with a list column
-containing data frames or tibbles allows like any other geom, the use of
-grouping, multiple insets per panel, faceting with different tables per panel,
-and different number of insets in each panel, i.e., individual tables added to a
-plot with `geom_table` behave similarly to individual `character` values added
-with `geom_text`.
+Three of the geometries described below allow the addition of plot
+layers containing insets. Insets can be plots, tables, bitmaps, or grid
+objects. Insets can be also added as annotations. Using for `data` a
+tibble with a list column containing data frames or tibbles allows like
+any other geom, the use of grouping, multiple insets per panel, faceting
+with different tables per panel, and different number of insets in each
+panel, i.e., individual tables added to a plot with `geom_table` behave
+similarly to individual `character` values added with `geom_text`.
 
-Other geometries also described in this section support the use of native plot
-coordinates for positioning elements in the plotting area. Obviously these
-geometries are not meant to be used to display data, but instead they make it
-possible to add annotations to plots consistently across data sets even when
-using scales with varying limits.
+Other geometries also described in this section support the use of
+native plot coordinates for positioning elements in the plotting area.
+Obviously these geometries are not meant to be used to display data, but
+instead they make it possible to add annotations to plots consistently
+across data sets even when using scales with varying limits.
 
 ### geom_table() and stat_fmt_table()
 
@@ -407,8 +445,8 @@ positioning, and `label` for the list of data frames containing the data
 for the tables. The tables are created as 'grid' grobs and added as
 usual to the ggplot object. In contrast to "standard" geoms, this geom
 by default does not inherit the globally mapped aesthetics. Tables are
-always added at their native sizes, which can be altered by changing the `size`
-of the text in them.
+always added at their native sizes, which can be altered by changing the
+`size` of the text in them.
 
 ```{r}
 tb <- mpg %>%
@@ -437,12 +475,13 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
   geom_point() 
 ```
 
-Table themes are supported through parameter `table.theme` and if variables or
-constants are mapped to the `colour`, `fill`, `size`, or `family`, aesthetics
-they override the corresponding default theme settings. The display of
-`rownames` and `colnames` can be enabled or disable through parameter
-`table.rownames` and `table.colnames` and the horizontal justification of text
-in the core of the table through parameter `table.hjust`.
+Table themes are supported through parameter `table.theme` and if
+variables or constants are mapped to the `colour`, `fill`, `size`, or
+`family`, aesthetics they override the corresponding default theme
+settings. The display of `rownames` and `colnames` can be enabled or
+disable through parameter `table.rownames` and `table.colnames` and the
+horizontal justification of text in the core of the table through
+parameter `table.hjust`.
 
 Parameter `table.theme` accepts as arguments `NULL` for use of the
 current default, a `ttheme` constructor function such as those defined
@@ -479,13 +518,14 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
   theme_bw()
 ```
 
-Parsed text, using plot math syntax is supported in the table, with fall-back to
-plain text in case of parsing errors, on a cell by cell basis (see `tableGrob()`
-in package 'gridExtra' for details, as this function is used to build the
-table). Here we plot the MPG for city traffic and we can see that the plotting
-area expands to include the coordinates at which the table is anchored.
-Justification is by default set to `"inward"` which ensures that the table is
-fully within the plotting region.
+Parsed text, using plot math syntax is supported in the table, with
+fall-back to plain text in case of parsing errors, on a cell by cell
+basis (see `tableGrob()` in package 'gridExtra' for details, as this
+function is used to build the table). Here we plot the MPG for city
+traffic and we can see that the plotting area expands to include the
+coordinates at which the table is anchored. Justification is by default
+set to `"inward"` which ensures that the table is fully within the
+plotting region.
 
 ```{r}
 tb.pm <- tibble(Parameter = c("frac(beta[1], a^2)", "frac(beta[2], a^3)"),
@@ -497,12 +537,13 @@ ggplot(mpg, aes(displ, cty)) +
   theme_bw()
 ```
 
-As implemented, there is no limitation to the number of insets, and faceting is
-respected. If the base plot shows a map, multiple small tables could be
-superimposed on different countries or regions. The size of the table inset is
-given by the _size_ aesthetic, so like for `geom_text()` it is independent of
-the `ggplot2::theme()` and controlled by the `table.theme` directly or
-indirectly through the _size_ aesthetic.
+As implemented, there is no limitation to the number of insets, and
+faceting is respected. If the base plot shows a map, multiple small
+tables could be superimposed on different countries or regions. The size
+of the table inset is given by the *size* aesthetic, so like for
+`geom_text()` it is independent of the `ggplot2::theme()` and controlled
+by the `table.theme` directly or indirectly through the *size*
+aesthetic.
 
 Please see section **Normalised Parent Coordinates** below for a
 description of `geom_table_npc()`.
@@ -588,26 +629,28 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
   theme_bw()
 ```
 
-As implemented, there is no limitation to the number of insets, and faceting is
-respected. If the base plot shows a map or a bitmap, multiple small plots could
-be superimposed on different countries or regions. The size of the insets is
-controlled by the `vp.width` and `vp.height` aesthetics as a fraction of the
-main plot's plotting region. Consequently, the insets are scaled together with
-the main plot. A possible unintuitive but useful feature, is that the theme is
-linked to each plot.
+As implemented, there is no limitation to the number of insets, and
+faceting is respected. If the base plot shows a map or a bitmap,
+multiple small plots could be superimposed on different countries or
+regions. The size of the insets is controlled by the `vp.width` and
+`vp.height` aesthetics as a fraction of the main plot's plotting region.
+Consequently, the insets are scaled together with the main plot. A
+possible unintuitive but useful feature, is that the theme is linked to
+each plot.
 
 Please see section **Normalised Parent Coordinates** below for a
 description of `geom_plot_npc()`.
 
 ### geom_grob()
 
-The `geom_grob()` *geometry* plots grobs (graphical objects as created with
-'grid'), nested in a tibble passed as data argument, using *aesthetics* `x` and
-`y` for positioning, and `label` for the Grob object. While `geom_table()` and
-`geom_plot()` take as values mapped to the `label` aesthetics tibbles or data
-frames, and ggplots, respectively, and convert them into Grobs, `geom_grob()`
-expects Grobs ready to be rendered. This means that any Grob created using
-'grid' or its extenssions can be added as a data label to a ggplot.
+The `geom_grob()` *geometry* plots grobs (graphical objects as created
+with 'grid'), nested in a tibble passed as data argument, using
+*aesthetics* `x` and `y` for positioning, and `label` for the Grob
+object. While `geom_table()` and `geom_plot()` take as values mapped to
+the `label` aesthetics tibbles or data frames, and ggplots,
+respectively, and convert them into Grobs, `geom_grob()` expects Grobs
+ready to be rendered. This means that any Grob created using 'grid' or
+its extenssions can be added as a data label to a ggplot.
 
 ```{r, eval=eval_magick}
 file.name <- 
@@ -631,14 +674,15 @@ ggplot() +
  theme_bw(12)
 ```
 
-As shown above for inset tables and inset plots, it is also possible to use
-`annotate()` with Grobs. The next example insets a single `Grob`. Here we reuse
-the bitmap `Isoquercitin` read in the previous example. The Grob is contained in
-a viewport. Here setting `width = 1` ("npc" units) when creating the `Grob` from
-the bitmap ensures that the bitmap fills the width of the viewport (to ensure
-that the inset is not distorted, set only one of `width` or `height`). The
-argument to `vp.width` or `vp.height`, also in "npc" units, determines the size
-of the `Grob` relative to the size of the plotting area.
+As shown above for inset tables and inset plots, it is also possible to
+use `annotate()` with Grobs. The next example insets a single `Grob`.
+Here we reuse the bitmap `Isoquercitin` read in the previous example.
+The Grob is contained in a viewport. Here setting `width = 1` ("npc"
+units) when creating the `Grob` from the bitmap ensures that the bitmap
+fills the width of the viewport (to ensure that the inset is not
+distorted, set only one of `width` or `height`). The argument to
+`vp.width` or `vp.height`, also in "npc" units, determines the size of
+the `Grob` relative to the size of the plotting area.
 
 ```{r, eval=(eval_all && eval_magick)}
 ggplot() +
@@ -648,16 +692,18 @@ ggplot() +
 ```
 
 `geom_grob()` is designed thinking that its main use will in graphical
-annotations, although one could use it for infographics with multiple copies of
-each grob, this would go against the grammar of graphics. In this implementation
-grobs cannot be mapped to an aesthetic through a scale.
+annotations, although one could use it for infographics with multiple
+copies of each grob, this would go against the grammar of graphics. In
+this implementation grobs cannot be mapped to an aesthetic through a
+scale.
 
-As implemented, there is no limitation to the number of insets and faceting is
-respected. If the base plot shows a map or a bitmap, multiple simple grobs (e.g.
-national flags) could be superimposed on different countries. The size of the
-insets is controlled by the `vp.width` and `vp.height` aesthetics as a fraction
-of the main plot's plotting region. Consequently, the insets are scaled together
-with the main plot.
+As implemented, there is no limitation to the number of insets and
+faceting is respected. If the base plot shows a map or a bitmap,
+multiple simple grobs (e.g. national flags) could be superimposed on
+different countries. The size of the insets is controlled by the
+`vp.width` and `vp.height` aesthetics as a fraction of the main plot's
+plotting region. Consequently, the insets are scaled together with the
+main plot.
 
 Please see section **Normalised Parent Coordinates** below for a
 description of `geom_grob_npc()`.
@@ -677,23 +723,22 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
 
 ```
 
-### geom_text_s()
+### geom_text_s() and geom_point_s()
 
-With package 'ggrepel' we have become used to easily add text and labels linked
-to the labelled observations or points by a line segment or arrow. However,
-sometimes a plot has few text labels and repulsion is unnecessary. In such
-cases nudging or dodging may be enough, or even preferable so as to achieve
-consistency.
+With package 'ggrepel' we have become used to easily add text and labels
+linked to the labelled observations or points by a line segment or
+arrow. However, sometimes a plot has few text labels and repulsion is
+unnecessary. In such cases nudging or dodging may be enough, or even
+preferable so as to achieve consistency.
 
-We can achieve this with `geom_text_s()` together with a suitable position
-function that retains the original _x_ and _y_ coordinates of the point. We
-currently provide three different nudge functions described in
-a later section. One of them is used by default providing the same default
-behaviour as `geom_text()` from 'ggplot2' but drawing linking segments if
-nudging is set to a value different to the default of zero.
-
-**Please, be aware that this is a preliminary implementation, whose user interface
-and behavior are very likely to change in coming months.**
+We can achieve this with `geom_text_s()` (formerly named
+`geom_text_linked()`) together with a suitable position function that
+retains the original *x* and *y* coordinates of the point. We currently
+provide three different nudge functions described in a later section.
+One of them is used by default providing the same default behaviour as
+`geom_text()` from 'ggplot2' but drawing linking segments if nudging is
+set to a value different to the default of zero. The equivalent for
+points connected with segments is `geom_point_s()`.
 
 ```{r}
 my.cars <- mtcars[c(TRUE, FALSE, FALSE, FALSE), ]
@@ -712,22 +757,23 @@ ggplot(my.cars, aes(wt, mpg, label = name)) +
 
 ### Normalised Parent Coordinates
 
-R's 'grid' package defines several units that can be used to describe the
-locations of plot elements. In 'ggplot2' the *x* and *y* aesthetics are directly
-mapped to `"native"` or data units. For consistent location of **annotations**
-with respect to the plotting area we need to rely on `"npc"` which are expressed
-relative to the size of the grid viewport. The plotting area in a ggplot is
-implemented as a 'grid' viewport and support for `"npc"` coordinates is
-relatively easy to implement.
+R's 'grid' package defines several units that can be used to describe
+the locations of plot elements. In 'ggplot2' the *x* and *y* aesthetics
+are directly mapped to `"native"` or data units. For consistent location
+of **annotations** with respect to the plotting area we need to rely on
+`"npc"` which are expressed relative to the size of the grid viewport.
+The plotting area in a ggplot is implemented as a 'grid' viewport and
+support for `"npc"` coordinates is relatively easy to implement.
 
-To support `"npc"` positions we have implemented *scales* for two new (pseudo)
-*aesthetics*, `npcx` and `npcy`. These are very simple continuous scales which
-do not support any transformation or changes to their limits, both of which
-would be meaningless for `"npc"` units. Variables mapped to these aesthetics can
-be either numerical with values in the range zero to one or character. A limited
-set of strings are recognised and converted to `"npc"` units: `"bottom"`,
-`"center"`, `"top"`, `"left"`, `"middle"`, `"right"` (`"centre"` is a synonym
-for `"center"`).
+To support `"npc"` positions we have implemented *scales* for two new
+(pseudo) *aesthetics*, `npcx` and `npcy`. These are very simple
+continuous scales which do not support any transformation or changes to
+their limits, both of which would be meaningless for `"npc"` units.
+Variables mapped to these aesthetics can be either numerical with values
+in the range zero to one or character. A limited set of strings are
+recognised and converted to `"npc"` units: `"bottom"`, `"center"`,
+`"top"`, `"left"`, `"middle"`, `"right"` (`"centre"` is a synonym for
+`"center"`).
 
 To make these scales useful we need also to define *geometries* that use
 these new aesthetics. Package 'ggpp' currently provides
@@ -870,8 +916,9 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
 
 It can be useful to mark the centroid of a group of observations with a
 point or with a label. By default `stat_centroid()` applies function
-`mean_se()` to both `x` and `y` by group. If the value mapped to
-an aesthetics across rows within each group is unique this value is copied to the returned `data`.
+`mean_se()` to both `x` and `y` by group. If the value mapped to an
+aesthetics across rows within each group is unique this value is copied
+to the returned `data`.
 
 ```{r}
 ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
@@ -967,15 +1014,17 @@ ggplot(my.data, aes(x, y, colour = group)) +
 
 ### stat_apply_group
 
-This statistic applies functions to `x` and `y` data. The function(s) supplied as argument are expected to return a numeric vector. Both functions should return vectors of the same length. When possible it is
-usually better to apply functions through mappings using `aes()`
-when they are independent of grouping, or to use a transformation for the
-scale. However, when grouping is important, these statistics make it possible
-to avoid pre-computation of the data for a layer. 
+This statistic applies functions to `x` and `y` data. The function(s)
+supplied as argument are expected to return a numeric vector. Both
+functions should return vectors of the same length. When possible it is
+usually better to apply functions through mappings using `aes()` when
+they are independent of grouping, or to use a transformation for the
+scale. However, when grouping is important, these statistics make it
+possible to avoid pre-computation of the data for a layer.
 
-Here we plot the difference in trunck circumference between dates for each tree.
-(As the vector returned by `diff()` is one element shorter than its input, we
-delete the first value of `x` in `.fun.x`.).
+Here we plot the difference in trunck circumference between dates for
+each tree. (As the vector returned by `diff()` is one element shorter
+than its input, we delete the first value of `x` in `.fun.x`.).
 
 ```{r}
 ggplot(Orange, aes(age, circumference, colour = Tree)) +
@@ -1243,51 +1292,53 @@ In other respects than `orientation` and the parameters passed
 internally to `stats::density()` the examples given earlier for
 `stat_dens2d_labels()` also apply.
 
-## Nudge position functions
+## Position functions
 
-Nudging shifts deterministically the coordinates giving an _x_ and/or _y_
-position and also expands the limits of the corresponding scales to match. By
-default in 'ggplot2' geometries and position functions no nudging is applied.
+Nudging shifts deterministically the coordinates giving an *x* and/or
+*y* position and also expands the limits of the corresponding scales to
+match. By default in 'ggplot2' geometries and position functions no
+nudging is applied.
 
 Function `position_nudge()` from package 'ggplot2' simply applies the
-nudge, or *x* and/or *y* shifts based directly on the values passed to its
-parameters `x` and `y`. Passing arguments to the `nudge_x` and/or `nudge_y`
-parameters of a geometry has the same effect as these values are passed to
-`position_nudge()`. Geometries also have a `position` parameter to which
-we can pass an expression based on a _position function_ which opens the
-door to more elaborate approaches to nudging.
+nudge, or *x* and/or *y* shifts based directly on the values passed to
+its parameters `x` and `y`. Passing arguments to the `nudge_x` and/or
+`nudge_y` parameters of a geometry has the same effect as these values
+are passed to `position_nudge()`. Geometries also have a `position`
+parameter to which we can pass an expression based on a *position
+function* which opens the door to more elaborate approaches to nudging.
 
-A new variation on simple nudge is provided by function `position_nudge_to()`,
-which accepts the desired nudged coordinates directly.
+A new variation on simple nudge is provided by function
+`position_nudge_to()`, which accepts the desired nudged final
+coordinates directly instead of as a shift.
 
-We can do better than simply shifting all data to the same extent and direction
-or to a fixed position. For example by nudging away from a focal point, a line
-or a curve.  In `position_nudge_center()` and `position_nudge_liner()` described
-below, this reference alters only the direction (angle) along which nudge is
-applied but not the extent of the shift. Advanced nudging works very well, but
-only for some patterns of observations and may require manual adjustment of
-positions, repulsion is more generally applicable but like jittering is
-aleatory. Combining nudging and repulsion we can make repulsion more predictable
-with little loss of its applicability.
+We can do better than simply shifting all data to the same extent and
+direction or to a fixed position. For example by nudging away from a
+focal point, a line or a curve. In `position_nudge_center()` and
+`position_nudge_line()` described below, this reference alters only the
+direction (angle) along which nudge is applied but not the extent of the
+shift. Advanced nudging works very well, but only for some patterns of
+observations and may require manual adjustment of positions, repulsion
+is more generally applicable but like jitter is aleatory. Combining
+nudging and repulsion we can make repulsion more predictable with little
+loss of its applicability.
 
-These functions can be used with any geometry but if segments joining the labels
-to the points are desired, `ggrepel::geom_text_repel()` or
-`ggrepel::geom_label_repel()` should be used, possibly setting `max.iter = 0` if
-no repulsion is desired. Plotting of short segments can be forced with
-`min.segment.length = 0`. Please see the documentation for these geometries for
-the details. Drawing of segments or arrows is made possible by storing in `data`
-both the nudged and original _x_ and _y_ coordinates. This is made possible by
-coordinated development of packages 'ggpp' and 'ggrepel' and a naming
-convention for storing the original position. 
+These functions can be used with any geometry but if segments joining
+the labels to the points are desired, `ggrepel::geom_text_repel()` or
+`ggrepel::geom_label_repel()`, possibly setting `max.iter = 0` if no
+repulsion is desired. Several of the functions defined in 'ggpp' even if
+not supporting repulsion, can plot connecting segments. Please see the
+documentation for these geometries for the details. Drawing of segments
+or arrows is made possible by storing in `data` both the nudged and
+original *x* and *y* coordinates. This is made possible by coordinated
+development of packages 'ggpp' and 'ggrepel' and agreement on a naming
+convention for storing the original position.
 
-### position_nudge_keep()
+### position_nudge_keep() and position_jitter_keep()
 
-Function `position_nudge_keep()` is like `ggplot2::position_nudge()` but keeps
-(stores) the original _x_ and _y_ coordinates. It is similar to function
-`position_nudge_repel()` but uses a different naming convention for the
-coordinates. Both work with `geom_text_repel()` or `geom_label_repel()` from
-package 'ggrepel' (> 0.9.1), but only `position_nudge_keep()` can be used
-interchangeably with `ggplot2::position_nudge()` with other geometries.
+Function `position_nudge_keep()` is like `ggplot2::position_nudge()` but
+keeps (stores) the original *x* and *y* coordinates;
+`position_nudge_keep()` can be used interchangeably with
+`ggplot2::position_nudge()` with other geometries.
 
 ```{r}
 set.seed(84532)
@@ -1299,21 +1350,32 @@ df <- data.frame(
 
 ```
 
-With `position_nudge_keep()` used together with `geom_text_repel()` or 
-`geom_label_repel()` segments between a nudged and/or repelled label and the
-original position (here indicated by a point) are drawn.
+When used together with `geom_text_s()` or `geom_label_s()` segments
+between a nudged and/or repelled label and the original position (here
+indicated by a point) are drawn.
 
-```{r, eval=eval_ggrepel}
+```{r}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
-  geom_text_repel(position = 
-                    position_nudge_keep(x = 0.3),
-                    min.segment.length = 0, max.iter = 0)
+  geom_text_s(position = position_nudge_keep(x = 0.1),
+              hjust = "left") +
+  expand_limits(x = 2.5)
 ```
 
-With `position_nudge()` used together with `geom_text_repel()` or 
-`geom_label_repel()` segments connecting a nudged and/or repelled label and
-the original position (here indicated by a point) are **not** drawn.
+We can supress the drawing of segments.
+
+```{r}
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_s(position = position_nudge_keep(x = 0.1),
+              hjust = "left", add.segments = FALSE) +
+  expand_limits(x = 2.5)
+```
+
+With `position_nudge()` used together with `geom_text_repel()` or
+`geom_label_repel()` segments connecting a nudged and/or repelled label
+and the original position (here indicated by a point) are, by default,
+**not** drawn unless they are longer than a minimum.
 
 ```{r, eval=eval_ggrepel}
 ggplot(df, aes(x, y, label = l)) +
@@ -1323,10 +1385,22 @@ ggplot(df, aes(x, y, label = l)) +
                   max.iter = 0)
 ```
 
-`position_nudge_keep()` and all other position functions described below can
-be used with all 'ggplot2' geometries but the original position will be ignored
-and no connecting segment drawn unless the geometry has been designed to work
-together with them.
+With `geom_text_repel()` or `geom_label_repel()` we can force drawing of
+segments irespective of their length if we pass `min.segment.length = 0`
+in the call.
+
+```{r, eval=eval_ggrepel}
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_repel(position = position_nudge_keep(x = 0.3),
+                  min.segment.length = 0, max.iter = 0)
+```
+
+`position_nudge_keep()` and all other position functions described below
+save the original positions in `data` in columns `x_orig` and `y_orig`
+and the shifted positions in columns `x` and `y`. Because of this, they
+can be used together with any 'ggplot2' geometry, even though these
+geometries will ignore the stored original positions.
 
 ```{r}
 ggplot(df, aes(x, y, label = l)) +
@@ -1336,28 +1410,26 @@ ggplot(df, aes(x, y, label = l)) +
 
 ### position_nudge_to()
 
-Function `position_nudge_to()` nudges to a given position instead of using
-the same shift for each observation. Can be used to align labels for points 
-that are not themselves aligned. By left-justifying the label text we ensure
-the alignment of labels differing in width.
+Function `position_nudge_to()` nudges to a given position instead of
+using the same shift for each observation. Can be used to align labels
+for points that are not themselves aligned. By left-justifying the label
+text we ensure the alignment of labels differing in width.
 
-```{r, eval=eval_ggrepel}
+```{r}
 ggplot(df, aes(x, y, label = ifelse(x < 1, "", l) )) +
   geom_point() +
-  geom_text_repel(position = 
-                    position_nudge_to(x = 2.3),
-                  min.segment.length = 0,
-                  segment.color = "red",
-                  arrow = arrow(length = unit(0.015, "npc")),
-                  direction = "y",
-                  hjust = "left") +
+  geom_text_s(position = position_nudge_to(y = 2.3),
+              segment.color = "red",
+              arrow = arrow(length = unit(0.015, "npc")),
+              angle = 90,
+              hjust = "left") +
   expand_limits(x = 3)
 ```
 
-We here the pass a vector of length one as argument for `y`, but `x` and `y`
-also accept vectors of the same length as rows has `data`. In other words, it
-allows manual positioning of text and labels. 
- 
+We here the pass a vector of length one as argument for `y`, but `x` and
+`y` also accept vectors of the same length as rows has `data`. In other
+words, it allows manual positioning of text and labels.
+
 ```{r, eval=eval_ggrepel}
 ggplot(df, aes(x, y, label = l)) +
   geom_point(color = "red", size = 3) +
@@ -1374,17 +1446,18 @@ ggplot(df, aes(x, y, label = l)) +
 
 ### position_nudge_center()
 
-Function `position_nudge_center()` can nudge radially away from a focal point if
-both `x` and `y` are passed as arguments, or towards opposite sides of a
-boundary vertical or horizontal _virtual_ line if only one of `x` or `y` is
-passed an argument. By default, the "center" is the centroid computed using
-`mean()`, but other functions or numeric values can be passed to override it.
-When data are sparse, such nudging may be effective in avoiding label overlaps,
-and achieving a visually pleasing positioning.
+Function `position_nudge_center()` can nudge radially away from a focal
+point if both `x` and `y` are passed as arguments, or towards opposite
+sides of a boundary vertical or horizontal *virtual* line if only one of
+`x` or `y` is passed an argument. By default, the "center" is the
+centroid computed using `mean()`, but other functions or numeric values
+can be passed to override it. When data are sparse, such nudging may be
+effective in avoiding label overlaps, and achieving a visually pleasing
+positioning.
 
-In all cases nudging shifts the coordinates giving an _x_ and/or _y_ position
-and also expands the limits of the corresponding scales to include the nudged
-coordinate values.
+In all cases nudging shifts the coordinates giving an *x* and/or *y*
+position and also expands the limits of the corresponding scales to
+include the nudged coordinate values.
 
 ```{r, eval=eval_ggrepel}
 ggplot(df, aes(x, y, label = l)) +
@@ -1394,8 +1467,8 @@ ggplot(df, aes(x, y, label = l)) +
                     min.segment.length = 0, max.iter = 0)
 ```
 
-By default, split is away or towards the `mean()`. Here we allow repulsion to 
-separate the labels (compare with previous plot).
+By default, split is away or towards the `mean()`. Here we allow
+repulsion to separate the labels (compare with previous plot).
 
 ```{r, eval=eval_ggrepel}
 ggplot(df, aes(x, y, label = l)) +
@@ -1418,8 +1491,8 @@ ggplot(df, aes(x, y, label = l)) +
                   min.segment.length = 0)
 ```
 
-We set a different split point as the value computed by a function function,
-by name.
+We set a different split point as the value computed by a function
+function, by name.
 
 ```{r, eval=eval_ggrepel}
 ggplot(df, aes(x, y, label = l)) +
@@ -1431,8 +1504,8 @@ ggplot(df, aes(x, y, label = l)) +
                   min.segment.length = 0)
 ```
 
-We set a different split point as the value computed by an anonymous function 
-function. Here que split on the first quartile along _x_.
+We set a different split point as the value computed by an anonymous
+function function. Here que split on the first quartile along *x*.
 
 ```{r, eval=eval_ggrepel}
 ggplot(df, aes(x, y, label = l)) +
@@ -1459,7 +1532,9 @@ ggplot(df, aes(x, y, label = l)) +
                                           direction = "split"))
 ```
 
-By requesting nudging along _x_ and _y_ and setting `direction = "split"` nudging is applied according to the quadrants centred on the centroid of the data.
+By requesting nudging along *x* and *y* and setting
+`direction = "split"` nudging is applied according to the quadrants
+centred on the centroid of the data.
 
 ```{r, eval=eval_ggrepel}
 ggplot(df, aes(x, y, label = l)) +
@@ -1470,7 +1545,7 @@ ggplot(df, aes(x, y, label = l)) +
                                           direction = "split"))
 ```
 
-With `direction = "radial"`, the distance nudged away from the center is 
+With `direction = "radial"`, the distance nudged away from the center is
 the same for all labels.
 
 ```{r, eval=eval_ggrepel}
@@ -1483,11 +1558,11 @@ ggplot(df, aes(x, y, label = l)) +
                   min.segment.length = 0)
 ```
 
-As shown above for `direction = "split"` we can set the coordinates of the 
-centre by passing constant values as in this example or functions (possibly
-different for _x_ and _y_). We can also set the justification the text labels
-although repulsion usually works best with labels justified at the centre,
-which is the default.
+As shown above for `direction = "split"` we can set the coordinates of
+the centre by passing constant values as in this example or functions
+(possibly different for *x* and *y*). We can also set the justification
+the text labels although repulsion usually works best with labels
+justified at the centre, which is the default.
 
 ```{r, eval=eval_ggrepel}
 ggplot(df, aes(x, y, label = l)) +
@@ -1502,8 +1577,9 @@ ggplot(df, aes(x, y, label = l)) +
                   hjust = "outward", vjust = "outward")
 ```
 
-Nudging along one axis, here _x_, and setting the repulsion `direction` along
-the other axis, here _y_, tends to give a pleasent arrangement of labels.
+Nudging along one axis, here *x*, and setting the repulsion `direction`
+along the other axis, here *y*, tends to give a pleasent arrangement of
+labels.
 
 ```{r, eval=eval_ggrepel}
 ggplot(df, aes(x, y, label = l)) +
@@ -1524,7 +1600,7 @@ Function `position_nudge_line()` nudges away from a line, which can be a
 user supplied straight line as well as a smooth spline or a polynomial
 fitted to the observations themselves. The nudging is away and
 perpendicular to the local slope of the straight or curved line. It
-relies on the same assumptions as linear regression, assuming that _x_
+relies on the same assumptions as linear regression, assuming that *x*
 values are not subject to error. This in most cases prevents labels from
 overlaping a curve fitted to the data, even if not exactly based on the
 same model fit. When observations are sparse, this may be enough to
@@ -1541,12 +1617,13 @@ df <- data.frame(
 )
 ```
 
-The first, simple example shows that `position_nudge_line()` has shifted the
-direction of the nudging based on the alignment of the observations along a
-line. One could, of course, have in this case passed suitable values as
-arguments to *x* and *y* using `position_nudge()` from package 'ggplot2'.
-However, `position_nudge_line()` will work without change irrespective of the
-slope or intercept along which the observations fall.
+The first, simple example shows that `position_nudge_line()` has shifted
+the direction of the nudging based on the alignment of the observations
+along a line. One could, of course, have in this case passed suitable
+values as arguments to *x* and *y* using `position_nudge()` from package
+'ggplot2'. However, `position_nudge_line()` will work without change
+irrespective of the slope or intercept along which the observations
+fall.
 
 ```{r}
 ggplot(df, aes(x, 2 * x, label = l)) +
@@ -1556,8 +1633,8 @@ ggplot(df, aes(x, 2 * x, label = l)) +
 ```
 
 With observations with high variation in *y*, a linear model fit may
-need to be used. In this case fitted twice, once in `stat_smooth()` and once in
-`position_nudge_line()`.
+need to be used. In this case fitted twice, once in `stat_smooth()` and
+once in `position_nudge_line()`.
 
 ```{r}
 ggplot(subset(df, x >= 0), aes(x, yyy)) +
@@ -1598,13 +1675,13 @@ ggplot(subset(df, x >= 0), aes(y, yy)) +
                                            direction = "split"))
 ```
 
-With observations that follow exactly a simple curve the defaults work well to
-automate the nudging of individual data labels away from the implicit curve.
-Positive values as arguments to `x` and `y` correspond to above and inside the
-curve. One could, of course, pass also in this case suitable values as arguments
-to *x* and *y* using `position_nudge()` from package 'ggplot2', but these
-arguments would need to be vectors with different *nudge* values for each
-observation.
+With observations that follow exactly a simple curve the defaults work
+well to automate the nudging of individual data labels away from the
+implicit curve. Positive values as arguments to `x` and `y` correspond
+to above and inside the curve. One could, of course, pass also in this
+case suitable values as arguments to *x* and *y* using
+`position_nudge()` from package 'ggplot2', but these arguments would
+need to be vectors with different *nudge* values for each observation.
 
 ```{r}
 ggplot(df, aes(x, y, label = l)) +
@@ -1653,9 +1730,9 @@ ggplot(df, aes(x, yy, label = l)) +
 ```
 
 When fitting a polynomial, `"lm"` should be the argument passed to
-`method` and a model formula preferably based on `poly()`, setting `raw = TRUE`,
-as argument to `formula`.
-*Currently no other methods are implemented in* `position_nudge_line()`.
+`method` and a model formula preferably based on `poly()`, setting
+`raw = TRUE`, as argument to `formula`. *Currently no other methods are
+implemented in* `position_nudge_line()`.
 
 ```{r}
 ggplot(df, aes(x, yy, label = l)) +
@@ -1669,7 +1746,9 @@ ggplot(df, aes(x, yy, label = l)) +
                                            direction = "split"))
 ```
 
-Compared to pure repulsion adding nudging helps "direct" repulsion in the desired direction. Compare the two plots bellow using no nudging with the two above.
+Compared to pure repulsion adding nudging helps "direct" repulsion in
+the desired direction. Compare the two plots bellow using no nudging
+with the two above.
 
 ```{r, eval=eval_ggrepel}
 ggplot(df, aes(x, yy, label = l)) +
@@ -1689,7 +1768,6 @@ ggplot(df, aes(x, yy, label = l)) +
                   min.segment.length = 0)
 ```
 
-
 Grouping is supported.
 
 ```{r}
@@ -1708,7 +1786,8 @@ ggplot(df, aes(x, y, label = l, color = group)) +
   coord_equal(ratio = 0.5)
 ```
 
-One needs to ensure that grouping is in effect in the geoms with nudging.
+One needs to ensure that grouping is in effect in the geoms with
+nudging.
 
 ```{r}
 ggplot(df, aes(x, y, label = l, color = group, group = group)) +
@@ -1734,6 +1813,10 @@ ggplot(df, aes(x, y, label = l)) +
   facet_wrap(~group) +
   coord_equal(ratio = 1)
 ```
+
+## Combined position functions
+
+TO BE ADDED
 
 ## Appendix A: More on density filtering
 

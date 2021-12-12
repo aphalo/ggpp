@@ -33,8 +33,8 @@ geom_grob_npc(
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
-\code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs
-to be set at the layer level if you are overriding the plot defaults.}
+\code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be
+set at the layer level if you are overriding the plot defaults.}
 
 \item{data}{A layer specific dataset - only needed if you want to override
 the plot defaults.}
@@ -76,60 +76,64 @@ A plot layer instance.
 }
 \description{
 \code{geom_grob} and \code{geom_grob_npc} add Grobs as insets to the ggplot
-using syntax similar to that of \code{\link[ggplot2]{geom_text}}. In most
-respects they behave as any other ggplot geometry: ther add a layer
-containing one or more grobs and faceting works as usual.
+using syntax similar to that of \code{\link[ggplot2]{geom_text}} and
+\code{\link{geom_text_s}}. In most respects they behave as any other ggplot
+geometry: ther add a layer containing one or more grobs and faceting works as
+usual.
 }
 \details{
-The "width" and "height" of an inset grob as for a text element are
-  seen as zero by ggplot. However, their size is respected when plotted. The
-  amount of space the grobs on the main plot is not constant in data units of
-  the base plot: when you modify scale limits, inset grobs stay the same size
-  relative to the physical size of the base plot. They do scale when the
-  output size of the plot changes, e.g., when zooming. Axis limits are not
-  automatically expanded to include inset grobs in whole but only their x and
-  y coordinates.
+You can modify the alignment of inset grobs with the \code{vjust}
+  and \code{hjust} aesthetics. These can either be a number between 0
+  (right/bottom) and 1 (top/left) or a character ("left", "middle", "right",
+  "bottom", "center", "top").
 
-  Position functions, including all nudge funcrions in this package are
-  supported, as well as drawing of connecting segments. However, stacking and
-  dodging of inset grobs will not usually work as for they do for plot
-  elements with non-zero size.
+  You can modify the size of inset grobs with the \code{vp.width} and
+  \code{vp.height} aesthetics. These can take a number between 0 (smallest
+  possible inset) and 1 (whole plotting area width or height). The default
+  value for for both of these aesthetics is 1/5. Thus, in contrast to
+  \code{\link[ggplot2]{geom_text}} and \code{\link{geom_text_s}} the size of
+  the insets remains the same relative to the size of the plotting area
+  irrespective of how the plot is rendered. The aspect ratio of insets is
+  preserved and size is adjusted until the whole inset fits within the
+  viewport.
 
-  These geoms work only with tibbles as \code{data}, as they expect a list of
+  You can modify inset grob alignment with the `vjust` and `hjust`
+  aesthetics. These can either be a number between 0 (right/bottom) and 1
+  (top/left) or a character (`"left"`, `"middle"`, `"right"`, `"bottom"`,
+  `"center"`, `"top"`). There several two special alignments: `"inward"` and
+  `"outward"`. Inward always aligns text towards the center of the plotting
+  area, and outward aligns it away from the center of the plotting area. It
+  tagged with `_mean` or `_median` the mean or median of the data in the
+  panel along the corresponding axis is used as center.
+
+  By default this geom uses \code{\link{position_nudge_center}} which is
+  backwards compatible with \code{\link[ggplot2]{position_nudge}} but
+  provides additional control on the direction of the nudging. In contrast to
+  \code{\link[ggplot2]{position_nudge}}, \code{\link{position_nudge_center}}
+  and all other position functions defined in packages 'ggpp' and 'ggrepel'
+  keep the original coordinates thus allowing the plotting of connecting
+  segments and arrows.
+
+  This geom works only with tibbles as \code{data}, as its expects a list of
   graphics objects ("grob") to be mapped to the \code{label} aesthetic.
-  Aesthetics mappings in the inset plot are independent of those in the base
-  plot.
 
-  In the case of \code{geom_grob()}, \code{x} and \code{y} aesthetics
-  determine the position of the whole inset grob, similarly to that of a text
-  label, justification is interpreted as indicating the position of the grob
-  with respect to its $x$ and $y$ coordinates in the data, and \code{angle}
-  is used to rotate the grob as a whole.
+  The \code{x} and \code{y} aesthetics determine the position of the whole
+  inset grob, similarly to that of a text label, justification is interpreted
+  as indicating the position of the grob with respect to its $x$ and $y$
+  coordinates in the data, and \code{angle} is used to rotate the grob as a
+  whole.
 
   In the case of \code{geom_grob_npc()}, \code{npcx} and \code{npcy}
   aesthetics determine the position of the inset grob. As for text labels,
   justification is interpreted as indicating the position of the grob with
-  respect to the $x$ and $y$ coordinates in "npc" units, and \code{angle} is
-  used to rotate the plot as a whole.
+  respect to the x and y coordinates in "npc" units, and \code{angle} is used
+  to rotate the plot as a whole.
 
-  \strong{\code{annotate()} cannot be used with \code{geom = "grob"}}. Use
-  \code{\link[ggplot2]{annotation_custom}} directly when adding inset plots
-  as annotations.
+  \code{\link[ggplot2]{annotate}} cannot be used with \code{geom = "grob"}.
+  Use \code{\link{annotate}} (automatic unless 'ggpp' is not attached) as
+  redefined in 'ggpp' when adding inset grobs as annotations (automatic
+  unless 'ggpp' is not attached).
 }
-\section{Alignment}{
- You can modify gron alignment with the \code{vjust} and
-  \code{hjust} aesthetics. These can either be a number between 0
-  (right/bottom) and 1 (top/left) or a character ("left", "middle", "right",
-  "bottom", "center", "top").
-}
-
-\section{Inset size}{
- You can modify inset plot size with the \code{vp.width}
-  and \code{vp.height} aesthetics. These can take a number between 0 (smallest
-  possible inset) and 1 (whole plotting area width or height). The default
-  value for for both of these aesthetics is 1/3.
-}
-
 \examples{
 library(tibble)
 df <- tibble(x = 2, y = 15, grob = list(grid::circleGrob(r = 0.2)))
@@ -160,6 +164,11 @@ The idea of implementing a \code{geom_custom()} for grobs has
   \url{https://github.com/tidyverse/ggplot2/issues/1399}.
 }
 \seealso{
+\code{\link{geom_plot}}, \code{\link{geom_table}},
+  \code{\link{annotate}}, \code{\link{position_nudge_keep}},
+  \code{\link{position_nudge_to}}, \code{\link{position_jitternudge}},
+  \code{\link{position_dodgenudge}} and \code{\link{position_stacknudge}}.
+
 Other geometries adding layers with insets: 
 \code{\link{geom_plot}()},
 \code{\link{geom_table}()}

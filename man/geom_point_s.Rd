@@ -21,10 +21,10 @@ geom_point_s(
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by
-\code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. If specified and
-\code{inherit.aes = TRUE} (the default), is combined with the default
-mapping at the top level of the plot. You only need to supply
-\code{mapping} if there isn't a mapping defined for the plot.}
+\code{\link[ggplot2]{aes}}. If specified and \code{inherit.aes = TRUE} (the
+default), is combined with the default mapping at the top level of the
+plot. You only need to supply \code{mapping} if there isn't a mapping
+defined for the plot.}
 
 \item{data}{A data frame. If specified, overrides the default data frame
 defined at the top level of the plot.}
@@ -69,10 +69,24 @@ default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 A plot layer instance.
 }
 \description{
-The "point_s" geom provides a superset of the capabilities of geom "point"
-by allowing plotting of segments joining the original position of displaced
-observations to their current one. Displacements by position functions from
-packages 'ggpp' and 'ggrepel' are supported.
+The \code{"point_s"} geom provides a superset of the capabilities of geom
+\code{"point"} from package 'ggplot2' by allowing plotting of segments
+joining the original position of displaced observations to their current
+potition rendered as points or graphic symbols. Displacements by position
+functions from packages 'ggpp' and 'ggrepel' are supported.
+}
+\details{
+The plotting of segments is similar in idea at that available in
+  \code{\link[ggrepel]{geom_text_repel}} and relies on position functions
+  that rename instead of removing the original original \code{x} and \code{y}
+  coordinates from the \code{data} object.
+
+  By default this geom uses \code{\link{position_nudge_center}} which is backwards
+  compatible with \code{\link[ggplot2]{position_nudge}} but provides additional control
+  on the direction of the nudging. In contrast to \code{\link[ggplot2]{position_nudge}},
+  \code{\link{position_nudge_center}} and all other position functions defined in
+  packaged 'ggpp' and 'ggrepel' keep the original coordinates thus allowing
+  the plotting of connecting segments and arrows.
 }
 \examples{
 
@@ -107,5 +121,8 @@ ggplot(mpg[1:50, ],
 
 }
 \seealso{
-[ggplot2::geom_point], [nudge_keep] and [nudge_to]
+\code{\link[ggplot2]{geom_point}}, \code{\link{geom_text_s}},
+  \code{\link{position_nudge_keep}}, \code{\link{position_nudge_to}},
+  \code{\link{position_jitternudge}}, \code{\link{position_dodgenudge}} and
+  \code{\link{position_stacknudge}}.
 }

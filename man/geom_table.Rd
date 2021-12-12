@@ -96,85 +96,89 @@ default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 A plot layer instance.
 }
 \description{
-\code{geom_table} adds a textual table directly to the ggplot using syntax
-similar to that of \code{\link[ggplot2]{geom_label}} while
-\code{geom_table_npc} is similar to \code{geom_label_npc} in that \code{x}
-and \code{y} coordinates are given in npc units. In most respects they
-behave as any other ggplot geometry: a layer con contain multiple tables
-and faceting works as usual.
+\code{geom_table} and \code{geom_table_npc} add data frames as table insets
+to the base ggplot, using syntax similar to that of
+\code{\link[ggplot2]{geom_text}} and \code{\link{geom_text_s}}. In most
+respects they behave as any other ggplot geometry: a layer con contain
+multiple tables and faceting works as usual.
 }
 \details{
-These geoms work only with tibbles as \code{data}, as they expects a
-  list of data frames or tibbles ("tb" objects) to be mapped to the
-  \code{label} aesthetic. Aesthetics mappings in the inset plot are
-  independent of those in the base plot.
+You can modify the alignment of inset tables with the \code{vjust}
+  and \code{hjust} aesthetics. These can either be a number between 0
+  (right/bottom) and 1 (top/left) or a character
+  ("left", "middle", "right", "bottom", "center", "top").
 
-  In the case of \code{geom_table()}, \code{x} and \code{y} aesthetics
-  determine the position of the whole inset table, similarly to that of a
-  text label, justification is interpreted as indicating the position of the
-  table with respect to the $x$ and $y$ coordinates in the data, and
-  \code{angle} is used to rotate the table as a whole.
+  You can modify the size of inset tabls with the \code{vp.width} and
+  \code{vp.height} aesthetics. These can take a number between 0 (smallest
+  possible inset) and 1 (whole plotting area width or height). The default
+  value for for both of these aesthetics is 1/5. Thus, in contrast to
+  \code{\link[ggplot2]{geom_text}} and \code{\link{geom_text_s}} the size of
+  the insets remains the same relative to the size of the plotting area
+  irrespective of how the plot is rendered. The aspect ratio of insets is
+  preserved and size is adjusted until the whole inset fits within the
+  viewport.
 
-  In the case of \code{geom_table_npc()}, \code{npcx} and \code{npcy}
-  aesthetics determine the position of the whole inset table, similarly to
-  that of a text label, justification is interpreted as indicating the
-  position of the table with respect to the $x$ and $y$ coordinates in "npc"
-  units, and \code{angle} is used to rotate the table as a whole.
+  You can modify inset table alignment with the `vjust` and `hjust`
+  aesthetics. These can either be a number between 0 (right/bottom) and 1
+  (top/left) or a character (`"left"`, `"middle"`, `"right"`, `"bottom"`,
+  `"center"`, `"top"`). There several two special alignments: `"inward"` and
+  `"outward"`. Inward always aligns text towards the center of the plotting
+  area, and outward aligns it away from the center of the plotting area. It
+  tagged with `_mean` or `_median` the mean or median of the data in the
+  panel along the corresponding axis is used as center.
 
-  The "width" and "height" of an inset as for a text element are
-  0, so stacking and dodging inset tables will not work by default, and axis
-  limits are not automatically expanded to include all inset tables.
-  Obviously, insets do have height and width, but they are physical units,
-  not data units. The amount of space they occupy on the main plot is not
-  constant in data units of the base plot: when you modify scale limits,
-  inset plots stay the same size relative to the physical size of the base
-  plot.
+  By default this geom uses \code{\link{position_nudge_center}} which is
+  backwards compatible with \code{\link[ggplot2]{position_nudge}} but
+  provides additional control on the direction of the nudging. In contrast to
+  \code{\link[ggplot2]{position_nudge}}, \code{\link{position_nudge_center}}
+  and all other position functions defined in packages 'ggpp' and 'ggrepel'
+  keep the original coordinates thus allowing the plotting of connecting
+  segments and arrows.
+
+  This geom works only with tibbles as \code{data}, as its expects a list of
+  data frames (or tibbles) to be mapped to the \code{label} aesthetic.
+  A table is built with function \code{gridExtra::gtable()} for each
+  data frame in the list, and formatted according to a table theme or
+  \code{ttheme}. The character strings in the data frame can be parsed into
+  R expressions so the inset tables can include maths.
 
   If the argument passed to \code{table.theme} is a constructor function
   (passing its name without parenthesis), the values mapped to \code{size},
   \code{colour}, \code{fill}, \code{alpha}, and \code{family} aesthetics will
   the passed to this theme constructor for each individual table. In
-  contrast, if a ready constructed ttheme as a list object is passed as
-  argument (e.g., by calling the constructor, using contructor name followed
-  by parenthesis), it will be used as is, i.e., mappings to aesthetics such
-  as \code{colour} are ignored if present.
-
-  By default the constructor \code{ttheme_gtdefault} is used and
-  \code{colour} and \code{fill}, are mapped to \code{NA}. Mapping these
-  aesthetics to \code{NA} triggers the use of the default base_colour of the
-  \code{ttheme}.
-
+  contrast, if a ready constructed \code{ttheme} stored as a list object is
+  passed as argument (e.g., by calling the constructor, using constructor
+  name followed by parenthesis), it will be used as is, i.e., mappings to
+  aesthetics such as \code{colour} are ignored if present. By default the
+  constructor \code{ttheme_gtdefault} is used and \code{colour} and
+  \code{fill}, are mapped to \code{NA}. Mapping these aesthetics to \code{NA}
+  triggers the use of the default base_colour of the \code{ttheme}.
   As the table is built with function \code{gridExtra::gtable()}, for
   formatting details, please, consult \code{\link[gridExtra]{tableGrob}}.
+
+  The \code{x} and \code{y} aesthetics determine the position of the whole
+  inset table, similarly to that of a text label, justification is interpreted
+  as indicating the position of the inset table with respect to its x and y
+  coordinates in the data, and \code{angle} is used to rotate the inset table as a
+  whole.
+
+  In the case of \code{geom_table_npc()}, \code{npcx} and \code{npcy}
+  aesthetics determine the position of the inset table. As for text labels,
+  justification is interpreted as indicating the position of the inset plot
+  with respect to its \code{npcx} and \code{npcy} coordinates, and
+  \code{angle} is used to rotate the plot as a whole.
+
+  \code{\link[ggplot2]{annotate}} cannot be used with \code{geom = "table"}.
+  Use \code{\link{annotate}} (automatic override unless 'ggpp' is not
+  attached) as redefined in 'ggpp' when adding inset plots as annotations
+  (automatic unless 'ggpp' is not attached).
 }
 \note{
-As all geometries, \code{geom_table()} and \code{geom_table_npc()} add
-  a layer to a plot, and behave as expected in the grammar of graphics. In general
-  ggplot themes do not affect how layers are rendered, and this is also the
-  case for \code{geom_table()}. As described abovem, the formatting of the
-  inset table is done according to the the argument passed to parameter
-  \code{table.theme}.
-
-  Complex tables with annotations or different colouring of rows or cells can
-  be constructed with functions in package 'gridExtra' or in any other way
-  as long as they can be saved as grid graphical objects and then added to a
-  ggplot as a new layer with \code{\link{geom_grob}}.
-
-  In 'ggpmisc' (>= 0.3.6) \strong{\code{annotate()} can be used with
-  \code{geom = "table"}}.
+Complex tables with annotations or different colouring of rows or cells
+  can be constructed with functions in package 'gridExtra' or in any other
+  way as long as they can be saved as grid graphical objects and then added
+  to a ggplot as a new layer with \code{\link{geom_grob}}.
 }
-\section{Alignment}{
- You can modify table alignment with the \code{vjust} and
-  \code{hjust} aesthetics. These can either be a number between 0
-  (right/bottom) and 1 (top/left) or a character ("left", "middle", "right",
-  "bottom", "center", "top").
-}
-
-\section{Inset size}{
- You can modify inset table size with the \code{size}
-  aesthetics, which determines the size of text within the table.
-}
-
 \examples{
 library(dplyr)
 library(tibble)
@@ -254,8 +258,9 @@ This geometry is inspired on answers to two questions in
   \url{https://stackoverflow.com/questions/25554548/adding-sub-tables-on-each-panel-of-a-facet-ggplot-in-r?}
 }
 \seealso{
-function \code{\link[gridExtra]{tableGrob}} as it is used to
-  construct the table.
+Formatting of tables \code{stat_fmt_table},
+  \code{\link{ttheme_gtdefault}}, \code{\link{ttheme_set}},
+  \code{\link[gridExtra]{tableGrob}}.
 
 Other geometries adding layers with insets: 
 \code{\link{geom_grob}()},

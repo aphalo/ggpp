@@ -2,25 +2,66 @@
 #'
 #' \code{geom_plot} and \code{geom_plot_npc} add ggplot objects as insets to the
 #' base ggplot, using syntax similar to that of
-#' \code{\link[ggplot2]{geom_label}}. In most respects they behave as any other
-#' ggplot geometry: a layer con contain multiple tables and faceting works as
-#' usual.
+#' \code{\link[ggplot2]{geom_label}}  and \code{\link{geom_text_s}}. In most
+#' respects they behave as any other ggplot geometry: a layer con contain
+#' multiple tables and faceting works as usual.
 #'
-#' @section Inset alignment: You can modify inset plot alignment with the
-#'   \code{vjust} and \code{hjust} aesthetics. These can either be a number
-#'   between 0 (right/bottom) and 1 (top/left) or a character ("left", "middle",
-#'   "right", "bottom", "center", "top"). The \code{angle} aesthetics can be
-#'   used to rotate the inset plots.
+#' @details You can modify the alignment of inset plots with the \code{vjust}
+#'   and \code{hjust} aesthetics. These can either be a number between 0
+#'   (right/bottom) and 1 (top/left) or a character ("left", "middle", "right",
+#'   "bottom", "center", "top").
 #'
-#' @section Inset size and aspect: You can modify the size of the inset plot
-#'   with the \code{vp.width} and \code{vp.height} aesthetics. Arguments can be
-#'   a number between 0 (smallest possible inset) and 1 (whole plotting area
-#'   width or height). The default value for for both of these aesthetics is
-#'   1/3. If the coordinates are "free" the plot stretches to fill the viewport.
-#'   However, if the coordinates of the inset are "fixed" and the aspect ratio
-#'   of the viewport is different to that of the inset, the viewport will be
-#'   surrounded on either $x$ or $y$ margins by invisible space, which may look
-#'   as if the position of the inset is wrong.
+#'   You can modify the size of inset plots with the \code{vp.width} and
+#'   \code{vp.height} aesthetics. These can take a number between 0 (smallest
+#'   possible inset) and 1 (whole plotting area width or height). The default
+#'   value for for both of these aesthetics is 1/5. Thus, in contrast to
+#'   \code{\link[ggplot2]{geom_text}} and \code{\link{geom_text_s}} the size of
+#'   the insets remains the same relative to the size of the plotting area
+#'   irrespective of how the plot is rendered. The aspect ratio of insets is
+#'   preserved and size is adjusted until the whole inset fits within the
+#'   viewport.
+#'
+#'   You can modify inset plot alignment with the `vjust` and `hjust`
+#'   aesthetics. These can either be a number between 0 (right/bottom) and 1
+#'   (top/left) or a character (`"left"`, `"middle"`, `"right"`, `"bottom"`,
+#'   `"center"`, `"top"`). There several two special alignments: `"inward"` and
+#'   `"outward"`. Inward always aligns text towards the center of the plotting
+#'   area, and outward aligns it away from the center of the plotting area. It
+#'   tagged with `_mean` or `_median` the mean or median of the data in the
+#'   panel along the corresponding axis is used as center.
+#'
+#'   By default this geom uses \code{\link{position_nudge_center}} which is
+#'   backwards compatible with \code{\link[ggplot2]{position_nudge}} but
+#'   provides additional control on the direction of the nudging. In contrast to
+#'   \code{\link[ggplot2]{position_nudge}}, \code{\link{position_nudge_center}}
+#'   and all other position functions defined in packages 'ggpp' and 'ggrepel'
+#'   keep the original coordinates thus allowing the plotting of connecting
+#'   segments and arrows.
+#'
+#'   This geom works only with tibbles as \code{data}, as its expects a list of
+#'   ggplot objects ("gg" class) to be mapped to the \code{label} aesthetic.
+#'
+#'   The \code{x} and \code{y} aesthetics determine the position of the whole
+#'   inset plot, similarly to that of a text label, justification is interpreted
+#'   as indicating the position of the plot with respect to its x and y
+#'   coordinates in the data, and \code{angle} is used to rotate the plot as a
+#'   whole.
+#'
+#'   In the case of \code{geom_plot_npc()}, \code{npcx} and \code{npcy}
+#'   aesthetics determine the position of the inset plot. As for text labels,
+#'   justification is interpreted as indicating the position of the inset plot
+#'   with respect to its \code{npcx} and \code{npcy} coordinates, and
+#'   \code{angle} is used to rotate the plot as a whole.
+#'
+#'   \code{\link[ggplot2]{annotate}} cannot be used with \code{geom = "plot"}.
+#'   Use \code{\link{annotate}} (automatic unless 'ggpp' is not attached) as
+#'   redefined in 'ggpp' when adding inset plots as annotations (automatic
+#'   unless 'ggpp' is not attached).
+#'
+#' @seealso \code{\link{geom_plot}}, \code{\link{geom_table}},
+#'   \code{\link{annotate}}, \code{\link{position_nudge_keep}},
+#'   \code{\link{position_nudge_to}}, \code{\link{position_jitternudge}},
+#'   \code{\link{position_dodgenudge}} and \code{\link{position_stacknudge}}.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be
@@ -51,18 +92,17 @@
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
 #'
-#' @section Known problem!: In some cases when explicit coordinates are added
-#'   to the inner plot, it may be also necessary to add explicitly coordinates
-#'   to the outer plots.
+#' @section Known problem!: In some cases when explicit coordinates are added to
+#'   the inner plot, it may be also necessary to add explicitly coordinates to
+#'   the outer plots.
 #'
-#' @details The "width" and "height" of an inset as for a text element are
-#'   0, so stacking and dodging inset plots will not work by default, and axis
-#'   limits are not automatically expanded to include all inset plots.
-#'   Obviously, insets do have height and width, but they are physical units,
-#'   not data units. The amount of space they occupy on the main plot is not
-#'   constant in data units of the base plot: when you modify scale limits,
-#'   inset plots stay the same size relative to the physical size of the base
-#'   plot.
+#' @details The "width" and "height" of an inset as for a text element are 0, so
+#'   stacking and dodging inset plots will not work by default, and axis limits
+#'   are not automatically expanded to include all inset plots. Obviously,
+#'   insets do have height and width, but they are physical units, not data
+#'   units. The amount of space they occupy on the main plot is not constant in
+#'   data units of the base plot: when you modify scale limits, inset plots stay
+#'   the same size relative to the physical size of the base plot.
 #'
 #' @note These geoms work only with tibbles as \code{data}, as they expects a
 #'   list of ggplots ("gg" objects) to be mapped to the \code{label} aesthetic.

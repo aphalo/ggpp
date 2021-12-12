@@ -3,3 +3,4 @@
 .RData
 tests/figs
 *.log
+revdep/

@@ -3,29 +3,29 @@
 #' `position_jitternudge()` combines into one function the action of
 #' [ggplot2::position_jitter] and [ggplot2::position_nudge]. It is useful when
 #' labels to jittered plots and when adding jitter to text labels linked to
-#' points plotted without jitter. It can replace other position functions as
-#' it is backwards compatible. Like all other position functions in 'ggpp' and
+#' points plotted without jitter. It can replace other position functions as it
+#' is backwards compatible. Like all other position functions in 'ggpp' and
 #' 'ggrepel' it preserves the initial position to allow drawing of segments or
 #' arrow linking the original position to the displaced one.
 #'
 #' @details Jitter is identical to that by [ggplot2::position_jitter] while
-#' nudging is enhanced compared to [ggplot2::position_nudge] by taking into
-#' use cases specific to the combination of jitter and nudge.
+#'   nudging is enhanced compared to [ggplot2::position_nudge] by taking into
+#'   use cases specific to the combination of jitter and nudge.
 #'
-#' There are two posible uses for this function. First it can be used
-#' to label jittered point in a plot. In this case, it is mandatory to use
-#' the same arguments to `width`, `height` and `seed` when passing
-#' `position_jitter()` to `geom_point()` and `position_jitternudge()` to
-#' `geom_text()` or `geom_label()` or their repulsive equivalents. Otherwise
-#' the arrows or segments will fail to connect to the labels. In other words
-#' jittering is computed twice. Jitter should be identical with the same
-#' arguments as `position_jitternudge()` as this last function simply call the
-#' same code from package 'ggplot2'.
+#'   There are two posible uses for this function. First it can be used to label
+#'   jittered point in a plot. In this case, it is mandatory to use the same
+#'   arguments to `width`, `height` and `seed` when passing `position_jitter()`
+#'   to `geom_point()` and `position_jitternudge()` to `geom_text()` or
+#'   `geom_label()` or their repulsive equivalents. Otherwise the arrows or
+#'   segments will fail to connect to the labels. In other words jittering is
+#'   computed twice. Jitter should be identical with the same arguments as
+#'   `position_jitternudge()` as this last function simply call the same code
+#'   from package 'ggplot2'.
 #'
-#' The second use is to jitter labels to be connected to points that have not
-#' been jittered. The return of original positions instead of the jittered
-#' ones is achieved by passing `origin = "original"` instead of the default
-#' of `origin = "jittered".`
+#'   The second use is to jitter labels to be connected to points that have not
+#'   been jittered. The return of original positions instead of the jittered
+#'   ones is achieved by passing `origin = "original"` instead of the default of
+#'   `origin = "jittered".`
 #'
 #' @family position adjustments
 #'
@@ -55,10 +55,10 @@
 #'   "jittered.x"), "original.x" (or "jittered.y"). A value of "original"
 #'   applies the nudge before jittering the observations, while "jittered"
 #'   applies the nudging after jittering.
-#' @param returned.origin One of "original" or "jittered".
+#' @param returned.origin One of "original", "jittered" or "none".
 #'
-#' @note When `direction = "split"` is used together with no jitter, the
-#'   split to left and right, or up and down is done at random.
+#' @note When `direction = "split"` is used together with no jitter, the split
+#'   to left and right, or up and down is done at random.
 #'
 #' @seealso [ggplot2::position_jitter()], [ggplot2::position_nudge()],
 #'   [ggrepel::position_nudge_repel()].
@@ -122,9 +122,9 @@
 #'        aes(cyl, hwy, label = drv)) +
 #'   geom_point() +
 #'   geom_point_s(position =
-#'              position_jitter_keep(width = 0.3, height = 2, seed = 123),
-#'              color = "red",
-#'              arrow = grid::arrow(length = unit(0.4, "lines")))
+#'                position_jitter_keep(width = 0.3, height = 2, seed = 123),
+#'                color = "red",
+#'                arrow = grid::arrow(length = unit(0.4, "lines")))
 #'
 position_jitternudge <- function(width = NULL,
                                  height = NULL,
@@ -134,6 +134,15 @@ position_jitternudge <- function(width = NULL,
                                  direction = "as.is",
                                  nudge.from = "original",
                                  returned.origin = "jittered") {
+  # Ensure error message is triggered early
+  if (!nudge.from %in% c("original", "original.x", "original.y", "jittered", "jittered.y", "jittered.x")) {
+    stop("Invalid 'nudge.from': '", nudge.from,
+         "', expected: '\"original\", \"original.x\", \"original.y\" or \"jittered\"")
+  }
+  if (!returned.origin %in% c("original", "jittered", "none")) {
+    stop("Invalid 'returned.origin': '", returned.origin,
+         ", expected: `\"original\", \"jittered\" or \"none\"")
+  }
 
   fixed.direction <-
     function(x) {1}
@@ -240,7 +249,7 @@ PositionJitterAndNudge <-
                      if (params$returned.origin == "jittered") {
                        data$x_orig <- x_jittered
                        data$y_orig <- y_jittered
-                     } else {
+                     } else if (params$returned.origin == "original") {
                        data$x_orig <- x_orig
                        data$y_orig <- y_orig
                      }

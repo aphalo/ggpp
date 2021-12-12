@@ -2,6 +2,7 @@
 % Please edit documentation in R/position-nudge-stack.R
 \name{position_stacknudge}
 \alias{position_stacknudge}
+\alias{position_stack_keep}
 \title{Combined positions stack and nudge}
 \usage{
 position_stacknudge(
@@ -9,8 +10,11 @@ position_stacknudge(
   reverse = FALSE,
   x = 0,
   y = 0,
-  direction = "none"
+  direction = "none",
+  returned.origin = "stacked"
 )
+
+position_stack_keep(vjust = 1, reverse = FALSE)
 }
 \arguments{
 \item{vjust}{Vertical adjustment for geoms that have a position (like points
@@ -27,6 +31,8 @@ vector of length 1, or of the same length as rows there are in `data`,}
 "none" replicates the behavior of [ggplot2::position_nudge]. At the moment
 "split" changes the sign of the nudge at zero, which is suiatble for column
 plots with negative slices.}
+
+\item{returned.origin}{One of "original", "stacked" or "none".}
 }
 \value{
 A \code{"Position"} object.
@@ -48,6 +54,7 @@ when the desire is only to have access to both the original and nudged
 coordinates.
 }
 \examples{
+
 df <- data.frame(x1 = c(1, 2, 1, 3, -1),
                  x2 = c("a", "a", "b", "b", "b"),
                  grp = c("some long name", "other name", "some name",

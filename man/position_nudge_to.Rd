@@ -4,12 +4,14 @@
 \alias{position_nudge_to}
 \title{Nudge labels to new positions}
 \usage{
-position_nudge_to(x = NULL, y = NULL)
+position_nudge_to(x = NULL, y = NULL, returned.origin = "original")
 }
 \arguments{
 \item{x, y}{Coordinates of the destination position. A numeric
 vector of length 1, or of the same length as rows there are in `data`.
 The default, `NULL`, leaves the original coordinates unchanged.}
+
+\item{returned.origin}{One of "original" or "none".}
 }
 \value{
 A \code{"Position"} object.
@@ -18,7 +20,7 @@ A \code{"Position"} object.
 `position_nudge_to()` is generally useful for adjusting the position of
 labels or text, both on a discrete or continuous scale. This version from
 package 'ggpmisc' differs from [ggplot2::position_nudge] in that the
-coordinates of the new position is given directly, rather than as a
+coordinates of the new position are given directly, rather than as a
 displacement from the original location. As other position functions in
 this package, it preserves the original position to allow the text to
 be linked back to its original position with a segment or arrow.

@@ -12,7 +12,8 @@ position_nudge_center(
   center_x = NULL,
   center_y = NULL,
   direction = NULL,
-  obey_grouping = NULL
+  obey_grouping = NULL,
+  returned.origin = "original"
 )
 
 position_nudge_centre(
@@ -21,7 +22,8 @@ position_nudge_centre(
   center_x = NULL,
   center_y = NULL,
   direction = NULL,
-  obey_grouping = NULL
+  obey_grouping = NULL,
+  returned.origin = "original"
 )
 
 position_nudge_keep(x = 0, y = 0)
@@ -44,6 +46,8 @@ values is the default depends on the values passed to the other parameters.}
 of the observations. By default, grouping is obeyed when both of the
 variables mapped to _x_ and _y_ are continuous numeric and ignored
 otherwise.}
+
+\item{returned.origin}{One of "original" or "none".}
 }
 \value{
 A \code{"Position"} object.

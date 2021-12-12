@@ -24,6 +24,8 @@
 #' @param direction One of "none", or "split".
 #' @param line_nudge A positive multiplier >= 1, increasing nudging
 #'   away from the curve or line compared to nudging from points.
+#' @param returned.origin One of "original" or "none".
+#'
 #' @details The default ammount of nudging is 3% of the spread of the data along
 #'   _x_ and _y_ axes, which in most cases is good. In most cases it is best to
 #'   apply nudging along a direction perpendicular to the line or curve, if this
@@ -224,7 +226,15 @@ position_nudge_line <- function(x = NA_real_,
                                 method = NULL,
                                 formula = y ~ x,
                                 direction = NULL,
-                                line_nudge = 1) {
+                                line_nudge = 1,
+                                returned.origin = "original") {
+
+  # Ensure error message is triggered early
+  if (!returned.origin %in% c("original", "none")) {
+    stop("Invalid 'returned.origin': ", returned.origin,
+         "expected: `\"original\" or \"none\"")
+  }
+
   # set defaults
   if (!is.null(abline)) {
     method <- "abline"
@@ -264,7 +274,8 @@ position_nudge_line <- function(x = NA_real_,
     method = method,
     formula = formula,
     direction = direction,
-    line_nudge = line_nudge
+    line_nudge = line_nudge,
+    returned.origin = returned.origin
   )
 }
 
@@ -369,15 +380,18 @@ quant_compute_panel <- function(data, params, scales) {
   # transform only the dimensions for which new coordinates exist
   if (any(params$x != 0)) {
     if (any(params$y != 0)) {
-      data <- transform_position(data, function(x) x + x_nudge, function(y) y + y_nudge)
+      data <- ggplot2::transform_position(data, function(x) x + x_nudge, function(y) y + y_nudge)
     } else {
-      data <- transform_position(data, function(x) x + x_nudge, NULL)
+      data <- ggplot2::transform_position(data, function(x) x + x_nudge, NULL)
     }
   } else if (any(params$y != 0)) {
-    data <- transform_position(data, NULL, function(y) y + y_nudge)
+    data <- ggplot2::transform_position(data, NULL, function(y) y + y_nudge)
   }
-  data$x_orig <- x_orig
-  data$y_orig <- y_orig
+  if (params$returned.origin == "original") {
+    data$x_orig <- x_orig
+    data$y_orig <- y_orig
+  }
+
   data
 }
 
@@ -405,6 +419,7 @@ PositionNudgeLine <-
            abline = self$abline,
            method = self$method,
            formula = self$formula,
+           returned.origin = self$returned.origin,
            direction = self$direction,
            line_nudge = self$line_nudge
       )
