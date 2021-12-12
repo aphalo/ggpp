@@ -256,18 +256,35 @@ requirement. All those geoms whose names are highlighted in *`italics`*
 support plotting of connecting segments or arrows when a the coordinates
 have been modified by a *position* function.
 
-| Data labels (data coordinates)   | Annotations (npc)  | Mapped to `label` aesthetic |
-|----------------------------------|--------------------|-----------------------------|
-| `ggplot2::geom_text()`           | `geom_text_npc()`  | `character` vector          |
-| `ggplot2::geom_label()`          | `geom_label_npc()` | `character` vector          |
-| *`ggrepe l::geom_text_repel()`*  |                    | `character` vector          |
-| *`ggrepel ::geom_label_repel()`* |                    | `character` vector          |
-| *`geom_text_s()`*                |                    | `character` vector          |
-| geom_label_s() (planned)         |                    | `character` vector          |
-| *`geom_point_s()`*               |                    | none                        |
-| *`geom_plot()`*                  | `geom_plot_npc()`  | `list()` of `ggplot2::gg`   |
-| *`geom_table()`*                 | `geom_table_npc()` | `list()` of `data.frame`    |
-| *`geom_grob()`*                  | `geom_grob_npc()`  | `list()` of `grid::grob`    |
++----------------------------+--------------------+--------------------+
+| Data labels (data          | Annotations (npc)  | Mapped to `label`  |
+| coordinates)               |                    |                    |
++============================+====================+====================+
+| `ggplot2::geom_text()`     | `geom_text_npc()`  | `character` vector |
++----------------------------+--------------------+--------------------+
+| `ggplot2::geom_label()`    | `geom_label_npc()` | `character` vector |
++----------------------------+--------------------+--------------------+
+| *`ggr                      |                    | `character` vector |
+| epe l::geom_text_repel()`* |                    |                    |
++----------------------------+--------------------+--------------------+
+| *`ggre                     |                    | `character` vector |
+| pel ::geom_label_repel()`* |                    |                    |
++----------------------------+--------------------+--------------------+
+| *`geom_text_s()`*          |                    | `character` vector |
++----------------------------+--------------------+--------------------+
+| geom_label_s() (planned)   |                    | `character` vector |
++----------------------------+--------------------+--------------------+
+| *`geom_point_s()`*         |                    | none               |
++----------------------------+--------------------+--------------------+
+| *`geom_plot()`*            | `geom_plot_npc()`  | `list()` of        |
+|                            |                    | `ggplot2::gg`      |
++----------------------------+--------------------+--------------------+
+| *`geom_table()`*           | `geom_table_npc()` | `list()` of        |
+|                            |                    | `data.frame`       |
++----------------------------+--------------------+--------------------+
+| *`geom_grob()`*            | `geom_grob_npc()`  | `list()` of        |
+|                            |                    | `grid::grob`       |
++----------------------------+--------------------+--------------------+
 
 When adding an informative element to a plot, assess whether it is an
 *annotation* or a *data label*. To decide on the best approach, consider
@@ -384,8 +401,8 @@ books, Espoo. ISBN 978-952-60-7449-8.
 Wickham H. (2010) A Layered Grammar of Graphics. *Journal of
 Computational and Graphical Statistics* **19:** 3--28.
 
-Wickham H. (2016) *ggplot2*. Springer International Publishing. ISBN
-978-3-319-24275-0.
+Wickham H. (2016) *ggplot2: Elegant Graphics for Data Analysis*.
+Springer International Publishing. ISBN 978-3-319-24275-0.
 
 # Examples
 
@@ -671,7 +688,7 @@ ggplot() +
             hjust = 0.7, vjust = 0.55) +
   scale_y_continuous(expand = expansion(mult = 0.3, add = 0)) +
   scale_x_continuous(expand = expansion(mult = 0.2, add = 0)) +
- theme_bw(12)
+  theme_bw(12)
 ```
 
 As shown above for inset tables and inset plots, it is also possible to
@@ -688,7 +705,7 @@ the `Grob` relative to the size of the plotting area.
 ggplot() +
   annotate("grob", x = 1, y = 3, vp.width = 0.5,
            label = grid::rasterGrob(image = Isoquercitin, width = 1)) +
- theme_bw(12)
+  theme_bw(12)
 ```
 
 `geom_grob()` is designed thinking that its main use will in graphical
@@ -1209,7 +1226,7 @@ observations. For the selection of observations to work cleanly, the
 argument for `n` must large enough to generate a dense grid or the
 bandwidth may need to be increased by passing a number \> 1 as argument.
 Increasing the bandwidth makes the empirical density function smoother,
-and the selection of points less dependent on immediate neighbors.
+and the selection of points less dependent on immediate neighbours.
 
 We use the same data as in the previous sections.
 
@@ -1292,7 +1309,7 @@ In other respects than `orientation` and the parameters passed
 internally to `stats::density()` the examples given earlier for
 `stat_dens2d_labels()` also apply.
 
-## Position functions
+## Simple position functions
 
 Nudging shifts deterministically the coordinates giving an *x* and/or
 *y* position and also expands the limits of the corresponding scales to
@@ -1333,12 +1350,15 @@ original *x* and *y* coordinates. This is made possible by coordinated
 development of packages 'ggpp' and 'ggrepel' and agreement on a naming
 convention for storing the original position.
 
-### position_nudge_keep() and position_jitter_keep()
+### position_nudge_keep() and friends
 
 Function `position_nudge_keep()` is like `ggplot2::position_nudge()` but
 keeps (stores) the original *x* and *y* coordinates;
 `position_nudge_keep()` can be used interchangeably with
-`ggplot2::position_nudge()` with other geometries.
+`ggplot2::position_nudge()` with other geometries. Although possibly
+only occasionally needed, `position_jitter_keep()` ,
+`position_dodge_keep()` and `position_stack_keep()` are also made
+available for completeness.
 
 ```{r}
 set.seed(84532)
@@ -1816,7 +1836,13 @@ ggplot(df, aes(x, y, label = l)) +
 
 ## Combined position functions
 
-TO BE ADDED
+Nudging text or labels in a dodged or stacked bar or column plot has not
+been easy in 'ggplot2'. This is a rather frequent situation, although
+usually there are workarounds. Non-the-less this imposed some
+limitations on the design of plots. The examples below show the use of
+*position* that implement the functionality of more than one of the
+position functions available in 'ggplot2'. In the first example we label
+a stacked column plot.
 
 ## Appendix A: More on density filtering
 
