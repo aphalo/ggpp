@@ -25,7 +25,7 @@ class. I edited this code and included it in the package.
 
 Except for the position functions with names ending in `_keep`, for
 which *normal* counterparts exist, the *keeping* of the original
-position can be disabled by passing `returned.origin = "none"` when they
+position can be disabled by passing `kept.origin = "none"` when they
 are called.
 
 The renaming of `geom_text_linked()` to `geom_text_s()` is code breaking

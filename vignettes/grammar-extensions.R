@@ -201,13 +201,13 @@ ggplot() +
             hjust = 0.7, vjust = 0.55) +
   scale_y_continuous(expand = expansion(mult = 0.3, add = 0)) +
   scale_x_continuous(expand = expansion(mult = 0.2, add = 0)) +
- theme_bw(12)
+  theme_bw(12)
 
 ## ---- eval=(eval_all && eval_magick)------------------------------------------
 #  ggplot() +
 #    annotate("grob", x = 1, y = 3, vp.width = 0.5,
 #             label = grid::rasterGrob(image = Isoquercitin, width = 1)) +
-#   theme_bw(12)
+#    theme_bw(12)
 
 ## -----------------------------------------------------------------------------
 ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
