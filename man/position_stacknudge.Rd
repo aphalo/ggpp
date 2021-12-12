@@ -11,7 +11,7 @@ position_stacknudge(
   x = 0,
   y = 0,
   direction = "none",
-  returned.origin = "stacked"
+  kept.origin = "stacked"
 )
 
 position_stack_keep(vjust = 1, reverse = FALSE)
@@ -32,7 +32,7 @@ vector of length 1, or of the same length as rows there are in `data`,}
 "split" changes the sign of the nudge at zero, which is suiatble for column
 plots with negative slices.}
 
-\item{returned.origin}{One of "original", "stacked" or "none".}
+\item{kept.origin}{One of "original", "stacked" or "none".}
 }
 \value{
 A \code{"Position"} object.

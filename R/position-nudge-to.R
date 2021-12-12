@@ -13,7 +13,7 @@
 #' @param x,y Coordinates of the destination position. A numeric
 #'   vector of length 1, or of the same length as rows there are in `data`.
 #'   The default, `NULL`, leaves the original coordinates unchanged.
-#' @param returned.origin One of "original" or "none".
+#' @param kept.origin One of "original" or "none".
 #'
 #' @details The new `x` or `y` replace the original ones, while the original
 #'   coordinates are returned in `x_orig` and `y_orig`.
@@ -44,18 +44,18 @@
 position_nudge_to <-
   function(x = NULL,
            y = NULL,
-           returned.origin = "original") {
+           kept.origin = "original") {
 
     # Ensure error message is triggered early
-    if (!returned.origin %in% c("original", "none")) {
-      stop("Invalid 'returned.origin': ", returned.origin,
+    if (!kept.origin %in% c("original", "none")) {
+      stop("Invalid 'kept.origin': ", kept.origin,
            "expected: `\"original\" or \"none\"")
     }
 
     ggplot2::ggproto(NULL, PositionNudgeTo,
                      x = x,
                      y = y,
-                     returned.origin = returned.origin
+                     kept.origin = kept.origin
     )
   }
 
@@ -74,7 +74,7 @@ PositionNudgeTo <-
 
       list(x = self$x,
            y = self$y,
-           returned.origin = self$returned.origin
+           kept.origin = self$kept.origin
       )
     },
 
@@ -111,7 +111,7 @@ PositionNudgeTo <-
         data <- transform_position(data, NULL, function(y) y + params$y)
       }
       # add original position
-      if (params$returned.origin == "original") {
+      if (params$kept.origin == "original") {
         data$x_orig <- x_orig
         data$y_orig <- y_orig
       }

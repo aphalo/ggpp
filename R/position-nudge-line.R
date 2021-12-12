@@ -24,7 +24,7 @@
 #' @param direction One of "none", or "split".
 #' @param line_nudge A positive multiplier >= 1, increasing nudging
 #'   away from the curve or line compared to nudging from points.
-#' @param returned.origin One of "original" or "none".
+#' @param kept.origin One of "original" or "none".
 #'
 #' @details The default ammount of nudging is 3% of the spread of the data along
 #'   _x_ and _y_ axes, which in most cases is good. In most cases it is best to
@@ -227,11 +227,11 @@ position_nudge_line <- function(x = NA_real_,
                                 formula = y ~ x,
                                 direction = NULL,
                                 line_nudge = 1,
-                                returned.origin = "original") {
+                                kept.origin = "original") {
 
   # Ensure error message is triggered early
-  if (!returned.origin %in% c("original", "none")) {
-    stop("Invalid 'returned.origin': ", returned.origin,
+  if (!kept.origin %in% c("original", "none")) {
+    stop("Invalid 'kept.origin': ", kept.origin,
          "expected: `\"original\" or \"none\"")
   }
 
@@ -275,7 +275,7 @@ position_nudge_line <- function(x = NA_real_,
     formula = formula,
     direction = direction,
     line_nudge = line_nudge,
-    returned.origin = returned.origin
+    kept.origin = kept.origin
   )
 }
 
@@ -387,7 +387,7 @@ quant_compute_panel <- function(data, params, scales) {
   } else if (any(params$y != 0)) {
     data <- ggplot2::transform_position(data, NULL, function(y) y + y_nudge)
   }
-  if (params$returned.origin == "original") {
+  if (params$kept.origin == "original") {
     data$x_orig <- x_orig
     data$y_orig <- y_orig
   }
@@ -419,7 +419,7 @@ PositionNudgeLine <-
            abline = self$abline,
            method = self$method,
            formula = self$formula,
-           returned.origin = self$returned.origin,
+           kept.origin = self$kept.origin,
            direction = self$direction,
            line_nudge = self$line_nudge
       )

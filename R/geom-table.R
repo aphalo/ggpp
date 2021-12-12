@@ -224,8 +224,11 @@ geom_table <- function(mapping = NULL, data = NULL,
     if (!missing(position)) {
       rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")
     }
-
-    position <- position_nudge_center(nudge_x, nudge_y)
+    # We do not keep the original positions if they will not be used
+    position <-
+      position_nudge_center(nudge_x, nudge_y,
+                            kept.origin = ifelse(add.segments,
+                                                 "original", "none"))
   }
 
   if (is.character(table.hjust)) {

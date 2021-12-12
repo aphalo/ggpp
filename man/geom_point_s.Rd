@@ -114,7 +114,7 @@ ggplot(mpg[1:50, ],
   geom_point_s(position = position_jitternudge(width = 0.66, height = 2,
                                                seed = 456,
                                                nudge.from = "jittered",
-                                               returned.origin = "original"),
+                                               kept.origin = "original"),
                color = "red",
                arrow = grid::arrow(length = grid::unit(0.4, "lines"))) +
   geom_point_s()

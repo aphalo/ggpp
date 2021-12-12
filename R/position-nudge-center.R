@@ -31,7 +31,7 @@
 #'   of the observations. By default, grouping is obeyed when both of the
 #'   variables mapped to _x_ and _y_ are continuous numeric and ignored
 #'   otherwise.
-#' @param returned.origin One of "original" or "none".
+#' @param kept.origin One of "original" or "none".
 #'
 #' @details Positive values as arguments to `x` and `y` are added to the
 #'   original position along either axis. If no arguments are passed to
@@ -230,11 +230,11 @@ position_nudge_center <-
            center_y = NULL,
            direction = NULL,
            obey_grouping = NULL,
-           returned.origin = "original") {
+           kept.origin = "original") {
 
     # Ensure error message is triggered early
-    if (!returned.origin %in% c("original", "none")) {
-      stop("Invalid 'returned.origin': ", returned.origin,
+    if (!kept.origin %in% c("original", "none")) {
+      stop("Invalid 'kept.origin': ", kept.origin,
            "expected: `\"original\" or \"none\"")
     }
 
@@ -269,7 +269,7 @@ position_nudge_center <-
                      y = y,
                      center_x = center_x,
                      center_y = center_y,
-                     returned.origin = returned.origin,
+                     kept.origin = kept.origin,
                      direction = direction,
                      obey_grouping = obey_grouping
     )
@@ -296,7 +296,7 @@ PositionNudgeCenter <-
            y = self$y,
            center_x = self$center_x,
            center_y = self$center_y,
-           returned.origin = self$returned.origin,
+           kept.origin = self$kept.origin,
            direction = self$direction,
            obey_grouping = self$obey_grouping)
     },
@@ -399,7 +399,7 @@ PositionNudgeCenter <-
         data <- transform_position(data, NULL, function(y) y + y_nudge)
       }
       # add original position
-      if (params$returned.origin == "original") {
+      if (params$kept.origin == "original") {
         data$x_orig <- x_orig
         data$y_orig <- y_orig
       }
@@ -425,5 +425,5 @@ position_nudge_keep <- function(x = 0, y = 0) {
                         center_y = NULL,
                         direction = NULL,
                         obey_grouping = NULL,
-                        returned.origin = "original")
+                        kept.origin = "original")
 }

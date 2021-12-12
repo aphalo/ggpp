@@ -9,10 +9,10 @@ position_dodge2nudge <- function(width = 1,
                                  x = 0,
                                  y = 0,
                                  direction = "none",
-                                 returned.origin = "dodged") {
+                                 kept.origin = "dodged") {
   # Ensure error message is triggered early
-  if (!returned.origin %in% c("original", "dodged", "none")) {
-    stop("Invalid 'returned.origin': ", returned.origin,
+  if (!kept.origin %in% c("original", "dodged", "none")) {
+    stop("Invalid 'kept.origin': ", kept.origin,
          "expected: `\"original\", \"dodged\" or \"none\"")
   }
 
@@ -33,7 +33,7 @@ position_dodge2nudge <- function(width = 1,
                                    split.y = sign,
                                    center = sign,
                                    function(x) {1}),
-                   returned.origin = returned.origin,
+                   kept.origin = kept.origin,
                    width = width,
                    preserve = match.arg(preserve),
                    padding = padding,
@@ -54,7 +54,7 @@ PositionDodgeAndNudge <-
                      c(
                        list(nudge_x = self$x, nudge_y = self$y,
                             .fun_x = self$.fun_x, .fun_y = self$.fun_y,
-                            returned.origin = self$returned.origin),
+                            kept.origin = self$kept.origin),
                        ggplot2::ggproto_parent(ggplot2::PositionDodge2, self)$setup_params(data)
                      )
                    },
@@ -84,10 +84,10 @@ PositionDodgeAndNudge <-
                                                            function(y) y + params$nudge_y * params$.fun_y(y))
                      }
                      # add original position
-                     if (params$returned.origin == "dodged") {
+                     if (params$kept.origin == "dodged") {
                        data$x_orig <- x_dodged
                        data$y_orig <- y_dodged
-                     } else if (params$returned.origin == "original") {
+                     } else if (params$kept.origin == "original") {
                        data$x_orig <- x_orig
                        data$y_orig <- y_orig
                      }

@@ -14,7 +14,7 @@ position_dodgenudge(
   x = 0,
   y = 0,
   direction = "none",
-  returned.origin = "dodged"
+  kept.origin = "dodged"
 )
 
 position_dodge_keep(width = 1, preserve = c("total", "single"))
@@ -29,7 +29,7 @@ position_dodge2nudge(
   x = 0,
   y = 0,
   direction = "none",
-  returned.origin = "dodged"
+  kept.origin = "dodged"
 )
 }
 \arguments{
@@ -48,7 +48,7 @@ vector of length 1, or of the same length as rows there are in `data`,}
 "split" changes the sign of the nudge at zero, which is suiatble for column
 plots with negative slices.}
 
-\item{returned.origin}{One of "original", "dodged" or "none".}
+\item{kept.origin}{One of "original", "dodged" or "none".}
 
 \item{padding}{Padding between elements at the same position. Elements are
 shrunk by this proportion to allow space between them. Defaults to 0.1.}

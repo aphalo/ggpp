@@ -46,7 +46,7 @@
 #'   "none" replicates the behavior of [ggplot2::position_nudge]. At the moment
 #'   "split" changes the sign of the nudge at zero, which is suiatble for column
 #'   plots with negative slices.
-#' @param returned.origin One of "original", "dodged" or "none".
+#' @param kept.origin One of "original", "dodged" or "none".
 #'
 #' @seealso [ggplot2::position_nudge()], [ggrepel::position_nudge_repel()].
 #'
@@ -89,10 +89,10 @@ position_dodgenudge <- function(width = 1,
                                 x = 0,
                                 y = 0,
                                 direction = "none",
-                                returned.origin = "dodged") {
+                                kept.origin = "dodged") {
   # Ensure error message is triggered early
-  if (!returned.origin %in% c("original", "dodged", "none")) {
-    stop("Invalid 'returned.origin': ", returned.origin,
+  if (!kept.origin %in% c("original", "dodged", "none")) {
+    stop("Invalid 'kept.origin': ", kept.origin,
          "expected: `\"original\", \"dodged\" or \"none\"")
   }
 
@@ -113,7 +113,7 @@ position_dodgenudge <- function(width = 1,
                                    split.y = sign,
                                    center = sign,
                                    function(x) {1}),
-                   returned.origin = returned.origin,
+                   kept.origin = kept.origin,
                    width = width,
                    preserve = match.arg(preserve)
   )
@@ -132,7 +132,7 @@ PositionDodgeAndNudge <-
                      c(
                        list(nudge_x = self$x, nudge_y = self$y,
                             .fun_x = self$.fun_x, .fun_y = self$.fun_y,
-                            returned.origin = self$returned.origin),
+                            kept.origin = self$kept.origin),
                        ggplot2::ggproto_parent(ggplot2::PositionDodge, self)$setup_params(data)
                      )
                    },
@@ -162,10 +162,10 @@ PositionDodgeAndNudge <-
                                                            function(y) y + params$nudge_y * params$.fun_y(y))
                      }
                      # add original position
-                     if (params$returned.origin == "dodged") {
+                     if (params$kept.origin == "dodged") {
                        data$x_orig <- x_dodged
                        data$y_orig <- y_dodged
-                     } else if (params$returned.origin == "original") {
+                     } else if (params$kept.origin == "original") {
                        data$x_orig <- x_orig
                        data$y_orig <- y_orig
                      }
@@ -189,7 +189,7 @@ position_dodge_keep <- function(width = 1,
                       x = 0,
                       y = 0,
                       direction = "as.is",
-                      returned.origin = "original")
+                      kept.origin = "original")
 }
 
 #' @rdname position_dodgenudge
@@ -203,5 +203,5 @@ position_dodge2_keep <- function(width = 1,
                       x = 0,
                       y = 0,
                       direction = "as.is",
-                      returned.origin = "original")
+                      kept.origin = "original")
 }

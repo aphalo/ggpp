@@ -86,7 +86,7 @@
 #'   geom_point_s(position = position_jitternudge(width = 0.66, height = 2,
 #'                                                seed = 456,
 #'                                                nudge.from = "jittered",
-#'                                                returned.origin = "original"),
+#'                                                kept.origin = "original"),
 #'                color = "red",
 #'                arrow = grid::arrow(length = grid::unit(0.4, "lines"))) +
 #'   geom_point_s()
@@ -106,8 +106,11 @@ geom_point_s <- function(mapping = NULL, data = NULL,
     if (!missing(position)) {
       rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")
     }
-
-    position <- position_nudge_center(nudge_x, nudge_y)
+    # We do not keep the original positions if they will not be used
+    position <-
+      position_nudge_center(nudge_x, nudge_y,
+                            kept.origin = ifelse(add.segments,
+                                                 "original", "none"))
   }
 
   layer(

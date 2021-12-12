@@ -13,7 +13,7 @@ position_jitternudge(
   y = 0,
   direction = "as.is",
   nudge.from = "original",
-  returned.origin = "jittered"
+  kept.origin = "jittered"
 )
 
 position_jitter_keep(width = NULL, height = NULL, seed = NA)
@@ -50,7 +50,7 @@ jittered data.}
 applies the nudge before jittering the observations, while "jittered"
 applies the nudging after jittering.}
 
-\item{returned.origin}{One of "original", "jittered" or "none".}
+\item{kept.origin}{One of "original", "jittered" or "none".}
 }
 \value{
 A \code{"Position"} object. The layer function within it returns a

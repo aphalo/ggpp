@@ -27,7 +27,7 @@
 #'   "none" replicates the behavior of [ggplot2::position_nudge]. At the moment
 #'   "split" changes the sign of the nudge at zero, which is suiatble for column
 #'   plots with negative slices.
-#' @param returned.origin One of "original", "stacked" or "none".
+#' @param kept.origin One of "original", "stacked" or "none".
 #'
 #' @seealso [ggplot2::position_nudge()], [ggrepel::position_nudge_repel()].
 #'
@@ -89,10 +89,10 @@ position_stacknudge <- function(vjust = 1,
                                 x = 0,
                                 y = 0,
                                 direction = "none",
-                                returned.origin = "stacked") {
+                                kept.origin = "stacked") {
   # Ensure error message is triggered early
-  if (!returned.origin %in% c("original", "stacked", "none")) {
-    stop("Invalid 'returned.origin': ", returned.origin,
+  if (!kept.origin %in% c("original", "stacked", "none")) {
+    stop("Invalid 'kept.origin': ", kept.origin,
          "expected: `\"original\", \"stacked\" or \"none\"")
   }
 
@@ -113,7 +113,7 @@ position_stacknudge <- function(vjust = 1,
                                    split.y = sign,
                                    center = sign,
                                    function(x) {1}),
-                   returned.origin = returned.origin,
+                   kept.origin = kept.origin,
                    vjust = vjust,
                    reverse = reverse
   )
@@ -132,7 +132,7 @@ PositionStackAndNudge <-
                      c(
                        list(nudge_x = self$x, nudge_y = self$y,
                             .fun_x = self$.fun_x, .fun_y = self$.fun_y,
-                            returned.origin = self$returned.origin),
+                            kept.origin = self$kept.origin),
                        ggplot2::ggproto_parent(ggplot2::PositionStack, self)$setup_params(data)
                      )
                    },
@@ -164,10 +164,10 @@ PositionStackAndNudge <-
                      }
 
                      # add original position
-                     if (params$returned.origin == "stacked") {
+                     if (params$kept.origin == "stacked") {
                        data$x_orig <- x_stacked
                        data$y_orig <- y_stacked
-                     } else if (params$returned.origin == "original") {
+                     } else if (params$kept.origin == "original") {
                        data$x_orig <- x_orig
                        data$y_orig <- y_orig
                      }
@@ -191,5 +191,5 @@ position_stack_keep <- function(vjust = 1,
                       x = 0,
                       y = 0,
                       direction = "as.is",
-                      returned.origin = "original")
+                      kept.origin = "original")
 }

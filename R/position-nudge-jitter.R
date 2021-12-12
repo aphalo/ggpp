@@ -55,7 +55,7 @@
 #'   "jittered.x"), "original.x" (or "jittered.y"). A value of "original"
 #'   applies the nudge before jittering the observations, while "jittered"
 #'   applies the nudging after jittering.
-#' @param returned.origin One of "original", "jittered" or "none".
+#' @param kept.origin One of "original", "jittered" or "none".
 #'
 #' @note When `direction = "split"` is used together with no jitter, the split
 #'   to left and right, or up and down is done at random.
@@ -133,14 +133,14 @@ position_jitternudge <- function(width = NULL,
                                  y = 0,
                                  direction = "as.is",
                                  nudge.from = "original",
-                                 returned.origin = "jittered") {
+                                 kept.origin = "jittered") {
   # Ensure error message is triggered early
   if (!nudge.from %in% c("original", "original.x", "original.y", "jittered", "jittered.y", "jittered.x")) {
     stop("Invalid 'nudge.from': '", nudge.from,
          "', expected: '\"original\", \"original.x\", \"original.y\" or \"jittered\"")
   }
-  if (!returned.origin %in% c("original", "jittered", "none")) {
-    stop("Invalid 'returned.origin': '", returned.origin,
+  if (!kept.origin %in% c("original", "jittered", "none")) {
+    stop("Invalid 'kept.origin': '", kept.origin,
          ", expected: `\"original\", \"jittered\" or \"none\"")
   }
 
@@ -188,7 +188,7 @@ position_jitternudge <- function(width = NULL,
                                    alternate.y = alternate.direction,
                                    fixed.direction),
                    nudge.from = nudge.from,
-                   returned.origin = returned.origin,
+                   kept.origin = kept.origin,
                    width = width,
                    height = height,
                    seed = seed
@@ -208,7 +208,7 @@ PositionJitterAndNudge <-
                      c(
                        list(nudge_x = self$x, nudge_y = self$y,
                             .fun_x = self$.fun_x, .fun_y = self$.fun_y,
-                            nudge.from = self$nudge.from, returned.origin = self$returned.origin),
+                            nudge.from = self$nudge.from, kept.origin = self$kept.origin),
                        ggplot2::ggproto_parent(ggplot2::PositionJitter, self)$setup_params(data)
                      )
                    },
@@ -246,10 +246,10 @@ PositionJitterAndNudge <-
                                                            function(y) y + params$nudge_y * params$.fun_y(y_jittered - y_orig))
                      }
                      # add origin position (for connecting arrow or segment)
-                     if (params$returned.origin == "jittered") {
+                     if (params$kept.origin == "jittered") {
                        data$x_orig <- x_jittered
                        data$y_orig <- y_jittered
-                     } else if (params$returned.origin == "original") {
+                     } else if (params$kept.origin == "original") {
                        data$x_orig <- x_orig
                        data$y_orig <- y_orig
                      }
@@ -276,5 +276,5 @@ position_jitter_keep <- function(width = NULL,
                        y = 0,
                        direction = "as.is",
                        nudge.from = "jittered",
-                       returned.origin = "original")
+                       kept.origin = "original")
 }
