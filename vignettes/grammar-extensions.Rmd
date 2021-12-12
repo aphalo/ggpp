@@ -279,7 +279,7 @@ have been modified by a *position* function.
 +-------------------------------+---------------------+----------------------+
 | `geom_grob()`                 | `geom_grob_npc()`   | `list(<grob>)`       |
 +-------------------------------+---------------------+----------------------+
-| `geom_raster()`  *(planned)*  | `geom_raster_npc()` | `list(<raster>)`     |
+| `geom_img()`  *(planned)*     | `geom_img_npc()`    | `list(<raster>)`     |
 +-------------------------------+---------------------+----------------------+
 
 When adding an informative element to a plot, assess whether it is an

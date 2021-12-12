@@ -24,8 +24,8 @@ Package '**ggpp**' provides a set of building blocks that extend the Grammar of
 Graphics implemented in package 'ggplot2' (>= 3.0.0). New "geoms" support insets
 in plots, marginal marks and the use of native plot coordinates (npc). Position
 functions implement new approaches to nudging usable with any geometry, but
-especially useful together with `geom_text_s()`, `geom_text_repel()` and
-`geom_label_repel()`.
+especially useful together with `geom_text_s()`, `ggrepel::geom_text_repel()` and
+`ggrepel::geom_label_repel()`.
 
 ## Extended Grammar of graphics
 
@@ -47,8 +47,9 @@ Geometries `geom_x_margin_arrow()`, `geom_y_margin_arrow()`,
 axes. `geom_vhlines()` and `geom_quadrant_lines()` draw vertical and horizontal
 reference lines within a single layer.
 
-Geometries `geom_text_s()`, `geom_point_s()`, `geom_table()`, `geom_plot()` and `geom_grob()` connect (by default) the plot elements added at a nudged position to
-the original position with a segment or arrow.
+Geometries `geom_text_s()`, `geom_point_s()`, `geom_table()`, `geom_plot()` and 
+`geom_grob()` connect (by default) the plot elements added at a nudged position
+to the original position with a segment or arrow.
 
 ### Aesthetics and scales
 
@@ -110,12 +111,16 @@ Justification outward or inward from an arbitrary origin is also supported.
 
 This package is a "spin-off" from package 'ggpmisc' containing extensions to the
 grammar originally written for use wihtin 'ggpmisc'. As 'ggpmisc' had grown in
-size, splitting it into two packages was necessary to easy development and maintenance and to facilitate imports into other packages. For the time being,
+size, splitting it into two packages was necessary to easy development and 
+maintenance and to facilitate imports into other packages. For the time being,
 package 'ggpmisc' imports and re-exports all visible definitions from 'ggpp'.
 
 ## Examples
 
-The plots below exemplify some of the things that 'ggpp' makes possible or makes easier to code compared to 'ggplot' used by itself. Additional examples including several combining 'ggpp' and 'ggrepel' are provided in the package vignette.
+The plots below exemplify some of the things that 'ggpp' makes possible or 
+makes easier to code compared to 'ggplot' used by itself. Additional examples 
+including several combining 'ggpp' and 'ggrepel' are provided in the package 
+vignette.
 
 ```{r readme-02, message=FALSE}
 library(ggpp)
@@ -224,11 +229,14 @@ including several of those made available by packages 'ggpp' and 'ggpmisc'.
 
 ## Contributing
 
-Please report bugs and request new features at (https://github.com/aphalo/ggpp/issues). Pull requests are welcome at (https://github.com/aphalo/ggpp).
+Please report bugs and request new features at 
+(https://github.com/aphalo/ggpp/issues). Pull requests are welcome at 
+(https://github.com/aphalo/ggpp).
 
 ## Citation
 
-If you use this package to produce scientific or commercial publications, please cite according to:
+If you use this package to produce scientific or commercial publications, 
+please cite according to:
 
 ```{r, eval=FALSE}
 citation("ggpp")
@@ -236,8 +244,10 @@ citation("ggpp")
 
 ## References
 
-Aphalo, Pedro J. (2020) _Learn R: As a Language._ The R Series. Boca Raton and London: Chapman and Hall/CRC Press. ISBN: 978-0-367-18253-3. 350 pp.
+Aphalo, Pedro J. (2020) _Learn R: As a Language._ The R Series. Boca Raton and 
+London: Chapman and Hall/CRC Press. ISBN: 978-0-367-18253-3. 350 pp.
 
 ## License
 
-© 2016-2021 Pedro J. Aphalo (pedro.aphalo@helsinki.fi). Released under the GPL, version 2 or greater. This software carries no warranty of any kind.
+© 2016-2021 Pedro J. Aphalo (pedro.aphalo@helsinki.fi). Released under the GPL, 
+version 2 or greater. This software carries no warranty of any kind.
