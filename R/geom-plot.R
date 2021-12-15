@@ -243,6 +243,8 @@ gplot_draw_panel_fun <-
     if (add.segments) {
       data_orig <- data.frame(x = data$x_orig, y = data$y_orig)
       data_orig <- coord$transform(data_orig, panel_params)
+      data$x_orig <- data_orig$x
+      data$y_orig <- data_orig$y
     }
 
     if (is.character(data$vjust)) {
@@ -262,46 +264,44 @@ gplot_draw_panel_fun <-
                        a = "x", b = "y")
     }
 
-    plot.grobs <- grid::gList()
-    idx.shift <- 0
+    # loop needed as gpar is not vectorized
+    all.grobs <- grid::gList()
 
-    # Draw segments first
-    if(add.segments) {
-      idx.shift <- idx.shift + 1
-      plot.grobs[[1L]] <-
-        grid::segmentsGrob(x0 = data$x,
-                           y0 = data$y,
-                           x1 = data_orig$x,
-                           y1 = data_orig$y,
-                           arrow = arrow,
-                           gp = grid::gpar(col = ggplot2::alpha(data$segment.colour,
-                                                                data$segment.alpha)),
-                           name = "linking.segments.grob")
+    for (row.idx in 1:nrow(data)) {
+      row <- data[row.idx, , drop = FALSE]
+      user.grob <- ggplot2::ggplotGrob(x = data$label[[row.idx]])
+
+      user.grob$vp <-
+        grid::viewport(x = grid::unit(row$x, "native"),
+                       y = grid::unit(row$y, "native"),
+                       width = grid::unit(row$vp.width, "npc"),
+                       height = grid::unit(row$vp.height, "npc"),
+                       just = c(row$hjust, row$vjust),
+                       angle = row$angle,
+                       name = paste("inset.plot.vp", row$PANEL,
+                                    "row", row.idx, sep = "."))
+
+      # give unique name to each grob
+      user.grob$name <- paste("inset.plot", row.idx, sep = ".")
+
+      if (add.segments) {
+        segment.grob <-
+          grid::segmentsGrob(x0 = row$x,
+                             y0 = row$y,
+                             x1 = row$x_orig,
+                             y1 = row$y_orig,
+                             arrow = arrow,
+                             gp = grid::gpar(col = ggplot2::alpha(row$segment.colour,
+                                                                  row$segment.alpha)),
+                             name = paste("inset.plot.segment", row.idx, sep = "."))
+        all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
+      } else {
+        all.grobs <- grid::gList(all.grobs, user.grob)
+      }
     }
 
-    for (row.idx in seq_len(nrow(data))) {
-      plotGrob <-
-        ggplot2::ggplotGrob(x = data$label[[row.idx]])
+    grid::grobTree(children = all.grobs, name = "geom.plot.panel")
 
-      plotGrob$vp <-
-        grid::viewport(x = grid::unit(data$x[row.idx], "native"),
-                       y = grid::unit(data$y[row.idx], "native"),
-                       width = grid::unit(data$vp.width[row.idx], "npc"),
-                       height = grid::unit(data$vp.height[row.idx], "npc"),
-                       just = c(data$hjust[row.idx],
-                                data$vjust[row.idx]),
-                       angle = data$angle[row.idx],
-                       name = paste("geom_plot.panel",
-                                    data$PANEL[row.idx], "row",
-                                    row.idx, sep = "."))
-
-      # give unique name to each plot
-      plotGrob$name <- paste("inset.plot", row.idx, sep = ".")
-
-      plot.grobs[[row.idx + idx.shift]] <- plotGrob
-    }
-
-    grid::gTree(children = plot.grobs, name = "geom_plot.panel")
   }
 
 #' @rdname ggpp-ggproto

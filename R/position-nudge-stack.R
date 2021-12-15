@@ -64,6 +64,16 @@
 #'     angle = 90) +
 #'   theme(legend.position = "none")
 #'
+#' # Add labels to a vertical column plot (stacked by default)
+#' ggplot(data = subset(df, x1 >= 0), aes(x2, x1, group = grp)) +
+#'   geom_col(aes(fill = grp), width=0.5, position = position_fill()) +
+#'   geom_vline(xintercept = 0) +
+#'   geom_text(
+#'     aes(label = grp),
+#'     position = position_fillnudge(vjust = 0.5, x = -0.3),
+#'     angle = 90) +
+#'   theme(legend.position = "none")
+#'
 #' # Add label at a fixed distance from the top of each column slice
 #' ggplot(data = df, aes(x2, x1, group = grp)) +
 #'   geom_col(aes(fill = grp), width=0.5) +
@@ -118,6 +128,44 @@ position_stacknudge <- function(vjust = 1,
                    reverse = reverse
   )
 }
+
+#' @export
+#' @rdname position_stacknudge
+position_fillnudge <- function(vjust = 1,
+                               reverse = FALSE,
+                               x = 0,
+                               y = 0,
+                               direction = "none",
+                               kept.origin = "stacked") {
+  # Ensure error message is triggered early
+  if (!kept.origin %in% c("original", "stacked", "none")) {
+    stop("Invalid 'kept.origin': ", kept.origin,
+         "expected: `\"original\", \"stacked\" or \"none\"")
+  }
+
+  ggplot2::ggproto(NULL, PositionFillAndNudge,
+                   x = x,
+                   y = y,
+                   .fun_x = switch(direction,
+                                   none = function(x) {1},
+                                   split = sign,
+                                   split.y = function(x) {1},
+                                   split.x = sign,
+                                   center = sign,
+                                   function(x) {1}),
+                   .fun_y = switch(direction,
+                                   none = function(x) {1},
+                                   split = sign,
+                                   split.x = function(x) {1},
+                                   split.y = sign,
+                                   center = sign,
+                                   function(x) {1}),
+                   kept.origin = kept.origin,
+                   vjust = vjust,
+                   reverse = reverse
+  )
+}
+
 
 #' @rdname ggpp-ggproto
 #' @format NULL
@@ -184,12 +232,37 @@ PositionStackAndNudge <-
 #'
 #' @export
 #'
-position_stack_keep <- function(vjust = 1,
-                                reverse = FALSE) {
-  position_stacknudge(vjust = vjust,
-                      reverse = reverse,
-                      x = 0,
-                      y = 0,
-                      direction = "as.is",
-                      kept.origin = "original")
-}
+position_stack_keep <-
+  function(vjust = 1,
+           reverse = FALSE) {
+    position_stacknudge(vjust = vjust,
+                        reverse = reverse,
+                        x = 0,
+                        y = 0,
+                        direction = "as.is",
+                        kept.origin = "original")
+  }
+
+#' @rdname ggpp-ggproto
+#' @format NULL
+#' @usage NULL
+#' @export
+PositionFillAndNudge <-
+  ggplot2::ggproto("PositionFillAndNudge", PositionStackAndNudge,
+          fill = TRUE
+)
+
+#' @rdname position_stacknudge
+#'
+#' @export
+#'
+position_fill_keep <-
+  function(vjust = 1,
+           reverse = FALSE) {
+    position_fillnudge(vjust = vjust,
+                       reverse = reverse,
+                       x = 0,
+                       y = 0,
+                       direction = "as.is",
+                       kept.origin = "original")
+  }

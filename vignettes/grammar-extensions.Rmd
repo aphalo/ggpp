@@ -70,8 +70,8 @@ labels* irrespective if the "labels" are textual or graphical, like
 icons and small plots and simple tables linked to data points or map
 features.
 
-According to Koponen and Hildén (2019), "\[in a statistical chart\]
-annotations can be used to draw reader attention to relevant detail".
+According to Koponen and Hildén (2019), in a statistical chart 
+"annotations can be used to draw reader attention to relevant detail".
 These authors use as an example a text box in a plot to highlight a data
 point that is off-scale and has been "squeezed" to a position
 immediately outside the plotting area.
@@ -269,7 +269,7 @@ have been modified by a *position* function.
 +-------------------------------+---------------------+----------------------+
 | `geom_text_s()`               |                     | `character`          |
 +-------------------------------+---------------------+----------------------+
-| `geom_label_s()` *(planned)*  |                     | `character`          |
+| `geom_label_s()`              |                     | `character`          |
 +-------------------------------+---------------------+----------------------+
 | `geom_point_s()`              |                     |                      |
 +-------------------------------+---------------------+----------------------+
@@ -281,6 +281,8 @@ have been modified by a *position* function.
 +-------------------------------+---------------------+----------------------+
 | `geom_img()`  *(planned)*     | `geom_img_npc()`    | `list(<raster>)`     |
 +-------------------------------+---------------------+----------------------+
+
+: Geometries
 
 When adding an informative element to a plot, assess whether it is an
 *annotation* or a *data label*. To decide on the best approach, consider
@@ -318,20 +320,20 @@ can make use of the original coordinates kept in data.
 | Position (origin kept)                      | Position (origin discarded)       |
 |---------------------------------------------|-----------------------------------|
 | `position_nudge_keep()`                     | `ggplot2::position_nudge()`       |
-| `ggrepel::postion_nudge_keep()`             | `ggplot2::position_nudge()`       |
+| `ggrepel::postion_nudge_repel()`            | `ggplot2::position_nudge()`       |
 | `position_nudge_centre()`                   |                                   |
 | `position_nudge_line()`                     |                                   |
 | `position_jitter_keep()`                    | `ggplot2::position_jitter()`      |
 | `position_dodge_keep()`                     | `ggplot2::position_dodge()`       |
 | `position_dodge2_keep()`                    | `ggplot2::position_dodge2()`      |
 | `position_stack_keep()`                     | `ggplot2::position_stack()`       |
-| `position_fill_keep()` *(planned)*          | `ggplot2::position_fill()`        |
+| `position_fill_keep()`                      | `ggplot2::position_fill()`        |
 | `position_jitterdodge_keep()` *(planned)*   | `ggplot2::position_jitterdodge()` |
 | `position_jitternudge()`                    |                                   |
 | `position_dodgenudge()`                     |                                   |
 | `position_dodge2nudge()`                    |                                   |
 | `position_stacknudge()`                     |                                   |
-| `position_fillnudge()` *(planned)*          |                                   |
+| `position_fillnudge()`                      |                                   |
 | `position_jitterdodgenudge()` *(planned)*   |                                   |
 
 : Position functions

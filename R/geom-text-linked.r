@@ -100,6 +100,11 @@
 #' # Change size of the label
 #' p + geom_text_s(size = 2.5)
 #'
+#' # default behavior is as for geon_label()
+#' p + geom_label_s()
+#' # Change size of the label
+#' p + geom_label_s(size = 2.5)
+#'
 #' # Use nudging
 #' p +
 #'   geom_point() +
@@ -121,6 +126,11 @@
 #'               segment.colour = "red") +
 #'   expand_limits(y = 30)
 #'
+#' p +
+#'   geom_point() +
+#'   geom_label_s(hjust = 0, nudge_x = 0.12) +
+#'   expand_limits(x = 6.2)
+#'
 #' # Add aesthetic mappings and adjust arrows
 #' p +
 #'   geom_point() +
@@ -135,6 +145,16 @@
 #'               show.legend = FALSE) +
 #'   scale_colour_discrete(l = 40) + # luminance, make colours darker
 #'   expand_limits(y = 40)
+#'
+#' # Add aesthetic mappings and adjust arrows
+#' p +
+#'   geom_point() +
+#'   geom_label_s(aes(colour = factor(cyl)),
+#'               hjust = 0, nudge_x = 0.3,
+#'               arrow = arrow(angle = 20,
+#'                             length = grid::unit(2/3, "lines"))) +
+#'   scale_colour_discrete(l = 40) + # luminance, make colours darker
+#'   expand_limits(x = 7)
 #'
 #' # Scale height of text, rather than sqrt(height)
 #' p +
@@ -214,9 +234,12 @@ GeomTextS <-
                      segment.alpha = 1
                    ),
 
-                   draw_panel = function(data, panel_params, coord, #panel_scales,
+                   draw_panel = function(data,
+                                         panel_params,
+                                         coord, #panel_scales,
                                          parse = FALSE,
-                                         na.rm = FALSE, check_overlap = FALSE,
+                                         na.rm = FALSE,
+                                         check_overlap = FALSE,
                                          add.segments = TRUE,
                                          arrow = NULL,
                                          nudge_x = 0,
@@ -239,6 +262,8 @@ GeomTextS <-
                      if (add.segments) {
                        data_orig <- data.frame(x = data$x_orig, y = data$y_orig)
                        data_orig <- coord$transform(data_orig, panel_params)
+                       data$x_orig <- data_orig$x
+                       data$y_orig <- data_orig$y
                      }
 
                      if (is.character(data$vjust)) {
@@ -258,47 +283,47 @@ GeomTextS <-
                                         a = "x", b = "y")
                      }
 
-                     if(add.segments) {
-                       # create the grobs
-                       grid::grobTree(
-                         grid::segmentsGrob(
-                           x0 = data$x,
-                           y0 = data$y,
-                           x1 = data_orig$x,
-                           y1 = data_orig$y,
-                           arrow = arrow,
-                           gp = grid::gpar(col = alpha(data$segment.colour,
-                                                       data$segment.alpha))),
-                         grid::textGrob(
-                           lab,
-                           data$x, data$y, default.units = "native",
-                           hjust = data$hjust, vjust = data$vjust,
-                           rot = data$angle,
-                           gp = gpar(
-                             col = alpha(data$colour, data$alpha),
-                             fontsize = data$size * .pt,
-                             fontfamily = data$family,
-                             fontface = data$fontface,
-                             lineheight = data$lineheight
-                           ),
-                           check.overlap = check_overlap
-                         ))
-                     } else {
-                       grid::textGrob(
-                         lab,
-                         data$x, data$y, default.units = "native",
-                         hjust = data$hjust, vjust = data$vjust,
-                         rot = data$angle,
+                     # loop needed as gpar is not vectorized
+                     all.grobs <- grid::gList()
+
+                     for (row.idx in 1:nrow(data)) {
+                       row <- data[row.idx, , drop = FALSE]
+                       user.grob <- grid::textGrob(
+                         lab[row.idx],
+                         row$x, row$y, default.units = "native",
+                         hjust = row$hjust, vjust = row$vjust,
+                         rot = row$angle,
                          gp = gpar(
-                           col = alpha(data$colour, data$alpha),
-                           fontsize = data$size * .pt,
-                           fontfamily = data$family,
-                           fontface = data$fontface,
-                           lineheight = data$lineheight
+                           col = ggplot2::alpha(row$colour, row$alpha),
+                           fontsize = row$size * .pt,
+                           fontfamily = row$family,
+                           fontface = row$fontface,
+                           lineheight = row$lineheight
                          ),
                          check.overlap = check_overlap
                        )
+
+                       # give unique name to each grob
+                       user.grob$name <- paste("text.s.grob", row.idx, sep = ".")
+
+                       if (add.segments) {
+                         segment.grob <-
+                           grid::segmentsGrob(x0 = row$x,
+                                              y0 = row$y,
+                                              x1 = row$x_orig,
+                                              y1 = row$y_orig,
+                                              arrow = arrow,
+                                              gp = grid::gpar(col = ggplot2::alpha(row$segment.colour,
+                                                                                   row$segment.alpha)),
+                                              name = paste("text.s.segment", row.idx, sep = "."))
+                         all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
+                       } else {
+                         all.grobs <- grid::gList(all.grobs, user.grob)
+                       }
                      }
+
+                     grid::grobTree(children = all.grobs, name = "geom.text.s.panel")
+
                    },
 
                    draw_key = draw_key_text

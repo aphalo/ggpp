@@ -34,16 +34,16 @@
 <circle cx='529.26' cy='94.01' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='297.69' cy='402.66' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <line x1='66.11' y1='46.53' x2='66.11' y2='283.95' style='stroke-width: 0.75; stroke: #545454;' />
-<line x1='374.88' y1='46.53' x2='374.88' y2='521.37' style='stroke-width: 0.75; stroke: #545454;' />
-<line x1='220.50' y1='46.53' x2='220.50' y2='165.24' style='stroke-width: 0.75; stroke: #545454;' />
-<line x1='683.64' y1='46.53' x2='683.64' y2='331.43' style='stroke-width: 0.75; stroke: #545454;' />
-<line x1='529.26' y1='46.53' x2='529.26' y2='94.01' style='stroke-width: 0.75; stroke: #545454;' />
-<line x1='297.69' y1='46.53' x2='297.69' y2='402.66' style='stroke-width: 0.75; stroke: #545454;' />
 <text x='66.11' y='46.53' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='17.80px' lengthAdjust='spacingAndGlyphs'>abc</text>
+<line x1='374.88' y1='46.53' x2='374.88' y2='521.37' style='stroke-width: 0.75; stroke: #545454;' />
 <text x='374.88' y='46.53' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='11.66px' lengthAdjust='spacingAndGlyphs'>cd</text>
+<line x1='220.50' y1='46.53' x2='220.50' y2='165.24' style='stroke-width: 0.75; stroke: #545454;' />
 <text x='220.50' y='46.53' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='6.14px' lengthAdjust='spacingAndGlyphs'>d</text>
+<line x1='683.64' y1='46.53' x2='683.64' y2='331.43' style='stroke-width: 0.75; stroke: #545454;' />
 <text x='683.64' y='46.53' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='5.52px' lengthAdjust='spacingAndGlyphs'>c</text>
+<line x1='529.26' y1='46.53' x2='529.26' y2='94.01' style='stroke-width: 0.75; stroke: #545454;' />
 <text x='529.26' y='46.53' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='17.80px' lengthAdjust='spacingAndGlyphs'>bcd</text>
+<line x1='297.69' y1='46.53' x2='297.69' y2='402.66' style='stroke-width: 0.75; stroke: #545454;' />
 <text x='297.69' y='46.53' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='6.14px' lengthAdjust='spacingAndGlyphs'>a</text>
 <rect x='35.24' y='22.78' width='679.28' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
 </g>

@@ -2,7 +2,9 @@
 % Please edit documentation in R/position-nudge-stack.R
 \name{position_stacknudge}
 \alias{position_stacknudge}
+\alias{position_fillnudge}
 \alias{position_stack_keep}
+\alias{position_fill_keep}
 \title{Combined positions stack and nudge}
 \usage{
 position_stacknudge(
@@ -14,7 +16,18 @@ position_stacknudge(
   kept.origin = "stacked"
 )
 
+position_fillnudge(
+  vjust = 1,
+  reverse = FALSE,
+  x = 0,
+  y = 0,
+  direction = "none",
+  kept.origin = "stacked"
+)
+
 position_stack_keep(vjust = 1, reverse = FALSE)
+
+position_fill_keep(vjust = 1, reverse = FALSE)
 }
 \arguments{
 \item{vjust}{Vertical adjustment for geoms that have a position (like points
@@ -76,6 +89,16 @@ ggplot(data = df, aes(x2, x1, group = grp)) +
   geom_text(
     aes(label = grp),
     position = position_stacknudge(vjust = 0.5, x = -0.3),
+    angle = 90) +
+  theme(legend.position = "none")
+
+# Add labels to a vertical column plot (stacked by default)
+ggplot(data = subset(df, x1 >= 0), aes(x2, x1, group = grp)) +
+  geom_col(aes(fill = grp), width=0.5, position = position_fill()) +
+  geom_vline(xintercept = 0) +
+  geom_text(
+    aes(label = grp),
+    position = position_fillnudge(vjust = 0.5, x = -0.3),
     angle = 90) +
   theme(legend.position = "none")
 

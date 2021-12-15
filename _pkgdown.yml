@@ -1,6 +1,9 @@
 destination: ../ggpp-docs
 url: https://docs.r4photobiology.info/ggpp/
 
+template:
+  bootstrap: 5
+
 reference:
   - title: Package overview
     contents:
@@ -55,16 +58,10 @@ reference:
 
 navbar:
   structure:
-    left:
-    - home
-    - reference
-    - articles
-    - tutorials
-    - news
-    - intro
-    right: github
+    left:  [intro, reference, articles, tutorials, news]
+    right: [search, github]
   components:
-    home:
+    intro:
       icon: fas fa-home fa-lg
       href: index.html
     reference:

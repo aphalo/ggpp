@@ -25,24 +25,26 @@ class. I edited this code and included it in the package.
 
 Except for the position functions with names ending in `_keep`, for
 which *normal* counterparts exist, the *keeping* of the original
-position can be disabled by passing `kept.origin = "none"` when they
-are called.
+position can be disabled by passing `kept.origin = "none"` when they are
+called.
 
 The renaming of `geom_text_linked()` to `geom_text_s()` is code breaking
 but I am now fairly confident this shorter name is easy to remember with
 `s` for segment.
 
--   Add functions `position_stack_keep()`, `position_jitter_keep()`,
-    `position_dodge_keep()` and `position_dodge2_keep()`.
--   Add functions `position_stacknudge()`, `position_jitternudge()`,
-    `position_dodgenudge()` and `position_dodge2nudge()` based on code
-    by M. Krassowski for `position_stack_and_nudge()`.
+-   Add functions `position_stack_keep()`, `position_fill_keep()`,
+    `position_jitter_keep()`, `position_dodge_keep()` and
+    `position_dodge2_keep()`.
+-   Add functions `position_stacknudge()`, `position_fillnudge()`,
+    `position_jitternudge()`, `position_dodgenudge()` and
+    `position_dodge2nudge()` based on code by M. Krassowski for
+    `position_stack_and_nudge()`.
 -   Revise functions `position_nudge_to()`, `position_nudge_center()`
     and `position_nudge_line()` adding support for disabling keeping of
     the original positions.
--   Add `geom_point_s()` and update `geom_text_s()` **renamed** from
-    `geom_text_linked()`. This is a ***code breaking change*** with
-    respect to the previous (unstable) version.
+-   Add `geom_point_s()` and `geom_label_s()` and update `geom_text_s()`
+    **renamed** from `geom_text_linked()`. This is a ***code breaking
+    change*** with respect to the previous (unstable) version.
 -   Update `geom_plot()`, `geom_table()` and `geom_grob()` to support
     plotting of segments when positions change, e.g., with nudging.
 -   Update the vignette.
