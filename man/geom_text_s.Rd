@@ -19,7 +19,6 @@ geom_label_s(
   label.size = 0.25,
   add.segments = TRUE,
   arrow = NULL,
-  check_overlap = FALSE,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -84,11 +83,6 @@ original positions and displaced ones if both are available.}
 \item{arrow}{specification for arrow heads, as created by
 \code{\link[grid]{arrow}}}
 
-\item{check_overlap}{If \code{TRUE}, text that overlaps previous text in the
-same layer will not be plotted. \code{check_overlap} takes place at draw
-time and in the order of the data, thus its action depends of the size at
-which the plot is drawn.}
-
 \item{na.rm}{If \code{FALSE} (the default), removes missing values with a
 warning.  If \code{TRUE} silently removes missing values.}
 
@@ -100,6 +94,11 @@ never includes, and \code{TRUE} always includes.}
 than combining with them. This is most useful for helper functions that
 define both data and aesthetics and shouldn't inherit behaviour from the
 default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
+
+\item{check_overlap}{If \code{TRUE}, text that overlaps previous text in the
+same layer will not be plotted. \code{check_overlap} takes place at draw
+time and in the order of the data, thus its action depends of the size at
+which the plot is drawn.}
 }
 \value{
 A plot layer instance.

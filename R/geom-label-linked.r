@@ -17,7 +17,6 @@ geom_label_s <- function(mapping = NULL,
                          label.size = 0.25,
                          add.segments = TRUE,
                          arrow = NULL,
-                         check_overlap = FALSE,
                          na.rm = FALSE,
                          show.legend = NA,
                          inherit.aes = TRUE)

@@ -15,7 +15,8 @@ Grammar of Graphics implemented in package ‘ggplot2’ (>= 3.0.0). New
 “geoms” support insets in plots, marginal marks and the use of native
 plot coordinates (npc). Position functions implement new approaches to
 nudging usable with any geometry, but especially useful together with
-`geom_text_s()`, `geom_text_repel()` and `geom_label_repel()`.
+`geom_text_s()`, `ggrepel::geom_text_repel()` and
+`ggrepel::geom_label_repel()`.
 
 ## Extended Grammar of graphics
 
@@ -38,10 +39,10 @@ and `geom_y_margin_point()` make it possible to add marks along the *x*
 and *y* axes. `geom_vhlines()` and `geom_quadrant_lines()` draw vertical
 and horizontal reference lines within a single layer.
 
-Geometries `geom_text_s()`, `geom_point_s()`, `geom_table()`,
-`geom_plot()` and `geom_grob()` connect (by default) the plot elements
-added at a nudged position to the original position with a segment or
-arrow.
+Geometries `geom_text_s()`, `geom_label_s()`, `geom_point_s()`,
+`geom_table()`, `geom_plot()` and `geom_grob()` connect (by default) the
+plot elements added at a nudged position to the original position with a
+segment or arrow.
 
 ### Aesthetics and scales
 
@@ -80,21 +81,25 @@ according to the relative position of points with respect to arbitrary
 points or lines, or with respect to a polynomial or smoothing spline
 fitted on-the-fly to the the observations.
 
-Position functions `position_stacknudge()`, `position_dodgenudge()` and
+Position functions `position_stacknudge()`, `position_fillnudge()`,
+`position_jitternudge()`, `position_dodgenudge()` and
 `position_dodge2nudge()` each combines the roles of two *position*
 functions. They make it possible to easily nudge labels in plot layers
-that use stacking, dodging or jitter. Function `position_jitter_keep()`
-behaves like `ggplot2::position_jitter()` but keeps the original
-coordinates.
+that use stacking, dodging or jitter. Functions
+`position_jitter_keep()`, `position_stack_keep()`,
+`position_fill_keep()`, `position_dodge_keep()`,
+`position_dosge2_keep()` behave like the positions from ‘ggplot2’ but
+keep in data the original coordinates.
 
-In contrast to `ggplot2::position_nudge()` all these position functions
-keep the original *x* and *y* coordinates when displacing them. This
-makes them compatible with the repulsive geometries from package
-‘ggrepel’ (>= 0.9.1) as well as with `geom_text_s()`, `geom_point_s()`,
-`geom_table()`, `geom_plot()` and `geom_grob()` from this package that
-draw segments or arrows connecting the original positions to the
-displaced positions. They remain backwards compatible and can be used in
-all geometries that have a `position` formal parameter.
+In contrast to position functions from ‘ggplot2’ all these position
+functions keep the original *x* and *y* coordinates when displacing
+them. This makes them compatible with the repulsive geometries from
+package ‘ggrepel’ (>= 0.9.1) as well as with `geom_text_s()`,
+`geom_point_s()`, `geom_table()`, `geom_plot()` and `geom_grob()` from
+this package. All these geoms can draw segments or arrows connecting the
+original positions to the displaced positions. They remain backwards
+compatible and can be used in all geometries that have a `position`
+formal parameter.
 
 ## Justification
 

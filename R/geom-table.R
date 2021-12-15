@@ -299,6 +299,8 @@ gtb_draw_panel_fun <-
     if (add.segments) {
       data_orig <- data.frame(x = data$x_orig, y = data$y_orig)
       data_orig <- coord$transform(data_orig, panel_params)
+      data$x_orig <- data_orig$x
+      data$y_orig <- data_orig$y
     }
 
     if (is.character(data$vjust)) {
