@@ -49,6 +49,11 @@ but I am now fairly confident this shorter name is easy to remember with
     plotting of segments when positions change, e.g., with nudging.
 -   Update the vignette.
 
+With 12 new and four partly rewritten functions there is quite a lot of
+new code in this update, so even if tested and checked, it is possible
+that bugs may have slipped through. Please, do report them if you
+encounter any.
+
 # ggpp 0.4.2
 
 The initial implementation and user interface of three *apply*
