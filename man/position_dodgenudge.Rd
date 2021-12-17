@@ -7,6 +7,9 @@
 \alias{position_dodge2_keep}
 \alias{position_dodge2nudge}
 \title{Combined positions dodge and nudge}
+\source{
+\url{https://github.com/slowkow/ggrepel/issues/161}.
+}
 \usage{
 position_dodgenudge(
   width = 1,
@@ -129,7 +132,6 @@ Other position adjustments:
 \code{\link{position_stacknudge}()}
 }
 \author{
-Michał Krassowski \url{http://linkedin.com/in/michal-krassowski/} and
-  Pedro J. Aphalo.
+Michał Krassowski, edited by Pedro J. Aphalo.
 }
 \concept{position adjustments}

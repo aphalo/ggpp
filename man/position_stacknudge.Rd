@@ -6,6 +6,9 @@
 \alias{position_stack_keep}
 \alias{position_fill_keep}
 \title{Combined positions stack and nudge}
+\source{
+\url{https://github.com/slowkow/ggrepel/issues/161}.
+}
 \usage{
 position_stacknudge(
   vjust = 1,
@@ -134,7 +137,6 @@ Other position adjustments:
 \code{\link{position_nudge_to}()}
 }
 \author{
-Michał Krassowski \url{http://linkedin.com/in/michal-krassowski/}
-  (revised by Pedro J. Aphalo)
+Michał Krassowski, edited by Pedro J. Aphalo.
 }
 \concept{position adjustments}

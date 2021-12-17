@@ -4,6 +4,9 @@
 \alias{position_jitternudge}
 \alias{position_jitter_keep}
 \title{Combined positions jitter and nudge}
+\source{
+\url{https://github.com/slowkow/ggrepel/issues/161}.
+}
 \usage{
 position_jitternudge(
   width = NULL,
@@ -157,7 +160,6 @@ Other position adjustments:
 \code{\link{position_stacknudge}()}
 }
 \author{
-Michał Krassowski \url{http://linkedin.com/in/michal-krassowski/} and
-  Pedro J. Aphalo.
+Michał Krassowski, edited by Pedro J. Aphalo.
 }
 \concept{position adjustments}

@@ -71,8 +71,9 @@
 #'
 #' @export
 #'
-#' @author Michał Krassowski \url{http://linkedin.com/in/michal-krassowski/} and
-#'   Pedro J. Aphalo.
+#' @author Michał Krassowski, edited by Pedro J. Aphalo.
+#'
+#' @source \url{https://github.com/slowkow/ggrepel/issues/161}.
 #'
 #' @examples
 #'
