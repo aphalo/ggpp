@@ -1,0 +1,59 @@
+# -----------------------------------------------------------
+# CITATION file created with {cffr} R package, v0.1.1
+# See also: https://docs.ropensci.org/cffr/
+# -----------------------------------------------------------
+ 
+cff-version: 1.2.0
+message: 'To cite package "ggpp" in publications use:'
+type: software
+license: GPL-2.0-or-later
+title: 'ggpp: Grammar Extensions to ''ggplot2'''
+version: 0.4.3
+abstract: 'Extensions to ''ggplot2'' respecting the grammar of graphics paradigm.
+  Geometries: geom_table(), geom_plot() and geom_grob() add insets to plots using
+  native data coordinates, while geom_table_npc(), geom_plot_npc() and geom_grob_npc()
+  do the same using "npc" coordinates through new aesthetics "npcx" and "npcy". Statistics:
+  select observations based on 2D density. Positions: radial nudging away from a center
+  point and nudging away from a line or curve; combined stacking and nudging; combined
+  dodging and nudging.'
+authors:
+- family-names: Aphalo
+  given-names: Pedro J.
+  email: pedro.aphalo@helsinki.fi
+  orcid: https://orcid.org/0000-0003-3385-972X
+preferred-citation:
+  type: manual
+  title: 'ggpp: Grammar Extensions to ''ggplot2'''
+  authors:
+  - family-names: Aphalo
+    given-names: Pedro J.
+    email: pedro.aphalo@helsinki.fi
+    orcid: https://orcid.org/0000-0003-3385-972X
+  version: 0.4.3
+  abstract: 'Extensions to ''ggplot2'' respecting the grammar of graphics paradigm.
+    Geometries: geom_table(), geom_plot() and geom_grob() add insets to plots using
+    native data coordinates, while geom_table_npc(), geom_plot_npc() and geom_grob_npc()
+    do the same using "npc" coordinates through new aesthetics "npcx" and "npcy".
+    Statistics: select observations based on 2D density. Positions: radial nudging
+    away from a center point and nudging away from a line or curve; combined stacking
+    and nudging; combined dodging and nudging.'
+  repository: https://CRAN.R-project.org/package=ggpp
+  repository-code: https://github.com/aphalo/ggpp
+  url: https://docs.r4photobiology.info/ggpp/
+  date-released: '2021-12-16'
+  contact:
+  - family-names: Aphalo
+    given-names: Pedro J.
+    email: pedro.aphalo@helsinki.fi
+    orcid: https://orcid.org/0000-0003-3385-972X
+  license: GPL-2.0-or-later
+  year: '2021'
+repository: https://CRAN.R-project.org/package=ggpp
+repository-code: https://github.com/aphalo/ggpp
+url: https://docs.r4photobiology.info/ggpp/
+date-released: '2021-12-16'
+contact:
+- family-names: Aphalo
+  given-names: Pedro J.
+  email: pedro.aphalo@helsinki.fi
+  orcid: https://orcid.org/0000-0003-3385-972X
