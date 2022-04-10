@@ -81,8 +81,11 @@ navbar:
     tutorials:
       text: Resources
       menu:
+      - text: Book 'Learn R - As a Language'
+        href: https://www.learnr-book.info/
       - text: Blog on R by Pedro J. Aphalo
         href: https://www.r4photobiology.info/
+      - text: ------
       - text: Package 'ggpmisc'
         href: https://docs.r4photobiology.info/ggpmisc/
       - text: Package 'gginnards'
