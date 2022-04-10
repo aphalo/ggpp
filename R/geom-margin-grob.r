@@ -188,10 +188,11 @@ GeomXMarginGrob <-
               }
             }
 
-            grid.name <- paste("geom_x_margin_grob.panel",
-                               data$PANEL[row.idx], sep = ".")
-
-            grid::gTree(children = user.grobs, name = grid.name)
+            # grid.name <- paste("geom_x_margin_grob.panel",
+            #                    data$PANEL[row.idx], sep = ".")
+            #
+            # grid::gTree(children = user.grobs, name = grid.name)
+            grid::gTree(children = user.grobs)
           },
 
           draw_key = function(...) {

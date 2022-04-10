@@ -1,0 +1,270 @@
+---
+title: "Avoiding data label overlaps"
+subtitle: "Synergy between repulsion and nudging"
+author: "Pedro J. Aphalo"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Special cases}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include=FALSE, echo=FALSE}
+library(knitr)
+opts_chunk$set(fig.align = 'center', 
+               fig.show = 'hold', fig.width = 7, fig.height = 4)
+options(warnPartialMatchArgs = FALSE,
+        tibble.print.max = 4,
+        tibble.print.min = 4,
+        dplyr.summarise.inform = FALSE)
+eval_flag <- TRUE # evaluate all code chunks
+```
+
+## Preliminaries
+
+We load all the packages used in the examples.
+
+```{r, message = FALSE}
+# if this is file is to be added as a vignette DESCRIPTION will need
+# to be updated adding suggests and running of chunks here made
+# conditional on package availability
+
+library(ggrepel)
+library(ggpp)
+library(dplyr)
+library(readr)
+library(lubridate)
+```
+
+## `geom_dotplot` _issue #207 raised by svenbioinf_
+
+Q: When creating a plot with geom_dotplot, geom_text_repel does not draw the label arrows to the exact point location but rather to the center. (See points B1,B2,B3) Is there any way to do this?
+
+```{r}
+df <- data.frame(name = c("A1","A2","B1","B2","B3"),
+                 value = c(1,2,2,2,2),
+                 group = c("A","A","B","B","B"))
+
+ggplot(df, aes(x = group,y = value,label = name)) +
+  geom_dotplot(binaxis = 'y', stackdir = 'center', dotsize = 0.7) +
+  geom_text_repel(aes(segment.color = "red"),
+                  box.padding = 1, max.overlaps = 10)
+```
+
+A: As `geom_dotplot()` does not have a `stat` formal parameter and modifies the data it is impossible to access the positions of the points! As `group` is a factor a hypothetical `stat_dotplot()` would not work either, one would need to define a new geom `geom_labelled_dotoplot` to do the labelling in the same layer.
+
+## Repel from `geom_segment()` _issue #207 raised by ekatko1_
+
+Q: Currently, the repel works to repel text away from single points. However, it would be great if it could repel text away from segments as well. This would be especially useful for automatically generating nice biplots for multivariate analysis (PCA, RDA, etc.).
+
+```{r}
+## Example data frame where each species' principal components have been computed.
+df = data.frame(
+  Species = paste("Species",1:5),
+  PC1     = c(-4, -3.5, 1, 2, 3),
+  PC2     = c(-1, -1, 0, -0.5, 0.7)) 
+
+## We plot the two primary principal componenets and add species labels
+ggplot(df, aes(x=PC1, y = PC2, label=Species)) +
+  geom_segment(aes(x=0, y=0, xend=PC1, yend=PC2), 
+               arrow = arrow(length = unit(0.1, "inches"))) +
+  geom_text_repel() +
+  xlim(-5, 5) +
+  ylim(-2, 2) +
+  # Stadard settings for displaying biplots
+  geom_hline(aes(yintercept = 0), size=.2) +
+  geom_vline(aes(xintercept = 0), size=.2) +
+  coord_fixed()
+```
+
+A: Repulsion from segments is probably not the best approach, or at least useful only in sparse data cases. In the case of biplots a good approach is to use nudging away from the origin. Package 'ggpp' provides position functions implementing computed nudging that can be different for each individual observation. Nudging moves the initial position from which labels are repulsed, making their use together with repulsion usually effective.
+
+```{r}
+## We nudge the starting coordinates of the labels away from the origin
+ggplot(df, aes(x=PC1, y = PC2, label=Species)) +
+  geom_segment(aes(x=0, y=0, xend=PC1, yend=PC2), 
+               arrow = arrow(length = unit(0.1, "inches"))) +
+  geom_text_repel(position = position_nudge_centre(x = 0.2, y = 0.01,
+                                                   center_x = 0, center_y = 0)) +
+  xlim(-5, 5) +
+  ylim(-2, 2) +
+  # Stadard settings for displaying biplots
+  geom_hline(aes(yintercept = 0), size=.2) +
+  geom_vline(aes(xintercept = 0), size=.2) +
+  coord_fixed()
+```
+
+In a more crowed plot we may want to allow overlaps but improve the visibility of the text with a semitransparent fill using `geom_label_repel()`.
+
+```{r}
+## We nudge the labels manually
+ggplot(df, aes(x=PC1, y = PC2, label=Species)) +
+  geom_hline(aes(yintercept = 0), size=.2) +
+  geom_vline(aes(xintercept = 0), size=.2) +
+  geom_segment(aes(x=0, y=0, xend=PC1, yend=PC2), 
+               arrow = arrow(length = unit(0.1, "inches"))) +
+  geom_label_repel(position = position_nudge_center(x = 0.2, y = 0.01,
+                                                    center_x = 0, center_y = 0),
+                   label.size = NA,
+                   label.padding = 0.1,
+                   fill = rgb(red = 1, green = 1, blue = 1, alpha = 0.75)) +
+  xlim(-5, 5) +
+  ylim(-2, 2) +
+  # Stadard settings for displaying biplots
+  coord_fixed()
+```
+
+## Point `scale_size_area()` _issue #205 raised by sangwon-hyun_
+
+Q: When using `scale_size_area()`, `point.size` needs to be adjusted, probably by a square root. It seems this should be the default behavior without the user specifying it.
+
+A: Rather than automating this, adding a `parameter` called `point.size.area` seems an approach consistent with 'ggplot2' and very easy to implement. Meanwhile, an equivalent manual approach is as follows.
+
+```{r}
+size_from_area <- function(x) {sqrt(max(0, x) / pi)}
+
+df <- data.frame(b = exp(seq(2, 4, length.out = 10)))
+ggplot(df, aes(1, b, size = b)) + 
+  geom_point() +
+  scale_size_area() +
+  geom_text_repel(aes(label = round(b,2), 
+                      point.size = size_from_area(b),
+                      point.padding = size_from_area(b) / 30),
+                  label.padding = 0,
+                  box.pading = 0,
+                  min.segment.length = 0,
+                  direction = "x")
+```
+
+## Allow sorting of labels _issue #201 raised by z3tt_
+
+Q: Related to issue #200 that I filed today. It would be neat to order the boxes in decreasing or ascending order from left to right, bottom to top. I.e. now the order depends on the seed but would it be possible to have a logical order?
+
+A: Nudging can help. In this case appying nudging by speciying the y position for each label. Here we add increasing amounts of nudging. It would be better to start afresh by groups of labels. We need to sort the row in the data according to the position along the x axis for this approach to work.
+
+```{r}
+set.seed(42)
+
+mpg %>% 
+  group_by(model) %>% 
+  summarize(cty = mean(cty, na.rm = TRUE)) %>% 
+  arrange(cty) %>%
+  ggplot(aes(x = cty, y = 1, 
+             label = model)) +
+  geom_point(alpha = .3) +
+  geom_label_repel(
+    position = position_nudge_to(y = 2 + (1:length(unique(mpg$model)))/ 10),
+    fill = "grey90",
+    direction    = "y",
+    max.iter = 1e4, max.time = 1,
+    size = 3, ## tiny for reprex
+    lineheight = .9,
+    box.padding = 0.1,
+    label.padding = 0.1
+  ) +
+  ylim(1, NA) +
+  scale_x_continuous(expand = expansion(mult = c(0.1, 0.1))) +
+  theme_void()
+```
+
+## Left-align text but not label boxes _issue #200 raised by z3tt_
+
+Q: When forcing geom_text\|label_repel() to draw vertical lines, one needs to use hjust = 0.5. Unfortunately, this argument applies justification to both the text and the textbox.
+
+A: There is currently no solution available within 'ggrepel'.
+
+```{r}
+set.seed(42)
+
+## with left-aligned text (and thus no straight lines)
+mpg %>% 
+  group_by(manufacturer, model) %>% 
+  summarize(cty = mean(cty, na.rm = TRUE)) -> mpg.summaries
+
+ggplot(mpg.summaries,
+       aes(x = cty, y = 1, 
+             label = paste0(manufacturer, "\n", model))) +
+  geom_point(alpha = .3) +
+  geom_label_repel(
+    fill = "grey90",
+    nudge_y      = .03,
+    direction    = "y",
+    hjust        = 0,
+    max.iter = 1e4, max.time = 1,
+    size = 1, ## tiny for reprex
+    lineheight = .9
+  ) +
+  xlim(5, 30) +
+  ylim(1, 0.95) +
+  theme_void()
+```
+
+## Line labels to the right of plot without overlapping _issue #185 raised by ericpgreen_
+
+A: The original issue included a much more complex solution to this problem involving in addition formatting unrelated to 'ggreprl'. The simplification is achieved by using nudging.
+
+```{r}
+keep <- c("Israel", "United States", "European Union", "China",
+          "Russia", "Brazil", "World", "Indonesia", "Bangladesh")
+
+data <- readr::read_csv("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv", lazy = FALSE, show_col_types = FALSE) 
+
+data %>%
+  filter(location %in% keep) %>%
+  select(location, date, total_vaccinations_per_hundred) %>%
+  arrange(location, date) %>%
+  filter(!is.na(total_vaccinations_per_hundred)) %>%
+  mutate(location = factor(location),
+         location = reorder(location, total_vaccinations_per_hundred)) %>%
+  mutate(label = if_else(date == max(date), 
+                         as.character(location), 
+                         "")) -> owid
+
+ggplot(owid,
+       aes(x = date, 
+           y = total_vaccinations_per_hundred,
+           color = location)) +
+  geom_line() +
+  geom_text_repel(aes(label = label),
+                  size = 3,
+                  position = position_nudge_to(x = max(owid$date) + days(20)),
+                  segment.curvature = -0.1,
+                  segment.square = TRUE,
+                  segment.color = 'grey',
+                  point.size = 0,
+                  box.padding = 0.1,
+                  point.padding = 0.1,
+                  hjust = "left",
+                  direction="y") + 
+  scale_x_date(expand = expansion(mult = c(0.05, 0.2))) +
+  labs(title = "Cumulative COVID-19 vaccination doses administered per 100 people",
+       y = "",
+       x = "Date (year-month)") +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+##  Allow to both position_stack and position_nudge _issue #161 raised by krassowski_
+
+Q: I was trying to achieve something similar as in this question: Is there a possibility to combine position_stack and nudge_x in a stacked bar chart in ggplot2?, but with ggrepel. I think I succeeded.
+
+Having the following plot, I would like to move the names out of the bars and point to them with arrows:
+
+```{r}
+df <- tibble::tribble(
+  ~y, ~x, ~grp,
+  "a", 1,  "some long name",
+  "a", 2,  "other name",
+  "b", 1,  "some name",
+  "b", 3,  "another name",
+  "b", -1, "some long name"
+)
+
+ggplot(data = df, aes(x, y, group = grp)) +
+  geom_col(aes(fill = grp), width=0.5) +
+  geom_vline(xintercept = 0) +
+  geom_text(aes(label = grp), position = position_stack(vjust = 0.5))
+```
+
+

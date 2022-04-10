@@ -116,7 +116,7 @@ geom_text_npc <- function(mapping = NULL, data = NULL,
                       inherit.aes = FALSE)
 {
   if (!missing(nudge_x) || !missing(nudge_y)) {
-    if (!missing(position)) {
+    if (!missing(position) && position != "identity") {
       stop("You must specify either `position` or `nudge_x`/`nudge_y`.", call. = FALSE)
     }
 

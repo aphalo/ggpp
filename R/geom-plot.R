@@ -186,7 +186,7 @@ geom_plot <- function(mapping = NULL, data = NULL,
                       inherit.aes = FALSE) {
 
   if (!missing(nudge_x) || !missing(nudge_y)) {
-    if (!missing(position)) {
+    if (!missing(position) && position != "identity") {
       rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")
     }
     # We do not keep the original positions if they will not be used
@@ -300,7 +300,8 @@ gplot_draw_panel_fun <-
       }
     }
 
-    grid::grobTree(children = all.grobs, name = "geom.plot.panel")
+#    grid::grobTree(children = all.grobs, name = "geom.plot.panel")
+    grid::grobTree(children = all.grobs)
 
   }
 
@@ -409,10 +410,11 @@ gplotnpc_draw_panel_fun <-
       plot.grobs[[row.idx]] <- plotGrob
     }
 
-    grid.name <- paste("geom_plot.panel",
-                       data$PANEL[row.idx], sep = ".")
+    # grid.name <- paste("geom_plot.panel",
+    #                    data$PANEL[row.idx], sep = ".")
+    # grid::gTree(children = plot.grobs, name = grid.name)
 
-    grid::gTree(children = plot.grobs, name = grid.name)
+    grid::gTree(children = plot.grobs)
   }
 
 #' @rdname ggpp-ggproto

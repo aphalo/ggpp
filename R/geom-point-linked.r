@@ -103,7 +103,7 @@ geom_point_s <- function(mapping = NULL, data = NULL,
                          inherit.aes = TRUE) {
 
   if (!missing(nudge_x) || !missing(nudge_y)) {
-    if (!missing(position)) {
+    if (!missing(position) && position != "identity") {
       rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")
     }
     # We do not keep the original positions if they will not be used

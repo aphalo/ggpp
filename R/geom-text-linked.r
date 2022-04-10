@@ -179,7 +179,7 @@ geom_text_s <- function(mapping = NULL,
                         inherit.aes = TRUE)
 {
   if (!missing(nudge_x) || !missing(nudge_y)) {
-    if (!missing(position)) {
+    if (!missing(position) && position != "identity") {
       rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")
     }
     # We do not keep the original positions if they will not be used
@@ -201,8 +201,6 @@ geom_text_s <- function(mapping = NULL,
       parse = parse,
       add.segments = add.segments,
       arrow = arrow,
-      nudge_x = nudge_x,
-      nudge_y = nudge_y,
       check_overlap = check_overlap,
       na.rm = na.rm,
       ...
@@ -241,9 +239,7 @@ GeomTextS <-
                                          na.rm = FALSE,
                                          check_overlap = FALSE,
                                          add.segments = TRUE,
-                                         arrow = NULL,
-                                         nudge_x = 0,
-                                         nudge_y = 0) {
+                                         arrow = NULL) {
 
                      add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
 
@@ -304,7 +300,7 @@ GeomTextS <-
                        )
 
                        # give unique name to each grob
-                       user.grob$name <- paste("text.s.grob", row.idx, sep = ".")
+                       user.grob$name <- paste("text.s.grob", row$group, row.idx, sep = ".")
 
                        if (add.segments) {
                          segment.grob <-
@@ -315,14 +311,16 @@ GeomTextS <-
                                               arrow = arrow,
                                               gp = grid::gpar(col = ggplot2::alpha(row$segment.colour,
                                                                                    row$segment.alpha)),
-                                              name = paste("text.s.segment", row.idx, sep = "."))
+                                              name = paste("text.s.segment", row$group, row.idx, sep = "."))
                          all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
                        } else {
                          all.grobs <- grid::gList(all.grobs, user.grob)
                        }
                      }
 
-                     grid::grobTree(children = all.grobs, name = "geom.text.s.panel")
+                     # name needs to be unique within plot, so we would to know layer
+#                     grid::grobTree(children = all.grobs, name = "geom.text.s.panel")
+                     grid::grobTree(children = all.grobs)
 
                    },
 

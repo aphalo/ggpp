@@ -139,7 +139,7 @@ geom_grob <- function(mapping = NULL,
                       inherit.aes = FALSE) {
 
   if (!missing(nudge_x) || !missing(nudge_y)) {
-    if (!missing(position)) {
+    if (!missing(position) && position != "identity") {
       rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")
     }
     # We do not keep the original positions if they will not be used
@@ -251,8 +251,8 @@ grob_draw_panel_fun <-
         all.grobs <- grid::gList(all.grobs, user.grob)
       }
     }
-
-    grid::grobTree(children = all.grobs, name = "geom.grob.panel")
+#    grid::grobTree(children = all.grobs, name = "geom.grob.panel")
+    grid::grobTree(children = all.grobs)
 
   }
 
@@ -356,10 +356,11 @@ grobnpc_draw_panel_fun <-
       user.grobs[[row.idx]] <- userGrob
     }
 
-    grid.name <- paste("geom_grob.panel",
-                       data$PANEL[row.idx], sep = ".")
-
-    grid::gTree(children = user.grobs, name = grid.name)
+    # grid.name <- paste("geom_grob.panel",
+    #                    data$PANEL[row.idx], sep = ".")
+    #
+    # grid::gTree(children = user.grobs, name = grid.name)
+    grid::gTree(children = user.grobs)
   }
 
 #' @rdname ggpp-ggproto

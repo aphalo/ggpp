@@ -4,6 +4,16 @@ editor_options:
     wrap: 72
 ---
 
+# ggpp 0.4.4
+
+Multiple grobs and grob trees sharing the same name results in only the first
+one being rendered. This caused problems when multiple layers created with
+the same geometry were added to a plot.
+
+-   Fix bug caused by grob and grob tree naming. Until unique naming is
+    implemented, we do not assigng names in cases where these potentially
+    can interfere with rendering. This bug affected most geometries in 'ggpp'.
+
 # ggpp 0.4.3
 
 Based on issues raised in the GitHub repository of 'ggrepel' and the
