@@ -8,7 +8,7 @@ message: 'To cite package "ggpp" in publications use:'
 type: software
 license: GPL-2.0-or-later
 title: 'ggpp: Grammar Extensions to ''ggplot2'''
-version: 0.4.4
+version: 0.4.4.9000
 abstract: 'Extensions to ''ggplot2'' respecting the grammar of graphics paradigm.
   Geometries: geom_table(), geom_plot() and geom_grob() add insets to plots using
   native data coordinates, while geom_table_npc(), geom_plot_npc() and geom_grob_npc()
@@ -29,7 +29,7 @@ preferred-citation:
     given-names: Pedro J.
     email: pedro.aphalo@helsinki.fi
     orcid: https://orcid.org/0000-0003-3385-972X
-  version: 0.4.4
+  version: 0.4.4.9000
   abstract: 'Extensions to ''ggplot2'' respecting the grammar of graphics paradigm.
     Geometries: geom_table(), geom_plot() and geom_grob() add insets to plots using
     native data coordinates, while geom_table_npc(), geom_plot_npc() and geom_grob_npc()
@@ -40,7 +40,6 @@ preferred-citation:
   repository: https://CRAN.R-project.org/package=ggpp
   repository-code: https://github.com/aphalo/ggpp
   url: https://docs.r4photobiology.info/ggpp/
-  date-released: '2022-04-10'
   contact:
   - family-names: Aphalo
     given-names: Pedro J.
@@ -51,7 +50,6 @@ preferred-citation:
 repository: https://CRAN.R-project.org/package=ggpp
 repository-code: https://github.com/aphalo/ggpp
 url: https://docs.r4photobiology.info/ggpp/
-date-released: '2022-04-10'
 contact:
 - family-names: Aphalo
   given-names: Pedro J.
@@ -119,6 +117,18 @@ references:
     name: R Foundation for Statistical Computing
 - type: software
   title: grid
+  abstract: 'R: A Language and Environment for Statistical Computing'
+  notes: Imports
+  authors:
+  - name: R Core Team
+  location:
+    name: Vienna, Austria
+  year: '2022'
+  url: https://www.R-project.org/
+  institution:
+    name: R Foundation for Statistical Computing
+- type: software
+  title: grDevices
   abstract: 'R: A Language and Environment for Statistical Computing'
   notes: Imports
   authors:
