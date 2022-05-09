@@ -55,6 +55,10 @@ reference:
     desc: Convert R objects containing observations in other formats into 'tibble' objects suitable for plotting.
     contents:
     - try_data_frame
+  - title: Utilities
+    desc: Utility functions
+    contents:
+    - dark_or_light
 
 navbar:
   structure:

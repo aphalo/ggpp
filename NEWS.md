@@ -4,6 +4,10 @@ editor_options:
     wrap: 72
 ---
 
+# ggpp 0.4.5
+
+Add function `dark_or_light()`.
+
 # ggpp 0.4.4
 
 Multiple grobs and grob trees sharing the same name results in only the first
