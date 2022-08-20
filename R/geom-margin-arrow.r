@@ -171,14 +171,14 @@ GeomXMarginArrow <-
 #' @export
 #'
 geom_y_margin_arrow <- function(mapping = NULL, data = NULL,
-                                 stat = "identity", position = "identity",
-                                 ...,
-                                 yintercept,
-                                 sides = "l",
+                                stat = "identity", position = "identity",
+                                ...,
+                                yintercept,
+                                sides = "l",
                                 arrow.length = 0.03,
                                 na.rm = FALSE,
-                                 show.legend = FALSE,
-                                 inherit.aes = FALSE) {
+                                show.legend = FALSE,
+                                inherit.aes = FALSE) {
 
   # Act like an annotation
   if (!missing(yintercept)) {
