@@ -51,5 +51,5 @@ URL: https://docs.r4photobiology.info/ggpp/,
      https://github.com/aphalo/ggpp
 BugReports: https://github.com/aphalo/ggpp/issues
 Encoding: UTF-8
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 VignetteBuilder: knitr

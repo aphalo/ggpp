@@ -261,14 +261,14 @@ citation("ggpp")
 ## Acknowledgement
 
 Being an extension to package ‘ggplot2’, some of the code in package
-‘ggpmisc’ has been created by using as a template that from layer
-functions and scales in ‘ggplot2’. The user interface of ‘ggpmisc’ aims
-at being as consistent as possible with ‘ggplot2’ and the layered
-grammar of graphics (Wickham 2010). New features added in ‘ggplot2’ are
-added when relevant to ‘ggpmisc’, such as support for `orientation` for
-flipping of layers. This package does consequently indirectly include
-significant contributions from several of the authors and maintainers of
-‘ggplot2’, listed at (<https://ggplot2.tidyverse.org/>).
+‘ggpp’ has been created by using as a template that from layer functions
+and scales in ‘ggplot2’. The user interface of ‘ggpp’ aims at being as
+consistent as possible with ‘ggplot2’ and the layered grammar of
+graphics (Wickham 2010). New features added in ‘ggplot2’ are added when
+relevant to ‘ggpp’, such as support for `orientation` for flipping of
+layers. This package does consequently indirectly include significant
+contributions from several of the authors and maintainers of ‘ggplot2’,
+listed at (<https://ggplot2.tidyverse.org/>).
 
 ## References
 

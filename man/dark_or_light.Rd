@@ -23,7 +23,7 @@ dark and light objects (orveplotted on light and dark backgrounds, respectively)
 \description{
 Chose between a pair of contrasting dark and light colors based on a weighted mean
 of RGB channels of a color. This function implements a simple approach to the
-choice for a color of an plot element to ensure it is visible against a background color.
+choice for a color of a plot element to ensure it is visible against a background color.
 }
 \examples{
 
