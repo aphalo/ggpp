@@ -11,7 +11,7 @@ status](https://github.com/aphalo/ggpp/workflows/R-CMD-check/badge.svg)](https:/
 ## Purpose
 
 Package ‘**ggpp**’ provides a set of building blocks that extend the
-Grammar of Graphics implemented in package ‘ggplot2’ (>= 3.0.0). New
+Grammar of Graphics implemented in package ‘ggplot2’ (\>= 3.0.0). New
 “geoms” support insets in plots, marginal marks and the use of native
 plot coordinates (npc). Position functions implement new approaches to
 nudging usable with any geometry, but especially useful together with
@@ -94,7 +94,7 @@ keep in data the original coordinates.
 In contrast to position functions from ‘ggplot2’ all these position
 functions keep the original *x* and *y* coordinates when displacing
 them. This makes them compatible with the repulsive geometries from
-package ‘ggrepel’ (>= 0.9.1) as well as with `geom_text_s()`,
+package ‘ggrepel’ (\>= 0.9.1) as well as with `geom_text_s()`,
 `geom_point_s()`, `geom_table()`, `geom_plot()` and `geom_grob()` from
 this package. All these geoms can draw segments or arrows connecting the
 original positions to the displaced positions. They remain backwards
@@ -105,7 +105,7 @@ formal parameter.
 
 Justifications `"outward_mean"`, `"inward_mean"`, `"outward_median"` and
 `"inward_median"` implementing outward and inward justification relative
-to the centroid of the data instead of to the center of the *x* or *y*
+to the centroid of the data instead of to the center of the $x$ or $y$
 scales. Justification outward or inward from an arbitrary origin is also
 supported.
 
@@ -258,14 +258,30 @@ publications, please cite according to:
 citation("ggpp")
 ```
 
+## Acknowledgement
+
+Being an extension to package ‘ggplot2’, some of the code in package
+‘ggpmisc’ has been created by using as a template that from layer
+functions and scales in ‘ggplot2’. The user interface of ‘ggpmisc’ aims
+at being as consistent as possible with ‘ggplot2’ and the layered
+grammar of graphics (Wickham 2010). New features added in ‘ggplot2’ are
+added when relevant to ‘ggpmisc’, such as support for `orientation` for
+flipping of layers. This package does consequently indirectly include
+significant contributions from several of the authors and maintainers of
+‘ggplot2’, listed at (<https://ggplot2.tidyverse.org/>).
+
 ## References
 
 Aphalo, Pedro J. (2020) *Learn R: As a Language.* The R Series. Boca
 Raton and London: Chapman and Hall/CRC Press. ISBN: 978-0-367-18253-3.
 350 pp.
 
+Wickham, Hadley. 2010. “A Layered Grammar of Graphics.” Journal of
+Computational and Graphical Statistics 19 (1): 3–28.
+<https://doi.org/10.1198/jcgs.2009.07098>.
+
 ## License
 
-© 2016-2021 Pedro J. Aphalo (<pedro.aphalo@helsinki.fi>). Released under
+© 2016-2022 Pedro J. Aphalo (<pedro.aphalo@helsinki.fi>). Released under
 the GPL, version 2 or greater. This software carries no warranty of any
 kind.
