@@ -2,7 +2,7 @@
 % Please edit documentation in R/dark-or-light.R
 \name{dark_or_light}
 \alias{dark_or_light}
-\title{Chose dark between a light color}
+\title{Chose between dark and light color}
 \usage{
 dark_or_light(
   colors,
@@ -14,16 +14,18 @@ dark_or_light(
 \arguments{
 \item{colors}{A vector of color definitions or color names in the background.}
 
-\item{threshold}{numeric A value in [0..1] indicating the switch point between
-dark and light background.}
+\item{threshold}{numeric A value in [0..1] indicating the switch point
+between dark and light background.}
 
 \item{dark.color, light.color}{A color definition or color name to return for
-dark and light objects (orveplotted on light and dark backgrounds, respectively).}
+dark and light objects (orveplotted on light and dark backgrounds,
+respectively).}
 }
 \description{
-Chose between a pair of contrasting dark and light colors based on a weighted mean
-of RGB channels of a color. This function implements a simple approach to the
-choice for a color of a plot element to ensure it is visible against a background color.
+Chose between a pair of contrasting dark and light colors based on a weighted
+mean of RGB channels of a color. This function implements a simple approach
+to the choice for a color of a plot element to ensure it is visible against a
+background color.
 }
 \examples{
 

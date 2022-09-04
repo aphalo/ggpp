@@ -1,14 +1,16 @@
-#' Chose dark between a light color
+#' Chose between dark and light color
 #'
-#' Chose between a pair of contrasting dark and light colors based on a weighted mean
-#' of RGB channels of a color. This function implements a simple approach to the
-#' choice for a color of a plot element to ensure it is visible against a background color.
+#' Chose between a pair of contrasting dark and light colors based on a weighted
+#' mean of RGB channels of a color. This function implements a simple approach
+#' to the choice for a color of a plot element to ensure it is visible against a
+#' background color.
 #'
 #' @param colors A vector of color definitions or color names in the background.
-#' @param threshold numeric A value in [0..1] indicating the switch point between
-#'   dark and light background.
+#' @param threshold numeric A value in [0..1] indicating the switch point
+#'   between dark and light background.
 #' @param dark.color,light.color A color definition or color name to return for
-#'   dark and light objects (orveplotted on light and dark backgrounds, respectively).
+#'   dark and light objects (orveplotted on light and dark backgrounds,
+#'   respectively).
 #'
 #' @export
 #'
