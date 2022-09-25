@@ -53,19 +53,19 @@ otherwise.}
 A \code{"Position"} object.
 }
 \description{
-`position_nudge_center()` is generally useful for adjusting the position of
+\code{position_nudge_center()} is generally useful for adjusting the position of
 labels or text, both on a discrete or continuous scale. In contrast to
-[ggplot2::position_nudge], `position_nudge_center()` returns in `data` both
+\code{\link[ggplot2]{position_nudge}}, \code{position_nudge_center()} returns in \code{data} both
 the original coordinates and the nudged coordinates.
 }
 \details{
-This position function is backwards compatible with [ggplot2::position_nudge]
+This position function is backwards compatible with \code{\link[ggplot2]{position_nudge}}
 but extends it by adding support for nudging that varies across the plotting
-region, either in opposite directions or radially from a virtual _center
-point_.
+region, either in opposite directions or radially from a virtual emph{center
+point}.
 
-The wrapper `position_nudge_keep()` with exactly the same signature and
-behaviour as [ggplot2::position_nudge] provides an easier to remember name
+The wrapper \code{position_nudge_keep()} with exactly the same signature and
+behaviour as \code{\link[ggplot2]{position_nudge}} provides an easier to remember name
 when the desire is only to have access to both the original and nudged
 coordinates.
 
@@ -163,7 +163,7 @@ ggplot(df, aes(x, y)) +
 ggplot(df, aes(x, y)) +
   geom_point() +
   geom_text(aes(label = y),
-            vjust = "outward", hjust = "outward",
+            vjust = "middle", hjust = "outward",
             position = position_nudge_center(x = 0.1,
                                              center_x = 2.5))
 

@@ -1,5 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^\.Rhistory
 vignettes/figure
 inst-not
 test

@@ -157,7 +157,8 @@ You can alternatively use \code{\link[ggrepel]{geom_label_repel}},
 
 my.cars <- mtcars[c(TRUE, FALSE, FALSE, FALSE), ]
 my.cars$name <- rownames(my.cars)
-p <- ggplot(my.cars, aes(wt, mpg, label = name))
+p <- ggplot(my.cars, aes(wt, mpg, label = name)) +
+       geom_point(color = "red")
 
 # default behavior is as for geon_text()
 p + geom_text_s()
@@ -173,19 +174,15 @@ p + geom_label_s(size = 2.5)
 
 # Use nudging
 p +
-  geom_point() +
   geom_text_s(hjust = -0.04, nudge_x = 0.12) +
   expand_limits(x = 6.2)
 p +
-  geom_point() +
   geom_text_s(hjust = -0.04, nudge_x = 0.12,
   arrow = arrow(length = grid::unit(1.5, "mm"))) +
   expand_limits(x = 6.2)
 p +
-  geom_point() +
   geom_text_s(vjust = -0.5, nudge_y = 0.5)
 p +
-  geom_point() +
   geom_text_s(angle = 90,
               hjust = -0.04, nudge_y = 1,
               arrow = arrow(length = grid::unit(1.5, "mm")),
@@ -193,13 +190,11 @@ p +
   expand_limits(y = 30)
 
 p +
-  geom_point() +
   geom_label_s(hjust = 0, nudge_x = 0.12) +
   expand_limits(x = 6.2)
 
 # Add aesthetic mappings and adjust arrows
 p +
-  geom_point() +
   geom_text_s(aes(colour = factor(cyl)),
               segment.colour = "black",
               angle = 90,
@@ -214,7 +209,6 @@ p +
 
 # Add aesthetic mappings and adjust arrows
 p +
-  geom_point() +
   geom_label_s(aes(colour = factor(cyl)),
               hjust = 0, nudge_x = 0.3,
               arrow = arrow(angle = 20,
@@ -224,7 +218,6 @@ p +
 
 # Scale height of text, rather than sqrt(height)
 p +
-  geom_point() +
   geom_text_s(aes(size = wt), nudge_x = -0.1, hjust = "right") +
   scale_radius(range = c(3,6)) + # override scale_area()
     expand_limits(x = c(1.8, 5.5))

@@ -91,7 +91,8 @@
 #'
 #' my.cars <- mtcars[c(TRUE, FALSE, FALSE, FALSE), ]
 #' my.cars$name <- rownames(my.cars)
-#' p <- ggplot(my.cars, aes(wt, mpg, label = name))
+#' p <- ggplot(my.cars, aes(wt, mpg, label = name)) +
+#'        geom_point(color = "red")
 #'
 #' # default behavior is as for geon_text()
 #' p + geom_text_s()
@@ -107,19 +108,15 @@
 #'
 #' # Use nudging
 #' p +
-#'   geom_point() +
 #'   geom_text_s(hjust = -0.04, nudge_x = 0.12) +
 #'   expand_limits(x = 6.2)
 #' p +
-#'   geom_point() +
 #'   geom_text_s(hjust = -0.04, nudge_x = 0.12,
 #'   arrow = arrow(length = grid::unit(1.5, "mm"))) +
 #'   expand_limits(x = 6.2)
 #' p +
-#'   geom_point() +
 #'   geom_text_s(vjust = -0.5, nudge_y = 0.5)
 #' p +
-#'   geom_point() +
 #'   geom_text_s(angle = 90,
 #'               hjust = -0.04, nudge_y = 1,
 #'               arrow = arrow(length = grid::unit(1.5, "mm")),
@@ -127,13 +124,15 @@
 #'   expand_limits(y = 30)
 #'
 #' p +
-#'   geom_point() +
 #'   geom_label_s(hjust = 0, nudge_x = 0.12) +
+#'   expand_limits(x = 6.2)
+#'
+#' p +
+#'   geom_label_s(hjust = "outward_1", nudge_x = 0.12) +
 #'   expand_limits(x = 6.2)
 #'
 #' # Add aesthetic mappings and adjust arrows
 #' p +
-#'   geom_point() +
 #'   geom_text_s(aes(colour = factor(cyl)),
 #'               segment.colour = "black",
 #'               angle = 90,
@@ -144,21 +143,19 @@
 #'                             type = "closed"),
 #'               show.legend = FALSE) +
 #'   scale_colour_discrete(l = 40) + # luminance, make colours darker
-#'   expand_limits(y = 40)
+#'   expand_limits(y = 25)
 #'
 #' # Add aesthetic mappings and adjust arrows
 #' p +
-#'   geom_point() +
 #'   geom_label_s(aes(colour = factor(cyl)),
 #'               hjust = 0, nudge_x = 0.3,
 #'               arrow = arrow(angle = 20,
-#'                             length = grid::unit(2/3, "lines"))) +
+#'                             length = grid::unit(1/3, "lines"))) +
 #'   scale_colour_discrete(l = 40) + # luminance, make colours darker
 #'   expand_limits(x = 7)
 #'
 #' # Scale height of text, rather than sqrt(height)
 #' p +
-#'   geom_point() +
 #'   geom_text_s(aes(size = wt), nudge_x = -0.1, hjust = "right") +
 #'   scale_radius(range = c(3,6)) + # override scale_area()
 #'     expand_limits(x = c(1.8, 5.5))
@@ -340,69 +337,90 @@ compute_just2d <- function(data,
                            just,
                            a = "x",
                            b = a) {
+  print(data)
   if (a != b) {
     angle <- data$angle
   } else {
     angle <- 0
   }
-  range_a <- panel_params[[a]]$scale$range$range
-  range_b <- panel_params[[b]]$scale$range$range
-  if (any(grepl("outward|inward", just))) {
+  if (any(grepl("outward|inward|position", just))) {
     # ensure all angles are in -360...+360
     angle <- angle %% 360
     # ensure correct behaviour for angles in -360...+360
     angle <- ifelse(angle > 180, angle - 360, angle)
     angle <- ifelse(angle < -180, angle + 360, angle)
     rotated_forward <-
-      grepl("outward|inward", just) & (angle > 45 & angle < 135)
+      grepl("outward|inward|position", just) & (angle > 45 & angle < 135)
     rotated_backwards <-
-      grepl("outward|inward", just) & (angle < -45 & angle > -135)
+      grepl("outward|inward|position", just) & (angle < -45 & angle > -135)
 
     ab <- ifelse(rotated_forward | rotated_backwards, b, a)
     swap_ab <- rotated_backwards | abs(angle) > 135
 
-    just_used <- unique(just)
-    just_special <- grep("_mean$|_median$|.*[0-9].*", just_used, value = TRUE)
-    middle <- rep(0.5, length(just))
-    for (j in just_special) {
-      j_selector <- just == j
-      if (j %in% c("outward_mean", "inward_mean")) {
-        middle[j_selector & !swap_ab] <- mean(data[[a]])
-        middle[j_selector & swap_ab] <- mean(data[[b]])
-      } else if (j %in% c("outward_median", "inward_median")) {
-        middle[j_selector & !swap_ab] <- stats::median(data[[a]])
-        middle[j_selector & swap_ab] <- stats::median(data[[b]])
+    if (any(just == "position")) {
+      # compute justification based on saved original position
+      # works only with special position functions from 'ggpp' and 'ggrepel'
+      ab_orig <- paste(ab, "_orig", sep = "")
+      position <- just == "position"
+      if (!all(unique(ab_orig) %in% colnames(data))) {
+        warning("Original positions not available, 'hjust' or 'vjust' set to 0.5")
+        just[position] <- "middle"
       } else {
-        middle[j_selector & swap_ab] <- stats::median(data[[b]])
-        middle_a <- as.numeric(gsub("outward_|inward_", "", unique(just)))
-        if (a == "x") {
-          tmp_data <- tibble::tibble(x = middle_a, y = data[[b]])
-          middle[j_selector & !swap_ab] <- coord$transform(tmp_data, panel_params)$x
-        } else {
-          tmp_data <- tibble::tibble(y = middle_a, x = data[[b]])
-          middle[j_selector & !swap_ab] <- coord$transform(tmp_data, panel_params)$y
-        }
+        range_ab <- panel_params[[ab[1L]]]$scale$range$range
+        ab_rel <- (data[[ab[1L]]] - range_ab[1]) / abs(range_ab[2] - range_ab[1])
+        ab_orig_rel <- (data[[ab_orig[1L]]] - range_ab[1]) / abs(range_ab[2] - range_ab[1])
+        just[position] <- c("left", "middle", "right")[2L - 1L * sign(ab_orig_rel - ab_rel)]
+        print(just)
       }
     }
+    if (any(grepl("outward|inward", just))) {
+      # we allow tags for setting center/middle position for just
+      just_used <- unique(just)
+      just_special <- grep("_mean$|_median$|.*[0-9].*", just_used, value = TRUE)
+      middle <- rep(0.5, length(just))
+      for (j in just_special) { # skipped if just_special has length zero
+        j_selector <- just == j
+        if (j %in% c("outward_mean", "inward_mean")) {
+          middle[j_selector & !swap_ab] <- mean(data[[a]])
+          middle[j_selector & swap_ab] <- mean(data[[b]])
+        } else if (j %in% c("outward_median", "inward_median")) {
+          middle[j_selector & !swap_ab] <- stats::median(data[[a]])
+          middle[j_selector & swap_ab] <- stats::median(data[[b]])
+        } else {
+          middle[j_selector & swap_ab] <- stats::median(data[[b]])
+          middle_a <- as.numeric(gsub("outward_|inward_", "", unique(just)))
+          if (a == "x") {
+            tmp_data <- tibble::tibble(x = middle_a, y = data[[b]])
+            middle[j_selector & !swap_ab] <- coord$transform(tmp_data, panel_params)$x
+          } else {
+            tmp_data <- tibble::tibble(y = middle_a, x = data[[b]])
+            middle[j_selector & !swap_ab] <- coord$transform(tmp_data, panel_params)$y
+          }
+        }
+      }
 
-    just <- gsub("_.*$", "", just)
+      just <- gsub("_.*$", "", just)
 
-    obs <- data[[a]]
-    obs[swap_ab] <- data[[b]][swap_ab]
+      # what follows is like in ggplot2 except for split_at
+      obs <- data[[a]]
+      obs[swap_ab] <- data[[b]][swap_ab]
 
-    inward <- just == "inward"
-    just[inward] <- c("left", "middle", "right")[just_dir(obs[inward],
-                                                          split_at = middle[inward])]
-    outward <- just == "outward"
-    just[outward] <- c("right", "middle", "left")[just_dir(obs[outward],
-                                                           split_at = middle[outward])]
+      inward <- just == "inward"
+      just[inward] <- c("left", "middle", "right")[just_dir(obs[inward],
+                                                            split_at = middle[inward])]
+      outward <- just == "outward"
+      just[outward] <- c("right", "middle", "left")[just_dir(obs[outward],
+                                                             split_at = middle[outward])]
+    }
   }
+  print(just)
 
   unname(c(left = 0, center = 0.5, right = 1,
            bottom = 0, middle = 0.5, top = 1)[just])
 }
 
 # modified from geom-text.r from 'ggplot2' 3.1.0 to support arbitrary split
+# for "inward" and "outward" justification
 just_dir <- function(x, tol = 0.001, split_at = 0.5) {
   out <- rep(2L, length(x))
   out[x < split_at - tol] <- 1L
@@ -411,6 +429,7 @@ just_dir <- function(x, tol = 0.001, split_at = 0.5) {
 }
 
 # as in pull request to ggplot2
+# can be used by other geoms
 compute_just <- function(just, a, b = a, angle = 0) {
   #  As justification direction is relative to the text, not the plotting area
   #  we need to swap x and y if text direction is rotated so that hjust is

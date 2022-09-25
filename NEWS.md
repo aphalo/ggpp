@@ -11,6 +11,8 @@ editor_options:
 -   Add function `dark_or_light()`.
 -   Support the new 'ggplot2' aesthetic `linewidth` in `geom_quadrant_lines()`
     and `geom_vhlines()` for compatibility with 'ggplot2' (>= 3.3.7).
+-   Update `posiiton_nudge_center()` for compatibility with 'ggplot2' 
+    (>= 3.3.7).
 
 # ggpp 0.4.4
 
