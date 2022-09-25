@@ -1,4 +1,6 @@
 ---
+title:
+  "News: changelog"
 editor_options:
   markdown:
     wrap: 72
@@ -6,16 +8,18 @@ editor_options:
 
 # ggpp 0.4.5
 
-Add function `dark_or_light()`.
+-   Add function `dark_or_light()`.
+-   Support the new 'ggplot2' aesthetic `linewidth` in `geom_quadrant_lines()`
+    and `geom_vhlines()` for compatibility with 'ggplot2' (>= 3.3.7).
 
 # ggpp 0.4.4
 
-Multiple grobs and grob trees sharing the same name results in only the first
+Multiple grobs and grob trees sharing the same name result in only the first
 one being rendered. This caused problems when multiple layers created with
 the same geometry were added to a plot.
 
 -   Fix bug caused by grob and grob tree naming. Until unique naming is
-    implemented, we do not assigng names in cases where these potentially
+    implemented, we do not assign names in cases where these potentially
     can interfere with rendering. This bug affected most geometries in 'ggpp'.
 
 # ggpp 0.4.3
@@ -155,7 +159,7 @@ near future*.
     text labels when `angle` aesthetic takes values \< -45 or > 45
     degrees. This code change alters how old plots are rendered if text
     labels have been rotated by more than 45 degrees.
--   \['ggplot2', 'ggrepel'\] The problem with angle was a "bug" in
+-   'ggplot2', 'ggrepel': The problem with angle was a "bug" in
     'ggplot2' also present in 'ggrepel'. A pull request for
     `ggplot2::geom_text()` has been submitted and merged. This is now in
     the 'ggplot2' 3.3.4 milestone retaining consistent behaviour between
@@ -166,7 +170,7 @@ near future*.
 -   Update the documentation of `geom_plot()`.
 -   Revise handling of rounding for $R^2$ and $P$-value in
     `stat_poly_eq()`.
--   \[**Under development!**\] Link repositioned text to its original
+-   **Under development!** Link repositioned text to its original
     position with a segment or arrow: `geom_linked_text()`. Except for
     the drawing of segments or arrows this new *geometry* behaves as
     `ggplot2::geom_text()` . *Note:* Segments and arrows are drawn only

@@ -103,7 +103,7 @@ geom_quadrant_lines <- function(mapping = NULL,
                             yintercept = yintercept)
     show.legend <- FALSE
   } else if (xor(missing(xintercept), missing(yintercept))) {
-    stop("Arguments should be passed either to none or both of 'xintrecept' and 'yintercept'")
+    stop("Missing 'xintercept' and 'yintercept'")
   }
 
   ggplot2::layer(
@@ -129,7 +129,7 @@ geom_quadrant_lines <- function(mapping = NULL,
 GeomQuadrantLines <-
   ggplot2::ggproto(
     "GeomQuadrantLines", Geom,
-    draw_panel = function(data, panel_params, coord, pool.along = "none") {
+    draw_panel = function(data, panel_params, coord, pool.along = "none", lineend = "butt") {
       ranges <- coord$backtransform_range(panel_params)
       data.hline <- data.vline <- data
 
@@ -160,18 +160,21 @@ GeomQuadrantLines <-
                      data[NULL, ]
       )
 
-      ggplot2::GeomSegment$draw_panel(unique(data), panel_params, coord)
+      ggplot2::GeomSegment$draw_panel(unique(data), panel_params, coord, lineend = lineend)
 
     },
 
     default_aes = ggplot2::aes(colour = "black",
-                               size = 0.5,
+                               size = 0.5, # ggplot2 (<= 3.3.6)
+                               linewidth = 0.5, # ggplot2 (> 3.3.6)
                                linetype = "dashed",
                                alpha = NA),
     required_aes = c("xintercept", "yintercept"),
     non_missing_aes = c("size", "linetype", "colour"),
 
-    draw_key = draw_key_path
+    draw_key = draw_key_path,
+
+    rename_size = TRUE
   )
 
 #' @rdname geom_quadrant_lines
@@ -216,7 +219,7 @@ geom_vhlines <- function(mapping = NULL, data = NULL,
 GeomVHLines <-
   ggplot2::ggproto(
     "GeomVHLines", Geom,
-    draw_panel = function(data, panel_params, coord) {
+    draw_panel = function(data, panel_params, coord, lineend = "butt") {
       ranges <- coord$backtransform_range(panel_params)
       data.hline <- data.vline <- data
 
@@ -232,16 +235,19 @@ GeomVHLines <-
 
       data <- rbind(data.hline, data.vline)
 
-      ggplot2::GeomSegment$draw_panel(unique(data), panel_params, coord)
+      ggplot2::GeomSegment$draw_panel(unique(data), panel_params, coord, lineend = lineend)
 
     },
 
     default_aes = ggplot2::aes(colour = "black",
-                               size = 0.5,
+                               size = 0.5, # ggplot2 (<= 3.3.6)
+                               linewidth = 0.5, # ggplot2 (> 3.3.6)
                                linetype = 1,
                                alpha = NA),
     required_aes = c("xintercept", "yintercept"),
     non_missing_aes = c("size", "linetype", "colour"),
 
-    draw_key = draw_key_path
+    draw_key = draw_key_path,
+
+    rename_size = TRUE
   )

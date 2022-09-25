@@ -1,17 +1,17 @@
 #' Nudge labels away from a central point
 #'
-#' `position_nudge_center()` is generally useful for adjusting the position of
+#' \code{position_nudge_center()} is generally useful for adjusting the position of
 #' labels or text, both on a discrete or continuous scale. In contrast to
-#' [ggplot2::position_nudge], `position_nudge_center()` returns in `data` both
+#' \code{\link[ggplot2]{position_nudge}}, \code{position_nudge_center()} returns in \code{data} both
 #' the original coordinates and the nudged coordinates.
 #'
-#' This position function is backwards compatible with [ggplot2::position_nudge]
+#' This position function is backwards compatible with \code{\link[ggplot2]{position_nudge}}
 #' but extends it by adding support for nudging that varies across the plotting
-#' region, either in opposite directions or radially from a virtual _center
-#' point_.
+#' region, either in opposite directions or radially from a virtual emph{center
+#' point}.
 #'
-#' The wrapper `position_nudge_keep()` with exactly the same signature and
-#' behaviour as [ggplot2::position_nudge] provides an easier to remember name
+#' The wrapper \code{position_nudge_keep()} with exactly the same signature and
+#' behaviour as \code{\link[ggplot2]{position_nudge}} provides an easier to remember name
 #' when the desire is only to have access to both the original and nudged
 #' coordinates.
 #'
@@ -132,7 +132,7 @@
 #' ggplot(df, aes(x, y)) +
 #'   geom_point() +
 #'   geom_text(aes(label = y),
-#'             vjust = "outward", hjust = "outward",
+#'             vjust = "middle", hjust = "outward",
 #'             position = position_nudge_center(x = 0.1,
 #'                                              center_x = 2.5))
 #'
@@ -260,7 +260,7 @@ position_nudge_center <-
     }
 
     if (is.null(obey_grouping)) {
-      # default needs to be set in panel_fucntion when we have access to data
+      # default needs to be set in panel_function when we have access to data
       obey_grouping <- NA
     }
 
@@ -307,7 +307,9 @@ PositionNudgeCenter <-
       y_orig <- data$y
       # we handle grouping by ourselves
       if (is.na(params$obey_grouping)) {
-        if (inherits(data$x, "mapped_discrete") ||
+        if (inherits(data$x, "ggplot2_mapped_discrete") ||
+            inherits(data$y, "ggplot2_mapped_discrete") ||
+            inherits(data$x, "mapped_discrete") ||
             inherits(data$y, "mapped_discrete") ||
             params$direction == "none") {
           # we ignore grouping as position_nudge() does
@@ -333,7 +335,7 @@ PositionNudgeCenter <-
           in.grp <- data$group == group
         } else {
           # selector for all rows
-          in.grp <- TRUE
+          in.grp <- rep(TRUE, nrow(data))
         }
         # compute focal center by group
         if (is.function(params$center_x)) {
@@ -362,6 +364,7 @@ PositionNudgeCenter <-
           if (params$y == 0) {
             angle <- ifelse(sin(angle) == 0, pi / 2, angle)
           }
+
           x_nudge[in.grp] <- params$x * sin(angle)
           y_nudge[in.grp] <- -params$y * cos(angle)
         } else if (params$direction == "split") {

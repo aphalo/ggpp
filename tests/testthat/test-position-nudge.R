@@ -92,11 +92,29 @@ test_that("nudge_center", {
     y = c("abc","cd","d","c","bcd","a")
   )
 
+  vdiffr::expect_doppelganger("nudge_center0",
+                              ggplot(df, aes(x, y, label = y)) +
+                                geom_point() +
+                                geom_text(
+                                  position = position_nudge_center(center_x = 3, center_y = 4,
+                                                                   x = 0.1, y = 0.2)
+                                )
+  )
   vdiffr::expect_doppelganger("nudge_center1",
                               ggplot(df, aes(x, y, label = y)) +
                                 geom_point() +
                                 geom_text(hjust = 0, vjust = 0,
-                                          position = position_nudge_center(x = 0.05, y = 0.07)
+                                          position = position_nudge_center(x = 0.05,
+                                                                           y = 0.07)
+                                )
+  )
+  vdiffr::expect_doppelganger("nudge_center1a",
+                              ggplot(df, aes(x, y, label = y)) +
+                                geom_point() +
+                                geom_text(hjust = 0, vjust = 0,
+                                          position = position_nudge_center(x = 0.05,
+                                                                           y = 0.07,
+                                                                           direction = "none")
                                 )
   )
   vdiffr::expect_doppelganger("nudge_center2",
