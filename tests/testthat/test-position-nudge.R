@@ -81,8 +81,22 @@ test_that("nudge_keep", {
 
   vdiffr::expect_doppelganger("nudge_keep1",
                               p + geom_text_s(aes(label = grp),
-                                                   vjust = 0,
+                                              vjust = 0, hjust = 0.5,
                                             position = position_nudge_keep(y = 0.12))
+  )
+  vdiffr::expect_doppelganger("nudge_keep2",
+                              p + geom_text_s(aes(label = grp),
+                                              vjust = 0, hjust = "left",
+                                              position = position_nudge_keep(y = 0.12))
+  )
+  vdiffr::expect_doppelganger("nudge_keep3",
+                              p + geom_text_s(aes(label = grp),
+                                              vjust = 0, hjust = "inward",
+                                              position = position_nudge_keep(y = 0.12))
+  )
+  vdiffr::expect_doppelganger("nudge_keep4",
+                              p + geom_text_s(aes(label = grp),
+                                               position = position_nudge_keep(y = 0.12))
   )
 })
 
