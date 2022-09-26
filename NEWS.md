@@ -11,8 +11,11 @@ editor_options:
 -   Add function `dark_or_light()`.
 -   Support the new 'ggplot2' aesthetic `linewidth` in `geom_quadrant_lines()`
     and `geom_vhlines()` for compatibility with 'ggplot2' (>= 3.3.7).
--   Update `posiiton_nudge_center()` for compatibility with 'ggplot2' 
-    (>= 3.3.7).
+-   Update `geom_text_s()` and `geom_label_s()` to support justification 
+    computed from positions, with `hjust = "position"` and 
+    `vjust = "position"` as new defaults.
+-   Update `position_nudge_center()` for compatibility with 'ggplot2' 
+    (>= 3.3.7) and to ensure that every label gets nudged.
 
 # ggpp 0.4.4
 

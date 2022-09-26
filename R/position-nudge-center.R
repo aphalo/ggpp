@@ -77,92 +77,83 @@
 #'
 #' ggplot(df, aes(x, y, label = y)) +
 #'   geom_point() +
-#'   geom_text(hjust = 0, vjust = 0,
-#'             position = position_nudge(x = 0.05, y = 0.07)
-#'   )
+#'   geom_text_s(hjust = "left", vjust = "bottom",
+#'               position = position_nudge(x = 0.2, y = 0.2))
 #'
 #' ggplot(df, aes(x, y, label = y)) +
 #'   geom_point() +
-#'   geom_text(hjust = 0, vjust = 0,
-#'             position = position_nudge_center(x = 0.05, y = 0.07)
+#'   geom_text_s(add.segments = FALSE,
+#'               position = position_nudge_center(x = 0.2, y = 0.2)
 #'   )
 #'
 #' # "split" nudging
 #'
 #' ggplot(df, aes(x, y)) +
 #'   geom_point() +
-#'   geom_text(aes(label = y),
-#'             hjust = "outward", vjust = "outward",
-#'             position = position_nudge_center(x = 0.05,
-#'                                              y = 0.07,
-#'                                              direction = "split"))
+#'   geom_text_s(aes(label = y),
+#'               add.segments = FALSE,
+#'               position = position_nudge_center(x = 0.2,
+#'                                                y = 0.2,
+#'                                                direction = "split"))
 #'
 #' ggplot(df, aes(x, y)) +
 #'   geom_point() +
-#'   geom_text(aes(label = y),
-#'             hjust = "outward",
-#'             position = position_nudge_center(x = 0.08,
-#'                                              direction = "split"))
+#'   geom_text_s(aes(label = y),
+#'               position = position_nudge_center(x = 0.4,
+#'                                                direction = "split"))
 #'
 #' ggplot(df, aes(x, y)) +
 #'   geom_point() +
-#'   geom_text(aes(label = y),
-#'             vjust = "outward",
-#'             position = position_nudge_center(y = 0.1,
-#'                                              direction = "split"))
+#'   geom_text_s(aes(label = y),
+#'               position = position_nudge_center(y = 0.2,
+#'                                                direction = "split"))
 #'
 #' ggplot(df, aes(x, y)) +
 #'   geom_point() +
-#'   geom_text(aes(label = y),
-#'             vjust = "outward", hjust = "outward",
-#'             position = position_nudge_center(x = 0.06,
-#'                                              y = 0.08,
-#'                                              center_y = 2,
-#'                                              center_x = 1.5,
-#'                                              direction = "split"))
+#'   geom_text_s(aes(label = y),
+#'               position = position_nudge_center(x = 0.2,
+#'                                                y = 0.3,
+#'                                                center_y = 2,
+#'                                                center_x = 1.5,
+#'                                                direction = "split"))
 #'
 #' ggplot(df, aes(x, y)) +
 #'   geom_point() +
-#'   geom_text(aes(label = y),
-#'             vjust = "outward", hjust = "outward",
-#'             position = position_nudge_center(x = 0.06,
-#'                                              y = 0.08,
-#'                                              center_y = 2))
+#'   geom_text_s(aes(label = y),
+#'               position = position_nudge_center(x = 0.06,
+#'                                                y = 0.08,
+#'                                                center_y = 2))
 #'
 #' ggplot(df, aes(x, y)) +
 #'   geom_point() +
-#'   geom_text(aes(label = y),
-#'             vjust = "middle", hjust = "outward",
-#'             position = position_nudge_center(x = 0.1,
-#'                                              center_x = 2.5))
+#'   geom_text_s(aes(label = y),
+#'               position = position_nudge_center(x = 0.1,
+#'                                                center_x = 2.51))
 #'
 #' ggplot(df, aes(x, y)) +
 #'   geom_point() +
-#'   geom_text(aes(label = y),
-#'             vjust = "outward", hjust = "outward",
-#'             position = position_nudge_center(x = 0.06,
-#'                                              y = 0.08,
-#'                                              center_x = median,
-#'                                              center_y = median,
-#'                                              direction = "split"))
+#'   geom_text_s(aes(label = y),
+#'               position = position_nudge_center(x = 0.06,
+#'                                                y = 0.08,
+#'                                                center_x = median,
+#'                                                center_y = median,
+#'                                                direction = "split"))
 #'
 #' # "Radial" nudging
 #'
 #' ggplot(df, aes(x, y)) +
 #'   geom_point() +
-#'   geom_text(aes(label = y),
-#'             vjust = "outward", hjust = "outward",
-#'             position = position_nudge_center(x = 0.1,
-#'                                              y = 0.2,
-#'                                              direction = "radial"))
+#'   geom_text_s(aes(label = y),
+#'               position = position_nudge_center(x = 0.1,
+#'                                                y = 0.2,
+#'                                                direction = "radial"))
 #'
 #' ggplot(df, aes(x, y)) +
 #'   geom_point() +
-#'   geom_text(aes(label = y),
-#'             vjust = "inward", hjust = "inward",
-#'             position = position_nudge_center(x = -0.1,
-#'                                              y = -0.1,
-#'                                              direction = "radial"))
+#'   geom_text_s(aes(label = y),
+#'               position = position_nudge_center(x = -0.1,
+#'                                                y = -0.1,
+#'                                                direction = "radial"))
 #'
 #' df <- data.frame(
 #'   x = -10:10,
@@ -174,43 +165,39 @@
 #' ggplot(df, aes(x, z)) +
 #'   geom_point() +
 #'   geom_line() +
-#'   geom_text(aes(label = y),
-#'             vjust = "inward", hjust = "inward",
-#'             position = position_nudge_center(x = -0.9,
-#'                                              y = -2.7,
-#'                                              center_x = mean,
-#'                                              center_y = max))
+#'   geom_text_s(aes(label = y),
+#'               position = position_nudge_center(x = -0.9,
+#'                                                y = -2.7,
+#'                                                center_x = mean,
+#'                                                center_y = max))
 #'
 #' ggplot(df, aes(x, z)) +
 #'   geom_point() +
 #'   geom_line() +
-#'   geom_text(aes(label = y),
-#'             vjust = "outward", hjust = "outward",
-#'             position = position_nudge_center(x = 0.9,
-#'                                              y = 2.7,
-#'                                              center_x = mean,
-#'                                              center_y = max))
+#'   geom_text_s(aes(label = y),
+#'               position = position_nudge_center(x = 0.9,
+#'                                                y = 2.7,
+#'                                                center_x = mean,
+#'                                                center_y = max))
 #'
 #' above_max <- function(x) {1.2 * max(x)}
 #' ggplot(df, aes(x, z)) +
 #'   geom_point() +
 #'   geom_line() +
-#'   geom_text(aes(label = y),
-#'             vjust = "inward", hjust = "inward",
-#'             position = position_nudge_center(x = -1.2,
-#'                                              y = -3,
-#'                                              center_x = mean,
-#'                                              center_y = above_max))
+#'   geom_text_s(aes(label = y),
+#'               position = position_nudge_center(x = -1.2,
+#'                                                y = -3,
+#'                                                center_x = mean,
+#'                                                center_y = above_max))
 #'
 #' ggplot(df, aes(x, z, color = group)) +
 #'   geom_point() +
 #'   geom_line(color = "black", linetype = "dotted") +
-#'   geom_text(aes(label = y),
-#'             vjust = "inward", hjust = "inward",
-#'             position = position_nudge_center(x = -0.9,
-#'                                              y = -2.7,
-#'                                              center_x = mean,
-#'                                              center_y = max))
+#'   geom_text_s(aes(label = y),
+#'               position = position_nudge_center(x = -1.2,
+#'                                                y = -3,
+#'                                                center_x = 0,
+#'                                                center_y = above_max))
 #'
 #' ggplot(df, aes(x, z, color = group)) +
 #'   geom_point() +
@@ -357,6 +344,10 @@ PositionNudgeCenter <-
           # compute x and y nudge for each point
           x_dist <- as.numeric(data[in.grp, "x"]) - x_ctr
           y_dist <- as.numeric(data[in.grp, "y"]) - y_ctr
+          # if both x and y position displacements are 0, we force a shift
+          overlapping <- (abs(x_dist) < 1e-5) & (abs(y_dist) < 1e-5)
+          x_dist <- ifelse(overlapping, 1e-5, x_dist)
+          y_dist <- ifelse(overlapping, 1e-5, y_dist)
           angle <- atan2(y_dist, x_dist) + pi / 2
           if (params$x == 0) {
             angle <- ifelse(cos(angle) == 0, 0, angle)
@@ -382,6 +373,10 @@ PositionNudgeCenter <-
           }
           x_nudge[in.grp] <- xx * sign(as.numeric(data[in.grp, "x"]) - x_ctr)
           y_nudge[in.grp] <- yy * sign(as.numeric(data[in.grp, "y"]) - y_ctr)
+          # if both x and y position displacements are 0, we force a shift
+          overlapping <- (x_nudge[in.grp] == 0) & (y_nudge[in.grp] == 0)
+          x_nudge[in.grp] <- ifelse(overlapping, xx, x_nudge[in.grp])
+          y_nudge[in.grp] <- ifelse(overlapping, yy, y_nudge[in.grp])
         } else {
           if (params$direction != "none") {
             warning("Ignoring unrecognized direction \"",
