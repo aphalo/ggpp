@@ -23,7 +23,7 @@ options(warnPartialMatchArgs = FALSE,
         tibble.print.max = 4,
         tibble.print.min = 4,
         dplyr.summarise.inform = FALSE)
-eval_all <- FALSE  # if TRUE evaluate all code chunks
+eval_all <- TRUE  # if TRUE evaluate all code chunks, which is too slow for checks
 ```
 
 ## Preliminaries
@@ -40,6 +40,11 @@ eval_ggrepel <- requireNamespace("ggrepel", quietly = TRUE) &&
 if (eval_ggrepel) library(ggrepel)
 eval_magick <- requireNamespace("magick", quietly = TRUE)
 ```
+
+**We will use package 'ggrepel' in some examples. Only versions newer than 0.9.1
+are compatible with the position functions from 'ggpp'. The current CRAN version
+is 0.9.1. Consequently, 'ggrepel' will need to be installed from GitHub until
+version 0.9.2 is submitted to CRAN.
 
 # Introduction to the extensions
 
@@ -759,10 +764,11 @@ my.cars <- my.cars[order(my.cars$wt), ]
 ggplot(my.cars, aes(wt, mpg, label = name)) +
   geom_point() +
   geom_text_s(aes(colour = factor(cyl)),
-                   angle = 90,
-                   nudge_y = -1, 
-                   nudge_x = c(0, 0, -0.05, +0.05, 0, 0 ,0, 0),
-                   arrow = arrow(length = grid::unit(1.5, "mm"))) +
+              vjust = 0.5,
+              angle = 90,
+              nudge_y = -1.5, 
+              nudge_x = c(0, 0, -0.05, +0.05, 0, 0 ,0, 0),
+              arrow = arrow(length = grid::unit(1.5, "mm"))) +
   scale_colour_discrete(l = 40) +
   expand_limits(y = 0)
 ```
@@ -998,7 +1004,7 @@ quadrants, and overriding the default formatting for the label.
 ggplot(my.data, aes(x, y)) +
   geom_point() +
   stat_quadrant_counts(quadrants = 0L, label.x = "left", 
-                       aes(label = sprintf("%i observations", stat(count))))
+                       aes(label = sprintf("%i observations", after_stat(count))))
 ```
 
 Annotation of only specific quadrants.
@@ -1366,14 +1372,13 @@ df <- data.frame(
 ```
 
 When used together with `geom_text_s()` or `geom_label_s()` segments
-between a nudged and/or repelled label and the original position (here
+between a nudged label and the original position (here
 indicated by a point) are drawn.
 
 ```{r}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
-  geom_text_s(position = position_nudge_keep(x = 0.1),
-              hjust = "left") +
+  geom_text_s(position = position_nudge_keep(x = 0.1)) +
   expand_limits(x = 2.5)
 ```
 
@@ -1382,8 +1387,7 @@ We can supress the drawing of segments.
 ```{r}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
-  geom_text_s(position = position_nudge_keep(x = 0.1),
-              hjust = "left", add.segments = FALSE) +
+  geom_text_s(position = position_nudge_keep(x = 0.1), add.segments = FALSE) +
   expand_limits(x = 2.5)
 ```
 
@@ -1436,8 +1440,7 @@ ggplot(df, aes(x, y, label = ifelse(x < 1, "", l) )) +
   geom_text_s(position = position_nudge_to(y = 2.3),
               segment.color = "red",
               arrow = arrow(length = unit(0.015, "npc")),
-              angle = 90,
-              hjust = "left") +
+              angle = 90) +
   expand_limits(x = 3)
 ```
 
@@ -1474,90 +1477,96 @@ In all cases nudging shifts the coordinates giving an *x* and/or *y*
 position and also expands the limits of the corresponding scales to
 include the nudged coordinate values.
 
-```{r, eval=eval_ggrepel}
+```{r}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
-  geom_text_repel(position = 
-                    position_nudge_center(x = 0.3, center_x = 0),
-                    min.segment.length = 0, max.iter = 0)
+  geom_text_s(position = 
+                    position_nudge_center(x = -0.1, center_x = 0))
 ```
 
 By default, split is away or towards the `mean()`. Here we allow
 repulsion to separate the labels (compare with previous plot).
 
-```{r, eval=eval_ggrepel}
+```{r}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
-  geom_text_repel(position = 
-                    position_nudge_center(x = 0.3,
-                                          direction = "split"),
-                  min.segment.length = 0)
+  geom_text_s(position = position_nudge_center(x = 0.1, direction = "split")) +
+  expand_limits(x = c(-3, 3))
 ```
 
 We set a different split point as a constant value.
 
-```{r, eval=eval_ggrepel}
+```{r}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
-  geom_text_repel(position = 
-                    position_nudge_center(x = 0.3,
-                                          center_x = 1,
-                                          direction = "split"),
-                  min.segment.length = 0)
+  geom_text_s(position = 
+                position_nudge_center(x = 0.1, 
+                                      center_x = 1, 
+                                      direction = "split")) +
+  expand_limits(x = c(-3, 3))
 ```
 
 We set a different split point as the value computed by a function
 function, by name.
 
-```{r, eval=eval_ggrepel}
+```{r}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
-  geom_text_repel(position = 
-                    position_nudge_center(x = 0.3,
-                                          center_x = median,
-                                          direction = "split"),
-                  min.segment.length = 0)
+  geom_text_s(position = position_nudge_center(x = 0.1, 
+                                               center_x = median, 
+                                               direction = "split")) +
+  expand_limits(x = c(-3, 3))
 ```
 
 We set a different split point as the value computed by an anonymous
-function function. Here que split on the first quartile along *x*.
+function. Here we split on the first quartile along *x*.
 
-```{r, eval=eval_ggrepel}
+```{r}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
-  geom_text_repel(position = 
-                    position_nudge_center(x = 0.3,
+  geom_text_s(position = 
+                    position_nudge_center(x = 0.1,
                                           center_x = function(x) {
                                             quantile(x, 
                                                      probs = 1/4, 
                                                      names = FALSE)
                                           },
-                                          direction = "split"),
-                  min.segment.length = 0)
+                                          direction = "split")) +
+  expand_limits(x = c(-3, 3))
 ```
 
-The labels can be rotated as long as the geometry used supports this.
+The labels can be rotated as long as the geometry used supports this. In the
+next few examples nudging is not enough to avoid overlaps, so we use repulsive
+geometries from package 'ggrepel'. **The current CRAN release of 'ggrepel' (==
+0.9.1) does not work correctly with the position functions from 'ggpp'. The
+development version of 'ggrepel' that can be installed from CRAN and released in
+the future as version (== 0.9.2) works correctly. Incompatible versions of
+'ggrepel' do not crash but the segments are not correctly drawn because of the
+different naming conventions previously used in the 'ggpp' and 'ggrepel' to
+store the original positions.**
 
 ```{r, eval=eval_ggrepel}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
   geom_text_repel(angle = 90,
-                  position = 
-                    position_nudge_center(y = 0.1,
-                                          direction = "split"))
+                  position = position_nudge_center(y = 1,
+                                                   direction = "split")) +
+  expand_limits(y = c(-2, 7))
 ```
 
-By requesting nudging along *x* and *y* and setting
-`direction = "split"` nudging is applied according to the quadrants
-centred on the centroid of the data.
+By requesting nudging along *x* and *y* and setting `direction = "split"`
+nudging is applied according to the quadrants centred on the centroid of the
+data. We however shift the _x_ center point manually to avoid an overlap.
 
 ```{r, eval=eval_ggrepel}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
-  geom_text_repel(position = 
-                    position_nudge_center(x = 0.1,
-                                          y = 0.15,
-                                          direction = "split"))
+  geom_text_repel(position = position_nudge_center(x = 0.3,
+                                                   y = 0.3,
+                                                   center_x = -0.5,
+                                                   direction = "split"),
+                  min.segment.length = 0) +
+  expand_limits(x = c(-3, 3))
 ```
 
 With `direction = "radial"`, the distance nudged away from the center is
@@ -1582,18 +1591,17 @@ justified at the centre, which is the default.
 ```{r, eval=eval_ggrepel}
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
-  geom_text_repel(position = 
-                    position_nudge_center(x = 0.15,
-                                          y = 0.3,
-                                          center_x = 0,
-                                          center_y = 0,
-                                          direction = "radial"),
-                  min.segment.length = 0,
-                  hjust = "outward", vjust = "outward")
+  geom_text_repel(position = position_nudge_center(x = 0.4,
+                                                   y = 0.4,
+                                                   center_x = -0.5,
+                                                   center_y = 1,
+                                                   direction = "radial"),
+                  min.segment.length = 0) +
+  expand_limits(x = c(-3, 3))
 ```
 
 Nudging along one axis, here *x*, and setting the repulsion `direction`
-along the other axis, here *y*, tends to give a pleasent arrangement of
+along the other axis, here *y*, tends to give a pleasant arrangement of
 labels.
 
 ```{r, eval=eval_ggrepel}
@@ -1654,7 +1662,7 @@ once in `position_nudge_line()`.
 ```{r}
 ggplot(subset(df, x >= 0), aes(x, yyy)) +
   geom_point() +
-  stat_smooth(method = "lm") +
+  stat_smooth(method = "lm", formula = y ~ x) +
   geom_text(aes(label = l),
             vjust = "center", hjust = "center",
             position = position_nudge_line(x = 0, y = 1.2,
@@ -1722,10 +1730,10 @@ passed to `position_nudge_line()` are similar. By default
 `"spline"`, `smooth.sline()`, which are a good enough match.
 
 ```{r}
-ggplot(df, aes(x, yy, label = l)) +
+ggplot(df, aes(x, yy)) +
   geom_point() +
-  stat_smooth() +
-  geom_text(aes(y = yy, label = l),
+  stat_smooth(method = "loess", formula = y ~ x) +
+  geom_text(aes(label = l),
             position = position_nudge_line(x = 0.6, 
                                            y = 6,
                                            direction = "split"))
@@ -1734,14 +1742,14 @@ ggplot(df, aes(x, yy, label = l)) +
 We can use other geometries.
 
 ```{r, eval=eval_ggrepel}
-ggplot(df, aes(x, yy, label = l)) +
+ggplot(df, aes(x, yy)) +
   geom_point() +
-  stat_smooth() +
-  geom_label_repel(aes(y = yy, label = paste("point", l)),
-            position = position_nudge_line(x = 0.6, 
-                                           y = 6,
-                                           direction = "split"),
-            min.segment.length = 0)
+  stat_smooth(method = "loess", formula = y ~ x) +
+  geom_label_s(aes(label = l),
+                   position = position_nudge_line(x = 0.4, 
+                                                  y = 4,
+                                                  direction = "split")) +
+  expand_limits(y = -12)
 ```
 
 When fitting a polynomial, `"lm"` should be the argument passed to
@@ -1750,15 +1758,15 @@ When fitting a polynomial, `"lm"` should be the argument passed to
 implemented in* `position_nudge_line()`.
 
 ```{r}
-ggplot(df, aes(x, yy, label = l)) +
+ggplot(df, aes(x, yy)) +
   geom_point() +
   stat_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE)) +
-  geom_text(aes(y = yy, label = l),
-            position = position_nudge_line(method = "lm",
-                                           x = 0.5, 
-                                           y = 5,
-                                           formula = y ~ poly(x, 2, raw = TRUE),
-                                           direction = "split"))
+  geom_text_s(aes(label = l),
+              position = position_nudge_line(method = "lm",
+                                             x = 0.5, 
+                                             y = 5,
+                                             formula = y ~ poly(x, 2, raw = TRUE),
+                                             direction = "split"))
 ```
 
 Compared to pure repulsion adding nudging helps "direct" repulsion in
@@ -1766,21 +1774,22 @@ the desired direction. Compare the two plots bellow using no nudging
 with the two above.
 
 ```{r, eval=eval_ggrepel}
-ggplot(df, aes(x, yy, label = l)) +
+ggplot(df, aes(x, yy)) +
   geom_point() +
   stat_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE)) +
-  geom_text_repel(aes(y = yy, label = l),
+  geom_text_repel(aes(label = l),
                   box.padding = 0.5,
                   min.segment.length = Inf)
 ```
 
 ```{r, eval=eval_ggrepel}
-ggplot(df, aes(x, yy, label = l)) +
+ggplot(df, aes(x, yy)) +
   geom_point() +
-  stat_smooth() +
-  geom_label_repel(aes(y = yy, label = paste("point", l)),
+  stat_smooth(method = "loess", formula = y ~ x) +
+  geom_label_repel(aes(label = paste("point", l)),
                   box.padding = 0.5,
-                  min.segment.length = 0)
+                  min.segment.length = 0) +
+  expand_limits(y = -10, x = c(-13, 13))
 ```
 
 Grouping is supported.
@@ -1835,10 +1844,138 @@ Nudging text or labels in a dodged or stacked bar or column plot has not
 been easy in 'ggplot2'. This is a rather frequent situation, although
 usually there are workarounds. Non-the-less this imposed some
 limitations on the design of plots. The examples below show the use of
-*position* that implement the functionality of more than one of the
-position functions available in 'ggplot2'. ***Examples will be added
-here for the next release. Meanwhile, please, read the help page for
-each function. These pages contain examples.***
+*position* functions that implement the functionality of more than one of the
+position functions available in 'ggplot2'.
+
+**In all cases when labelling points or columns, to achieve the correct
+alignment, the arguments passed to the equivalent position functions used
+for observations and text to be the same.**
+
+All the position functions described in this section are compatible with
+most geometries from `ggpplot2` and extensions. However, only those from
+packages 'ggpp' and 'ggrepel' (> 0.9.1) plot segments and arrows linking
+original and displaced positions as saved by these position functions.
+
+```{r}
+ df <- data.frame(x1 = c(1, 2, 1, 3, -1),
+                  x2 = c("a", "a", "b", "b", "b"),
+                  grp = c("A", "B", "C", "D", "E"))
+```
+
+### position_dodgenudge()
+
+When labelling dodged columns, we can in addition apply nudging. Here we add a
+label just outside the tip of each horizontal bar. With `direction = "split"`
+we ensure that the text is correctly located in the _negative_ columns.
+
+```{r}
+ggplot(data = df, aes(x1, x2, group = grp)) +
+   geom_col(aes(fill = grp), width = 0.8,
+            position = position_dodge()) +
+   geom_vline(xintercept = 0) +
+   geom_text(
+     aes(label = grp),
+     position = position_dodgenudge(x = 0.09, direction = "split", width = 0.8)) +
+   theme(legend.position = "none")
+```
+
+```{r}
+ ggplot(data = df, aes(x2, x1, group = grp)) +
+   geom_col(aes(fill = grp), width = 0.75,
+            position = position_dodge(width = 0.75)) +
+   geom_hline(yintercept = 0) +
+   geom_text(aes(label = grp),
+             position = position_dodgenudge(y = 0.1,
+                                            direction = "split",
+                                            width = 0.75),
+             size = 3) +
+   theme(legend.position = "none")
+```
+
+### position_stacknudge()
+
+With horizontally stacked bar we add labels above each bar, at their horizontal
+center with `vjust = 0.5`. (As with text, the justification is relative, with
+vertical always meaning along the direction representing continuous data values
+or counts.)
+
+```{r}
+ ggplot(data = df, aes(x1, x2, group = grp)) +
+   geom_col(aes(fill = grp), width = 0.5) +
+   geom_vline(xintercept = 0) +
+   geom_text(
+     aes(label = grp),
+     position = position_stacknudge(vjust = 0.5, y = 0.33)) +
+   theme(legend.position = "none")
+```
+
+### position_fillnudge()
+
+Here we nudge the labels down from the top of each stacked bar with `vjust = 1`.
+
+```{r}
+ ggplot(data = subset(df, x1 >= 0), aes(x2, x1, group = grp)) +
+   geom_col(aes(fill = grp), width=0.5, position = position_fill()) +
+   geom_vline(xintercept = 0) +
+   geom_text(
+     aes(label = grp),
+     position = position_fillnudge(vjust = 1, y = -0.05)) +
+   theme(legend.position = "none")
+
+```
+
+### position_jitternudge()
+
+When combining jitter and nudge, we can nudge away from the jittered positions
+or from the original positions. In this example, nudge away from the jittered
+positions with `nudge.from = "jittered"` nad the direction of the nudge is on
+either side of the original position with `direction = "split"`, with nudging
+depending on the direction the jitter has moved the point.
+
+```{r}
+ jitter <- position_jitter(width = 0.2, height = 2, seed = 123)
+
+ jitter_nudge <- position_jitternudge(width = 0.2, height = 2,
+                                      seed = 123, x = 0.1,
+                                      direction = "split",
+                                      nudge.from = "jittered")
+ ggplot(mpg[1:20, ],
+        aes(cyl, hwy, label = drv)) +
+   geom_point(position = jitter) +
+   geom_text_s(position = jitter_nudge)
+
+```
+
+In this second example, the nudging is away from the original _x_-position and the
+jittered _y_-position, which gives vertically aligned labels.
+
+```{r}
+jitter <- position_jitter(width = 0.2, height = 2, seed = 123)
+
+jitter_nudge <- position_jitternudge(width = 0.2, height = 2,
+                                      seed = 123, x = 0.35,
+                                      direction = "split",
+                                      nudge.from = "original.x")
+ ggplot(mpg[1:20, ],
+        aes(cyl, hwy, label = drv)) +
+   geom_point(position = jitter) +
+   geom_text_s(position = jitter_nudge)
+```
+
+### position_jitter_keep()
+
+With no nudging but keeping the original positions we show how points have moved with jitter.
+
+```{r}
+ ggplot(mpg[1:20, ],
+        aes(cyl, hwy, label = drv)) +
+   geom_point() +
+   geom_point_s(position =
+                position_jitter_keep(width = 0.3, height = 2, seed = 123),
+                color = "red",
+                arrow = grid::arrow(length = unit(0.4, "lines")))
+
+```
 
 ## Appendix A: More on density filtering
 

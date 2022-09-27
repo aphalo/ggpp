@@ -101,13 +101,13 @@ df <- data.frame(x1 = c(1, 2, 1, 3, -1),
 
 # Add labels to a horizontal column plot (stacked by default)
 ggplot(data = df, aes(x1, x2, group = grp)) +
-  geom_col(aes(fill = grp), width = 1,
+  geom_col(aes(fill = grp), width = 0.8,
            position = position_dodge()) +
   geom_vline(xintercept = 0) +
   geom_text(
     aes(label = grp),
-    position = position_dodgenudge(x = 0.09, direction = "split"),
-    angle = 90) +
+    position = position_dodgenudge(x = 0.09, direction = "split", width = 0.8),
+    angle = 90, size = 3) +
   theme(legend.position = "none")
 
 ggplot(data = df, aes(x2, x1, group = grp)) +
@@ -117,7 +117,8 @@ ggplot(data = df, aes(x2, x1, group = grp)) +
   geom_text(aes(label = grp),
             position = position_dodgenudge(y = 0.1,
                                            direction = "split",
-                                           width = 0.75)) +
+                                           width = 0.75),
+            size = 3) +
   theme(legend.position = "none")
 
 }

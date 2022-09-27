@@ -16,7 +16,9 @@ Grammar of Graphics implemented in package ‘ggplot2’ (\>= 3.0.0). New
 plot coordinates (npc). Position functions implement new approaches to
 nudging usable with any geometry, but especially useful together with
 `geom_text_s()`, `ggrepel::geom_text_repel()` and
-`ggrepel::geom_label_repel()`.
+`ggrepel::geom_label_repel()`. **A version of ‘ggrepel’ \> 0.9.1 is
+needed, and currently only available from GitHub.** See:
+(<https://ggrepel.slowkow.com>).
 
 ## Extended Grammar of graphics
 

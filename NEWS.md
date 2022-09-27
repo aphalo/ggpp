@@ -15,9 +15,12 @@ editor_options:
     computed from positions, with `hjust = "position"` and 
     `vjust = "position"` as new defaults.
 -   Update `geom_text_s()` and `geom_label_s()` to enable `segment.size`
-    aesthetic and increase its default value.
+    aesthetic and increase its default value, and add formal parameters 
+    `point.padding`, `box.padding` and `min.segment.length` to allow adjusting
+    the length of the segments.
 -   Update `position_nudge_center()` for compatibility with 'ggplot2' 
-    (>= 3.3.7) and to ensure that every label gets nudged.
+    (>= 3.3.7) and to ensure that every label gets nudged even if located
+    exactly at the center (focus point of nudging).
 
 # ggpp 0.4.4
 

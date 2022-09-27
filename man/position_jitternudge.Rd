@@ -97,20 +97,20 @@ When `direction = "split"` is used together with no jitter, the split
 }
 \examples{
 
-jitter <- position_jitter(width = 0.3, height = 2, seed = 123)
+jitter <- position_jitter(width = 0.2, height = 2, seed = 123)
 
-jitter_nudge <- position_jitternudge(width = 0.3, height = 2,
-                                     seed = 123, x = 0.4,
-                                     direction = "as.is",
-                                     nudge.from = "original.x")
+jitter_nudge <- position_jitternudge(width = 0.2, height = 2,
+                                     seed = 123, x = 0.1,
+                                     direction = "split",
+                                     nudge.from = "jittered")
 ggplot(mpg[1:20, ],
        aes(cyl, hwy, label = drv)) +
   geom_point(position = jitter) +
   geom_text_s(position = jitter_nudge)
 
-jitter_nudge <- position_jitternudge(width = 0.3, height = 2,
-                                     seed = 123, x = -0.4,
-                                     direction = "as.is",
+jitter_nudge <- position_jitternudge(width = 0.2, height = 2,
+                                     seed = 123, x = 0.35,
+                                     direction = "split",
                                      nudge.from = "original.x")
 ggplot(mpg[1:20, ],
        aes(cyl, hwy, label = drv)) +

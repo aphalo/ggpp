@@ -1,8 +1,8 @@
 #' @title Linked Text
 #'
 #' @description Text geoms are most useful for labelling plots. `geom_text_s()`
-#'   adds text to the plot and for nudged positions links the original location
-#'   to the nudged text with a segment.
+#'   and `geom_label_s()` add text to the plot and for nudged positions link the
+#'   original location to the nudged text with a segment.
 #'
 #' @section Under development: This is preliminary version of the geom. I plan
 #'   to add features like padding around text and points. I aim to make use of
@@ -13,7 +13,23 @@
 #'   justification as shown in the examples. Aesthetics `segment.colour` and
 #'   `segment.alpha` are implemented, but `segment.linetype` not yet.
 #'
-#' @details Note that when you change the scale limits for x and/or y of a plot,
+#' @details Geometries `geom_text_s()` and `geom_label_s()` have an interface
+#'   that follows closely that of `geom_text_repel()` and `geom_label_repel()`.
+#'   At the current stage of development even if formal parameters have the same
+#'   names, arguments with the same numeric value may have quantitatively
+#'   different effects on the resulting plot. On the other hand,
+#'   `geom_text_repel()` and `geom_label_repel()` with their default arguments
+#'   produce (nearly ?) identical output to that of `geom_text()` and
+#'   `geom_label()`
+#'
+#'   By default this geometries use by default \code{\link{position_nudge_keep}}
+#'   which is backwards compatible with \code{\link[ggplot2]{position_nudge}}.
+#'   In contrast to \code{\link[ggplot2]{position_nudge}},
+#'   \code{\link{position_nudge_keep}} and all other position functions defined
+#'   in packages 'ggpp' and 'ggrepel' keep the original coordinates, thus
+#'   allowing the plotting of connecting segments and arrows.
+#'
+#'   Note that when you change the scale limits for x and/or y of a plot,
 #'   text labels stay the same size, as determined by the \code{size} aesthetic.
 #'   The actual size as seen in the plotted output is decided during the
 #'   rendering of the plot to a graphics device. Limits are expanded only to
@@ -23,36 +39,33 @@
 #'   the rendered size of text is known. Text labels do have height and width,
 #'   but in grid units, not data units.
 #'
-#'   By default this geom uses \code{\link{position_nudge_keep}} which is
-#'   backwards compatible with \code{\link[ggplot2]{position_nudge}}. In contrast to
-#'   \code{\link[ggplot2]{position_nudge}}, \code{\link{position_nudge_keep}}
-#'   and all other position functions defined in packages 'ggpp' and 'ggrepel'
-#'   keep the original coordinates, thus allowing the plotting of connecting
-#'   segments and arrows.
-#'
 #' @section Alignment: You can modify text alignment with the `vjust` and
 #'   `hjust` aesthetics. These can either be a number between 0 (right/bottom)
 #'   and 1 (top/left) or a character (\code{"left"}, \code{"middle"},
 #'   \code{"right"}, \code{"bottom"}, \code{"center"}, \code{"top"}). In
 #'   addition, you can use special alignments for justification including
-#'   \code{"position"}, \code{"inward"} and \code{"outward"}. Position
-#'   justification is computed based on the direction of the displacement of the
-#'   position of the label and is the default. Inward always aligns text towards
+#'   \code{"position"}, \code{"inward"} and \code{"outward"}. Inward always aligns text towards
 #'   the center of the plotting area, and outward aligns it away from the center
 #'   of the plotting area. If tagged with \code{_mean} or \code{_median} (e.g.,
 #'   \code{"outward_mean"}) the mean or median of the data in the panel along
 #'   the corresponding axis is used as center. If the characters following the
 #'   underscore represent a number (e.g., \code{"outward_10.5"}) the reference
-#'   point will be this value in data units.
+#'   point will be this value in data units. Position
+#'   justification is computed based on the direction of the displacement of the
+#'   position of the label so that each individual text or label is justified
+#'   outwards from its original position. The default justification is
+#'   \code{"position"}.
 #'
-#'   By default, unless nudging is set or one of the position functions defined
-#'   in this package are used, these geometries behave like the corresponding
-#'   ones from package 'ggplot2'.
+#'   If nudging is at its default of zero, or a position function defined in
+#'   'ggplot2' is used, these geometries behave like the corresponding
+#'   ones from package 'ggplot2' with a default justification of \code{0.5} and
+#'   no segment drawn.
 #'
-#' @param mapping Set of aesthetic mappings created by [ggplot2::aes]. If
-#'   specified and \code{inherit.aes = TRUE} (the default), is combined with the
-#'   default mapping at the top level of the plot. You only need to supply
-#'   \code{mapping} if there isn't a mapping defined for the plot.
+#' @param mapping Set of aesthetic mappings created by
+#'   \code{\link[ggplot2]{aes}}. If specified and with \code{inherit.aes = TRUE}
+#'   (the default), it is combined with the default mapping at the top level of
+#'   the plot. You only need to supply \code{mapping} if there isn't a mapping
+#'   defined for the plot.
 #' @param data A data frame. If specified, overrides the default data frame
 #'   defined at the top level of the plot.
 #' @param stat The statistical transformation to use on the data for this layer,
@@ -64,12 +77,12 @@
 #' @param na.rm If \code{FALSE} (the default), removes missing values with a
 #'   warning.  If \code{TRUE} silently removes missing values.
 #' @param show.legend logical. Should this layer be included in the legends?
-#'   \code{NA}, the default, includes if any aesthetics are mapped. \code{FALSE}
-#'   never includes, and \code{TRUE} always includes.
+#'   \code{NA}, the default, includes a legend if any aesthetics are mapped.
+#'   \code{FALSE} never includes it, and \code{TRUE} always includes it.
 #' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather
-#'   than combining with them. This is most useful for helper functions that
+#'   than combining them. This is most useful for helper functions that
 #'   define both data and aesthetics and shouldn't inherit behaviour from the
-#'   default plot specification, e.g. \code{\link[ggplot2]{borders}}.
+#'   default plot specification, e.g., \code{\link[ggplot2]{borders}}.
 #' @param check_overlap If \code{TRUE}, text that overlaps previous text in the
 #'   same layer will not be plotted. \code{check_overlap} takes place at draw
 #'   time and in the order of the data, thus its action depends of the size at
@@ -86,13 +99,18 @@
 #'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
 #' @param add.segments logical Display connecting segments or arrows between
 #'   original positions and displaced ones if both are available.
+#' @param box.padding,point.padding numeric By how much each end of the segments
+#'   should shortened.
+#' @param min.segment.length numeric Segments shorter that the minimum length
+#'   are not rendered. (implemented only for \code{geom_text_s()})
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
 #'
 #' @return A plot layer instance.
 #'
-#' @note You can alternatively use \code{\link[ggrepel]{geom_label_repel}},
-#'   possibly setting `max.iter = 0` to disable repulsion when needed.
+#' @note You can alternatively use \code{\link[ggrepel]{geom_text_repel}}
+#'   or \code{\link[ggrepel]{geom_label_repel}}, possibly setting `max.iter = 0`
+#'   to disable repulsion when needed.
 #'
 #' @export
 #'
@@ -198,6 +216,9 @@ geom_text_s <- function(mapping = NULL,
                         nudge_x = 0,
                         nudge_y = 0,
                         add.segments = TRUE,
+                        box.padding = 0.25,
+                        point.padding = 1e-06,
+                        min.segment.length = 0,
                         arrow = NULL,
                         check_overlap = FALSE,
                         na.rm = FALSE,
@@ -224,6 +245,9 @@ geom_text_s <- function(mapping = NULL,
     params = list(
       parse = parse,
       add.segments = add.segments,
+      box.padding = box.padding,
+      point.padding = point.padding,
+      min.segment.length = min.segment.length,
       arrow = arrow,
       check_overlap = check_overlap,
       na.rm = na.rm,
@@ -263,6 +287,9 @@ GeomTextS <-
                                          na.rm = FALSE,
                                          check_overlap = FALSE,
                                          add.segments = TRUE,
+                                         box.padding = 0.25,
+                                         point.padding = 1e-06,
+                                         min.segment.length = 0,
                                          arrow = NULL) {
 
                      add.segments <- add.segments && any(c("x_orig", "y_orig") %in% colnames(data))
@@ -303,6 +330,12 @@ GeomTextS <-
                                         a = "x", b = "y")
                      }
 
+                     if (add.segments) {
+                       segments.data <- shrink_segments(data,
+                                                        point.padding = point.padding,
+                                                        box.padding = box.padding,
+                                                        min.segment.length = min.segment.length)
+                     }
                      # loop needed as gpar is not vectorized
                      all.grobs <- grid::gList()
 
@@ -327,16 +360,21 @@ GeomTextS <-
                        user.grob$name <- paste("text.s.grob", row$group, row.idx, sep = ".")
 
                        if (add.segments) {
-                         segment.grob <-
-                           grid::segmentsGrob(x0 = row$x,
-                                              y0 = row$y,
-                                              x1 = row$x_orig,
-                                              y1 = row$y_orig,
-                                              arrow = arrow,
-                                              gp = grid::gpar(col = ggplot2::alpha(row$segment.colour,
-                                                                                   row$segment.alpha),
-                                                              lwd = row$segment.size),
-                                              name = paste("text.s.segment", row$group, row.idx, sep = "."))
+                         segment.row <- segments.data[row.idx, , drop = FALSE]
+                         if (segment.row$too.short) {
+                           segment.grob <- grid::nullGrob()
+                         } else {
+                           segment.grob <-
+                             grid::segmentsGrob(x0 = segment.row$x,
+                                                y0 = segment.row$y,
+                                                x1 = segment.row$x_orig,
+                                                y1 = segment.row$y_orig,
+                                                arrow = arrow,
+                                                gp = grid::gpar(col = ggplot2::alpha(row$segment.colour,
+                                                                                     row$segment.alpha),
+                                                                lwd = row$segment.size),
+                                                name = paste("text.s.segment", row$group, row.idx, sep = "."))
+                         }
                          all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
                        } else {
                          all.grobs <- grid::gList(all.grobs, user.grob)
@@ -481,3 +519,35 @@ compute_just <- function(just, a, b = a, angle = 0) {
   unname(c(left = 0, center = 0.5, right = 1,
            bottom = 0, middle = 0.5, top = 1)[just])
 }
+
+# shorten segments to add padding
+# code based on https://stackoverflow.com/questions/22649781/
+#
+shrink_segments <- function(data,
+                            box.padding = 0,
+                            point.padding = 0,
+                            min.segment.length = 0.5) {
+  stopifnot(box.padding >= 0 & point.padding >= 0 & (box.padding + point.padding) < 1)
+  segments.data <- data[ , c("x_orig", "y_orig", "x", "y")]
+  starting.length <- apply(segments.data, 1,
+                           function(x) stats::dist(rbind(x[1:2], x[3:4])))
+  # padding origin
+  if (point.padding != 0) {
+    p <- point.padding / starting.length / 100
+    p <- 1 - p
+    segments.data[ , "x_orig"] <- data[ , "x"] + p * (data[ ,"x_orig"] - data[ , "x"])
+    segments.data[ , "y_orig"] <- data[ , "y"] + p * (data[ ,"y_orig"] - data[ , "y"])
+  }
+  # padding position
+  if (box.padding != 0) {
+    p <- box.padding / starting.length / 100
+    p <- 1 - p
+    segments.data[ , "x"] <- data[ , "x_orig"] + p * (data[ ,"x"] - data[ , "x_orig"])
+    segments.data[ , "y"] <- data[ , "y_orig"] + p * (data[ ,"y"] - data[ , "y_orig"])
+  }
+  final.length <- apply(segments.data, 1,
+                        function(x) stats::dist(rbind(x[1:2], x[3:4])))
+  segments.data$too.short <- final.length < min.segment.length
+  segments.data
+}
+

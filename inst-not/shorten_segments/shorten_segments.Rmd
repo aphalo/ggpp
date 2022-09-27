@@ -20,6 +20,45 @@ movePoints <- function(x0y0, xy, d){
 }
 ```
 
+Possible implementation of segment shrinking as a fraction of starting length.
+
+```{r}
+shorten_segments <- function(data, 
+                             label.padding = 0,
+                             point.padding = 0,
+                             min.segment.length = 0.5) {
+  stopifnot(label.padding >= 0 & point.padding >= 0 & (label.padding + point.padding) < 1)
+  segments.data <- data[ , c("x_orig", "y_orig", "x", "y")]
+  starting.length <- apply(segments.data, 1,
+                           function(x) stats::dist(rbind(x[1:2], x[3:4])))
+  # padding origin
+  if (point.padding != 0) {
+    p <- point.padding / starting.dist
+    p <- 1 - p
+    segments.data[ , "x_orig"] <- data[ , "x"] + p * (data[ ,"x_orig"] - data[ , "x"])
+    segments.data[ , "y_orig"] <- data[ , "y"] + p * (data[ ,"y_orig"] - data[ , "y"])
+  }
+  # padding position
+  if (label.padding != 0) {
+    p <- -label.padding / starting.dist
+    p <- 1 - p
+    segments.data[ , "x"] <- data[ , "x_orig"] + p * (data[ ,"x"] - data[ , "x_orig"])
+    segments.data[ , "y"] <- data[ , "y_orig"] + p * (data[ ,"y"] - data[ , "y_orig"])
+  }
+  final.length <- apply(segments.data, 1,
+                        function(x) stats::dist(rbind(x[1:2], x[3:4])))
+  segments.data$too.short <- final.length < min.segment.length
+  segments.data
+}
+```
+
+```{r}
+data <- data.frame(x_orig = c(2:3, -1), y_orig = 0, x = 1:3, y = 0)
+shorten_segments(data, point.padding = 0.01, label.padding = 0.1, 
+                 min.segment.length = 0)
+data
+```
+
 movePoints <- function(x0y0, xy, d){
   total.dist <- apply(cbind(x0y0, xy), 1,
              function(x) stats::dist(rbind(x[1:2], x[3:4])))

@@ -1,8 +1,9 @@
-#' @export
 #' @rdname geom_text_s
 #' @param label.padding Amount of padding around label. Defaults to 0.25 lines.
 #' @param label.r Radius of rounded corners. Defaults to 0.15 lines.
 #' @param label.size Size of label border, in mm.
+#'
+#' @export
 #'
 geom_label_s <- function(mapping = NULL,
                          data = NULL,
@@ -16,6 +17,9 @@ geom_label_s <- function(mapping = NULL,
                          label.r = grid::unit(0.15, "lines"),
                          label.size = 0.25,
                          add.segments = TRUE,
+                         box.padding = 0.25,
+                         point.padding = 1e-06,
+                         min.segment.length = 0,
                          arrow = NULL,
                          na.rm = FALSE,
                          show.legend = NA,
@@ -43,6 +47,9 @@ geom_label_s <- function(mapping = NULL,
       label.r = label.r,
       label.size = label.size,
       add.segments = add.segments,
+      box.padding = box.padding,
+      point.padding = point.padding,
+      min.segment.length = min.segment.length,
       arrow = arrow,
       na.rm = na.rm,
       ...
@@ -79,6 +86,9 @@ GeomLabelS <-
                                          parse = FALSE,
                                          na.rm = FALSE,
                                          add.segments = TRUE,
+                                         box.padding = 0.25,
+                                         point.padding = 1e-06,
+                                         min.segment.length = 0,
                                          arrow = NULL,
                                          label.padding = unit(0.25, "lines"),
                                          label.r = unit(0.15, "lines"),
@@ -147,13 +157,18 @@ GeomLabelS <-
                      class(label.grobs) <- "gList"
 
                      if(add.segments) {
+                       segments.data <-
+                         shrink_segments(data,
+                                         point.padding = point.padding,
+                                         box.padding = box.padding,
+                                         min.segment.length = min.segment.length)
                        # create the grobs
                        segment.grobs <-
                          grid::segmentsGrob(
-                           x1 = data$x,
-                           y1 = data$y,
-                           x0 = data$x_orig,
-                           y0 = data$y_orig,
+                           x1 = segments.data$x,
+                           y1 = segments.data$y,
+                           x0 = segments.data$x_orig,
+                           y0 = segments.data$y_orig,
                            arrow = arrow,
                            gp = grid::gpar(col = alpha(data$segment.colour,
                                                        data$segment.alpha),
