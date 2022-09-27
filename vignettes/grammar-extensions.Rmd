@@ -41,13 +41,6 @@ if (eval_ggrepel) library(ggrepel)
 eval_magick <- requireNamespace("magick", quietly = TRUE)
 ```
 
-As we will use text and labels on the plotting area we change the
-default theme to an uncluttered one.
-
-```{r}
-old_theme <- theme_set(theme_bw())
-```
-
 # Introduction to the extensions
 
 ## Data labels, annotations and insets
@@ -83,7 +76,7 @@ and plots depends only weakly on the plot or map in which they are
 included.
 
 In the case of annotations and insets the designer of a data
-visualization has the freedom to locate them anywhere, as long they do
+visualization has the freedom to locate them anywhere, as long as they do
 not occlude features used to describe data. I will use the term
 *annotation* irrespective if the "labels" are textual or graphical.
 Insets are similar to annotations, but the term *inset* is used when an
@@ -101,7 +94,8 @@ implemented in package 'ggplot2'.
 The plotting of data using package 'ggplot2' is described by Wickham
 (2016) and several other books. Chapter 7 in Aphalo (2020) not only
 describes the grammar used by 'ggplot2' but also several extensions to
-it, including those provided by packages 'ggpp' and 'ggpmisc'.
+it, including those provided by packages 'ggpp' and 'ggpmisc' at the time of
+writing.
 
 In *The Layered Grammar of Graphics* (Wickham 2000) as implemented in
 package 'ggplot2' (Wickham 2016) annotations are "second class"
@@ -115,14 +109,14 @@ From the data visualization perspective the main practical and
 conceptual difference between data labels and annotations is in the
 scales used to position them within the plotting area. Instead of using
 an `annotate()` function that deviates from the grammar of graphics to
-implement annotations, we could retain the use of the grammar of
-graphics for annotations but add support of native plot coordinates
-(npc). Support of annotations done in this way would allow "annotation
+implement annotations, we can retain the use of the grammar of
+graphics for annotations but add support for native plot coordinates
+(npc). Support of annotations done in this way allows "annotation
 layers" to behave almost identically to "data layers", and use the same
-grammar. The *x* and *y* position aesthetics used for data could be
+syntax. The *x* and *y* position aesthetics used for data can be
 supplemented with pseudo-aesthetics without any translation relative to
 the native plotting coordinates of the plotting area or viewport. Doing
-so, would allow the graphic design flexibility conceptually inherent to
+so, allows the graphic design flexibility conceptually inherent to
 annotations within a user-friendly syntax.
 
 ## Extending 'ggplot2'
@@ -132,21 +126,21 @@ was implemented in package 'ggpmisc' (>= 0.3.1) through two new *x* and
 *y* pseudo-aesthetics, *npcx* and *npcy*, and corresponding dumb scales
 and various geometries that make use of them. These scales and
 geometries were implemented as an extension to package 'ggplot2' and are
-in package 'ggpp'.
+currently in package 'ggpp'.
 
-Before showing how this works in practice, we load the package and set
-an uncluttered theme as default.
+Before showing how this works, we load the package and set an uncluttered theme
+as default.
 
 ```{r, message=FALSE}
 library(ggpp)
-theme_set(theme_bw() + theme(panel.grid = element_blank()))
+old_theme <- theme_set(theme_bw() + theme(panel.grid = element_blank()))
 ```
 
-Native plot coordinates have range 0..1. However, the "npc" geoms also
-recognize some positions by name with the same character strings as used
+Native plot coordinates have range 0..1. However, the "npc" geoms from 'ggpp'
+also recognize certain positions by name with the same character strings as used
 for text justification in 'ggplot2'. The default justification is
 `"inward"`, as this protects from clipping at the edges the plotting
-area irrespective the arguments passed to the `witdth` and `height`
+area irrespective of the arguments passed to the `witdth` and `height`
 parameters of R's graphic devices.
 
 ```{r}
@@ -629,7 +623,7 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
 ```
 
 The same plot as above can be created using `annotate()`, but be aware
-that when using facets in 'ggplot2' annotations are identical in all
+that when using facets, 'ggplot2' annotations are identical in all
 panels.
 
 ```{r, eval=eval_all}
@@ -646,14 +640,13 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
   theme_bw()
 ```
 
-As implemented, there is no limitation to the number of insets, and
-faceting is respected. If the base plot shows a map or a bitmap,
-multiple small plots could be superimposed on different countries or
-regions. The size of the insets is controlled by the `vp.width` and
-`vp.height` aesthetics as a fraction of the main plot's plotting region.
-Consequently, the insets are scaled together with the main plot. A
-possible unintuitive but useful feature, is that the theme is linked to
-each plot.
+As implemented in 'ggpp' geometries, there is no limitation to the number of
+insets, and faceting is respected. If the base plot shows a map or a bitmap,
+multiple small plots could be superimposed on different countries or regions.
+The size of the insets is controlled by the `vp.width` and `vp.height`
+aesthetics as a fraction of the main plot's plotting region. Consequently, the
+insets are scaled together with the main plot. A possible unintuitive but useful
+feature, is that the theme is linked to each plot.
 
 Please see section **Normalised Parent Coordinates** below for a
 description of `geom_plot_npc()`.
@@ -661,13 +654,13 @@ description of `geom_plot_npc()`.
 ### geom_grob()
 
 The `geom_grob()` *geometry* plots grobs (graphical objects as created
-with 'grid'), nested in a tibble passed as data argument, using
+with package 'grid'), nested in a tibble passed as data argument, using
 *aesthetics* `x` and `y` for positioning, and `label` for the Grob
 object. While `geom_table()` and `geom_plot()` take as values mapped to
 the `label` aesthetics tibbles or data frames, and ggplots,
 respectively, and convert them into Grobs, `geom_grob()` expects Grobs
 ready to be rendered. This means that any Grob created using 'grid' or
-its extenssions can be added as a data label to a ggplot.
+its extensions can be added as a data label to a ggplot.
 
 ```{r, eval=eval_magick}
 file.name <- 
@@ -708,7 +701,7 @@ ggplot() +
   theme_bw(12)
 ```
 
-`geom_grob()` is designed thinking that its main use will in graphical
+`geom_grob()` is designed thinking that its main use will be for graphical
 annotations, although one could use it for infographics with multiple
 copies of each grob, this would go against the grammar of graphics. In
 this implementation grobs cannot be mapped to an aesthetic through a
@@ -740,22 +733,24 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
 
 ```
 
-### geom_text_s() and geom_point_s()
+### geom_text_s(), geom_label_s(), and geom_point_s()
 
-With package 'ggrepel' we have become used to easily add text and labels
-linked to the labelled observations or points by a line segment or
-arrow. However, sometimes a plot has few text labels and repulsion is
-unnecessary. In such cases nudging or dodging may be enough, or even
-preferable so as to achieve consistency.
+With package 'ggrepel' we have become used to easily add text and labels linked
+to the labelled observations or points by a line segment or arrow. However,
+sometimes a plot has few text labels and repulsion is unnecessary. In such cases
+nudging or dodging may be enough, or even preferable so as to achieve consistent
+positions irrespective of plot scaling or graphic device used for rendering.
 
-We can achieve this with `geom_text_s()` (formerly named
-`geom_text_linked()`) together with a suitable position function that
-retains the original *x* and *y* coordinates of the point. We currently
-provide three different nudge functions described in a later section.
-One of them is used by default providing the same default behaviour as
-`geom_text()` from 'ggplot2' but drawing linking segments if nudging is
-set to a value different to the default of zero. The equivalent for
-points connected with segments is `geom_point_s()`.
+We can achieve this with `geom_text_s()` (formerly named `geom_text_linked()`)
+together with a suitable position function that retains the original *x* and *y*
+coordinates of the point. We provide several different position functions
+described in a later section, all of which retain the initial position in
+`data$x_orig` and `data_$y_orig`. Function `position_nudge_keep()` is used by
+default providing the same default behaviour as `geom_text()` and `geom_label()`
+from 'ggplot2'. However, when nudging or a position
+function that keeps the original position is used, by default linking segments are drawn
+between the original and nudged or displaced positions. Passing `add.segments = FALSE` disables the drawing of segments. The equivalent for nudged points
+connected by segments to their original positions is `geom_point_s()`.
 
 ```{r}
 my.cars <- mtcars[c(TRUE, FALSE, FALSE, FALSE), ]
@@ -765,7 +760,7 @@ ggplot(my.cars, aes(wt, mpg, label = name)) +
   geom_point() +
   geom_text_s(aes(colour = factor(cyl)),
                    angle = 90,
-                   hjust = 1.04, nudge_y = -1, 
+                   nudge_y = -1, 
                    nudge_x = c(0, 0, -0.05, +0.05, 0, 0 ,0, 0),
                    arrow = arrow(length = grid::unit(1.5, "mm"))) +
   scale_colour_discrete(l = 40) +
