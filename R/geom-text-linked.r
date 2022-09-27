@@ -252,7 +252,7 @@ GeomTextS <-
                      lineheight = 1.2,
                      segment.linetype = 1,
                      segment.colour = "grey33",
-                     segment.size = 0.75,
+                     segment.size = 1.5,
                      segment.alpha = 1
                    ),
 
@@ -334,7 +334,8 @@ GeomTextS <-
                                               y1 = row$y_orig,
                                               arrow = arrow,
                                               gp = grid::gpar(col = ggplot2::alpha(row$segment.colour,
-                                                                                   row$segment.alpha)),
+                                                                                   row$segment.alpha),
+                                                              lwd = row$segment.size),
                                               name = paste("text.s.segment", row$group, row.idx, sep = "."))
                          all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
                        } else {

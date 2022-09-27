@@ -71,7 +71,7 @@ GeomLabelS <-
                      lineheight = 1.2,
                      segment.linetype = 1,
                      segment.colour = "grey33",
-                     segment.size = 0.75,
+                     segment.size = 1.5,
                      segment.alpha = 1
                    ),
 
@@ -156,7 +156,8 @@ GeomLabelS <-
                            y0 = data$y_orig,
                            arrow = arrow,
                            gp = grid::gpar(col = alpha(data$segment.colour,
-                                                       data$segment.alpha)))
+                                                       data$segment.alpha),
+                                           lwd = data$segment.size))
                        all.grobs <- gList(segment.grobs, label.grobs)
                      } else {
                        all.grobs <- label.grobs

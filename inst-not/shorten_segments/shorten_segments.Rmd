@@ -1,0 +1,31 @@
+---
+title: "How to add padding"
+output: html_document
+date: "2022-09-26"
+---
+
+(https://stackoverflow.com/questions/22649781/shorten-arrows-lines-segments-between-coordinates)
+
+These are all great answers. In an attempt to come up with something that doesn't presume that points connect in a chain, I wrote the following function, which moves x0y0 (a dataframe where column 1 is x and column 2 is y) closer to xy (same format as x0y0) by absolute distance d.
+
+```{r}
+movePoints <- function(x0y0, xy, d){
+  total.dist <- apply(cbind(x0y0, xy), 1,
+             function(x) stats::dist(rbind(x[1:2], x[3:4])))
+  p <- d / total.dist
+  p <- 1 - p
+  x0y0[,1] <- xy[,1] + p*(x0y0[,1] - xy[,1])
+  x0y0[,2] <- xy[,2] + p*(x0y0[,2] - xy[,2])
+  return(x0y0)
+}
+```
+
+movePoints <- function(x0y0, xy, d){
+  total.dist <- apply(cbind(x0y0, xy), 1,
+             function(x) stats::dist(rbind(x[1:2], x[3:4])))
+  p <- d / total.dist
+  p <- 1 - p
+  x0y0[,1] <- xy[,1] + p*(x0y0[,1] - xy[,1])
+  x0y0[,2] <- xy[,2] + p*(x0y0[,2] - xy[,2])
+  return(x0y0)
+}

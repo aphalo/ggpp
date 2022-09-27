@@ -71,8 +71,8 @@ coordinates.
 }
 \examples{
 
-df <- data.frame(x1 = c(1, 2, 1, 3, -1),
-                 x2 = c("a", "a", "b", "b", "b"),
+df <- data.frame(x1 = c("a", "a", "b", "b", "b"),
+                 x2 = c(1, 2, 1, 3, -1),
                  grp = c("some long name", "other name", "some name",
                          "another name", "some long name"))
 
@@ -96,7 +96,7 @@ ggplot(data = df, aes(x2, x1, group = grp)) +
   theme(legend.position = "none")
 
 # Add labels to a vertical column plot (stacked by default)
-ggplot(data = subset(df, x1 >= 0), aes(x2, x1, group = grp)) +
+ggplot(data = subset(df, x1 >= 0), aes(x1, x2, group = grp)) +
   geom_col(aes(fill = grp), width=0.5, position = position_fill()) +
   geom_vline(xintercept = 0) +
   geom_text(
@@ -106,7 +106,7 @@ ggplot(data = subset(df, x1 >= 0), aes(x2, x1, group = grp)) +
   theme(legend.position = "none")
 
 # Add label at a fixed distance from the top of each column slice
-ggplot(data = df, aes(x2, x1, group = grp)) +
+ggplot(data = df, aes(x1, x2, group = grp)) +
   geom_col(aes(fill = grp), width=0.5) +
   geom_vline(xintercept = 0) +
   geom_text(
@@ -116,12 +116,12 @@ ggplot(data = df, aes(x2, x1, group = grp)) +
 
 # Use geom_text_s(), geom_text_repel() or geom_label_repel() to link
 # label to labelled segment or object with an arrow
-ggplot(data = df, aes(x1, x2, group = grp)) +
+ggplot(data = df, aes(x2, x1, group = grp)) +
   geom_col(aes(fill = grp), width=0.5) +
   geom_vline(xintercept = 0) +
   geom_text_s(
     aes(label = grp),
-    position = position_stacknudge(vjust = 0.5, y = 0.4),
+    position = position_stacknudge(vjust = 0.5, y = 0.35),
     vjust = "bottom") +
   theme(legend.position = "none")
 

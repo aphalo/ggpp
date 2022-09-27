@@ -101,6 +101,11 @@ ggplot(df, aes(x, y, label = l)) +
 ggplot(df, aes(x, y, label = l)) +
   geom_line(linetype = "dotted") +
   geom_point() +
+  geom_text_s(position = position_nudge_line())
+
+ggplot(df, aes(x, y, label = l)) +
+  geom_line(linetype = "dotted") +
+  geom_point() +
   geom_text(position = position_nudge_line(xy_relative = -0.03))
 
 ggplot(df, aes(x, y, label = l)) +
@@ -179,9 +184,9 @@ ggplot(subset(df, x >= 0), aes(y, yy)) +
 ggplot(subset(df, x >= 0), aes(y, yy)) +
   stat_smooth(method = "lm", formula = y ~ x) +
   geom_point() +
-  geom_text(aes(label = l),
-            position = position_nudge_line(line_nudge = 2,
-                                           direction = "split"))
+  geom_text_s(aes(label = l),
+              position = position_nudge_line(line_nudge = 2,
+                                             direction = "split"))
 
 # fitting a linear model instead of the default spline
 

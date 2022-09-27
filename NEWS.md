@@ -14,6 +14,8 @@ editor_options:
 -   Update `geom_text_s()` and `geom_label_s()` to support justification 
     computed from positions, with `hjust = "position"` and 
     `vjust = "position"` as new defaults.
+-   Update `geom_text_s()` and `geom_label_s()` to enable `segment.size`
+    aesthetic and increase its default value.
 -   Update `position_nudge_center()` for compatibility with 'ggplot2' 
     (>= 3.3.7) and to ensure that every label gets nudged.
 
