@@ -17,8 +17,10 @@ plot coordinates (npc). Position functions implement new approaches to
 nudging usable with any geometry, but especially useful together with
 `geom_text_s()`, `ggrepel::geom_text_repel()` and
 `ggrepel::geom_label_repel()`. **A version of ‘ggrepel’ \> 0.9.1 is
-needed, and currently only available from GitHub.** See:
-(<https://ggrepel.slowkow.com>).
+needed to use the position functions from package ‘ggpp’ together with
+repulsive geometries, and currently ‘ggrepel’ \> 0.9.1 is only available
+from GitHub. See: (<https://ggrepel.slowkow.com>) for installation
+instructions and news about future releases.**
 
 ## Extended Grammar of graphics
 
@@ -91,17 +93,17 @@ that use stacking, dodging or jitter. Functions
 `position_jitter_keep()`, `position_stack_keep()`,
 `position_fill_keep()`, `position_dodge_keep()`,
 `position_dosge2_keep()` behave like the positions from ‘ggplot2’ but
-keep in data the original coordinates.
+keep in `data` the original coordinates.
 
 In contrast to position functions from ‘ggplot2’ all these position
 functions keep the original *x* and *y* coordinates when displacing
 them. This makes them compatible with the repulsive geometries from
-package ‘ggrepel’ (\>= 0.9.1) as well as with `geom_text_s()`,
-`geom_point_s()`, `geom_table()`, `geom_plot()` and `geom_grob()` from
-this package. All these geoms can draw segments or arrows connecting the
-original positions to the displaced positions. They remain backwards
-compatible and can be used in all geometries that have a `position`
-formal parameter.
+package ‘ggrepel’ (\> 0.9.1) as well as with `geom_text_s()`,
+`geom_label_s()`, `geom_point_s()`, `geom_table()`, `geom_plot()` and
+`geom_grob()` from this package. All these geoms can draw segments or
+arrows connecting the original positions to the displaced positions.
+They remain backwards compatible and can be used in all geometries that
+have a `position` formal parameter.
 
 ## Justification
 
@@ -123,7 +125,7 @@ re-exports all visible definitions from ‘ggpp’.
 ## Examples
 
 The plots below exemplify some of the things that ‘ggpp’ makes possible
-or makes easier to code compared to ‘ggplot’ used by itself. Additional
+or makes easier to code compared to ‘ggplot’ used on its own. Additional
 examples including several combining ‘ggpp’ and ‘ggrepel’ are provided
 in the package vignette.
 

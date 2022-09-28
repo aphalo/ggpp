@@ -13,7 +13,8 @@ editor_options:
     and `geom_vhlines()` for compatibility with 'ggplot2' (>= 3.3.7).
 -   Update `geom_text_s()` and `geom_label_s()` to support justification 
     computed from positions, with `hjust = "position"` and 
-    `vjust = "position"` as new defaults.
+    `vjust = "position"` as new defaults. (The current, very simple, approach
+    will be further tested and if necessary improved for the next release.)
 -   Update `geom_text_s()` and `geom_label_s()` to enable `segment.size`
     aesthetic and increase its default value, and add formal parameters 
     `point.padding`, `box.padding` and `min.segment.length` to allow adjusting
