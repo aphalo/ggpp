@@ -45,8 +45,9 @@ the plot defaults.}
 \item{position}{The position adjustment to use for overlapping points on this
 layer}
 
-\item{pool.along}{character, one of "none", "x" or "y", indicating which
-quadrants to pool to calculate counts by pair of quadrants.}
+\item{pool.along}{character, one of \code{"none"}, \code{"x"} or \code{"y"},
+indicating which quadrants to pool to calculate counts by pair of
+quadrants.}
 
 \item{xintercept, yintercept}{numeric vectors the coordinates of the origin of the
 quadrants.}

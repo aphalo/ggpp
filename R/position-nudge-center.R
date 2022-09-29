@@ -24,13 +24,14 @@
 #'   length 1 or of the same length as rows there are in \code{data}, or a
 #'   function returning either of these vectors computed from the variables in
 #'   data mapped to \code{x} or \code{y}, respectively.
-#' @param direction One of "none", "radial", or "split". A value of "none"
-#'   replicates the behavior of \code{\link[ggplot2]{position_nudge}}. Which of these three
-#'   values is the default depends on the values passed to the other parameters.
+#' @param direction One of \code{"none"}, \code{"radial"}, or \code{"split"}. A
+#'   value of \code{"none"} replicates the behavior of
+#'   \code{\link[ggplot2]{position_nudge}}. Which of these three values is the
+#'   default depends on the values passed to the other parameters.
 #' @param obey_grouping A logical flag indicating whether to obey or not
 #'   groupings of the observations. By default, grouping is obeyed when both of
-#'   the variables mapped to _x_ and _y_ are continuous numeric and ignored
-#'   otherwise.
+#'   the variables mapped to \emph{x} and \emph{y} are continuous numeric and
+#'   ignored otherwise.
 #' @param kept.origin One of \code{"original"} or \code{"none"}.
 #'
 #' @details Positive values as arguments to \code{x} and \code{y} are added to
@@ -49,7 +50,7 @@
 #'   instead of \code{y} for nudging. If non-\code{NULL} arguments are passed to
 #'   both \code{center_x} and \code{center_y}, and \code{direction} is passed
 #'   \code{"split"} as argument, then the split as described above is applied to
-#'   both _x_ and _y_ coordinates.
+#'   both to \emph{x} and \emph{y} coordinates.
 #'
 #' @note Some situations are handled as special cases. When \code{direction =
 #'   "split"} or \code{direction = "radial"}, observations at exactly the _center_

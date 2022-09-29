@@ -37,7 +37,7 @@
 #'   be estimated for applying the cut point. See \code{\link{density}} for
 #'   details.
 #' @param orientation	character The aesthetic along which density is computed.
-#'   Given explicitly by setting orientation to either "x" or "y".
+#'   Given explicitly by setting orientation to either \code{"x"} or \code{"y"}.
 #' @param position The position adjustment to use for overlapping points on this
 #'   layer
 #' @param show.legend logical. Should this layer be included in the legends?
@@ -50,8 +50,8 @@
 #' @param ... other arguments passed on to \code{\link[ggplot2]{layer}}. This
 #'   can include aesthetics whose values you want to set, not map. See
 #'   \code{\link[ggplot2]{layer}} for more details.
-#' @param na.rm	a logical value indicating whether NA values should be stripped
-#'   before the computation proceeds.
+#' @param na.rm	a logical value indicating whether \code{NA} values should be
+#'   stripped before the computation proceeds.
 #'
 #' @return A plot layer instance. Using as output \code{data} a subset of the
 #'   rows in input \code{data} retained based on a 1D filtering criterion.

@@ -43,8 +43,9 @@ retained in data.}
 \item{position}{The position adjustment to use for overlapping points on this
 layer}
 
-\item{table.theme}{NULL, list or function A gridExtra ttheme definition, or
-a constructor for a ttheme or NULL for default.}
+\item{table.theme}{NULL, list or function A 'gridExtra' \code{ttheme}
+definition, or a constructor for a \code{ttheme} or \code{NULL} for
+default.}
 
 \item{table.rownames, table.colnames}{logical flag to enable or disabling
 printing of row names and column names.}
@@ -52,11 +53,11 @@ printing of row names and column names.}
 \item{table.hjust}{numeric Horizontal justification for the core and column
 headings of the table.}
 
-\item{parse}{If TRUE, the labels will be parsed into expressions and
+\item{parse}{If \code{TRUE}, the labels will be parsed into expressions and
 displayed as described in \code{?plotmath}.}
 
-\item{na.rm}{a logical indicating whether NA values should be stripped before
-the computation proceeds.}
+\item{na.rm}{a logical indicating whether \code{NA} values should be stripped
+before the computation proceeds.}
 
 \item{show.legend}{logical. Should this layer be included in the legends?
 \code{NA}, the default, includes if any aesthetics are mapped. \code{FALSE}

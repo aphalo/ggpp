@@ -21,16 +21,17 @@
 #' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather
 #'   than combining with them. This is most useful for helper functions that
 #'   define both data and aesthetics and should not inherit behaviour from the
-#'   default plot specification, e.g. \code{\link[ggplot2]{borders}}.
+#'   default plot specification, e.g., \code{\link[ggplot2]{borders}}.
 #' @param ... other arguments passed on to \code{\link[ggplot2]{layer}}. This
 #'   can include aesthetics whose values you want to set, not map. See
 #'   \code{\link[ggplot2]{layer}} for more details.
-#' @param na.rm	a logical indicating whether NA values should be stripped before
-#'   the computation proceeds.
+#' @param na.rm	a logical indicating whether \code{NA} values should be stripped
+#'   before the computation proceeds.
 #' @param quadrants integer vector indicating which quadrants are of interest,
 #'   with a \code{OL} indicating the whole plot.
-#' @param pool.along character, one of "none", "x" or "y", indicating which
-#'   quadrants to pool to calculate counts by pair of quadrants.
+#' @param pool.along character, one of \code{"none"}, \code{"x"} or \code{"y"},
+#'   indicating which quadrants to pool to calculate counts by pair of
+#'   quadrants.
 #' @param xintercept,yintercept numeric the coordinates of the origin of the
 #'   quadrants.
 #' @param label.x,label.y \code{numeric} Coordinates (in npc units) to be used
@@ -46,14 +47,14 @@
 #'
 #'   The default origin of quadrants is at \code{xintercept = 0},
 #'   \code{yintercept = 0}. Also by default, counts are computed for all
-#'   quadrants within the $x$ and $y$ scale limits, but ignoring any marginal
-#'   scale expansion. The default positions of the labels is in the farthest
-#'   corner or edge of each quadrant using npc coordinates. Consequently, when
-#'   using facets even with free limits for $x$ and $y$ axes, the location of
-#'   the labels is consistent across panels. This is achieved by use of
-#'   \code{geom = "text_npc"} or \code{geom = "label_npc"}. To pass the
-#'   positions in native data units, pass \code{geom = "text"} explicitly as
-#'   argument.
+#'   quadrants within the \emph{x} and \emph{y} scale limits, but ignoring any
+#'   marginal scale expansion. The default positions of the labels is in the
+#'   farthest corner or edge of each quadrant using npc coordinates.
+#'   Consequently, when using facets even with free limits for \emph{x} and
+#'   \emph{y} axes, the location of the labels is consistent across panels. This
+#'   is achieved by use of \code{geom = "text_npc"} or \code{geom =
+#'   "label_npc"}. To pass the positions in native data units, pass \code{geom =
+#'   "text"} explicitly as argument.
 #'
 #' @section Computed variables: Data frame with one to four rows, one for each
 #'   quadrant for which counts are counted in \code{data}. \describe{

@@ -20,7 +20,7 @@ position_nudge_line(
 \item{x, y}{Amount of vertical and horizontal distance to move. A numeric
 vector of length 1, or of the same length as rows there are in \code{data}.}
 
-\item{xy_relative}{Nudge relative to _x_ and _y_ data expanse, ignored unless
+\item{xy_relative}{Nudge relative to \emph{x} and \emph{y} data expanse, ignored unless
 \code{x} and \code{y} are both \code{NA}s.}
 
 \item{abline}{a vector of length two giving the intercept and slope.}
@@ -49,13 +49,13 @@ line or curve fitted to the data points or supplied as coefficients. While
 \code{position_nudge_center()} is most useful for "round-shaped", vertically-
 or horizontally elongated clouds of points, \code{position_nudge_line()} is
 most suitable when observations follow a linear or curvilinear relationship
-between _x_ and _y_ values. In contrast to
+between \emph{x} and \emph{y} values. In contrast to
 \code{\link[ggplot2]{position_nudge}}, \code{position_nudge_line()} returns
 in `data` both the original coordinates and the nudged coordinates.
 }
 \details{
 The default amount of nudging is 3% of the spread of the data along
-  _x_ and _y_ axes, which in most cases is good. In most cases it is best to
+  \emph{x} and \emph{y} axes, which in most cases is good. In most cases it is best to
   apply nudging along a direction perpendicular to the line or curve, if this
   is the aim, passing an argument to only one of \code{x}, \code{y} or
   \code{xy_relative} will be enough. When \code{direction = "split"} nudging

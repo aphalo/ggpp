@@ -23,20 +23,21 @@
 #' @param ... other arguments passed on to \code{\link[ggplot2]{layer}}. This
 #'   can include aesthetics whose values you want to set, not map. See
 #'   \code{\link[ggplot2]{layer}} for more details.
-#' @param na.rm	a logical indicating whether NA values should be stripped before
-#'   the computation proceeds.
+#' @param na.rm	a logical indicating whether \code{NA} values should be stripped
+#'   before the computation proceeds.
 #' @param digits integer indicating the number of significant digits to be
 #'   retained in data.
 #' @param tb.vars,tb.rows character or numeric vectors, optionally named, used
 #'   to select and/or rename the columns or rows in the table
 #'   returned.
-#' @param table.theme NULL, list or function A gridExtra ttheme definition, or
-#'   a constructor for a ttheme or NULL for default.
+#' @param table.theme NULL, list or function A 'gridExtra' \code{ttheme}
+#'   definition, or a constructor for a \code{ttheme} or \code{NULL} for
+#'   default.
 #' @param table.rownames,table.colnames logical flag to enable or disabling
 #'   printing of row names and column names.
 #' @param table.hjust numeric Horizontal justification for the core and column
 #'   headings of the table.
-#' @param parse If TRUE, the labels will be parsed into expressions and
+#' @param parse If \code{TRUE}, the labels will be parsed into expressions and
 #'   displayed as described in \code{?plotmath}.
 #'
 #' @seealso See \code{\link{geom_table}} for details on how tables respond

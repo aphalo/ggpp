@@ -29,8 +29,9 @@
 #'   \code{\link[ggplot2]{layer}} for more details.
 #' @param na.rm	a logical indicating whether NA values should be stripped before
 #'   the computation proceeds.
-#' @param pool.along character, one of "none", "x" or "y", indicating which
-#'   quadrants to pool to calculate counts by pair of quadrants.
+#' @param pool.along character, one of \code{"none"}, \code{"x"} or \code{"y"},
+#'   indicating which quadrants to pool to calculate counts by pair of
+#'   quadrants.
 #' @param xintercept,yintercept numeric vectors the coordinates of the origin of the
 #'   quadrants.
 #'

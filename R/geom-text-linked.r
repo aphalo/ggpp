@@ -4,25 +4,18 @@
 #'   and `geom_label_s()` add text to the plot and for nudged positions link the
 #'   original location to the nudged text with a segment.
 #'
-#' @section Under development: This is preliminary version of the geom. I plan
-#'   to add features like padding around text and points. I aim to make use of
-#'   the new features of 'grid' in R >= 4.1.0 to keep the implementation as fast
-#'   and simple as possible. Currently this geom does all drawing using at most
-#'   two vectorized calls to 'grid' functions. As a temporary replacement of
-#'   padding around text one can use 'slightly out-of-range' numeric values for
-#'   justification as shown in the examples. Aesthetics `segment.colour` and
-#'   `segment.alpha` are implemented, but `segment.linetype` not yet.
+#' @section Under development: Aesthetic \code{segment.linetype} is not yet
+#'   implemented. The rendered plot may still slightly change slightly in
+#'   future versions. In particular justification based on the position
+#'   displacement needs some improvement.
 #'
-#' @details Geometries `geom_text_s()` and `geom_label_s()` have an interface
-#'   that follows closely that of `geom_text_repel()` and `geom_label_repel()`.
+#' @details Geometries \code{geom_text_s()} and \code{geom_label_s()} have an interface
+#'   that follows closely that of \code{geom_text_repel()} and \code{geom_label_repel()}.
 #'   At the current stage of development even if formal parameters have the same
 #'   names, arguments with the same numeric value may have quantitatively
-#'   different effects on the resulting plot. On the other hand,
-#'   `geom_text_repel()` and `geom_label_repel()` with their default arguments
-#'   produce (nearly ?) identical output to that of `geom_text()` and
-#'   `geom_label()`
+#'   different effects on the resulting plot.
 #'
-#'   This geometries use by default \code{\link{position_nudge_keep}}
+#'   These geometries use by default \code{\link{position_nudge_keep}}
 #'   which is backwards compatible with \code{\link[ggplot2]{position_nudge}}.
 #'   In contrast to \code{\link[ggplot2]{position_nudge}},
 #'   \code{\link{position_nudge_keep}} and all other position functions defined
@@ -39,22 +32,22 @@
 #'   the rendered size of text is known. Text labels do have height and width,
 #'   but in grid units, not data units.
 #'
-#' @section Alignment: You can modify text alignment with the `vjust` and
-#'   `hjust` aesthetics. These can either be a number between 0 (right/bottom)
-#'   and 1 (top/left) or a character (\code{"left"}, \code{"middle"},
-#'   \code{"right"}, \code{"bottom"}, \code{"center"}, \code{"top"}). In
-#'   addition, you can use special alignments for justification including
-#'   \code{"position"}, \code{"inward"} and \code{"outward"}. Inward always
-#'   aligns text towards the center of the plotting area, and outward aligns it
-#'   away from the center of the plotting area. If tagged with \code{_mean} or
-#'   \code{_median} (e.g., \code{"outward_mean"}) the mean or median of the data
-#'   in the panel along the corresponding axis is used as center. If the
-#'   characters following the underscore represent a number (e.g.,
-#'   \code{"outward_10.5"}) the reference point will be this value in data
-#'   units. Position justification is computed based on the direction of the
-#'   displacement of the position of the label so that each individual text or
-#'   label is justified outwards from its original position. The default
-#'   justification is \code{"position"}.
+#' @section Alignment: You can modify text alignment with the \code{vjust} and
+#'   \code{hjust} aesthetics. These can either be a number between 0
+#'   (right/bottom) and 1 (top/left) or a character (\code{"left"},
+#'   \code{"middle"}, \code{"right"}, \code{"bottom"}, \code{"center"},
+#'   \code{"top"}). In addition, you can use special alignments for
+#'   justification including \code{"position"}, \code{"inward"} and
+#'   \code{"outward"}. Inward always aligns text towards the center of the
+#'   plotting area, and outward aligns it away from the center of the plotting
+#'   area. If tagged with \code{_mean} or \code{_median} (e.g.,
+#'   \code{"outward_mean"}) the mean or median of the data in the panel along
+#'   the corresponding axis is used as center. If the characters following the
+#'   underscore represent a number (e.g., \code{"outward_10.5"}) the reference
+#'   point will be this value in data units. Position justification is computed
+#'   based on the direction of the displacement of the position of the label so
+#'   that each individual text or label is justified outwards from its original
+#'   position. The default justification is \code{"position"}.
 #'
 #'   If nudging is at its default of zero, or a position function defined in
 #'   'ggplot2' is used, these geometries behave like the corresponding
@@ -108,10 +101,6 @@
 #'
 #' @return A plot layer instance.
 #'
-#' @note You can alternatively use \code{\link[ggrepel]{geom_text_repel}}
-#'   or \code{\link[ggrepel]{geom_label_repel}}, possibly setting `max.iter = 0`
-#'   to disable repulsion when needed.
-#'
 #' @export
 #'
 #' @examples
@@ -120,18 +109,6 @@
 #' my.cars$name <- rownames(my.cars)
 #' p <- ggplot(my.cars, aes(wt, mpg, label = name)) +
 #'        geom_point(color = "red")
-#'
-#' # default behavior is as for geon_text()
-#' p + geom_text_s()
-#' # Avoid overlaps
-#' p + geom_text_s(check_overlap = TRUE)
-#' # Change size of the label
-#' p + geom_text_s(size = 2.5)
-#'
-#' # default behavior is as for geon_label()
-#' p + geom_label_s()
-#' # Change size of the label
-#' p + geom_label_s(size = 2.5)
 #'
 #' # Use nudging
 #' p +
@@ -149,7 +126,7 @@
 #'   expand_limits(x = 6.2)
 #' p +
 #'   geom_text_s(nudge_y = 0.25, angle = 90) +
-#'   expand_limits(y = 25)
+#'   expand_limits(y = 30)
 #' p +
 #'   geom_text_s(nudge_y = 0.22) +
 #'   expand_limits(x = c(2, 6))
