@@ -11,13 +11,13 @@ scale_npcx_continuous(...)
 scale_npcy_continuous(...)
 }
 \arguments{
-\item{...}{Other arguments passed on to `continuous_scale()`}
+\item{...}{Other arguments passed on to \code{continuous_scale()}}
 }
 \value{
 A \code{"Scale"} object.
 }
 \description{
-`scale_npcx_continuous()` and `scale_npcy_continuous()` are
+\code{scale_npcx_continuous()} and \code{scale_npcy_continuous()} are
 scales for continuous npcx and npcy aesthetics expressed in "npc" units.
 There are no variants. Obviously limits are always the full range of "npc"
 units and transformations meaningless. These scales are used by the newly

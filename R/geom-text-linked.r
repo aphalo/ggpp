@@ -22,17 +22,17 @@
 #'   produce (nearly ?) identical output to that of `geom_text()` and
 #'   `geom_label()`
 #'
-#'   By default this geometries use by default \code{\link{position_nudge_keep}}
+#'   This geometries use by default \code{\link{position_nudge_keep}}
 #'   which is backwards compatible with \code{\link[ggplot2]{position_nudge}}.
 #'   In contrast to \code{\link[ggplot2]{position_nudge}},
 #'   \code{\link{position_nudge_keep}} and all other position functions defined
 #'   in packages 'ggpp' and 'ggrepel' keep the original coordinates, thus
 #'   allowing the plotting of connecting segments and arrows.
 #'
-#'   Note that when you change the scale limits for x and/or y of a plot,
-#'   text labels stay the same size, as determined by the \code{size} aesthetic.
-#'   The actual size as seen in the plotted output is decided during the
-#'   rendering of the plot to a graphics device. Limits are expanded only to
+#'   Note that when you change the scale limits for \emph{x} and/or \emph{y} of
+#'   a plot, text labels stay the same size, as determined by the \code{size}
+#'   aesthetic. The actual size as seen in the plotted output is decided during
+#'   the rendering of the plot to a graphics device. Limits are expanded only to
 #'   include the anchor point of the labels because the "width" and "height" of
 #'   a text element are 0 (as seen by ggplot2). For the same reason, stacking
 #'   and dodging text will not work as they take place within 'ggplot2' before
@@ -44,17 +44,17 @@
 #'   and 1 (top/left) or a character (\code{"left"}, \code{"middle"},
 #'   \code{"right"}, \code{"bottom"}, \code{"center"}, \code{"top"}). In
 #'   addition, you can use special alignments for justification including
-#'   \code{"position"}, \code{"inward"} and \code{"outward"}. Inward always aligns text towards
-#'   the center of the plotting area, and outward aligns it away from the center
-#'   of the plotting area. If tagged with \code{_mean} or \code{_median} (e.g.,
-#'   \code{"outward_mean"}) the mean or median of the data in the panel along
-#'   the corresponding axis is used as center. If the characters following the
-#'   underscore represent a number (e.g., \code{"outward_10.5"}) the reference
-#'   point will be this value in data units. Position
-#'   justification is computed based on the direction of the displacement of the
-#'   position of the label so that each individual text or label is justified
-#'   outwards from its original position. The default justification is
-#'   \code{"position"}.
+#'   \code{"position"}, \code{"inward"} and \code{"outward"}. Inward always
+#'   aligns text towards the center of the plotting area, and outward aligns it
+#'   away from the center of the plotting area. If tagged with \code{_mean} or
+#'   \code{_median} (e.g., \code{"outward_mean"}) the mean or median of the data
+#'   in the panel along the corresponding axis is used as center. If the
+#'   characters following the underscore represent a number (e.g.,
+#'   \code{"outward_10.5"}) the reference point will be this value in data
+#'   units. Position justification is computed based on the direction of the
+#'   displacement of the position of the label so that each individual text or
+#'   label is justified outwards from its original position. The default
+#'   justification is \code{"position"}.
 #'
 #'   If nudging is at its default of zero, or a position function defined in
 #'   'ggplot2' is used, these geometries behave like the corresponding

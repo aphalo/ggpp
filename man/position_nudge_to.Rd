@@ -7,27 +7,28 @@
 position_nudge_to(x = NULL, y = NULL, kept.origin = "original")
 }
 \arguments{
-\item{x, y}{Coordinates of the destination position. A numeric
-vector of length 1, or of the same length as rows there are in `data`.
-The default, `NULL`, leaves the original coordinates unchanged.}
+\item{x, y}{Coordinates of the destination position. A numeric vector of
+length 1, or of the same length as rows there are in \code{data}. The
+default, \code{NULL}, leaves the original coordinates unchanged.}
 
-\item{kept.origin}{One of "original" or "none".}
+\item{kept.origin}{One of \code{"original"} or \code{"none"}.}
 }
 \value{
 A \code{"Position"} object.
 }
 \description{
-`position_nudge_to()` is generally useful for adjusting the position of
-labels or text, both on a discrete or continuous scale. This version from
-package 'ggpmisc' differs from [ggplot2::position_nudge] in that the
-coordinates of the new position are given directly, rather than as a
-displacement from the original location. As other position functions in
-this package, it preserves the original position to allow the text to
-be linked back to its original position with a segment or arrow.
+\code{position_nudge_to()} is generally useful for adjusting the position of
+labels or text, both on a discrete or continuous scale.
+\code{position_nudge_to()} differs from \code{\link[ggplot2]{position_nudge}}
+in that the coordinates of the new position are given directly, rather than
+as a displacement from the original location. As other position functions in
+this package, it preserves the original position to allow the text to be
+linked back to its original position with a segment or arrow.
 }
 \details{
-The new `x` or `y` replace the original ones, while the original
-  coordinates are returned in `x_orig` and `y_orig`.
+The nudged \code{x} or \code{y} replace the original ones in
+  \code{data}, while the original coordinates are returned in \code{x_orig}
+  and \code{y_orig}.
 }
 \examples{
 df <- data.frame(
@@ -48,7 +49,8 @@ ggplot(df, aes(x, y, label = label)) +
 
 }
 \seealso{
-[ggplot::position_nudge()], [ggrepel::position_nudge_repel()].
+\code{\link[ggplot2]{position_nudge}},
+  \code{\link[ggrepel]{position_nudge_repel}}.
 
 Other position adjustments: 
 \code{\link{position_dodgenudge}()},

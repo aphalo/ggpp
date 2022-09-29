@@ -1,6 +1,6 @@
 #' Compute npc coordinates
 #'
-#' Convert character-encoded positions to npc units and shift postions to
+#' Convert character-encoded positions to npc units and shift positions to
 #' avoid overlaps when grouping is active. If numeric validate npc values.
 #'
 #' @param x,y numeric or character vector of coordinates.

@@ -41,33 +41,36 @@ bottom, 0.5 for the middle, and 1 (the default) for the top.}
 useful if you're rotating both the plot and legend.}
 
 \item{x, y}{Amount of vertical and horizontal distance to move. A numeric
-vector of length 1, or of the same length as rows there are in `data`,}
+vector of length 1, or of the same length as rows there are in \code{data},}
 
-\item{direction}{One of "none", "split", "split.x" or "split.y". A value of
-"none" replicates the behavior of [ggplot2::position_nudge]. At the moment
-"split" changes the sign of the nudge at zero, which is suiatble for column
-plots with negative slices.}
+\item{direction}{One of \code{"none"}, \code{"split"}, \code{"split.x"} or
+\code{"split.y"}. A value of \code{"none"} replicates the behavior of
+\code{\link[ggplot2]{position_nudge}}. At the moment \code{"split"} changes
+the sign of the nudge at zero, which is suitable for column plots with
+negative slices.}
 
-\item{kept.origin}{One of "original", "stacked" or "none".}
+\item{kept.origin}{One of \code{"original"}, \code{"stacked"} or
+\code{"none"}.}
 }
 \value{
 A \code{"Position"} object.
 }
 \description{
-`position_stacknudge()` is useful when labelling plots such as stacked
+\code{position_stacknudge()} is useful when labelling plots such as stacked
 bars, stacked columns, stacked lines, etc. In contrast to
-[ggplot2::position_nudge], `position_stacknudge()` returns in `data`
-both the original coordinates and the nudged coordinates.
+\code{\link[ggplot2]{position_nudge}}, \code{position_stacknudge()} returns
+in \code{data} both the original coordinates and the nudged coordinates.
 }
 \details{
-This position function is backwards compatible with [ggplot2::position_nudge]
-but extends it by adding support for stacking and for the repulsive geometries
-from package 'ggrepel'.
+This position function is backwards compatible with
+\code{\link[ggplot2]{position_nudge}} but extends it by adding support for
+stacking and for geometries that make use of the original position to draw
+connecting segments or arrows.
 
-The wrapper `position_nudge_keep()` with exactly the same signature and
-behaviour as [ggplot2::position_nudge] provides an easier to remember name
-when the desire is only to have access to both the original and nudged
-coordinates.
+The wrapper \code{position_nudge_keep()} with exactly the same signature and
+behaviour as \code{\link[ggplot2]{position_nudge}} provides an easier to
+remember name when the desire is only to have access to both the original and
+nudged coordinates.
 }
 \examples{
 
@@ -127,7 +130,9 @@ ggplot(data = df, aes(x2, x1, group = grp)) +
 
 }
 \seealso{
-[ggplot2::position_nudge()], [ggrepel::position_nudge_repel()].
+\code{\link[ggplot2]{position_nudge}},
+  \code{\link[ggplot2]{position_stack}},
+  \code{\link[ggrepel]{position_nudge_repel}}.
 
 Other position adjustments: 
 \code{\link{position_dodgenudge}()},

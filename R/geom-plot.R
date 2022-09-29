@@ -6,12 +6,7 @@
 #' respects they behave as any other ggplot geometry: a layer con contain
 #' multiple tables and faceting works as usual.
 #'
-#' @details You can modify the alignment of inset plots with the \code{vjust}
-#'   and \code{hjust} aesthetics. These can either be a number between 0
-#'   (right/bottom) and 1 (top/left) or a character ("left", "middle", "right",
-#'   "bottom", "center", "top").
-#'
-#'   You can modify the size of inset plots with the \code{vp.width} and
+#' @details You can modify the size of inset plots with the \code{vp.width} and
 #'   \code{vp.height} aesthetics. These can take a number between 0 (smallest
 #'   possible inset) and 1 (whole plotting area width or height). The default
 #'   value for for both of these aesthetics is 1/5. Thus, in contrast to
@@ -20,15 +15,6 @@
 #'   irrespective of how the plot is rendered. The aspect ratio of insets is
 #'   preserved and size is adjusted until the whole inset fits within the
 #'   viewport.
-#'
-#'   You can modify inset plot alignment with the `vjust` and `hjust`
-#'   aesthetics. These can either be a number between 0 (right/bottom) and 1
-#'   (top/left) or a character (`"left"`, `"middle"`, `"right"`, `"bottom"`,
-#'   `"center"`, `"top"`). There several two special alignments: `"inward"` and
-#'   `"outward"`. Inward always aligns text towards the center of the plotting
-#'   area, and outward aligns it away from the center of the plotting area. It
-#'   tagged with `_mean` or `_median` the mean or median of the data in the
-#'   panel along the corresponding axis is used as center.
 #'
 #'   By default this geom uses \code{\link{position_nudge_center}} which is
 #'   backwards compatible with \code{\link[ggplot2]{position_nudge}} but
@@ -39,7 +25,8 @@
 #'   segments and arrows.
 #'
 #'   This geom works only with tibbles as \code{data}, as its expects a list of
-#'   ggplot objects ("gg" class) to be mapped to the \code{label} aesthetic.
+#'   ggplot objects (\code{"gg"} class) to be mapped to the \code{label}
+#'   aesthetic.
 #'
 #'   The \code{x} and \code{y} aesthetics determine the position of the whole
 #'   inset plot, similarly to that of a text label, justification is interpreted
@@ -47,16 +34,27 @@
 #'   coordinates in the data, and \code{angle} is used to rotate the plot as a
 #'   whole.
 #'
-#'   In the case of \code{geom_plot_npc()}, \code{npcx} and \code{npcy}
-#'   aesthetics determine the position of the inset plot. As for text labels,
-#'   justification is interpreted as indicating the position of the inset plot
-#'   with respect to its \code{npcx} and \code{npcy} coordinates, and
-#'   \code{angle} is used to rotate the plot as a whole.
+#'   In the case of \code{geom_table_npc()}, \code{npcx} and \code{npcy}
+#'   aesthetics determine the position of the inset plot. Justification as
+#'   described above for .
 #'
+#'   Use \code{\link{annotate}} as redefined in 'ggpp' when adding inset plots
+#'   as annotations (automatically available unless 'ggpp' is not attached).
 #'   \code{\link[ggplot2]{annotate}} cannot be used with \code{geom = "plot"}.
-#'   Use \code{\link{annotate}} (automatic unless 'ggpp' is not attached) as
-#'   redefined in 'ggpp' when adding inset plots as annotations (automatic
-#'   unless 'ggpp' is not attached).
+#'
+#' @section Alignment: You can modify the alignment of the plot with the `vjust`
+#'   and `hjust` aesthetics. These can either be a number between 0
+#'   (right/bottom) and 1 (top/left) or a character (\code{"left"},
+#'   \code{"middle"}, \code{"right"}, \code{"bottom"}, \code{"center"},
+#'   \code{"top"}). In addition, you can use special alignments for
+#'   justification including \code{"inward"} and \code{"outward"}. Inward always
+#'   aligns text towards the center of the plotting area, and outward aligns it
+#'   away from the center of the plotting area. If tagged with \code{_mean} or
+#'   \code{_median} (e.g., \code{"outward_mean"}) the mean or median of the data
+#'   in the panel along the corresponding axis is used as center. If the
+#'   characters following the underscore represent a number (e.g.,
+#'   \code{"outward_10.5"}) the reference point will be this value in data
+#'   units.
 #'
 #' @seealso \code{\link{geom_plot}}, \code{\link{geom_table}},
 #'   \code{\link{annotate}}, \code{\link{position_nudge_keep}},
@@ -104,26 +102,10 @@
 #'   data units of the base plot: when you modify scale limits, inset plots stay
 #'   the same size relative to the physical size of the base plot.
 #'
-#' @note These geoms work only with tibbles as \code{data}, as they expects a
-#'   list of ggplots ("gg" objects) to be mapped to the \code{label} aesthetic.
-#'   Aesthetics mappings in the inset plot are independent of those in the base
-#'   plot.
-#'
-#'   In the case of \code{geom_plot()}, \code{x} and \code{y} aesthetics
-#'   determine the position of the whole inset plot, similarly to that of a text
-#'   label, justification is interpreted as indicating the position of the plot
-#'   with respect to the $x$ and $y$ coordinates in the data, and \code{angle}
-#'   is used to rotate the plot as a whole.
-#'
-#'   In the case of \code{geom_plot_npc()}, \code{npcx} and \code{npcy}
-#'   aesthetics determine the position of the whole inset plot, similarly to
-#'   that of a text label, justification is interpreted as indicating the
-#'   position of the plot with respect to the $x$ and $y$ coordinates in "npc"
-#'   units, and \code{angle} is used to rotate the plot as a whole.
-#'
-#'   \strong{\code{annotate()} cannot be used with \code{geom = "plot"}}. Use
-#'   \code{\link[ggplot2]{annotation_custom}} directly when adding inset plots
-#'   as annotations.
+#' @note The inset plots are stored nested within the main ggplot object and
+#'   contain their own copy of the data are rendered as grid grobs as normal
+#'   ggplots at the time the main ggplot is rendered. They can have different
+#'   themes.
 #'
 #' @references The idea of implementing a \code{geom_custom()} for grobs has
 #'   been discussed as an issue at
@@ -151,13 +133,14 @@
 #'                          theme_bw(10)))
 #' p +
 #'   expand_limits(x = 0, y = 0) +
-#'   geom_plot_npc(data = df, aes(npcx = x, npcy = y, label = plot))
+#'   geom_plot_npc(data = df,
+#'                 aes(npcx = x, npcy = y, label = plot))
 #'
 #' p +
 #'   expand_limits(x = 0, y = 0) +
 #'   geom_plot_npc(data = df,
-#'                 vp.width = 1/2, vp.height = 1/4,
-#'                 aes(npcx = x, npcy = y, label = plot))
+#'                 aes(npcx = x, npcy = y, label = plot,
+#'                 vp.width = 1/2, vp.height = 1/4))
 #'
 #' p +
 #'   expand_limits(x = 0, y = 0) +

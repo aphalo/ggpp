@@ -30,24 +30,24 @@ position_nudge_keep(x = 0, y = 0)
 }
 \arguments{
 \item{x, y}{Amount of vertical and horizontal distance to move. A numeric
-vector of length 1, or of the same length as rows there are in `data`,}
+vector of length 1, or of the same length as rows there are in \code{data},}
 
 \item{center_x, center_y}{The coordinates of the virtual origin out from which
 nudging radiates or splits in opposite directions. A numeric vector of
-length 1 or of the same length as rows there are in `data`, or a function
-returning either of these vectors computed from the variables in data
-mapped to `x` or `y`, respectively.}
+length 1 or of the same length as rows there are in \code{data}, or a
+function returning either of these vectors computed from the variables in
+data mapped to \code{x} or \code{y}, respectively.}
 
 \item{direction}{One of "none", "radial", or "split". A value of "none"
-replicates the behavior of [ggplot2::position_nudge]. Which of these three
+replicates the behavior of \code{\link[ggplot2]{position_nudge}}. Which of these three
 values is the default depends on the values passed to the other parameters.}
 
-\item{obey_grouping}{A logical flag indicating whether to obey or not groupings
-of the observations. By default, grouping is obeyed when both of the
-variables mapped to _x_ and _y_ are continuous numeric and ignored
+\item{obey_grouping}{A logical flag indicating whether to obey or not
+groupings of the observations. By default, grouping is obeyed when both of
+the variables mapped to _x_ and _y_ are continuous numeric and ignored
 otherwise.}
 
-\item{kept.origin}{One of "original" or "none".}
+\item{kept.origin}{One of \code{"original"} or \code{"none"}.}
 }
 \value{
 A \code{"Position"} object.
@@ -69,34 +69,37 @@ behaviour as \code{\link[ggplot2]{position_nudge}} provides an easier to remembe
 when the desire is only to have access to both the original and nudged
 coordinates.
 
-Positive values as arguments to `x` and `y` are added to the
-  original position along either axis. If no arguments are passed to
-  `center_x`, `center_y` or `direction`, the nudging is applied as is, as is
-  the case if `direction = "none"`. If non-`NULL` arguments are passed to
-  both `center_x` and `center_y`, `direction = "radial"` is assumed. In this
-  case, if `x` and/or `y` positive nudging is applied radially outwards from
+Positive values as arguments to \code{x} and \code{y} are added to
+  the original position along either axis. If no arguments are passed to
+  \code{center_x}, \code{center_y} or \code{direction}, the nudging is
+  applied as is, as is the case if \code{direction = "none"}. If
+  non-\code{NULL} arguments are passed to both \code{center_x} and
+  \code{center_y}, \code{direction = "radial"} is assumed. In this case, if
+  \code{x} and/or \code{y} positive nudging is applied radially outwards from
   the center, while if negative, inwards towards the center. When a
-  non-`NULL` argument is passed only to one of `center_x` or `center_y`,
-  `direction = "split"` is assumed. In this case when the initial location of
-  the point is to the left of `center_x`, `-x` is used instead of `x` for
-  nudging, and when the initial location of the point is to the below of
-  `center_y`, `-y` is used instead of `y` for nudging. If non-`NULL` arguments
-  are passed to both `center_x` and `center_y`, and `direction` is passed
-  `"split"` as argument, then the split as described above is applied to
+  non-\code{NULL} argument is passed only to one of \code{center_x} or
+  \code{center_y}, \code{direction = "split"} is assumed. In this case when
+  the initial location of the point is to the left of \code{center_x},
+  \code{-x} is used instead of \code{x} for nudging, and when the initial
+  location of the point is to the below of \code{center_y}, \code{-y} is used
+  instead of \code{y} for nudging. If non-\code{NULL} arguments are passed to
+  both \code{center_x} and \code{center_y}, and \code{direction} is passed
+  \code{"split"} as argument, then the split as described above is applied to
   both _x_ and _y_ coordinates.
 }
 \note{
-Some situations are handled as special cases. When `direction =
-  "split"` or `direction = "radial"`, observations at exactly the _center_
-  are nudged using `x` and `y` unchanged. When `direction = "split"`, and
-  both `center_x` and `center_y` have been supplied, segments are drawn at
+Some situations are handled as special cases. When \code{direction =
+  "split"} or \code{direction = "radial"}, observations at exactly the _center_
+  are nudged using \code{x} and \code{y} unchanged. When\code{direction = "split"},
+  and
+  both \code{center_x} and \code{center_y} have been supplied, segments are drawn at
   eight different possible angles. When segments are exactly horizontal or
   vertical they would be shorter than when drawn at the other four angles, in
-  which case `x` or `y` are extended to ensure these segments are of the same
+  which case \code{x} or \code{y} are adjusted to ensure these segments are of the same
   lengths as those at other angles.
 
   This position is most useful when labeling points forming a cloud or
-  along vertical or horizontal lines or "divides".
+  grouped along vertical or horizontal lines or "divides".
 }
 \examples{
 df <- data.frame(

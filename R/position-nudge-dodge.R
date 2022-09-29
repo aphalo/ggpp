@@ -1,33 +1,36 @@
 #' Combined positions dodge and nudge
 #'
-#' `position_dodgenudge()` combines into one function the action of
-#' [ggplot2::position_dodge] and [ggplot2::position_nudge] and
-#' `position_dodge2nudge()` combines into one function the action of
-#' [ggplot2::position_dodge2] and [ggplot2::position_nudge]. They are useful
-#' when labelling plots such as grouped bars, columns, etc. and when adding
-#' dodged to text labels linked to observations plotted without dodge. It can
-#' replace other position functions as it is backwards compatible. Like all
-#' other position functions in 'ggpp' and 'ggrepel' it preserves the initial
-#' position to allow drawing of segments or arrow linking the original position
-#' to the displaced one.
+#' \code{position_dodgenudge()} combines into one function the action of
+#' \code{\link[ggplot2]{position_dodge}} and
+#' \code{\link[ggplot2]{position_nudge}} and \code{position_dodge2nudge()}
+#' combines into one function the action of
+#' \code{\link[ggplot2]{position_dodge2}} and
+#' \code{\link[ggplot2]{position_nudge}}. They are useful when labelling plots
+#' such as grouped bars, columns, etc. and when adding dodged to text labels
+#' linked to observations plotted without dodge. It can replace other position
+#' functions as it is backwards compatible. Like all other position functions in
+#' 'ggpp' and 'ggrepel' it preserves the initial position to allow drawing of
+#' segments or arrow linking the original position to the displaced one.
 #'
-#' @details The appled dodge is identical to that by [ggplot2::position_dodge]
-#'   while nudging is similar to that by [ggplot2::position_nudge].
+#' @details The applied dodge is identical to that by
+#'   \code{\link[ggplot2]{position_dodge}} or
+#'   \code{\link[ggplot2]{position_dodge2}} while nudging is similar to that by
+#'   \code{\link[ggplot2]{position_nudge}}.
 #'
-#' There are two posible uses for these functions. First they can be used
-#' to label dodged bars or boxplots. In this case, it is mandatory to use
-#' the same argument to `width` when passing
-#' `position_dodge()` to `geom_col()` and `position_dodgenudge()` to
-#' `geom_text()` or `geom_label()` or their repulsive equivalents. Otherwise
-#' the arrows or segments will fail to connect to the labels. In other words
-#' jittering is computed twice. Jitter should be identical with the same
-#' arguments as `position_dodgenudge()` as this last function simply call the
-#' same code from package 'ggplot2'.
+#' There are two posible uses for these functions. First they can be used to
+#' label dodged bars or boxplots. In this case, it is mandatory to use the same
+#' argument to \code{width} when passing \code{position_dodge()} to
+#' \code{geom_col()} and \code{position_dodgenudge()} to \code{geom_text()} or
+#' \code{geom_label()} or their repulsive equivalents. Otherwise the arrows or
+#' segments will fail to connect to the labels. In other words jittering is
+#' computed twice. Jitter should be identical with the same arguments as
+#' \code{position_dodgenudge()} as this last function simply call the same code
+#' from package 'ggplot2'.
 #'
 #' The second use is to dodge labels to be connected to elements that have not
 #' been jittered. The return of original positions instead of the dodged
-#' ones is achieved by passing `origin = "original"` instead of the default
-#' of `origin = "dodged".`
+#' ones is achieved by passing \code{origin = "original"} instead of the default
+#' of \code{origin = "dodged"}.
 #'
 #' @family position adjustments
 #'
@@ -42,13 +45,18 @@
 #'   useful if you're rotating both the plot and legend.
 #' @param x,y Amount of vertical and horizontal distance to move. A numeric
 #'   vector of length 1, or of the same length as rows there are in `data`,
-#' @param direction One of "none", "split", "split.x" or "split.y". A value of
-#'   "none" replicates the behavior of [ggplot2::position_nudge]. At the moment
-#'   "split" changes the sign of the nudge at zero, which is suiatble for column
-#'   plots with negative slices.
-#' @param kept.origin One of "original", "dodged" or "none".
+#' @param direction One of \code{"none"}, \code{"split"}, \code{"split.x"} or
+#'   \code{"split.y"}. A value of \code{"none"} replicates the behavior of
+#'   \code{\link[ggplot2]{position_nudge}}. At the moment \code{"split"} changes
+#'   the sign of the nudge at zero, which is suitable for column plots with
+#'   negative slices.
+#' @param kept.origin One of \code{"original"}, \code{"dodged"} or
+#'   \code{"none"}.
 #'
-#' @seealso [ggplot2::position_nudge()], [ggrepel::position_nudge_repel()].
+#' @param kept.origin One of \code{"original"} or \code{"none"}.
+#'
+#' @seealso \code{\link[ggplot2]{position_nudge}},
+#' \code{\link[ggrepel]{position_nudge_repel}}.
 #'
 #' @return A \code{"Position"} object.
 #'

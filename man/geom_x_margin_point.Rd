@@ -55,9 +55,9 @@ can include aesthetics whose values you want to set, not map. See
 the marginal points. If these are set, data, mapping and show.legend are
 overridden.}
 
-\item{sides}{A string that controls which sides of the plot the rugs appear on.
-It can be set to a string containing any of `"trbl"`, for top, right,
-bottom, and left.}
+\item{sides}{A string that controls which sides of the plot the rugs appear
+on. It can be set to a string containing any combination of \code{"trbl"},
+for top, right, bottom, and left.}
 
 \item{point.shift}{numeric value expressed in npc units for the shift of the
 rug points inwards from the edge of the plotting area.}
@@ -78,23 +78,23 @@ default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 A plot layer instance.
 }
 \description{
-Marging points can supplement a 2d display with annotations. Marging points
-can highligth individual cases or values along a margin. The geometries
+Margin points can supplement a 2d display with annotations. Margin points
+can highlight individual values along a margin. The geometries
 \code{geom_x_margin_point()} and \code{geom_y_margin_point()} behave
 similarly \code{geom_vline()} and \code{geom_hline()} and share their "double
 personality" as both annotations and geometries.
 }
 \examples{
 p <- ggplot(mtcars, aes(wt, mpg)) +
-  geom_point()
+       geom_point()
 p
 p + geom_x_margin_point(xintercept = 3.5)
 p + geom_y_margin_point(yintercept = c(18, 28, 15))
 p + geom_x_margin_point(data = data.frame(x = c(2.5, 4.5)),
-                         mapping = aes(xintercept = x))
+                        mapping = aes(xintercept = x))
 p + geom_x_margin_point(data = data.frame(x = c(2.5, 4.5)),
-                         mapping = aes(xintercept = x),
-                         sides="tb")
+                        mapping = aes(xintercept = x),
+                        sides = "tb")
 
 }
 \seealso{

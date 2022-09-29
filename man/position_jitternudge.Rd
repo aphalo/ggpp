@@ -32,68 +32,74 @@ distinction between the categories.}
 
 \item{seed}{A random seed to make the jitter reproducible. Useful if you need
 to apply the same jitter twice, e.g., for a point and a corresponding
-label. The random seed is reset after jittering. If NA (the default value),
-the seed is initialised with a random value; this makes sure that two
-subsequent calls start with a different seed. Use NULL to use the current
-random seed and also avoid resetting (the behaviour of ggplot 2.2.1 and
-earlier).}
+label. The random seed is reset after jittering. If \code{NA} (the default
+value), the seed is initialised with a random value; this makes sure that
+two subsequent calls start with a different seed. Use \code{NULL} to use
+the current random seed and also avoid resetting (the behaviour of ggplot
+2.2.1 and earlier).}
 
 \item{x, y}{Amount of vertical and horizontal distance to move. A numeric
-vector of length 1, or of the same length as rows there are in `data`,}
+vector of length 1, or of the same length as rows there are in \code{data},}
 
-\item{direction}{One of "as.is", "alternate", "split", "split.x" or
-"split.y". A value of "none" replicates the behavior of
-[ggplot2::position_nudge]. At the moment "split" changes the sign of the
-nudge depending on the direction of the random jitter applied to each
-indidual observation, which is suitable for nudging labels outward of the
-jittered data.}
+\item{direction}{One of \code{"as.is"}, code{"alternate"}, \code{"split"},
+\code{"split.x"} or \code{"split.y"}. A value of \code{"none"} replicates
+the behavior of \code{\link[ggplot2]{position_nudge}}. \code{"split"}
+changes the sign of the nudge depending on the direction of the random
+jitter applied to each individual observation, which is suitable for
+nudging labels outward of the jittered data.}
 
-\item{nudge.from}{One of "original", "jittered", "original.y" (or
-"jittered.x"), "original.x" (or "jittered.y"). A value of "original"
-applies the nudge before jittering the observations, while "jittered"
-applies the nudging after jittering.}
+\item{nudge.from}{One of \code{"original"}, \code{"jittered"},
+\code{"original.y"} (or \code{"jittered.x"}), \code{"original.x"} (or
+\code{"jittered.y"}). A value of \code{"original"} applies the nudge before
+jittering the observations, while \code{"jittered"} applies the nudging
+after jittering.}
 
-\item{kept.origin}{One of "original", "jittered" or "none".}
+\item{kept.origin}{One of \code{"original"}, \code{"jittered"} or
+\code{"none"}.}
 }
 \value{
 A \code{"Position"} object. The layer function within it returns a
-  data frame, with the jittered + nudged values in columns `x` and `y` and by
-  default the jittered values with no nudging as `x_orig` and `y_orig`. When
-  passing `nudge.from = "original` the original values with no jitter or
-  nudge applied are returned instead as `x_orig` and `y_orig`.
+  data frame, with the jittered + nudged values in columns \code{x} and
+  \code{y} and by default the jittered values with no nudging as
+  \code{x_orig} and \code{y_orig}. With \code{nudge.from = "original"} the
+  original values with no jitter and no nudge applied are returned as
+  \code{x_orig} and \code{y_orig}.
 }
 \description{
-`position_jitternudge()` combines into one function the action of
-[ggplot2::position_jitter] and [ggplot2::position_nudge]. It is useful when
-labels to jittered plots and when adding jitter to text labels linked to
-points plotted without jitter. It can replace other position functions as it
-is backwards compatible. Like all other position functions in 'ggpp' and
-'ggrepel' it preserves the initial position to allow drawing of segments or
-arrow linking the original position to the displaced one.
+\code{position_jitternudge()} combines into one function the action of
+\code{\link[ggplot2]{position_jitter}} and
+\code{\link[ggplot2]{position_nudge}}. It is useful when labels to jittered
+plots and when adding jitter to text labels linked to points plotted without
+jitter. It can replace other position functions as it is backwards
+compatible. Like all other position functions in 'ggpp' and 'ggrepel' it
+preserves the initial position to allow drawing of segments or arrow linking
+the original position to the displaced one.
 }
 \details{
-Jitter is identical to that by [ggplot2::position_jitter] while
-  nudging is enhanced compared to [ggplot2::position_nudge] by taking into
-  use cases specific to the combination of jitter and nudge.
+Jitter with \code{position_jitternudge()} is identical to that with
+  \code{\link[ggplot2]{position_jitter}} while nudging is enhanced compared
+  to \code{\link[ggplot2]{position_nudge}} by taking into use cases specific
+  to the combination of jitter and nudge.
 
   There are two posible uses for this function. First it can be used to label
-  jittered point in a plot. In this case, it is mandatory to use the same
-  arguments to `width`, `height` and `seed` when passing `position_jitter()`
-  to `geom_point()` and `position_jitternudge()` to `geom_text()` or
-  `geom_label()` or their repulsive equivalents. Otherwise the arrows or
+  jittered points in a plot. In this case, it is mandatory to use the same
+  arguments to \code{width}, \code{height} and \code{seed} when passing
+  \code{position_jitter()} to \code{geom_point()} and
+  \code{position_jitternudge()} to \code{geom_text()} or to
+  \code{geom_label()} or their repulsive equivalents. Otherwise the arrows or
   segments will fail to connect to the labels. In other words jittering is
   computed twice. Jitter should be identical with the same arguments as
-  `position_jitternudge()` as this last function simply call the same code
-  from package 'ggplot2'.
+  \code{position_jitternudge()} as this last function calls the same code
+  imported from package 'ggplot2'.
 
   The second use is to jitter labels to be connected to points that have not
   been jittered. The return of original positions instead of the jittered
-  ones is achieved by passing `origin = "original"` instead of the default of
-  `origin = "jittered".`
+  ones is achieved by passing \code{origin = "original"} to override the
+  default \code{origin = "jittered"}.
 }
 \note{
-When `direction = "split"` is used together with no jitter, the split
-  to left and right, or up and down is done at random.
+When \code{direction = "split"} is used together with no jitter, the
+  split to left and right, or up and down is done at random.
 }
 \examples{
 
@@ -149,8 +155,9 @@ ggplot(mpg[1:20, ],
 
 }
 \seealso{
-[ggplot2::position_jitter()], [ggplot2::position_nudge()],
-  [ggrepel::position_nudge_repel()].
+\code{\link[ggplot2]{position_jitter}},
+\code{\link[ggplot2]{position_nudge}},
+ \code{\link[ggrepel]{position_nudge_repel}}.
 
 Other position adjustments: 
 \code{\link{position_dodgenudge}()},

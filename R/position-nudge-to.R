@@ -1,26 +1,28 @@
 #' Nudge labels to new positions
 #'
-#' `position_nudge_to()` is generally useful for adjusting the position of
-#' labels or text, both on a discrete or continuous scale. This version from
-#' package 'ggpmisc' differs from [ggplot2::position_nudge] in that the
-#' coordinates of the new position are given directly, rather than as a
-#' displacement from the original location. As other position functions in
-#' this package, it preserves the original position to allow the text to
-#' be linked back to its original position with a segment or arrow.
+#' \code{position_nudge_to()} is generally useful for adjusting the position of
+#' labels or text, both on a discrete or continuous scale.
+#' \code{position_nudge_to()} differs from \code{\link[ggplot2]{position_nudge}}
+#' in that the coordinates of the new position are given directly, rather than
+#' as a displacement from the original location. As other position functions in
+#' this package, it preserves the original position to allow the text to be
+#' linked back to its original position with a segment or arrow.
 #'
 #' @family position adjustments
 #'
-#' @param x,y Coordinates of the destination position. A numeric
-#'   vector of length 1, or of the same length as rows there are in `data`.
-#'   The default, `NULL`, leaves the original coordinates unchanged.
-#' @param kept.origin One of "original" or "none".
+#' @param x,y Coordinates of the destination position. A numeric vector of
+#'   length 1, or of the same length as rows there are in \code{data}. The
+#'   default, \code{NULL}, leaves the original coordinates unchanged.
+#' @param kept.origin One of \code{"original"} or \code{"none"}.
 #'
-#' @details The new `x` or `y` replace the original ones, while the original
-#'   coordinates are returned in `x_orig` and `y_orig`.
+#' @details The nudged \code{x} or \code{y} replace the original ones in
+#'   \code{data}, while the original coordinates are returned in \code{x_orig}
+#'   and \code{y_orig}.
 #'
 #' @return A \code{"Position"} object.
 #'
-#' @seealso [ggplot::position_nudge()], [ggrepel::position_nudge_repel()].
+#' @seealso \code{\link[ggplot2]{position_nudge}},
+#'   \code{\link[ggrepel]{position_nudge_repel}}.
 #'
 #' @export
 #'

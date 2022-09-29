@@ -6,12 +6,7 @@
 #' geometry: ther add a layer containing one or more grobs and faceting works as
 #' usual.
 #'
-#' @details You can modify the alignment of inset grobs with the \code{vjust}
-#'   and \code{hjust} aesthetics. These can either be a number between 0
-#'   (right/bottom) and 1 (top/left) or a character ("left", "middle", "right",
-#'   "bottom", "center", "top").
-#'
-#'   You can modify the size of inset grobs with the \code{vp.width} and
+#' @details You can modify the size of inset grobs with the \code{vp.width} and
 #'   \code{vp.height} aesthetics. These can take a number between 0 (smallest
 #'   possible inset) and 1 (whole plotting area width or height). The default
 #'   value for for both of these aesthetics is 1/5. Thus, in contrast to
@@ -20,15 +15,6 @@
 #'   irrespective of how the plot is rendered. The aspect ratio of insets is
 #'   preserved and size is adjusted until the whole inset fits within the
 #'   viewport.
-#'
-#'   You can modify inset grob alignment with the `vjust` and `hjust`
-#'   aesthetics. These can either be a number between 0 (right/bottom) and 1
-#'   (top/left) or a character (`"left"`, `"middle"`, `"right"`, `"bottom"`,
-#'   `"center"`, `"top"`). There several two special alignments: `"inward"` and
-#'   `"outward"`. Inward always aligns text towards the center of the plotting
-#'   area, and outward aligns it away from the center of the plotting area. It
-#'   tagged with `_mean` or `_median` the mean or median of the data in the
-#'   panel along the corresponding axis is used as center.
 #'
 #'   By default this geom uses \code{\link{position_nudge_center}} which is
 #'   backwards compatible with \code{\link[ggplot2]{position_nudge}} but
@@ -43,20 +29,31 @@
 #'
 #'   The \code{x} and \code{y} aesthetics determine the position of the whole
 #'   inset grob, similarly to that of a text label, justification is interpreted
-#'   as indicating the position of the grob with respect to its $x$ and $y$
-#'   coordinates in the data, and \code{angle} is used to rotate the grob as a
-#'   whole.
+#'   as indicating the position of the grob with respect to its \emph{x} and
+#'   \emph{y} coordinates in the data, and \code{angle} is used to rotate the
+#'   grob as a whole.
 #'
-#'   In the case of \code{geom_grob_npc()}, \code{npcx} and \code{npcy}
-#'   aesthetics determine the position of the inset grob. As for text labels,
-#'   justification is interpreted as indicating the position of the grob with
-#'   respect to the x and y coordinates in "npc" units, and \code{angle} is used
-#'   to rotate the plot as a whole.
+#'   In the case of \code{geom_table_npc()}, \code{npcx} and \code{npcy}
+#'   aesthetics determine the position of the inset table. Justification is as
+#'   described above for \code{geom_table()}.
 #'
+#'   Use \code{\link{annotate}} as redefined in 'ggpp' when adding inset grobs
+#'   as annotations (automatically available unless 'ggpp' is not attached).
 #'   \code{\link[ggplot2]{annotate}} cannot be used with \code{geom = "grob"}.
-#'   Use \code{\link{annotate}} (automatic unless 'ggpp' is not attached) as
-#'   redefined in 'ggpp' when adding inset grobs as annotations (automatic
-#'   unless 'ggpp' is not attached).
+#'
+#' @section Alignment: You can modify the alignment of the grob with the `vjust`
+#'   and `hjust` aesthetics. These can either be a number between 0
+#'   (right/bottom) and 1 (top/left) or a character (\code{"left"},
+#'   \code{"middle"}, \code{"right"}, \code{"bottom"}, \code{"center"},
+#'   \code{"top"}). In addition, you can use special alignments for
+#'   justification including \code{"inward"} and \code{"outward"}. Inward always
+#'   aligns text towards the center of the plotting area, and outward aligns it
+#'   away from the center of the plotting area. If tagged with \code{_mean} or
+#'   \code{_median} (e.g., \code{"outward_mean"}) the mean or median of the data
+#'   in the panel along the corresponding axis is used as center. If the
+#'   characters following the underscore represent a number (e.g.,
+#'   \code{"outward_10.5"}) the reference point will be this value in data
+#'   units.
 #'
 #' @seealso \code{\link{geom_plot}}, \code{\link{geom_table}},
 #'   \code{\link{annotate}}, \code{\link{position_nudge_keep}},
@@ -107,21 +104,27 @@
 #' df <- tibble(x = 2, y = 15, grob = list(grid::circleGrob(r = 0.2)))
 #'
 #' # without nudging no segments are drawn
-#' ggplot(data = mtcars, aes(wt, mpg)) +
+#' ggplot(data = mtcars,
+#'        aes(wt, mpg)) +
 #'   geom_point(aes(colour = factor(cyl))) +
-#'   geom_grob(data = df, aes(x, y, label = grob))
+#'   geom_grob(data = df,
+#'             aes(x, y, label = grob))
 #'
 #' # with nudging segments are drawn
-#' ggplot(data = mtcars, aes(wt, mpg)) +
+#' ggplot(data = mtcars,
+#'        aes(wt, mpg)) +
 #'   geom_point(aes(colour = factor(cyl))) +
-#'   geom_grob(data = df, aes(x, y, label = grob),
+#'   geom_grob(data = df,
+#'             aes(x, y, label = grob),
 #'             nudge_x = 0.5,
 #'             segment.colour = "red")
 #'
 #' # with nudging plotting of segments can be disabled
-#' ggplot(data = mtcars, aes(wt, mpg)) +
+#' ggplot(data = mtcars,
+#'        aes(wt, mpg)) +
 #'   geom_point(aes(colour = factor(cyl))) +
-#'   geom_grob(data = df, aes(x, y, label = grob),
+#'   geom_grob(data = df,
+#'             aes(x, y, label = grob),
 #'             add.segments = FALSE,
 #'             nudge_x = 0.5)
 #'

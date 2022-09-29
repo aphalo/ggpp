@@ -79,10 +79,10 @@ default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 A plot layer instance.
 }
 \description{
-Marging points can supplement a 2d display with annotations. Marging points
-can highligth individual cases or values along a margin. The geometries
-\code{geom_x_margin_grob()} and \code{geom_y_margin_grob()} behave similarly
-\code{geom_vline()} and \code{geom_hline()} and share their "double
+Margin grobs can supplement a 2d display with annotations. Margin grobs such
+as icons or symbols can highlight individual values along a margin. The
+geometries \code{geom_x_margin_grob()} and \code{geom_y_margin_grob()} behave
+similarly \code{geom_vline()} and \code{geom_hline()} and share their "double
 personality" as both annotations and geometries.
 }
 \examples{

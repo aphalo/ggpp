@@ -1,7 +1,7 @@
 #' Reference arrows on the margins
 #'
 #' Small arrows on plot margins can supplement a 2d display with annotations.
-#' Arrows can be used to highligth specific values along a margin. The geometries
+#' Arrows can be used to highlight specific values along a margin. The geometries
 #' \code{geom_x_margin_arrow()} and \code{geom_y_margin_arrow()} behave
 #' similarly \code{geom_vline()} and \code{geom_hline()} and share their "double
 #' personality" as both annotations and geometries.
@@ -26,10 +26,10 @@
 #' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather
 #'   than combining with them. This is most useful for helper functions that
 #'   define both data and aesthetics and shouldn't inherit behaviour from the
-#'   default plot specification, e.g. \code{\link[ggplot2]{borders}}.
-#' @param sides A string that controls which sides of the plot the rugs appear on.
-#'   It can be set to a string containing any of `"trbl"`, for top, right,
-#'   bottom, and left.
+#'   default plot specification, e.g., \code{\link[ggplot2]{borders}}.
+#' @param sides A string that controls which sides of the plot the rugs appear
+#'   on. It can be set to a string containing any combination of \code{"trbl"},
+#'   for top, right, bottom, and left.
 #' @param arrow.length numeric value expressed in npc units for the length of the
 #'   arows inwards from the edge of the plotting area.
 #' @param xintercept,yintercept numeric Parameters that control the position of
@@ -48,10 +48,10 @@
 #' p + geom_x_margin_arrow(xintercept = 3.5)
 #' p + geom_y_margin_arrow(yintercept = c(18, 28, 15))
 #' p + geom_x_margin_arrow(data = data.frame(x = c(2.5, 4.5)),
-#'                          mapping = aes(xintercept = x))
+#'                         mapping = aes(xintercept = x))
 #' p + geom_x_margin_arrow(data = data.frame(x = c(2.5, 4.5)),
-#'                          mapping = aes(xintercept = x),
-#'                          sides="tb")
+#'                         mapping = aes(xintercept = x),
+#'                         sides="tb")
 #'
 geom_x_margin_arrow <- function(mapping = NULL, data = NULL,
                                 stat = "identity", position = "identity",

@@ -1,57 +1,60 @@
 #' Nudge labels away from a line
 #'
-#' `position_nudge_line` is generally useful for adjusting the starting
+#' \code{position_nudge_line()} is generally useful for adjusting the starting
 #' position of labels or text to be repelled while preserving the original
 #' position as the start of the segments. The difference compared to
-#' [position_nudge_center()] is that the nudging is away from from a line or
-#' curve fitted to the data points or supplied as coefficients. While
-#' [position_nudge_center()] is most useful for "round-shaped", vertically- or
-#' horizontally elongated clouds of points, [position_nudge_line()] is most
-#' suitable when observations follow a linear or curvilinear relationship
-#' between _x_ and _y_ values. In contrast to [ggplot2::position_nudge],
-#' `position_nudge_line()` returns in `data` both the original
-#' coordinates and the nudged coordinates.
+#' \code{\link{position_nudge_center}} is that the nudging is away from from a
+#' line or curve fitted to the data points or supplied as coefficients. While
+#' \code{position_nudge_center()} is most useful for "round-shaped", vertically-
+#' or horizontally elongated clouds of points, \code{position_nudge_line()} is
+#' most suitable when observations follow a linear or curvilinear relationship
+#' between _x_ and _y_ values. In contrast to
+#' \code{\link[ggplot2]{position_nudge}}, \code{position_nudge_line()} returns
+#' in `data` both the original coordinates and the nudged coordinates.
 #'
 #' @family position adjustments
-#' @param x,y Amount of vertical and horizontal distance to move. A numeric
-#'   vector of length 1, or of the same length as rows there are in `data`.
-#' @param xy_relative Nudge relative to _x_ and _y_ data expanse, ignored
-#'   unless `x` and `y` are both `NA`s.
-#' @param abline a vector of length two giving the intercept and slope.
-#' @param method One of `"spline"`, `"lm"` or `"auto"`.
-#' @param formula A model formula for [lm()] when `method = "lm"`. Ignored
-#'   otherwise.
-#' @param direction One of "none", or "split".
-#' @param line_nudge A positive multiplier >= 1, increasing nudging
-#'   away from the curve or line compared to nudging from points.
-#' @param kept.origin One of "original" or "none".
 #'
-#' @details The default ammount of nudging is 3% of the spread of the data along
+#' @param x,y Amount of vertical and horizontal distance to move. A numeric
+#'   vector of length 1, or of the same length as rows there are in \code{data}.
+#' @param xy_relative Nudge relative to _x_ and _y_ data expanse, ignored unless
+#'   \code{x} and \code{y} are both \code{NA}s.
+#' @param abline a vector of length two giving the intercept and slope.
+#' @param method One of \code{"spline"}, \code{"lm"} or \code{"auto"}.
+#' @param formula A model formula for \code{\link{lm}} when \code{method =
+#'   "lm"}. Ignored otherwise.
+#' @param direction One of \code{"none"}, or \code{"split"}.
+#' @param line_nudge A positive multiplier >= 1, increasing nudging away from
+#'   the curve or line compared to nudging from points.
+#' @param kept.origin One of \code{"original"} or \code{"none"}.
+#'
+#' @details The default amount of nudging is 3% of the spread of the data along
 #'   _x_ and _y_ axes, which in most cases is good. In most cases it is best to
 #'   apply nudging along a direction perpendicular to the line or curve, if this
-#'   is the aim, passing an argument to only one of `x`, `y` or `xy_relative`
-#'   will be enough. When `direction = "split"` nudging is away from an implicit
-#'   line or curve on either side with positive nudging. The line of curve can
-#'   be smooth spline or linear regression fitted on-the-fly to the data points,
-#'   or a straight line defined by its coefficients passed to `abline`. The
-#'   fitting is well defined only if the observations fall roughly on a curve or
-#'   straight line that is monotonic in `y`. By means of `line_nudge` one can
-#'   increment nudging away from the line or curve compared to away from the
-#'   points, which is useful for example to keep labels outside of a confidence
-#'   band. Direction defaults to `"split"` when `line_nudge > 1`, and otherwise
-#'   to `"none"`.
+#'   is the aim, passing an argument to only one of \code{x}, \code{y} or
+#'   \code{xy_relative} will be enough. When \code{direction = "split"} nudging
+#'   is away from an implicit line or curve on either side with positive
+#'   nudging. The line or curve can be smooth spline or linear regression fitted
+#'   on-the-fly to the data points, or a straight line defined by its
+#'   coefficients passed to \code{abline}. The fitting is well defined only if
+#'   the observations fall roughly on a curve or straight line that is monotonic
+#'   in \code{y}. By means of \code{line_nudge} one can increment nudging away
+#'   from the line or curve compared to away from the points, which is useful
+#'   for example to keep labels outside of a confidence band. Direction defaults
+#'   to \code{"split"} when \code{line_nudge} > 1, and otherwise to
+#'   \code{"none"}.
 #'
-#' @note For `method = "lm"` only model formulas corresponding to polynomials
-#'   with no missing terms are supported. If using [poly()], `raw = TRUE` is
-#'   required.
+#' @note For \code{method = "lm"} only model formulas corresponding to
+#'   polynomials with no missing terms are supported. If using\code{\link{poly}}
+#'   in the model formula, \code{raw = TRUE} is required.
 #'
-#'   In practice, `x` and `y` should have the same sign for nudging to work
-#'   correctly.
+#'   In practice, \code{x} and \code{y} should have the same sign for nudging to
+#'   work correctly.
 #'
 #'   This position is most useful when labeling points conforming a cloud along
 #'   an arbitrary curve or line.
 #'
-#' @seealso [ggplot::position_nudge()], [ggrepel::position_nudge_repel()].
+#' @seealso \code{\link[ggplot2]{position_nudge}},
+#'  \code{\link[ggrepel]{position_nudge_repel}}.
 #'
 #' @return A \code{"Position"} object.
 #'

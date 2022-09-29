@@ -6,12 +6,7 @@
 #' respects they behave as any other ggplot geometry: a layer con contain
 #' multiple tables and faceting works as usual.
 #'
-#' @details You can modify the alignment of inset tables with the \code{vjust}
-#'   and \code{hjust} aesthetics. These can either be a number between 0
-#'   (right/bottom) and 1 (top/left) or a character
-#'   ("left", "middle", "right", "bottom", "center", "top").
-#'
-#'   You can modify the size of inset tabls with the \code{vp.width} and
+#' @details You can modify the size of inset tables with the \code{vp.width} and
 #'   \code{vp.height} aesthetics. These can take a number between 0 (smallest
 #'   possible inset) and 1 (whole plotting area width or height). The default
 #'   value for for both of these aesthetics is 1/5. Thus, in contrast to
@@ -20,15 +15,6 @@
 #'   irrespective of how the plot is rendered. The aspect ratio of insets is
 #'   preserved and size is adjusted until the whole inset fits within the
 #'   viewport.
-#'
-#'   You can modify inset table alignment with the `vjust` and `hjust`
-#'   aesthetics. These can either be a number between 0 (right/bottom) and 1
-#'   (top/left) or a character (`"left"`, `"middle"`, `"right"`, `"bottom"`,
-#'   `"center"`, `"top"`). There several two special alignments: `"inward"` and
-#'   `"outward"`. Inward always aligns text towards the center of the plotting
-#'   area, and outward aligns it away from the center of the plotting area. It
-#'   tagged with `_mean` or `_median` the mean or median of the data in the
-#'   panel along the corresponding axis is used as center.
 #'
 #'   By default this geom uses \code{\link{position_nudge_center}} which is
 #'   backwards compatible with \code{\link[ggplot2]{position_nudge}} but
@@ -55,26 +41,36 @@
 #'   aesthetics such as \code{colour} are ignored if present. By default the
 #'   constructor \code{ttheme_gtdefault} is used and \code{colour} and
 #'   \code{fill}, are mapped to \code{NA}. Mapping these aesthetics to \code{NA}
-#'   triggers the use of the default base_colour of the \code{ttheme}.
+#'   triggers the use of the default \code{base_colour} of the \code{ttheme}.
 #'   As the table is built with function \code{gridExtra::gtable()}, for
 #'   formatting details, please, consult \code{\link[gridExtra]{tableGrob}}.
 #'
 #'   The \code{x} and \code{y} aesthetics determine the position of the whole
-#'   inset table, similarly to that of a text label, justification is interpreted
-#'   as indicating the position of the inset table with respect to its x and y
-#'   coordinates in the data, and \code{angle} is used to rotate the inset table as a
-#'   whole.
+#'   inset table, similarly to that of a text label, justification is
+#'   interpreted as indicating the position of the inset table with respect to
+#'   its \emph{horizontal} and \emph{vertical} axes (rows and columns in the
+#'   data frame), and \code{angle} is used to rotate the inset table as a whole.
 #'
 #'   In the case of \code{geom_table_npc()}, \code{npcx} and \code{npcy}
-#'   aesthetics determine the position of the inset table. As for text labels,
-#'   justification is interpreted as indicating the position of the inset plot
-#'   with respect to its \code{npcx} and \code{npcy} coordinates, and
-#'   \code{angle} is used to rotate the plot as a whole.
+#'   aesthetics determine the position of the inset table. Justification as
+#'   described above for .
 #'
+#'   Use \code{\link{annotate}} as redefined in 'ggpp' when adding inset plots
+#'   as annotations (automatically available unless 'ggpp' is not attached).
 #'   \code{\link[ggplot2]{annotate}} cannot be used with \code{geom = "table"}.
-#'   Use \code{\link{annotate}} (automatic override unless 'ggpp' is not
-#'   attached) as redefined in 'ggpp' when adding inset plots as annotations
-#'   (automatic unless 'ggpp' is not attached).
+#'
+#' @section Alignment: You can modify the alignment of the whole table with the `vjust` and
+#'   `hjust` aesthetics. These can either be a number between 0 (right/bottom)
+#'   and 1 (top/left) or a character (\code{"left"}, \code{"middle"},
+#'   \code{"right"}, \code{"bottom"}, \code{"center"}, \code{"top"}). In
+#'   addition, you can use special alignments for justification including
+#'   \code{"inward"} and \code{"outward"}. Inward always aligns text towards
+#'   the center of the plotting area, and outward aligns it away from the center
+#'   of the plotting area. If tagged with \code{_mean} or \code{_median} (e.g.,
+#'   \code{"outward_mean"}) the mean or median of the data in the panel along
+#'   the corresponding axis is used as center. If the characters following the
+#'   underscore represent a number (e.g., \code{"outward_10.5"}) the reference
+#'   point will be this value in data units.
 #'
 #' @seealso Formatting of tables \code{stat_fmt_table},
 #'   \code{\link{ttheme_gtdefault}}, \code{\link{ttheme_set}},
@@ -151,24 +147,33 @@
 #' # using defaults
 #' ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
 #'   geom_point() +
-#'   geom_table(data = df, aes(x = x, y = y, label = tb))
+#'   geom_table(data = df,
+#'              aes(x = x, y = y, label = tb))
 #'
-#' ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+#' ggplot(mtcars,
+#'        aes(wt, mpg, colour = factor(cyl))) +
 #'   geom_point() +
-#'   geom_table(data = df, aes(x = x, y = y, label = tb),
-#'              table.rownames = TRUE, table.theme = ttheme_gtstripes)
+#'   geom_table(data = df,
+#'              aes(x = x, y = y, label = tb),
+#'              table.rownames = TRUE,
+#'              table.theme = ttheme_gtstripes)
 #'
 #' # settings aesthetics to constants
-#' ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+#' ggplot(mtcars,
+#'        aes(wt, mpg, colour = factor(cyl))) +
 #'   geom_point() +
-#'   geom_table(data = df, aes(x = x, y = y, label = tb),
-#'              color = "red", fill = "#FFCCCC", family = "serif", size = 5,
+#'   geom_table(data = df,
+#'              aes(x = x, y = y, label = tb),
+#'              color = "red", fill = "#FFCCCC",
+#'              family = "serif", size = 5,
 #'              angle = 90, vjust = 0)
 #'
 #' # passing a theme constructor as argument
-#' ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+#' ggplot(mtcars,
+#'        aes(wt, mpg, colour = factor(cyl))) +
 #'   geom_point() +
-#'   geom_table(data = df, aes(x = x, y = y, label = tb),
+#'   geom_table(data = df,
+#'              aes(x = x, y = y, label = tb),
 #'              table.theme = ttheme_gtminimal) +
 #'   theme_classic()
 #'
@@ -180,29 +185,33 @@
 #'               tb = list(tb[1, 1:3], tb[2, 1:3], tb[3, 1:3]))
 #'
 #' # mapped aesthetics
-#' ggplot(data = mtcars, mapping = aes(wt, mpg, color = factor(cyl))) +
+#' ggplot(mtcars,
+#'        aes(wt, mpg, color = factor(cyl))) +
 #'   geom_point() +
 #'   geom_table(data = df2,
 #'              inherit.aes = TRUE,
 #'              mapping = aes(x = x, y = y, label = tb))
 #'
 #' # nudging and segments
-#' ggplot(data = mtcars, mapping = aes(wt, mpg, color = factor(cyl))) +
+#' ggplot(mtcars,
+#'        aes(wt, mpg, color = factor(cyl))) +
 #'   geom_point(show.legend = FALSE) +
 #'   geom_table(data = df2,
 #'              inherit.aes = TRUE,
+#'              mapping = aes(x = x1, y = y1, label = tb),
 #'              nudge_x = 0.7, nudge_y = 3,
 #'              vjust = 0.5, hjust = 0.5,
-#'              arrow = arrow(length = unit(0.5, "lines")),
-#'              mapping = aes(x = x1, y = y1, label = tb)) +
+#'              arrow = arrow(length = unit(0.5, "lines"))) +
 #'   theme_classic()
 #'
 #' # Using native plot coordinates instead of data coordinates
 #' dfnpc <- tibble(x = 0.95, y = 0.95, tb = list(tb))
 #'
-#' ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+#' ggplot(mtcars,
+#'        aes(wt, mpg, colour = factor(cyl))) +
 #'   geom_point() +
-#'   geom_table_npc(data = dfnpc, aes(npcx = x, npcy = y, label = tb))
+#'   geom_table_npc(data = dfnpc,
+#'                  aes(npcx = x, npcy = y, label = tb))
 #'
 geom_table <- function(mapping = NULL, data = NULL,
                        stat = "identity", position = "identity",
