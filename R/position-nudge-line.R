@@ -91,16 +91,6 @@
 #' ggplot(df, aes(x, y, label = l)) +
 #'   geom_line(linetype = "dotted") +
 #'   geom_point() +
-#'   geom_text(position = position_nudge_line(x = 0.6))
-#'
-#' ggplot(df, aes(x, y, label = l)) +
-#'   geom_line(linetype = "dotted") +
-#'   geom_point() +
-#'   geom_text(position = position_nudge_line(y = 3.2))
-#'
-#' ggplot(df, aes(x, y, label = l)) +
-#'   geom_line(linetype = "dotted") +
-#'   geom_point() +
 #'   geom_text(position = position_nudge_line(x = 0.6, y = 3.2))
 #'
 #' ggplot(df, aes(x, y, label = l)) +
@@ -115,37 +105,12 @@
 #'   geom_point() +
 #'   geom_text(position = position_nudge_line())
 #'
-#' ggplot(df, aes(x, y - 40, label = l)) +
-#'   geom_line(linetype = "dotted") +
-#'   geom_point() +
-#'   geom_text(position = position_nudge_line())
-#'
 #' ggplot(subset(df, x >= 0), aes(y, sqrt(y), label = l)) +
 #'   geom_line(linetype = "dotted") +
 #'   geom_point() +
 #'   geom_text(position = position_nudge_line())
-#'
-#' # nudging outwards and downwards from a curve
-#'
-#' ggplot(subset(df, x >= 0), aes(y, sqrt(y), label = l)) +
-#'   geom_line(linetype = "dotted") +
-#'   geom_point() +
-#'   geom_text(position = position_nudge_line(xy_relative = -0.03))
-#'
-#' # an arbitrary straight line
-#'
-#' ggplot(df, aes(x, x * 2 + 5, label = l)) +
-#'   geom_abline(intercept = 5, slope = 2, linetype = "dotted") +
-#'   geom_point() +
-#'   geom_text(position = position_nudge_line(abline = c(5, 2)))
 #'
 #' # Points scattered near a curve or line, we use 'direction = "split"'
-#'
-#' ggplot(subset(df, x >= 0), aes(x, yyy)) +
-#'   stat_smooth(method = "lm", formula = y ~ x) +
-#'   geom_point() +
-#'   geom_text(aes(label = l),
-#'             position = position_nudge_line(direction = "split"))
 #'
 #' ggplot(df, aes(x)) +
 #'   geom_line(aes(y = y), linetype = "dotted") +
@@ -164,7 +129,7 @@
 #' ggplot(subset(df, x >= 0), aes(y, yy)) +
 #'   stat_smooth(method = "lm", formula = y ~ x) +
 #'   geom_point() +
-#'   geom_text_s(aes(label = l),
+#'   geom_text(aes(label = l),
 #'               position = position_nudge_line(line_nudge = 2,
 #'                                              direction = "split"))
 #'
@@ -183,49 +148,6 @@
 #'   geom_text(aes(label = l),
 #'             position = position_nudge_line(method = "lm",
 #'                                            formula = y ~ poly(x, 2, raw = TRUE)))
-#'
-#' ggplot(subset(df, x >= 0), aes(x, x^2)) +
-#'   stat_smooth(method = "lm", formula = y ~ x + I(x^2)) +
-#'   geom_point() +
-#'   geom_text(aes(label = l),
-#'             position = position_nudge_line(method = "lm",
-#'                                            formula = y ~ x + I(x^2)))
-#'
-#' # grouping is supported
-#'
-#' df <- data.frame(x = rep(1:10, 2),
-#'                  y = c(1:10, 10:1),
-#'                  group = rep(c("a", "b"), c(10, 10)),
-#'                  l = "+")
-#'
-#' ggplot(df, aes(x, y, label = l, color = group)) +
-#'   geom_line(linetype = "dotted") +
-#'   geom_text() +
-#'   geom_text(position = position_nudge_line()) +
-#'   geom_text(position = position_nudge_line(xy_relative = -0.03))
-#'
-#' # one needs to ensure that grouping is in effect in the geoms with nudging
-#'
-#' ggplot(df, aes(x, y, label = l, color = group, group = group)) +
-#'   geom_line(linetype = "dotted") +
-#'   geom_text() +
-#'   geom_text(color = "red",
-#'             position = position_nudge_line()) +
-#'   geom_text(color = "blue",
-#'             position = position_nudge_line(xy_relative = -0.03)) +
-#'   coord_equal()
-#'
-#' # facets are also supported
-#'
-#' ggplot(df, aes(x, y, label = l)) +
-#'   geom_line(linetype = "dotted") +
-#'   geom_text() +
-#'   geom_text(position = position_nudge_line(xy_relative = c(0.06, 0.03)),
-#'             color = "red") +
-#'   geom_text(position = position_nudge_line(xy_relative = -c(0.06, 0.03)),
-#'             color = "blue") +
-#'   facet_wrap(~group) +
-#'   coord_equal(ratio = 1.5)
 #'
 position_nudge_line <- function(x = NA_real_,
                                 y = NA_real_,
