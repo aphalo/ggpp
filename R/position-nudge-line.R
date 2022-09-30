@@ -359,7 +359,7 @@ quant_compute_panel <- function(data, params, scales) {
   # compute x and y nudge for each point
   # By changing the sign we ensure consistent positions in opposite slopes
   angle.rotation <- ifelse(sm.deriv > 0, -0.5 * pi, +0.5 * pi)
-  # scaling is needed to conpute the angle on the plot
+  # scaling is needed to compute the angle on the plot
   angle <- atan2(sm.deriv * xy.range.ratio, 1) + angle.rotation
   x_nudge <- params$x * cos(angle) * ifelse(sm.deriv > 0, -1, +1)
   y_nudge <- params$y * sin(angle) * ifelse(sm.deriv > 0, -1, +1)
