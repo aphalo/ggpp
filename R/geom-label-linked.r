@@ -1,7 +1,5 @@
 #' @rdname geom_text_s
 #'
-#' @param colour.target,color.target A character string; \code{"both"},
-#'    \code{"text"}, or \code{"box"}.
 #' @param label.padding Amount of padding around label. Defaults to 0.25 lines.
 #' @param label.r Radius of rounded corners. Defaults to 0.15 lines.
 #' @param label.size Size of label border, in mm.
@@ -16,8 +14,8 @@ geom_label_s <- function(mapping = NULL,
                          parse = FALSE,
                          nudge_x = 0,
                          nudge_y = 0,
-                         colour.target = "both",
-                         color.target = colour.target,
+                         default.colour = "black",
+                         colour.target = "all",
                          label.padding = grid::unit(0.25, "lines"),
                          label.r = grid::unit(0.15, "lines"),
                          label.size = 0.25,
@@ -48,7 +46,8 @@ geom_label_s <- function(mapping = NULL,
     inherit.aes = inherit.aes,
     params = list(
       parse = parse,
-      colour.target = color.target,
+      default.colour = default.colour,
+      colour.target = colour.target,
       label.padding = label.padding,
       label.r = label.r,
       label.size = label.size,
@@ -83,16 +82,15 @@ GeomLabelS <-
                      fontface = 1,
                      lineheight = 1.2,
                      segment.linetype = 1,
-                     segment.colour = "grey33",
-                     segment.size = 1.5,
-                     segment.alpha = 1
+                     segment.size = 1.5
                    ),
 
                    draw_panel = function(data, panel_params, coord, #panel_scales,
                                          parse = FALSE,
                                          na.rm = FALSE,
                                          add.segments = TRUE,
-                                         colour.target = "both",
+                                         default.colour = "black",
+                                         colour.target = "all",
                                          box.padding = 0.25,
                                          point.padding = 1e-06,
                                          min.segment.length = 0,
@@ -140,26 +138,26 @@ GeomLabelS <-
                      }
 
                      label.grobs <- lapply(1:nrow(data), function(i) {
-                       row <- data[i, , drop = FALSE]
+                       current.row <- data[i, , drop = FALSE]
                        labelGrob(lab[i],
-                                 x = unit(row$x, "native"),
-                                 y = unit(row$y, "native"),
-                                 just = c(row$hjust, row$vjust),
+                                 x = unit(current.row$x, "native"),
+                                 y = unit(current.row$y, "native"),
+                                 just = c(current.row$hjust, current.row$vjust),
                                  padding = label.padding,
                                  r = label.r,
                                  text.gp = gpar(
-                                   col = ifelse(colour.target %in% c("both", "text"),
-                                                row$colour, "black"),
-                                   fontsize = row$size * .pt,
-                                   fontfamily = row$family,
-                                   fontface = row$fontface,
-                                   lineheight = row$lineheight
+                                   col = ifelse(any(colour.target %in% c("all", "text")),
+                                                current.row$colour, default.colour),
+                                   fontsize = current.row$size * .pt,
+                                   fontfamily = current.row$family,
+                                   fontface = current.row$fontface,
+                                   lineheight = current.row$lineheight
                                  ),
                                  rect.gp = gpar(
                                    col = if (isTRUE(all.equal(label.size, 0))) NA else
-                                     ifelse(colour.target %in% c("both", "box"),
-                                            row$colour, "black"),
-                                   fill = alpha(row$fill, row$alpha),
+                                     ifelse(any(colour.target %in% c("all", "box")),
+                                            current.row$colour, default.colour),
+                                   fill = alpha(current.row$fill, current.row$alpha),
                                    lwd = label.size * .pt
                                  )
                        )
@@ -167,6 +165,12 @@ GeomLabelS <-
                      class(label.grobs) <- "gList"
 
                      if(add.segments) {
+                       segment.colour <-
+                         if (any(colour.target %in% c("all", "segment")))
+                           data$colour
+                         else
+                           rep(default.colour, nrow(data))
+                       segment.colour <- default.colour
                        segments.data <-
                          shrink_segments(data,
                                          point.padding = point.padding,
@@ -180,8 +184,7 @@ GeomLabelS <-
                            x0 = segments.data$x_orig,
                            y0 = segments.data$y_orig,
                            arrow = arrow,
-                           gp = grid::gpar(col = alpha(data$segment.colour,
-                                                       data$segment.alpha),
+                           gp = grid::gpar(col = segment.colour,
                                            lwd = data$segment.size))
                        all.grobs <- gList(segment.grobs, label.grobs)
                      } else {

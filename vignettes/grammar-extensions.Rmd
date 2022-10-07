@@ -747,15 +747,20 @@ nudging or dodging may be enough, or even preferable so as to achieve consistent
 positions irrespective of plot scaling or graphic device used for rendering.
 
 We can achieve this with `geom_text_s()` (formerly named `geom_text_linked()`)
-together with a suitable position function that retains the original *x* and *y*
-coordinates of the point. We provide several different position functions
-described in a later section, all of which retain the initial position in
-`data$x_orig` and `data_$y_orig`. Function `position_nudge_keep()` is used by
-default providing the same default behaviour as `geom_text()` and `geom_label()`
-from 'ggplot2'. However, when nudging or a position
-function that keeps the original position is used, by default linking segments are drawn
-between the original and nudged or displaced positions. Passing `add.segments = FALSE` disables the drawing of segments. The equivalent for nudged points
-connected by segments to their original positions is `geom_point_s()`.
+or `geom_label_s()`, together with a suitable position function that retains the
+original *x* and *y* coordinates of the point. We provide several different
+position functions described in a later section, all of which retain the initial
+position in `data$x_orig` and `data_$y_orig`. Function `position_nudge_keep()`
+is used by default providing the same default behaviour as `geom_text()` and
+`geom_label()` from 'ggplot2'. However, when nudging using the `nudeg_x` and/or
+`nudeg_y` parameters, or passing as argument to `position` a position function
+that keeps the original position, by default linking segments are drawn between
+the original and nudged or displaced positions. Passing `add.segments = FALSE`
+disables the drawing of segments. The equivalent geometry for points connected
+by segments to their original positions is `geom_point_s()`.
+
+These geometries still lack some of the advanced features found in 'ggrepel'
+for the formatting of the segments.
 
 ```{r}
 my.cars <- mtcars[c(TRUE, FALSE, FALSE, FALSE), ]

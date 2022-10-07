@@ -9,11 +9,15 @@
 #'   future versions. In particular justification based on the position
 #'   displacement needs some improvement.
 #'
-#' @details Geometries \code{geom_text_s()} and \code{geom_label_s()} have an interface
-#'   that follows closely that of \code{geom_text_repel()} and \code{geom_label_repel()}.
-#'   At the current stage of development even if formal parameters have the same
-#'   names, arguments with the same numeric value may have quantitatively
-#'   different effects on the resulting plot.
+#' @details Geometries \code{geom_text_s()} and \code{geom_label_s()} have an
+#'   interface that similar to that of \code{geom_text_repel()} and
+#'   \code{geom_label_repel()}. One aspect where they deviate from
+#'   \code{geom_label()}, \code{geom_text_repel()} and \code{geom_label_repel()}
+#'   is the handling of the colour aesthetics. There no additional aesthetics,
+#'   only the possibility of choosing which elements are targeted by the
+#'   aesthetics and which are always rendered in a default colour. In the
+#'   grammar of graphics using the same aesthetic with multiple meanings is not
+#'   allowed, thus, the approach used in our geoms attempts to enforce this.
 #'
 #'   These geometries use by default \code{\link{position_nudge_keep}}
 #'   which is backwards compatible with \code{\link[ggplot2]{position_nudge}}.
@@ -90,6 +94,10 @@
 #' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
 #'   starting position of each text label. The units for \code{nudge_x} and
 #'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
+#' @param default.colour A colour definition to use for elements not targeted
+#'    by the colour aesthetic.
+#' @param colour.target A vector of character strings; \code{"all"},
+#'    \code{"text"}, \code{"box"} and \code{"segment"}.
 #' @param add.segments logical Display connecting segments or arrows between
 #'   original positions and displaced ones if both are available.
 #' @param box.padding,point.padding numeric By how much each end of the segments
@@ -133,7 +141,7 @@
 #' p +
 #'   geom_text_s(angle = 90, nudge_y = 1,
 #'               arrow = arrow(length = grid::unit(1.5, "mm")),
-#'               segment.colour = "red") +
+#'               colour.target = "segment", colour = "red") +
 #'   expand_limits(y = 30)
 #'
 #' p +
@@ -158,7 +166,19 @@
 #' # Add aesthetic mappings and adjust arrows
 #' p +
 #'   geom_text_s(aes(colour = factor(cyl)),
-#'               segment.colour = "black",
+#'               angle = 90,
+#'               nudge_y = 1,
+#'               arrow = arrow(angle = 20,
+#'                             length = grid::unit(1.5, "mm"),
+#'                             ends = "first",
+#'                             type = "closed"),
+#'               show.legend = FALSE) +
+#'   scale_colour_discrete(l = 40) + # luminance, make colours darker
+#'   expand_limits(y = 25)
+#'
+#' p +
+#'   geom_text_s(aes(colour = factor(cyl)),
+#'               colour.target = "text",
 #'               angle = 90,
 #'               nudge_y = 1,
 #'               arrow = arrow(angle = 20,
@@ -191,6 +211,7 @@
 #'   geom_label_s(aes(colour = factor(cyl)),
 #'               nudge_x = 0.3,
 #'               colour.target = "box",
+#'               label.size = 1,
 #'               arrow = arrow(angle = 20,
 #'                             length = grid::unit(1/3, "lines"))) +
 #'   scale_colour_discrete(l = 40) + # luminance, make colours darker
@@ -210,6 +231,8 @@ geom_text_s <- function(mapping = NULL,
                         parse = FALSE,
                         nudge_x = 0,
                         nudge_y = 0,
+                        default.colour = "black",
+                        colour.target = "all",
                         add.segments = TRUE,
                         box.padding = 0.25,
                         point.padding = 1e-06,
@@ -228,7 +251,6 @@ geom_text_s <- function(mapping = NULL,
     position <- position_nudge_keep(nudge_x, nudge_y)
   }
 
-
   ggplot2::layer(
     data = data,
     mapping = mapping,
@@ -239,6 +261,8 @@ geom_text_s <- function(mapping = NULL,
     inherit.aes = inherit.aes,
     params = list(
       parse = parse,
+      default.colour = default.colour,
+      colour.target = colour.target,
       add.segments = add.segments,
       box.padding = box.padding,
       point.padding = point.padding,
@@ -270,15 +294,15 @@ GeomTextS <-
                      fontface = 1,
                      lineheight = 1.2,
                      segment.linetype = 1,
-                     segment.colour = "grey33",
-                     segment.size = 1.5,
-                     segment.alpha = 1
+                     segment.size = 1.5
                    ),
 
                    draw_panel = function(data,
                                          panel_params,
                                          coord, #panel_scales,
                                          parse = FALSE,
+                                         default.colour = "black",
+                                         colour.target = "all",
                                          na.rm = FALSE,
                                          check_overlap = FALSE,
                                          add.segments = TRUE,
@@ -342,7 +366,8 @@ GeomTextS <-
                          hjust = row$hjust, vjust = row$vjust,
                          rot = row$angle,
                          gp = gpar(
-                           col = ggplot2::alpha(row$colour, row$alpha),
+                           col = ifelse(any(colour.target %in% c("all", "text")),
+                                        ggplot2::alpha(row$colour, row$alpha), default.colour),
                            fontsize = row$size * .pt,
                            fontfamily = row$family,
                            fontface = row$fontface,
@@ -365,8 +390,9 @@ GeomTextS <-
                                                 x1 = segment.row$x_orig,
                                                 y1 = segment.row$y_orig,
                                                 arrow = arrow,
-                                                gp = grid::gpar(col = ggplot2::alpha(row$segment.colour,
-                                                                                     row$segment.alpha),
+                                                gp = grid::gpar(col = ifelse(any(colour.target %in% c("all", "segment")),
+                                                                             ggplot2::alpha(row$colour, row$alpha),
+                                                                             default.colour),
                                                                 lwd = row$segment.size),
                                                 name = paste("text.s.segment", row$group, row.idx, sep = "."))
                          }

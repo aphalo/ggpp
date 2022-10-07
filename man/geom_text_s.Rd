@@ -14,8 +14,8 @@ geom_label_s(
   parse = FALSE,
   nudge_x = 0,
   nudge_y = 0,
-  colour.target = "both",
-  color.target = colour.target,
+  default.colour = "black",
+  colour.target = "all",
   label.padding = grid::unit(0.25, "lines"),
   label.r = grid::unit(0.15, "lines"),
   label.size = 0.25,
@@ -38,6 +38,8 @@ geom_text_s(
   parse = FALSE,
   nudge_x = 0,
   nudge_y = 0,
+  default.colour = "black",
+  colour.target = "all",
   add.segments = TRUE,
   box.padding = 0.25,
   point.padding = 1e-06,
@@ -80,8 +82,11 @@ displayed as described in \code{?plotmath}.}
 starting position of each text label. The units for \code{nudge_x} and
 \code{nudge_y} are the same as for the data units on the x-axis and y-axis.}
 
-\item{colour.target, color.target}{A character string; \code{"both"},
-\code{"text"}, or \code{"box"}.}
+\item{default.colour}{A colour definition to use for elements not targeted
+by the colour aesthetic.}
+
+\item{colour.target}{A vector of character strings; \code{"all"},
+\code{"text"}, \code{"box"} and \code{"segment"}.}
 
 \item{label.padding}{Amount of padding around label. Defaults to 0.25 lines.}
 
@@ -127,11 +132,15 @@ Text geoms are most useful for labelling plots. `geom_text_s()`
   original location to the nudged text with a segment.
 }
 \details{
-Geometries \code{geom_text_s()} and \code{geom_label_s()} have an interface
-  that follows closely that of \code{geom_text_repel()} and \code{geom_label_repel()}.
-  At the current stage of development even if formal parameters have the same
-  names, arguments with the same numeric value may have quantitatively
-  different effects on the resulting plot.
+Geometries \code{geom_text_s()} and \code{geom_label_s()} have an
+  interface that similar to that of \code{geom_text_repel()} and
+  \code{geom_label_repel()}. One aspect where they deviate from
+  \code{geom_label()}, \code{geom_text_repel()} and \code{geom_label_repel()}
+  is the handling of the colour aesthetics. There no additional aesthetics,
+  only the possibility of choosing which elements are targeted by the
+  aesthetics and which are always rendered in a default colour. In the
+  grammar of graphics using the same aesthetic with multiple meanings is not
+  allowed, thus, the approach used in our geoms attempts to enforce this.
 
   These geometries use by default \code{\link{position_nudge_keep}}
   which is backwards compatible with \code{\link[ggplot2]{position_nudge}}.
@@ -211,7 +220,7 @@ p +
 p +
   geom_text_s(angle = 90, nudge_y = 1,
               arrow = arrow(length = grid::unit(1.5, "mm")),
-              segment.colour = "red") +
+              colour.target = "segment", colour = "red") +
   expand_limits(y = 30)
 
 p +
@@ -236,7 +245,19 @@ p +
 # Add aesthetic mappings and adjust arrows
 p +
   geom_text_s(aes(colour = factor(cyl)),
-              segment.colour = "black",
+              angle = 90,
+              nudge_y = 1,
+              arrow = arrow(angle = 20,
+                            length = grid::unit(1.5, "mm"),
+                            ends = "first",
+                            type = "closed"),
+              show.legend = FALSE) +
+  scale_colour_discrete(l = 40) + # luminance, make colours darker
+  expand_limits(y = 25)
+
+p +
+  geom_text_s(aes(colour = factor(cyl)),
+              colour.target = "text",
               angle = 90,
               nudge_y = 1,
               arrow = arrow(angle = 20,
@@ -251,6 +272,25 @@ p +
 p +
   geom_label_s(aes(colour = factor(cyl)),
               nudge_x = 0.3,
+              arrow = arrow(angle = 20,
+                            length = grid::unit(1/3, "lines"))) +
+  scale_colour_discrete(l = 40) + # luminance, make colours darker
+  expand_limits(x = 7)
+
+p +
+  geom_label_s(aes(colour = factor(cyl)),
+              nudge_x = 0.3,
+              colour.target = "text",
+              arrow = arrow(angle = 20,
+                            length = grid::unit(1/3, "lines"))) +
+  scale_colour_discrete(l = 40) + # luminance, make colours darker
+  expand_limits(x = 7)
+
+p +
+  geom_label_s(aes(colour = factor(cyl)),
+              nudge_x = 0.3,
+              colour.target = "box",
+              label.size = 1,
               arrow = arrow(angle = 20,
                             length = grid::unit(1/3, "lines"))) +
   scale_colour_discrete(l = 40) + # luminance, make colours darker
