@@ -1,4 +1,7 @@
 #' @rdname geom_text_s
+#'
+#' @param colour.target,color.target A character string; \code{"both"},
+#'    \code{"text"}, or \code{"box"}.
 #' @param label.padding Amount of padding around label. Defaults to 0.25 lines.
 #' @param label.r Radius of rounded corners. Defaults to 0.15 lines.
 #' @param label.size Size of label border, in mm.
@@ -13,6 +16,8 @@ geom_label_s <- function(mapping = NULL,
                          parse = FALSE,
                          nudge_x = 0,
                          nudge_y = 0,
+                         colour.target = "both",
+                         color.target = colour.target,
                          label.padding = grid::unit(0.25, "lines"),
                          label.r = grid::unit(0.15, "lines"),
                          label.size = 0.25,
@@ -43,6 +48,7 @@ geom_label_s <- function(mapping = NULL,
     inherit.aes = inherit.aes,
     params = list(
       parse = parse,
+      colour.target = color.target,
       label.padding = label.padding,
       label.r = label.r,
       label.size = label.size,
@@ -86,6 +92,7 @@ GeomLabelS <-
                                          parse = FALSE,
                                          na.rm = FALSE,
                                          add.segments = TRUE,
+                                         colour.target = "both",
                                          box.padding = 0.25,
                                          point.padding = 1e-06,
                                          min.segment.length = 0,
@@ -141,14 +148,17 @@ GeomLabelS <-
                                  padding = label.padding,
                                  r = label.r,
                                  text.gp = gpar(
-                                   col = row$colour,
+                                   col = ifelse(colour.target %in% c("both", "text"),
+                                                row$colour, "black"),
                                    fontsize = row$size * .pt,
                                    fontfamily = row$family,
                                    fontface = row$fontface,
                                    lineheight = row$lineheight
                                  ),
                                  rect.gp = gpar(
-                                   col = if (isTRUE(all.equal(label.size, 0))) NA else row$colour,
+                                   col = if (isTRUE(all.equal(label.size, 0))) NA else
+                                     ifelse(colour.target %in% c("both", "box"),
+                                            row$colour, "black"),
                                    fill = alpha(row$fill, row$alpha),
                                    lwd = label.size * .pt
                                  )

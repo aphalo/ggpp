@@ -14,6 +14,8 @@ geom_label_s(
   parse = FALSE,
   nudge_x = 0,
   nudge_y = 0,
+  colour.target = "both",
+  color.target = colour.target,
   label.padding = grid::unit(0.25, "lines"),
   label.r = grid::unit(0.15, "lines"),
   label.size = 0.25,
@@ -77,6 +79,9 @@ displayed as described in \code{?plotmath}.}
 \item{nudge_x, nudge_y}{Horizontal and vertical adjustments to nudge the
 starting position of each text label. The units for \code{nudge_x} and
 \code{nudge_y} are the same as for the data units on the x-axis and y-axis.}
+
+\item{colour.target, color.target}{A character string; \code{"both"},
+\code{"text"}, or \code{"box"}.}
 
 \item{label.padding}{Amount of padding around label. Defaults to 0.25 lines.}
 
