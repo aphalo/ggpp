@@ -134,7 +134,7 @@ if (gginnards.installed) {
 
 ggplot(my.data, aes(x, y)) +
  geom_point() +
- stat_quadrant_counts(aes(label = sprintf("\%i observations", stat(count)))) +
+ stat_quadrant_counts(aes(label = sprintf("\%i observations", after_stat(count)))) +
  expand_limits(y = 12.7)
 
 ggplot(my.data, aes(x, y)) +

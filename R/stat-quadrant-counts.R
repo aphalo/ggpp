@@ -100,7 +100,7 @@
 #'
 #' ggplot(my.data, aes(x, y)) +
 #'  geom_point() +
-#'  stat_quadrant_counts(aes(label = sprintf("%i observations", stat(count)))) +
+#'  stat_quadrant_counts(aes(label = sprintf("%i observations", after_stat(count)))) +
 #'  expand_limits(y = 12.7)
 #'
 #' ggplot(my.data, aes(x, y)) +
@@ -278,9 +278,9 @@ StatQuadrantCounts <-
   ggplot2::ggproto("StatQuadrantCounts", ggplot2::Stat,
                    compute_panel = compute_counts_fun,
                    default_aes =
-                     ggplot2::aes(npcx = stat(npcx),
-                                  npcy = stat(npcy),
-                                  label = sprintf("n=%i", stat(count)),
+                     ggplot2::aes(npcx = ggplot2::after_stat(npcx),
+                                  npcy = ggplot2::after_stat(npcy),
+                                  label = sprintf("n=%i", ggplot2::after_stat(count)),
                                   hjust = "inward",
                                   vjust = "inward"),
                    required_aes = c("x", "y")
