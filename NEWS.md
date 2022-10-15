@@ -6,13 +6,15 @@ editor_options:
     wrap: 72
 ---
 
-# ggpp 0.4.6
+# ggpp 0.5.0
 
 -   Add parameters `default.colour` and `colour.target` to `geom_label_s()`
-    and `geom_text_s()`. Remove support for aesthetics `segment.colour`,
-    `segment.alpha`, and `segment.size`. (Segments are links, and not meant
+    and `geom_text_s()`.
+-   **Code breaking.** Remove support for aesthetics `segment.colour`,
+    `segment.alpha`, and `segment.size` in `geom_label_s()`
+    and `geom_text_s()`. (Segments are links, and not meant
     to inform about data on their own. They may share the same colour mapping
-    as text and border, or have a default constant colour.)
+    as text and/or border, or have a default constant colour.)
 
 # ggpp 0.4.5
 
