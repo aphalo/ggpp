@@ -16,6 +16,8 @@ geom_label_s <- function(mapping = NULL,
                          nudge_y = 0,
                          default.colour = "black",
                          colour.target = "all",
+                         default.alpha = 1,
+                         alpha.target = "fill",
                          label.padding = grid::unit(0.25, "lines"),
                          label.r = grid::unit(0.15, "lines"),
                          label.size = 0.25,
@@ -48,6 +50,8 @@ geom_label_s <- function(mapping = NULL,
       parse = parse,
       default.colour = default.colour,
       colour.target = colour.target,
+      default.alpha = default.alpha,
+      alpha.target = alpha.target,
       label.padding = label.padding,
       label.r = label.r,
       label.size = label.size,
@@ -91,6 +95,8 @@ GeomLabelS <-
                                          add.segments = TRUE,
                                          default.colour = "black",
                                          colour.target = "all",
+                                         default.alpha = 1,
+                                         alpha.target = "fill",
                                          box.padding = 0.25,
                                          point.padding = 1e-06,
                                          min.segment.length = 0,
@@ -137,61 +143,81 @@ GeomLabelS <-
                                         a = "x", b = "y")
                      }
 
-                     label.grobs <- lapply(1:nrow(data), function(i) {
-                       current.row <- data[i, , drop = FALSE]
-                       labelGrob(lab[i],
-                                 x = unit(current.row$x, "native"),
-                                 y = unit(current.row$y, "native"),
-                                 just = c(current.row$hjust, current.row$vjust),
-                                 padding = label.padding,
-                                 r = label.r,
-                                 text.gp = gpar(
-                                   col = ifelse(any(colour.target %in% c("all", "text")),
-                                                current.row$colour, default.colour),
-                                   fontsize = current.row$size * .pt,
-                                   fontfamily = current.row$family,
-                                   fontface = current.row$fontface,
-                                   lineheight = current.row$lineheight
-                                 ),
-                                 rect.gp = gpar(
-                                   col = if (isTRUE(all.equal(label.size, 0))) NA else
-                                     ifelse(any(colour.target %in% c("all", "box")),
-                                            current.row$colour, default.colour),
-                                   fill = alpha(current.row$fill, current.row$alpha),
-                                   lwd = label.size * .pt
-                                 )
-                       )
-                     })
-                     class(label.grobs) <- "gList"
-
-                     if(add.segments) {
-                       segment.colour <-
-                         if (any(colour.target %in% c("all", "segment")))
-                           data$colour
-                         else
-                           rep(default.colour, nrow(data))
-                       segment.colour <- default.colour
+                     if (add.segments) {
                        segments.data <-
                          shrink_segments(data,
                                          point.padding = point.padding,
                                          box.padding = box.padding,
                                          min.segment.length = min.segment.length)
-                       # create the grobs
-                       segment.grobs <-
-                         grid::segmentsGrob(
-                           x1 = segments.data$x,
-                           y1 = segments.data$y,
-                           x0 = segments.data$x_orig,
-                           y0 = segments.data$y_orig,
-                           arrow = arrow,
-                           gp = grid::gpar(col = segment.colour,
-                                           lwd = data$segment.size))
-                       all.grobs <- gList(segment.grobs, label.grobs)
-                     } else {
-                       all.grobs <- label.grobs
+                     }
+                     # loop needed as gpar is not vectorized
+                     all.grobs <- grid::gList()
+
+                     for (row.idx in 1:nrow(data)) {
+                       row <- data[row.idx, , drop = FALSE]
+                       text.alpha <-
+                         ifelse(any(alpha.target %in% c("all", "text")),
+                                row$alpha, default.alpha)
+                       segment.alpha <-
+                         ifelse(any(alpha.target %in% c("all", "segment")),
+                                row$alpha, default.alpha)
+                       box.alpha <-
+                         ifelse(any(alpha.target %in% c("all", "box")),
+                                row$alpha, default.alpha)
+                       user.grob <- labelGrob(lab[row.idx],
+                                              x = unit(row$x, "native"),
+                                              y = unit(row$y, "native"),
+                                              just = c(row$hjust, row$vjust),
+                                              padding = label.padding,
+                                              r = label.r,
+                                              text.gp = gpar(
+                                                col = ifelse(any(colour.target %in% c("all", "text")),
+                                                             ggplot2::alpha(row$colour, text.alpha),
+                                                             ggplot2::alpha(default.colour, text.alpha)),
+                                                fontsize = row$size * .pt,
+                                                fontfamily = row$family,
+                                                fontface = row$fontface,
+                                                lineheight = row$lineheight
+                                              ),
+                                              rect.gp = gpar(
+                                                col = if (isTRUE(all.equal(label.size, 0))) NA else
+                                                  ifelse(any(colour.target %in% c("all", "box")),
+                                                         ggplot2::alpha(row$colour, box.alpha),
+                                                         ggplot2::alpha(default.colour, box.alpha)),
+                                                fill = alpha(row$fill, row$alpha),
+                                                lwd = label.size * .pt
+                                              )
+                       )
+
+                       # give unique name to each grob
+                       user.grob$name <- paste("text.s.grob", row$group, row.idx, sep = ".")
+
+                       if (add.segments) {
+                         segment.row <- segments.data[row.idx, , drop = FALSE]
+                         if (segment.row$too.short) {
+                           segment.grob <- grid::nullGrob()
+                         } else {
+                           segment.grob <-
+                             grid::segmentsGrob(x0 = segment.row$x,
+                                                y0 = segment.row$y,
+                                                x1 = segment.row$x_orig,
+                                                y1 = segment.row$y_orig,
+                                                arrow = arrow,
+                                                gp = grid::gpar(col = ifelse(any(colour.target %in% c("all", "segment")),
+                                                                             ggplot2::alpha(row$colour, segment.alpha),
+                                                                             ggplot2::alpha(default.colour, segment.alpha)),
+                                                                lwd = row$segment.size),
+                                                name = paste("text.s.segment", row$group, row.idx, sep = "."))
+                         }
+                         all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
+                       } else {
+                         all.grobs <- grid::gList(all.grobs, user.grob)
+                       }
                      }
 
-                     grid::grobTree(children = all.grobs, name = "geom.label.s.panel")
+                     # name needs to be unique within plot, so we would to know layer
+                     #                     grid::grobTree(children = all.grobs, name = "geom.text.s.panel")
+                     grid::grobTree(children = all.grobs)
 
                    },
 

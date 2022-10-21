@@ -98,6 +98,10 @@
 #'    by the colour aesthetic.
 #' @param colour.target A vector of character strings; \code{"all"},
 #'    \code{"text"}, \code{"box"} and \code{"segment"}.
+#' @param default.alpha numeric in [0..1] A transparency value to use for
+#'    elements not targeted by the alpha aesthetic.
+#' @param alpha.target A vector of character strings; \code{"all"},
+#'    \code{"text"}, \code{"box"} and \code{"segment"}.
 #' @param add.segments logical Display connecting segments or arrows between
 #'   original positions and displaced ones if both are available.
 #' @param box.padding,point.padding numeric By how much each end of the segments
@@ -142,6 +146,11 @@
 #'   geom_text_s(angle = 90, nudge_y = 1,
 #'               arrow = arrow(length = grid::unit(1.5, "mm")),
 #'               colour.target = "segment", colour = "red") +
+#'   expand_limits(y = 30)
+#' p +
+#'   geom_text_s(angle = 90, nudge_y = 1,
+#'               arrow = arrow(length = grid::unit(1.5, "mm")),
+#'               alpha.target = "segment", alpha = 0.3) +
 #'   expand_limits(y = 30)
 #'
 #' p +
@@ -217,7 +226,27 @@
 #'   scale_colour_discrete(l = 40) + # luminance, make colours darker
 #'   expand_limits(x = 7)
 #'
-#' # Scale height of text, rather than sqrt(height)
+#' p +
+#'   geom_label_s(aes(colour = factor(cyl)),
+#'               nudge_x = 0.3,
+#'               colour.target = c("segment", "box"),
+#'               label.size = 1,
+#'               arrow = arrow(angle = 20,
+#'                             length = grid::unit(1/3, "lines"))) +
+#'   scale_colour_discrete(l = 40) + # luminance, make colours darker
+#'   expand_limits(x = 7)
+#'
+#' p +
+#'   geom_label_s(aes(colour = factor(cyl)),
+#'               nudge_x = 0.3,
+#'               alpha.target = c("segment", "box"),
+#'               alpha = 0.3,
+#'               label.size = 1,
+#'               arrow = arrow(angle = 20,
+#'                             length = grid::unit(1/3, "lines"))) +
+#'   scale_colour_discrete(l = 40) + # luminance, make colours darker
+#'   expand_limits(x = 7)#' # Scale height of text, rather than sqrt(height)
+#'
 #' p +
 #'   geom_text_s(aes(size = wt), nudge_x = -0.1) +
 #'   scale_radius(range = c(3,6)) + # override scale_area()
@@ -233,6 +262,8 @@ geom_text_s <- function(mapping = NULL,
                         nudge_y = 0,
                         default.colour = "black",
                         colour.target = "all",
+                        default.alpha = 1,
+                        alpha.target = "all",
                         add.segments = TRUE,
                         box.padding = 0.25,
                         point.padding = 1e-06,
@@ -263,6 +294,8 @@ geom_text_s <- function(mapping = NULL,
       parse = parse,
       default.colour = default.colour,
       colour.target = colour.target,
+      default.alpha = default.alpha,
+      alpha.target = alpha.target,
       add.segments = add.segments,
       box.padding = box.padding,
       point.padding = point.padding,
@@ -289,7 +322,7 @@ GeomTextS <-
                      angle = 0,
                      hjust = "position",
                      vjust = "position",
-                     alpha = NA,
+                     alpha = 1,
                      family = "",
                      fontface = 1,
                      lineheight = 1.2,
@@ -303,6 +336,8 @@ GeomTextS <-
                                          parse = FALSE,
                                          default.colour = "black",
                                          colour.target = "all",
+                                         default.alpha = 1,
+                                         alpha.target = "all",
                                          na.rm = FALSE,
                                          check_overlap = FALSE,
                                          add.segments = TRUE,
@@ -350,16 +385,23 @@ GeomTextS <-
                      }
 
                      if (add.segments) {
-                       segments.data <- shrink_segments(data,
-                                                        point.padding = point.padding,
-                                                        box.padding = box.padding,
-                                                        min.segment.length = min.segment.length)
+                       segments.data <-
+                         shrink_segments(data,
+                                         point.padding = point.padding,
+                                         box.padding = box.padding,
+                                         min.segment.length = min.segment.length)
                      }
                      # loop needed as gpar is not vectorized
                      all.grobs <- grid::gList()
 
                      for (row.idx in 1:nrow(data)) {
                        row <- data[row.idx, , drop = FALSE]
+                       text.alpha <-
+                         ifelse(any(alpha.target %in% c("all", "text")),
+                                row$alpha, default.alpha)
+                       segment.alpha <-
+                         ifelse(any(alpha.target %in% c("all", "segment")),
+                                row$alpha, default.alpha)
                        user.grob <- grid::textGrob(
                          lab[row.idx],
                          row$x, row$y, default.units = "native",
@@ -367,7 +409,8 @@ GeomTextS <-
                          rot = row$angle,
                          gp = gpar(
                            col = ifelse(any(colour.target %in% c("all", "text")),
-                                        ggplot2::alpha(row$colour, row$alpha), default.colour),
+                                        ggplot2::alpha(row$colour, text.alpha),
+                                        ggplot2::alpha(default.colour, text.alpha)),
                            fontsize = row$size * .pt,
                            fontfamily = row$family,
                            fontface = row$fontface,
@@ -391,8 +434,8 @@ GeomTextS <-
                                                 y1 = segment.row$y_orig,
                                                 arrow = arrow,
                                                 gp = grid::gpar(col = ifelse(any(colour.target %in% c("all", "segment")),
-                                                                             ggplot2::alpha(row$colour, row$alpha),
-                                                                             default.colour),
+                                                                             ggplot2::alpha(row$colour, segment.alpha),
+                                                                             ggplot2::alpha(default.colour, segment.alpha)),
                                                                 lwd = row$segment.size),
                                                 name = paste("text.s.segment", row$group, row.idx, sep = "."))
                          }

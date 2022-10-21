@@ -16,6 +16,8 @@ geom_label_s(
   nudge_y = 0,
   default.colour = "black",
   colour.target = "all",
+  default.alpha = 1,
+  alpha.target = "fill",
   label.padding = grid::unit(0.25, "lines"),
   label.r = grid::unit(0.15, "lines"),
   label.size = 0.25,
@@ -40,6 +42,8 @@ geom_text_s(
   nudge_y = 0,
   default.colour = "black",
   colour.target = "all",
+  default.alpha = 1,
+  alpha.target = "all",
   add.segments = TRUE,
   box.padding = 0.25,
   point.padding = 1e-06,
@@ -86,6 +90,12 @@ starting position of each text label. The units for \code{nudge_x} and
 by the colour aesthetic.}
 
 \item{colour.target}{A vector of character strings; \code{"all"},
+\code{"text"}, \code{"box"} and \code{"segment"}.}
+
+\item{default.alpha}{numeric in [0..1] A transparency value to use for
+elements not targeted by the alpha aesthetic.}
+
+\item{alpha.target}{A vector of character strings; \code{"all"},
 \code{"text"}, \code{"box"} and \code{"segment"}.}
 
 \item{label.padding}{Amount of padding around label. Defaults to 0.25 lines.}
@@ -222,6 +232,11 @@ p +
               arrow = arrow(length = grid::unit(1.5, "mm")),
               colour.target = "segment", colour = "red") +
   expand_limits(y = 30)
+p +
+  geom_text_s(angle = 90, nudge_y = 1,
+              arrow = arrow(length = grid::unit(1.5, "mm")),
+              alpha.target = "segment", alpha = 0.3) +
+  expand_limits(y = 30)
 
 p +
   geom_label_s(nudge_x = 0.12) +
@@ -296,7 +311,27 @@ p +
   scale_colour_discrete(l = 40) + # luminance, make colours darker
   expand_limits(x = 7)
 
-# Scale height of text, rather than sqrt(height)
+p +
+  geom_label_s(aes(colour = factor(cyl)),
+              nudge_x = 0.3,
+              colour.target = c("segment", "box"),
+              label.size = 1,
+              arrow = arrow(angle = 20,
+                            length = grid::unit(1/3, "lines"))) +
+  scale_colour_discrete(l = 40) + # luminance, make colours darker
+  expand_limits(x = 7)
+
+p +
+  geom_label_s(aes(colour = factor(cyl)),
+              nudge_x = 0.3,
+              alpha.target = c("segment", "box"),
+              alpha = 0.3,
+              label.size = 1,
+              arrow = arrow(angle = 20,
+                            length = grid::unit(1/3, "lines"))) +
+  scale_colour_discrete(l = 40) + # luminance, make colours darker
+  expand_limits(x = 7)#' # Scale height of text, rather than sqrt(height)
+
 p +
   geom_text_s(aes(size = wt), nudge_x = -0.1) +
   scale_radius(range = c(3,6)) + # override scale_area()
