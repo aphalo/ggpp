@@ -22,8 +22,8 @@ License: GPL (>= 2)
 LazyLoad: TRUE
 ByteCompile: TRUE
 Depends:
-    R (>= 3.6.0),
-    ggplot2 (>= 3.3.2)
+    R (>= 4.0.0),
+    ggplot2 (>= 3.3.6)
 Imports:
     stats,
     grid,

@@ -33,17 +33,17 @@
 <circle cx='560.14' cy='310.33' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='436.63' cy='46.53' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='251.37' cy='389.47' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<line x1='681.95' y1='257.57' x2='66.11' y2='257.57' style='stroke-width: 1.12;' />
+<line x1='681.95' y1='257.57' x2='66.11' y2='257.57' style='stroke-width: 1.42;' />
 <text x='683.64' y='261.37' style='font-size: 11.04px; font-family: sans;' textLength='17.80px' lengthAdjust='spacingAndGlyphs'>abc</text>
-<line x1='681.95' y1='521.37' x2='313.13' y2='521.37' style='stroke-width: 1.12;' />
+<line x1='681.95' y1='521.37' x2='313.13' y2='521.37' style='stroke-width: 1.42;' />
 <text x='683.64' y='525.17' style='font-size: 11.04px; font-family: sans;' textLength='11.66px' lengthAdjust='spacingAndGlyphs'>cd</text>
-<line x1='681.95' y1='125.67' x2='189.62' y2='125.67' style='stroke-width: 1.12;' />
+<line x1='681.95' y1='125.67' x2='189.62' y2='125.67' style='stroke-width: 1.42;' />
 <text x='683.64' y='129.47' style='font-size: 11.04px; font-family: sans;' textLength='6.14px' lengthAdjust='spacingAndGlyphs'>d</text>
-<line x1='681.95' y1='310.33' x2='560.14' y2='310.33' style='stroke-width: 1.12;' />
+<line x1='681.95' y1='310.33' x2='560.14' y2='310.33' style='stroke-width: 1.42;' />
 <text x='683.64' y='314.13' style='font-size: 11.04px; font-family: sans;' textLength='5.52px' lengthAdjust='spacingAndGlyphs'>c</text>
-<line x1='681.95' y1='46.53' x2='436.63' y2='46.53' style='stroke-width: 1.12;' />
+<line x1='681.95' y1='46.53' x2='436.63' y2='46.53' style='stroke-width: 1.42;' />
 <text x='683.64' y='50.32' style='font-size: 11.04px; font-family: sans;' textLength='17.80px' lengthAdjust='spacingAndGlyphs'>bcd</text>
-<line x1='681.95' y1='389.47' x2='251.37' y2='389.47' style='stroke-width: 1.12;' />
+<line x1='681.95' y1='389.47' x2='251.37' y2='389.47' style='stroke-width: 1.42;' />
 <text x='683.64' y='393.27' style='font-size: 11.04px; font-family: sans;' textLength='6.14px' lengthAdjust='spacingAndGlyphs'>a</text>
 <rect x='35.24' y='22.78' width='679.28' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
 </g>

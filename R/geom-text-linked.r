@@ -97,19 +97,29 @@
 #' @param default.colour A colour definition to use for elements not targeted
 #'    by the colour aesthetic.
 #' @param colour.target A vector of character strings; \code{"all"},
-#'    \code{"text"}, \code{"box"} and \code{"segment"}.
+#'   \code{"text"}, \code{"box"} and \code{"segment"}.
 #' @param default.alpha numeric in [0..1] A transparency value to use for
-#'    elements not targeted by the alpha aesthetic.
+#'   elements not targeted by the alpha aesthetic.
 #' @param alpha.target A vector of character strings; \code{"all"},
-#'    \code{"text"}, \code{"box"} and \code{"segment"}.
+#'   \code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
+#'   \code{"box.fill"}.
 #' @param add.segments logical Display connecting segments or arrows between
 #'   original positions and displaced ones if both are available.
 #' @param box.padding,point.padding numeric By how much each end of the segments
-#'   should shortened.
+#'   should shortened in mm.
+#' @param segment.linewidth numeric Width of the segments or arrows in mm.
 #' @param min.segment.length numeric Segments shorter that the minimum length
-#'   are not rendered. (implemented only for \code{geom_text_s()})
+#'   are not rendered, in mm.
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
+#'
+#' @section Aesthetics:
+#' Both geoms require aesthetics \code{x}, \code{y} and \code{label} and support
+#' aesthetics: \code{alpha}, \code{colour}, \code{size} (of text),
+#' \code{family}, \code{fontface}, \code{lineheight}, \code{hjust} and
+#' \code{vjust}. In addition, \code{geom_text_s} supports \code{angle} and
+#' \code{geom_label_s} supports \code{fill}, \code{linewidth} and
+#' \code{linetype}.
 #'
 #' @return A plot layer instance.
 #'
@@ -267,6 +277,7 @@ geom_text_s <- function(mapping = NULL,
                         add.segments = TRUE,
                         box.padding = 0.25,
                         point.padding = 1e-06,
+                        segment.linewidth = 0.5,
                         min.segment.length = 0,
                         arrow = NULL,
                         check_overlap = FALSE,
@@ -299,6 +310,7 @@ geom_text_s <- function(mapping = NULL,
       add.segments = add.segments,
       box.padding = box.padding,
       point.padding = point.padding,
+      segment.linewidth = segment.linewidth,
       min.segment.length = min.segment.length,
       arrow = arrow,
       check_overlap = check_overlap,
@@ -325,9 +337,7 @@ GeomTextS <-
                      alpha = 1,
                      family = "",
                      fontface = 1,
-                     lineheight = 1.2,
-                     segment.linetype = 1,
-                     segment.size = 1.5
+                     lineheight = 1.2
                    ),
 
                    draw_panel = function(data,
@@ -343,6 +353,7 @@ GeomTextS <-
                                          add.segments = TRUE,
                                          box.padding = 0.25,
                                          point.padding = 1e-06,
+                                         segment.linewidth = 1,
                                          min.segment.length = 0,
                                          arrow = NULL) {
 
@@ -433,10 +444,12 @@ GeomTextS <-
                                                 x1 = segment.row$x_orig,
                                                 y1 = segment.row$y_orig,
                                                 arrow = arrow,
-                                                gp = grid::gpar(col = ifelse(any(colour.target %in% c("all", "segment")),
-                                                                             ggplot2::alpha(row$colour, segment.alpha),
-                                                                             ggplot2::alpha(default.colour, segment.alpha)),
-                                                                lwd = row$segment.size),
+                                                gp = grid::gpar(
+                                                  col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
+                                                    ifelse(any(colour.target %in% c("all", "segment")),
+                                                           ggplot2::alpha(row$colour, segment.alpha),
+                                                           ggplot2::alpha(default.colour, segment.alpha)),
+                                                  lwd = (if (segment.linewidth == 0) 1 else segment.linewidth) * .stroke),
                                                 name = paste("text.s.segment", row$group, row.idx, sep = "."))
                          }
                          all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
@@ -445,7 +458,7 @@ GeomTextS <-
                        }
                      }
 
-                     # name needs to be unique within plot, so we would to know layer
+                     # name needs to be unique within plot, so we would to know other layers
 #                     grid::grobTree(children = all.grobs, name = "geom.text.s.panel")
                      grid::grobTree(children = all.grobs)
 

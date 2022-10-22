@@ -17,12 +17,12 @@ geom_label_s(
   default.colour = "black",
   colour.target = "all",
   default.alpha = 1,
-  alpha.target = "fill",
+  alpha.target = "box.fill",
   label.padding = grid::unit(0.25, "lines"),
   label.r = grid::unit(0.15, "lines"),
-  label.size = 0.25,
+  segment.linewidth = 0.5,
   add.segments = TRUE,
-  box.padding = 0.25,
+  box.padding = 1e-06,
   point.padding = 1e-06,
   min.segment.length = 0,
   arrow = NULL,
@@ -47,6 +47,7 @@ geom_text_s(
   add.segments = TRUE,
   box.padding = 0.25,
   point.padding = 1e-06,
+  segment.linewidth = 0.5,
   min.segment.length = 0,
   arrow = NULL,
   check_overlap = FALSE,
@@ -96,22 +97,23 @@ by the colour aesthetic.}
 elements not targeted by the alpha aesthetic.}
 
 \item{alpha.target}{A vector of character strings; \code{"all"},
-\code{"text"}, \code{"box"} and \code{"segment"}.}
+\code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
+\code{"box.fill"}.}
 
 \item{label.padding}{Amount of padding around label. Defaults to 0.25 lines.}
 
 \item{label.r}{Radius of rounded corners. Defaults to 0.15 lines.}
 
-\item{label.size}{Size of label border, in mm.}
+\item{segment.linewidth}{numeric Width of the segments or arrows in mm.}
 
 \item{add.segments}{logical Display connecting segments or arrows between
 original positions and displaced ones if both are available.}
 
 \item{box.padding, point.padding}{numeric By how much each end of the segments
-should shortened.}
+should shortened in mm.}
 
 \item{min.segment.length}{numeric Segments shorter that the minimum length
-are not rendered. (implemented only for \code{geom_text_s()})}
+are not rendered, in mm.}
 
 \item{arrow}{specification for arrow heads, as created by
 \code{\link[grid]{arrow}}}
@@ -198,6 +200,16 @@ Geometries \code{geom_text_s()} and \code{geom_label_s()} have an
   'ggplot2' is used, these geometries behave like the corresponding
   ones from package 'ggplot2' with a default justification of \code{0.5} and
   no segment drawn.
+}
+
+\section{Aesthetics}{
+
+Both geoms require aesthetics \code{x}, \code{y} and \code{label} and support
+aesthetics: \code{alpha}, \code{colour}, \code{size} (of text),
+\code{family}, \code{fontface}, \code{lineheight}, \code{hjust} and
+\code{vjust}. In addition, \code{geom_text_s} supports \code{angle} and
+\code{geom_label_s} supports \code{fill}, \code{linewidth} and
+\code{linetype}.
 }
 
 \examples{
