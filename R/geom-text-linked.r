@@ -1,6 +1,6 @@
 #' @title Linked Text
 #'
-#' @description Linked text geoms are most useful for adding data labels to
+#' @description Linked text geometries are most useful for adding data labels to
 #'   plots. `geom_text_s()` and `geom_label_s()` add text to the plot and for
 #'   nudged positions link the original location to the nudged text with a
 #'   segment or arrow.
@@ -11,32 +11,33 @@
 #'   displacement needs some improvement.
 #'
 #' @details Geometries \code{geom_text_s()} and \code{geom_label_s()} have an
-#'   interface that similar to that of \code{geom_text_repel()} and
-#'   \code{geom_label_repel()}. One aspect where they deviate from
-#'   \code{geom_label()}, \code{geom_text_repel()} and \code{geom_label_repel()}
-#'   is the handling of the colour and alpha aesthetics. They do not support
+#'   interface similar to that of \code{\link[ggplot2]{geom_text}} and
+#'   \code{\link[ggplot2]{geom_label}}, but support additional features.
+#'   Similarly to \code{geom_text_repel()} and \code{geom_label_repel()} when
+#'   used together with position functions defined in package 'ggpp' they draw a
+#'   segment linking the label at a displaced position to the original position,
+#'   usually a point corresponding to an observation to which the label refers.
+#'   Another difference is that they allow control of to which graphical
+#'   elements the mappings to colour and alpha aesthetics are applied.
+#'   Differently to \code{geom_label()}, \code{geom_label_s()} obeys aesthetic
+#'   mappings to \code{linewidth} and \code{linetype} applied to the line at the
+#'   edge of the label box.
+#'
+#'   Differently to \code{geom_text_repel()} and \code{geom_label_repel()},
+#'   \code{geom_text_s()} and \code{geom_label_s()} do not make use of
 #'   additional aesthetics for the segments or boxes, but instead allow the
 #'   choice of which elements are targeted by the aesthetics and which are
-#'   always rendered in a default colour. In the grammar of graphics using the
-#'   same aesthetic with multiple meanings is not allowed, thus, the approach
-#'   used in our geoms attempts to enforce this.
-#'
-#'   These geometries use by default \code{\link{position_nudge_keep}}
-#'   which is backwards compatible with \code{\link[ggplot2]{position_nudge}}.
-#'   In contrast to \code{\link[ggplot2]{position_nudge}},
-#'   \code{\link{position_nudge_keep}} and all other position functions defined
-#'   in packages 'ggpp' and 'ggrepel' keep the original coordinates, thus
-#'   allowing the plotting of connecting segments and arrows.
+#'   rendered in a default colour. In the grammar of graphics using the same
+#'   aesthetic with multiple meanings is not allowed, thus, the approach used in
+#'   our geoms attempts to enforce this.
 #'
 #'   Note that when you change the scale limits for \emph{x} and/or \emph{y} of
 #'   a plot, text labels stay the same size, as determined by the \code{size}
-#'   aesthetic. The actual size as seen in the plotted output is decided during
-#'   the rendering of the plot to a graphics device. Limits are expanded only to
-#'   include the anchor point of the labels because the "width" and "height" of
-#'   a text element are 0 (as seen by ggplot2). For the same reason, stacking
-#'   and dodging text will not work as they take place within 'ggplot2' before
-#'   the rendered size of text is known. Text labels do have height and width,
-#'   but in grid units, not data units.
+#'   aesthetic, given in millimetres. The actual size as seen in the plotted
+#'   output is decided during the rendering of the plot to a graphics device.
+#'   Limits are expanded only to include the anchor point of the labels because
+#'   the "width" and "height" of a text element are 0 (as seen by ggplot2). Text
+#'   labels do have height and width, but in grid units, not data units.
 #'
 #' @section Alignment: You can modify text alignment with the \code{vjust} and
 #'   \code{hjust} aesthetics. These can either be a number between 0
@@ -55,8 +56,8 @@
 #'   that each individual text or label is justified outwards from its original
 #'   position. The default justification is \code{"position"}.
 #'
-#'   If nudging is at its default of zero, or a position function defined in
-#'   'ggplot2' is used, these geometries behave like the corresponding
+#'   If no position displacement is applied, or a position function defined in
+#'   'ggplot2' is used, these geometries behave similarly to the corresponding
 #'   ones from package 'ggplot2' with a default justification of \code{0.5} and
 #'   no segment drawn.
 #'
@@ -115,13 +116,38 @@
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
 #'
-#' @section Aesthetics:
-#' Both geoms require aesthetics \code{x}, \code{y} and \code{label} and support
-#' aesthetics: \code{alpha}, \code{colour}, \code{size} (of text),
-#' \code{family}, \code{fontface}, \code{lineheight}, \code{hjust} and
-#' \code{vjust}. In addition, \code{geom_text_s} supports \code{angle} and
-#' \code{geom_label_s} supports \code{fill}, \code{linewidth} and
-#' \code{linetype}.
+#' @section Aesthetics: Layer functions \code{geom_text_s()} and
+#'   \code{geom_label_s()} require aesthetics \code{x}, \code{y} and
+#'   \code{label} and support aesthetics: \code{alpha}, \code{colour},
+#'   \code{group}, \code{size} (of text), \code{family}, \code{fontface},
+#'   \code{lineheight}, \code{hjust} and \code{vjust}. In addition,
+#'   \code{geom_text_s} supports \code{angle} and \code{geom_label_s} supports
+#'   \code{fill}, \code{linewidth} and \code{linetype}. See
+#'   \code{\link[ggplot2]{aes_colour_fill_alpha}},
+#'   \code{\link[ggplot2]{aes_linetype_size_shape}},
+#'   \code{\link[ggplot2]{aes_position}}, and
+#'   \code{\link[ggplot2]{aes_group_order}}.
+#'
+#' @section Position functions: Layer functions \code{geom_text_s()} and
+#'   \code{geom_label_s()} use by default \code{\link{position_nudge_keep}}
+#'   which is backwards compatible with \code{\link[ggplot2]{position_nudge}}.
+#'   In contrast to \code{\link[ggplot2]{position_nudge}},
+#'   \code{\link{position_nudge_keep}} and all other position functions defined
+#'   in packages 'ggpp' and 'ggrepel' keep the original coordinates, thus
+#'   allowing the plotting of connecting segments and arrows.
+#'
+#'   Layer functions \code{geom_text_s()} and \code{geom_label_s()} are designed
+#'   to work seamlessly with position functions that keep in the data rather
+#'   than discard the original \code{x} and \code{y} positions when computing a
+#'   new displaced position. See \code{\link{position_nudge_keep}},
+#'   \code{\link{position_dodge_keep}}, \code{\link{position_jitter_keep}},
+#'   \code{\link{position_nudge_center}}, \code{\link{position_nudge_line}},
+#'   \code{\link{position_nudge_to}}, \code{\link{position_dodgenudge}},
+#'   \code{\link{position_jitternudge}}, and \code{\link{position_stacknudge}}
+#'   for examples and details of their use.
+#'
+#' @seealso \code{\link[ggplot2]{geom_text}}, \code{\link[ggplot2]{geom_label}}
+#'   and other documentation of package 'ggplot2'.
 #'
 #' @return A plot layer instance.
 #'
