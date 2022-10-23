@@ -3,8 +3,13 @@
 #' \code{geom_table} and \code{geom_table_npc} add data frames as table insets
 #' to the base ggplot, using syntax similar to that of
 #' \code{\link[ggplot2]{geom_text}} and \code{\link{geom_text_s}}. In most
-#' respects they behave as any other ggplot geometry: a layer con contain
-#' multiple tables and faceting works as usual.
+#' respects they behave as any other ggplot geometry: they add a layer
+#' containing one or more grobs and grouping and faceting works as usual. The
+#' most common use of \code{geom_table} is to add data labels that are whole
+#' tables rather than text. \code{\link{geom_table_npc}} is used to add tables
+#' as annotations to plots, but contrary to layer function \code{annotate},
+#' \code{\link{geom_table_npc}} is data driven and respects grouping and facets,
+#' thus plot insets can differ among panels.
 #'
 #' @details You can modify the size of inset tables with the \code{vp.width} and
 #'   \code{vp.height} aesthetics. These can take a number between 0 (smallest
@@ -26,7 +31,7 @@
 #'
 #'   This geom works only with tibbles as \code{data}, as its expects a list of
 #'   data frames (or tibbles) to be mapped to the \code{label} aesthetic.
-#'   A table is built with function \code{gridExtra::gtable()} for each
+#'   A table is built with function \code{gridExtra::gtable} for each
 #'   data frame in the list, and formatted according to a table theme or
 #'   \code{ttheme}. The character strings in the data frame can be parsed into
 #'   R expressions so the inset tables can include maths.
@@ -51,34 +56,30 @@
 #'   its \emph{horizontal} and \emph{vertical} axes (rows and columns in the
 #'   data frame), and \code{angle} is used to rotate the inset table as a whole.
 #'
-#'   In the case of \code{geom_table_npc()}, \code{npcx} and \code{npcy}
+#'   In the case of \code{geom_table_npc}, \code{npcx} and \code{npcy}
 #'   aesthetics determine the position of the inset table. Justification as
 #'   described above for .
 #'
-#'   Use \code{\link{annotate}} as redefined in 'ggpp' when adding inset plots
-#'   as annotations (automatically available unless 'ggpp' is not attached).
-#'   \code{\link[ggplot2]{annotate}} cannot be used with \code{geom = "table"}.
+#' @inheritSection geom_text_s Alignment
 #'
-#' @section Alignment: You can modify the alignment of the whole table with the `vjust` and
-#'   `hjust` aesthetics. These can either be a number between 0 (right/bottom)
-#'   and 1 (top/left) or a character (\code{"left"}, \code{"middle"},
-#'   \code{"right"}, \code{"bottom"}, \code{"center"}, \code{"top"}). In
-#'   addition, you can use special alignments for justification including
-#'   \code{"inward"} and \code{"outward"}. Inward always aligns text towards
-#'   the center of the plotting area, and outward aligns it away from the center
-#'   of the plotting area. If tagged with \code{_mean} or \code{_median} (e.g.,
-#'   \code{"outward_mean"}) the mean or median of the data in the panel along
-#'   the corresponding axis is used as center. If the characters following the
-#'   underscore represent a number (e.g., \code{"outward_10.5"}) the reference
-#'   point will be this value in data units.
+#' @inheritSection geom_text_s Position functions
+#'
+#' @inheritSection geom_grob Plot boundaries and clipping
+#'
+#' @note Complex tables with annotations or different colouring of rows or cells
+#'   can be constructed with functions in package 'gridExtra' or in any other
+#'   way as long as they can be saved as grid graphical objects and then added
+#'   to a ggplot as a new layer with \code{\link{geom_grob}}.
+#'
+#' @inherit geom_grob note return seealso references
 #'
 #' @seealso Formatting of tables \code{stat_fmt_table},
 #'   \code{\link{ttheme_gtdefault}}, \code{\link{ttheme_set}},
 #'   \code{\link[gridExtra]{tableGrob}}.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
-#'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs
-#'   to be set at the layer level if you are overriding the plot defaults.
+#'   \code{\link[ggplot2]{aes}}. Only needs to be set at the layer level if you
+#'   are overriding the plot defaults.
 #' @param data A layer specific data set - only needed if you want to override
 #'   the plot defaults.
 #' @param stat The statistical transformation to use on the data for this layer,
@@ -113,11 +114,6 @@
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
 #'
-#' @note Complex tables with annotations or different colouring of rows or cells
-#'   can be constructed with functions in package 'gridExtra' or in any other
-#'   way as long as they can be saved as grid graphical objects and then added
-#'   to a ggplot as a new layer with \code{\link{geom_grob}}.
-#'
 #' @references This geometry is inspired on answers to two questions in
 #'   Stackoverflow. In contrast to these earlier examples, the current geom
 #'   obeys the grammar of graphics, and attempts to be consistent with the
@@ -126,8 +122,6 @@
 #'   \url{https://stackoverflow.com/questions/25554548/adding-sub-tables-on-each-panel-of-a-facet-ggplot-in-r?}
 #'
 #' @family geometries adding layers with insets
-#'
-#' @return A plot layer instance.
 #'
 #' @export
 #'
@@ -619,9 +613,15 @@ GeomTableNpc <-
           required_aes = c("npcx", "npcy", "label"),
 
           default_aes = ggplot2::aes(
-            colour = NA, fill = NA,
-            size = 3.2, angle = 0, hjust = "inward",
-            vjust = "inward", alpha = 1, family = "", fontface = 1,
+            colour = NA,
+            fill = NA,
+            size = 3.2,
+            angle = 0,
+            hjust = "inward",
+            vjust = "inward",
+            alpha = 1,
+            family = "",
+            fontface = 1,
             lineheight = 1.2
           ),
 

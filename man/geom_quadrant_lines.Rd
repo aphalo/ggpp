@@ -34,8 +34,8 @@ geom_vhlines(
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
-\code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be
-set at the layer level if you are overriding the plot defaults.}
+\code{\link[ggplot2]{aes}}. Only needs to be set at the layer level if you
+are overriding the plot defaults.}
 
 \item{data}{A layer specific data set - only needed if you want to override
 the plot defaults.}

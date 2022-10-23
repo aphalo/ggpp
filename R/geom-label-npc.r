@@ -3,6 +3,7 @@
 #' @param label.padding Amount of padding around label. Defaults to 0.25 lines.
 #' @param label.r Radius of rounded corners. Defaults to 0.15 lines.
 #' @param label.size Size of label border, in mm.
+#'
 geom_label_npc <- function(mapping = NULL, data = NULL,
                       stat = "identity", position = "identity",
                       ...,

@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ggpp <img src="man/figures/logo-ggpp.png" align="right" width="150" />
+# ggpp <img src="man/figures/logo-ggpp.png" align="right" width="150"/>
 
 [![cran
 version](https://www.r-pkg.org/badges/version/ggpp)](https://cran.r-project.org/package=ggpp)
@@ -11,49 +11,98 @@ status](https://github.com/aphalo/ggpp/workflows/R-CMD-check/badge.svg)](https:/
 ## Purpose
 
 Package ‘**ggpp**’ provides a set of building blocks that extend the
-Grammar of Graphics implemented in package ‘ggplot2’ (\>= 3.0.0). New
-“geoms” support insets in plots, marginal marks and the use of native
-plot coordinates (npc). Position functions implement new approaches to
-nudging usable with any geometry, but especially useful together with
-`geom_text_s()`, `ggrepel::geom_text_repel()` and
-`ggrepel::geom_label_repel()`. **A version of ‘ggrepel’ \> 0.9.1 is
-needed to use the position functions from package ‘ggpp’ together with
-repulsive geometries, and currently ‘ggrepel’ \> 0.9.1 is only available
-from GitHub. See: (<https://ggrepel.slowkow.com>) for installation
-instructions and news about future releases.**
+Grammar of Graphics implemented in package ‘ggplot2’ (\>= 3.0.0). The
+extensions enhance the support of data labels and annotations in plots.
+New geometries support insets in plots, data labels, marginal marks and
+the use of native plot coordinates (npc). Position functions implement
+new approaches to nudging usable with any geometry, but especially
+useful together with `geom_text_s()` and `geom_label_s()`. **Their
+support in ‘ggrepel’ still under development. See:
+(<https://ggrepel.slowkow.com>) for installation instructions and news
+about future releases.**
 
 ## Extended Grammar of graphics
 
 ### Geometries
 
-Geometries `geom_table()`, `geom_plot()` and `geom_grob()` make it
-possible to add inset tables, inset plots, and arbitrary ‘grid’
-graphical objects including bitmaps and vector graphics as layers to a
-ggplot using native coordinates for `x` and `y`.
+The distinction between observations or data mapped to *x* and *y*
+aesthetics and data labels is that data labels are linked to a the
+coordinates of the data, but own location is usually nearby but not
+exactly that of the data. In other words the location of a data label in
+*x* and *y* coordinates is flexible as long as the link to a data
+observation can be inferred. In the case of annotations the location on
+the plotting area is arbitrary, dictated by available graphic design
+considerations and the requirement of not occluding data observations.
+In the table below we list the geometries defined in package ‘ggpp’,
+whether they are intended to for data labels, annotations or data, the
+aesthetics and pseudo-aesthetic they obey and whether the can connect
+the original data position to the displaced position where the data
+label is anchored. These requires also a change in the behaviour of
+position functions, that we will describe in the next section.
 
-Geometries `geom_text_npc()`, `geom_label_npc()`, `geom_table_npc()`,
-`geom_plot_npc()` and `geom_grob_npc()`, `geom_text_npc()` and
-`geom_label_npc()` are versions of geometries that accept positions on
-*x* and *y* axes using aesthetics `npcx` and `npcy` values expressed in
-“npc” units.
+| Geometry                                   | Main use                        | Aesthetics                                                                                                | Segment |
+|--------------------------------------------|---------------------------------|-----------------------------------------------------------------------------------------------------------|---------|
+| `geom_text_s()`                            | data labels                     | x, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                           | yes     |
+| `geom_label_s()`                           | data labels                     | x, y, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust       | yes     |
+| `geom_text_npc()`                          | annotations                     | npcx, npcy, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                     | no      |
+| `geom_label_npc()`                         | annotations                     | npcx, npcy, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust | no      |
+| `geom_point_s()`                           | data labels                     | x, y, size, colour, fill, alpha, shape, stroke, group                                                     | yes     |
+| `geom_table_s()`                           | data labels                     | x, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                           | yes     |
+| `geom_table_npc()`                         | annotations                     | npcx, npcy, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                     | no      |
+| `geom_plot_s()` , `geom_grob_s()`          | data labels                     | x, y, label, group, angle, vjust, hjust                                                                   | yes     |
+| `geom_plot_npc()` , `geom_grob_npc()`      | annotations                     | npcx, npcy, label, group, vjust, hjust                                                                    | no      |
+| `geom_margin_arrow()`                      | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                | no      |
+| `geom_margin_point()`                      | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                | no      |
+| `geom_margin_grob()`                       | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                | no      |
+| `geom_quadrant_lines()` , `geom_vhlines()` | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                | no      |
+|                                            |                                 |                                                                                                           |         |
 
-Geometries `geom_x_margin_arrow()`, `geom_y_margin_arrow()`,
-`geom_x_margin_grob()`, `geom_y_margin_grob()`, `geom_x_margin_point()`
-and `geom_y_margin_point()` make it possible to add marks along the *x*
-and *y* axes. `geom_vhlines()` and `geom_quadrant_lines()` draw vertical
-and horizontal reference lines within a single layer.
+Geometries defined in package ‘ggpp’
 
-Geometries `geom_text_s()`, `geom_label_s()`, `geom_point_s()`,
-`geom_table()`, `geom_plot()` and `geom_grob()` connect (by default) the
-plot elements added at a nudged position to the original position with a
-segment or arrow.
+## Position functions
+
+In contrast to position functions from ‘ggplot2’ all these position
+functions are able keep the original *x* and *y* coordinates under a
+different name in the `data` object when displacing them to a new
+position. This makes them compatible with `geom_text_s()`,
+`geom_label_s()`, `geom_point_s()`, `geom_table()`, `geom_plot()` and
+`geom_grob()` from this package. All these geoms can draw segments or
+arrows connecting the original positions to the displaced positions.
+They remain backwards compatible and can be used in all geometries that
+have a `position` formal parameter. This is similar to the approach used
+in package ‘ggrepel’ (\<= 0.9.1) but uses different naming that allows
+them to remain backwards compatible with ‘ggplot2’. Future versions of
+‘ggrepel’ are likely to be compatible with this new naming.
+
+Position functions `position_nudge_keep()`, `position_nudge_to()`,
+`position_nudge_center()` and `position_nudge_line()` implement
+different flavours of nudging. The last two functions make it possible
+to apply nudging that varies automatically according to the relative
+position of data points with respect to arbitrary points or lines, or
+with respect to a polynomial or smoothing spline fitted on-the-fly to
+the the observations.
+
+Position functions `position_stacknudge()`, `position_fillnudge()`,
+`position_jitternudge()`, `position_dodgenudge()` and
+`position_dodge2nudge()` each combines the roles of two *position*
+functions. They make it possible to easily nudge labels in plot layers
+that use stacking, dodging or jitter. Functions
+`position_jitter_keep()`, `position_stack_keep()`,
+`position_fill_keep()`, `position_dodge_keep()`,
+`position_dosge2_keep()` behave like the positions from ‘ggplot2’ but
+keep in the `data` object the original coordinates.
 
 ### Aesthetics and scales
 
 Scales `scale_npcx_continuous()` and `scale_npcy_continuous()` and the
 corresponding new aesthetics `npcx` and `npcy` make it possible to add
-graphic elements and text to plots using coordinates expressed in `npc`
-units for the location within the plotting area.
+graphic elements and text as nnotations to plots using coordinates
+expressed in `npc` units for the location within the plotting area. The
+difference to using function `annotate()` is that while annotate is
+driven only by constant values and does not support facets, the geoms
+that use these pseudo-aesthetics do, opening the door to the easy
+addition of a whole range of new annotations within the grammar of
+graphics.
 
 ### Statistics
 
@@ -74,36 +123,6 @@ for applying arbitrary functions returning numeric vectors like
 `cumsum()`, `cummax()` and `diff()`. Statistics `stat_centroid()` and
 `stat_summary_xy()` allow computation of summaries on both *x* and *y*
 and passing them to a geom.
-
-## Position functions
-
-Position functions implementing different flavours of nudging are
-provided: `position_nudge_keep()`, `position_nudge_to()`,
-`position_nudge_center()` and `position_nudge_line()`. These last two
-functions make it possible to apply nudging that varies automatically
-according to the relative position of points with respect to arbitrary
-points or lines, or with respect to a polynomial or smoothing spline
-fitted on-the-fly to the the observations.
-
-Position functions `position_stacknudge()`, `position_fillnudge()`,
-`position_jitternudge()`, `position_dodgenudge()` and
-`position_dodge2nudge()` each combines the roles of two *position*
-functions. They make it possible to easily nudge labels in plot layers
-that use stacking, dodging or jitter. Functions
-`position_jitter_keep()`, `position_stack_keep()`,
-`position_fill_keep()`, `position_dodge_keep()`,
-`position_dosge2_keep()` behave like the positions from ‘ggplot2’ but
-keep in `data` the original coordinates.
-
-In contrast to position functions from ‘ggplot2’ all these position
-functions keep the original *x* and *y* coordinates when displacing
-them. This makes them compatible with the repulsive geometries from
-package ‘ggrepel’ (\> 0.9.1) as well as with `geom_text_s()`,
-`geom_label_s()`, `geom_point_s()`, `geom_table()`, `geom_plot()` and
-`geom_grob()` from this package. All these geoms can draw segments or
-arrows connecting the original positions to the displaced positions.
-They remain backwards compatible and can be used in all geometries that
-have a `position` formal parameter.
 
 ## Justification
 

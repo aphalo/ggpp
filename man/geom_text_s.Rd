@@ -87,8 +87,8 @@ displayed as described in \code{?plotmath}.}
 starting position of each text label. The units for \code{nudge_x} and
 \code{nudge_y} are the same as for the data units on the x-axis and y-axis.}
 
-\item{default.colour}{A colour definition to use for elements not targeted
-by the colour aesthetic.}
+\item{default.colour}{A colour definition to use for elements not targeted by
+the colour aesthetic.}
 
 \item{colour.target}{A vector of character strings; \code{"all"},
 \code{"text"}, \code{"box"} and \code{"segment"}.}
@@ -126,9 +126,9 @@ warning.  If \code{TRUE} silently removes missing values.}
 \code{FALSE} never includes it, and \code{TRUE} always includes it.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics, rather
-than combining them. This is most useful for helper functions that
-define both data and aesthetics and shouldn't inherit behaviour from the
-default plot specification, e.g., \code{\link[ggplot2]{borders}}.}
+than combining them. This is most useful for helper functions that define
+both data and aesthetics and shouldn't inherit behaviour from the default
+plot specification, e.g., \code{\link[ggplot2]{borders}}.}
 
 \item{check_overlap}{If \code{TRUE}, text that overlaps previous text in the
 same layer will not be plotted. \code{check_overlap} takes place at draw
@@ -158,6 +158,14 @@ Geometries \code{geom_text_s()} and \code{geom_label_s()} have an
   mappings to \code{linewidth} and \code{linetype} applied to the line at the
   edge of the label box.
 
+  Layer functions \code{geom_text_s()} and \code{geom_label_s()} use by
+  default \code{\link{position_nudge_keep}} which is backwards compatible
+  with \code{\link[ggplot2]{position_nudge}}. In contrast to
+  \code{\link[ggplot2]{position_nudge}}, \code{\link{position_nudge_keep}}
+  and all other position functions defined in packages 'ggpp' and 'ggrepel'
+  keep the original coordinates, thus allowing the plotting of connecting
+  segments and arrows.
+
   Differently to \code{geom_text_repel()} and \code{geom_label_repel()},
   \code{geom_text_s()} and \code{geom_label_s()} do not make use of
   additional aesthetics for the segments or boxes, but instead allow the
@@ -165,20 +173,23 @@ Geometries \code{geom_text_s()} and \code{geom_label_s()} have an
   rendered in a default colour. In the grammar of graphics using the same
   aesthetic with multiple meanings is not allowed, thus, the approach used in
   our geoms attempts to enforce this.
-
-  Note that when you change the scale limits for \emph{x} and/or \emph{y} of
-  a plot, text labels stay the same size, as determined by the \code{size}
-  aesthetic, given in millimetres. The actual size as seen in the plotted
-  output is decided during the rendering of the plot to a graphics device.
-  Limits are expanded only to include the anchor point of the labels because
-  the "width" and "height" of a text element are 0 (as seen by ggplot2). Text
-  labels do have height and width, but in grid units, not data units.
 }
 \section{Under development}{
  Aesthetic \code{segment.linetype} is not yet
-  implemented. The rendered plot may still slightly change slightly in
-  future versions. In particular justification based on the position
-  displacement needs some improvement.
+  implemented. The rendered plot may still slightly change slightly in future
+  versions. In particular justification based on the position displacement
+  needs some improvement.
+}
+
+\section{Plot boundaries and clipping}{
+ Note that when you change the scale
+  limits for \emph{x} and/or \emph{y} of a plot, text labels stay the same
+  size, as determined by the \code{size} aesthetic, given in millimetres. The
+  actual size as seen in the plotted output is decided during the rendering
+  of the plot to a graphics device. Limits are expanded only to include the
+  anchor point of the labels because the "width" and "height" of a text
+  element are 0 (as seen by ggplot2). Text labels do have height and width,
+  but in grid units, not data units.
 }
 
 \section{Alignment}{
@@ -220,18 +231,10 @@ Geometries \code{geom_text_s()} and \code{geom_label_s()} have an
 }
 
 \section{Position functions}{
- Layer functions \code{geom_text_s()} and
-  \code{geom_label_s()} use by default \code{\link{position_nudge_keep}}
-  which is backwards compatible with \code{\link[ggplot2]{position_nudge}}.
-  In contrast to \code{\link[ggplot2]{position_nudge}},
-  \code{\link{position_nudge_keep}} and all other position functions defined
-  in packages 'ggpp' and 'ggrepel' keep the original coordinates, thus
-  allowing the plotting of connecting segments and arrows.
-
-  Layer functions \code{geom_text_s()} and \code{geom_label_s()} are designed
-  to work seamlessly with position functions that keep in the data rather
-  than discard the original \code{x} and \code{y} positions when computing a
-  new displaced position. See \code{\link{position_nudge_keep}},
+ Many layer functions from package 'ggpp' are
+  designed to work seamlessly with position functions that keep, rather than
+  discard, the original \code{x} and \code{y} positions in \code{data} when
+  computing a new displaced position. See \code{\link{position_nudge_keep}},
   \code{\link{position_dodge_keep}}, \code{\link{position_jitter_keep}},
   \code{\link{position_nudge_center}}, \code{\link{position_nudge_line}},
   \code{\link{position_nudge_to}}, \code{\link{position_dodgenudge}},

@@ -2,9 +2,14 @@
 #'
 #' \code{geom_plot} and \code{geom_plot_npc} add ggplot objects as insets to the
 #' base ggplot, using syntax similar to that of
-#' \code{\link[ggplot2]{geom_label}}  and \code{\link{geom_text_s}}. In most
-#' respects they behave as any other ggplot geometry: a layer con contain
-#' multiple tables and faceting works as usual.
+#' \code{\link[ggplot2]{geom_label}}  and \code{\link{geom_text_s}}.
+#' In most respects they behave as any other ggplot geometry: they add a layer
+#' containing one or more grobs and grouping and faceting works as usual. The
+#' most common use of \code{geom_plot} is to add data labels that are themselves
+#' ggplots rather than text. \code{\link{geom_plot_npc}} is used to add ggplots
+#' as annotations to plots, but contrary to layer function \code{annotate()},
+#' \code{\link{geom_plot_npc}} is data driven and respects grouping and facets,
+#' thus plot insets can differ among panels.
 #'
 #' @details You can modify the size of inset plots with the \code{vp.width} and
 #'   \code{vp.height} aesthetics. These can take a number between 0 (smallest
@@ -34,36 +39,19 @@
 #'   coordinates in the data, and \code{angle} is used to rotate the plot as a
 #'   whole.
 #'
-#'   In the case of \code{geom_table_npc()}, \code{npcx} and \code{npcy}
+#'   In the case of \code{geom_plot_npc()}, \code{npcx} and \code{npcy}
 #'   aesthetics determine the position of the inset plot. Justification as
 #'   described above for .
 #'
-#'   Use \code{\link{annotate}} as redefined in 'ggpp' when adding inset plots
-#'   as annotations (automatically available unless 'ggpp' is not attached).
-#'   \code{\link[ggplot2]{annotate}} cannot be used with \code{geom = "plot"}.
+#' @inheritSection geom_text_s Alignment
 #'
-#' @section Alignment: You can modify the alignment of the plot with the `vjust`
-#'   and `hjust` aesthetics. These can either be a number between 0
-#'   (right/bottom) and 1 (top/left) or a character (\code{"left"},
-#'   \code{"middle"}, \code{"right"}, \code{"bottom"}, \code{"center"},
-#'   \code{"top"}). In addition, you can use special alignments for
-#'   justification including \code{"inward"} and \code{"outward"}. Inward always
-#'   aligns text towards the center of the plotting area, and outward aligns it
-#'   away from the center of the plotting area. If tagged with \code{_mean} or
-#'   \code{_median} (e.g., \code{"outward_mean"}) the mean or median of the data
-#'   in the panel along the corresponding axis is used as center. If the
-#'   characters following the underscore represent a number (e.g.,
-#'   \code{"outward_10.5"}) the reference point will be this value in data
-#'   units.
+#' @inheritSection geom_text_s Position functions
 #'
-#' @seealso \code{\link{geom_plot}}, \code{\link{geom_table}},
-#'   \code{\link{annotate}}, \code{\link{position_nudge_keep}},
-#'   \code{\link{position_nudge_to}}, \code{\link{position_jitternudge}},
-#'   \code{\link{position_dodgenudge}} and \code{\link{position_stacknudge}}.
+#' @inherit geom_grob return note seealso references
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
-#'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be
-#'   set at the layer level if you are overriding the plot defaults.
+#'   \code{\link[ggplot2]{aes}}. Only needs to be set at the layer level if you
+#'   are overriding the plot defaults.
 #' @param data A layer specific data set - only needed if you want to override
 #'   the plot defaults.
 #' @param stat The statistical transformation to use on the data for this layer,
@@ -90,30 +78,9 @@
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
 #'
-#' @section Known problem!: In some cases when explicit coordinates are added to
-#'   the inner plot, it may be also necessary to add explicitly coordinates to
-#'   the outer plots.
-#'
-#' @details The "width" and "height" of an inset as for a text element are 0, so
-#'   stacking and dodging inset plots will not work by default, and axis limits
-#'   are not automatically expanded to include all inset plots. Obviously,
-#'   insets do have height and width, but they are physical units, not data
-#'   units. The amount of space they occupy on the main plot is not constant in
-#'   data units of the base plot: when you modify scale limits, inset plots stay
-#'   the same size relative to the physical size of the base plot.
-#'
-#' @note The inset plots are stored nested within the main ggplot object and
-#'   contain their own copy of the data are rendered as grid grobs as normal
-#'   ggplots at the time the main ggplot is rendered. They can have different
-#'   themes.
-#'
-#' @references The idea of implementing a \code{geom_custom()} for grobs has
-#'   been discussed as an issue at
-#'   \url{https://github.com/tidyverse/ggplot2/issues/1399}.
+#' @inheritSection geom_grob Plot boundaries and clipping
 #'
 #' @family geometries adding layers with insets
-#'
-#' @return A plot layer instance.
 #'
 #' @export
 #'
@@ -157,8 +124,10 @@
 #'             segment.colour = "red",
 #'             vp.width = 1/5, vp.height = 1/5)
 #'
-geom_plot <- function(mapping = NULL, data = NULL,
-                      stat = "identity", position = "identity",
+geom_plot <- function(mapping = NULL,
+                      data = NULL,
+                      stat = "identity",
+                      position = "identity",
                       ...,
                       nudge_x = 0,
                       nudge_y = 0,
@@ -172,11 +141,9 @@ geom_plot <- function(mapping = NULL, data = NULL,
     if (!missing(position) && position != "identity") {
       rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")
     }
-    # We do not keep the original positions if they will not be used
+    # original position needed for "position" justification
     position <-
-      position_nudge_center(nudge_x, nudge_y,
-                            kept.origin = ifelse(add.segments,
-                                                 "original", "none"))
+      position_nudge_center(nudge_x, nudge_y, kept.origin = "original")
   }
 
   ggplot2::layer(
@@ -321,8 +288,10 @@ GeomPlot <-
 #' @rdname geom_plot
 #' @export
 #'
-geom_plot_npc <- function(mapping = NULL, data = NULL,
-                          stat = "identity", position = "identity",
+geom_plot_npc <- function(mapping = NULL,
+                          data = NULL,
+                          stat = "identity",
+                          position = "identity",
                           ...,
                           na.rm = FALSE,
                           show.legend = FALSE,

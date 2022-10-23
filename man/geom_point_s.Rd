@@ -69,25 +69,45 @@ default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 A plot layer instance.
 }
 \description{
-The \code{"point_s"} geom provides a superset of the capabilities of geom
-\code{"point"} from package 'ggplot2' by allowing plotting of segments
-joining the original position of displaced observations to their current
-potition rendered as points or graphic symbols. Displacements by position
-functions from packages 'ggpp' and 'ggrepel' are supported.
+The geometry \code{"geom_point_s"} provides a super set of the capabilities of
+geom \code{\link[ggplot2]{geom_point}} from package 'ggplot2' by allowing
+plotting of segments joining the original position of displaced observations
+to their current position rendered as points or graphic symbols. The most
+common use is to add data labels to a plot to highlight individual points.
 }
 \details{
-The plotting of segments is similar in idea at that available in
+The plotting of segments is similar in idea to that implemented in
   \code{\link[ggrepel]{geom_text_repel}} and relies on position functions
-  that rename instead of removing the original original \code{x} and \code{y}
+  that rename instead of removing the original \code{x} and \code{y}
   coordinates from the \code{data} object.
 
   By default this geom uses \code{\link{position_nudge_center}} which is backwards
   compatible with \code{\link[ggplot2]{position_nudge}} but provides additional control
-  on the direction of the nudging. In contrast to \code{\link[ggplot2]{position_nudge}},
-  \code{\link{position_nudge_center}} and all other position functions defined in
-  packaged 'ggpp' and 'ggrepel' keep the original coordinates thus allowing
-  the plotting of connecting segments and arrows.
+  on the direction of the nudging.
 }
+\note{
+The insets are stored nested within the main ggplot object and
+  contain their own copy of the data, and are rendered as grid grobs as normal
+  ggplots at the time the main ggplot is rendered. They can have different
+  themes.
+
+  Use \code{\link{annotate}} as redefined in 'ggpp' when adding insets
+  as annotations (automatically available unless 'ggpp' is not attached).
+  \code{\link[ggplot2]{annotate}} cannot be used with the \code{npcx} and
+  \code{npcy} pseudo-aesthetics.
+}
+\section{Position functions}{
+ Many layer functions from package 'ggpp' are
+  designed to work seamlessly with position functions that keep, rather than
+  discard, the original \code{x} and \code{y} positions in \code{data} when
+  computing a new displaced position. See \code{\link{position_nudge_keep}},
+  \code{\link{position_dodge_keep}}, \code{\link{position_jitter_keep}},
+  \code{\link{position_nudge_center}}, \code{\link{position_nudge_line}},
+  \code{\link{position_nudge_to}}, \code{\link{position_dodgenudge}},
+  \code{\link{position_jitternudge}}, and \code{\link{position_stacknudge}}
+  for examples and details of their use.
+}
+
 \examples{
 
 # Same output as with geom_point()
@@ -121,8 +141,5 @@ ggplot(mpg[1:50, ],
 
 }
 \seealso{
-\code{\link[ggplot2]{geom_point}}, \code{\link{geom_text_s}},
-  \code{\link{position_nudge_keep}}, \code{\link{position_nudge_to}},
-  \code{\link{position_jitternudge}}, \code{\link{position_dodgenudge}} and
-  \code{\link{position_stacknudge}}.
+\code{\link[ggplot2]{geom_point}}.
 }

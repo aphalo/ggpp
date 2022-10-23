@@ -22,10 +22,10 @@
 #' dark_or_light("#FFFFFF", dark.color = "darkblue", light.color = "lightgrey")
 #' dark_or_light("#000000", dark.color = "darkblue", light.color = "lightgrey")
 #'
-dark_or_light <- function (colors,
-                           threshold = 0.45,
-                           dark.color = "black",
-                           light.color = "white")
+dark_or_light <- function(colors,
+                          threshold = 0.45,
+                          dark.color = "black",
+                          light.color = "white")
 {
   if (!length(colors))
     return(character())

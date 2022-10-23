@@ -39,7 +39,7 @@ geom_text_npc(
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
-\code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs
+\code{\link[ggplot2]{aes}}. Only needs
 to be set at the layer level if you are overriding the plot defaults.}
 
 \item{data}{A layer specific data set - only needed if you want to override
@@ -82,60 +82,60 @@ default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 \item{check_overlap}{If `TRUE`, text that overlaps previous text in the same
 layer will not be plotted.}
 }
-\value{
-A plot layer instance.
-}
 \description{
 \code{geom_text_npc()} adds text directly to the plot.
 \code{geom_label_npc()} draws a rectangle behind the text, making it easier
 to read. The difference is that \code{x} and \code{y} mappings are expected
-to be given in \code{npc} graphic units. They are intended to be used for
-positioning text relative to the physical dimensions of a plot. This can be
-also achieved with \code{annotate()} except when faceting is used.
+to be given in \code{npc} graphic units, using pseudo-aesthetics. Their
+intended use is to add annotations to a plot.
 }
 \details{
-Note that the "width" and "height" of a text element are 0, so stacking and
-dodging text will not work by default, and axis limits are not automatically
-expanded to include all text. Obviously, labels do have height and width, but
-they are physical units, not data units. The amount of space they occupy on
-the plot is not constant in data units: when you resize a plot, labels stay
-the same size, but the size of the axes changes.
-
-\code{geom_text_npc()} and \code{geom_label_npc()} add labels for each row in
-the data, even if coordinates \emph{x}, \emph{y} are set to single values in
-the call to \code{geom_label_npc()} or \code{geom_text_npc()}. To add labels
-at specified points use \code{\link{annotate}} with \code{annotate(geom =
-"text_npc", ...)} or \code{annotate(geom = "label_npc", ...)}.
+This geom is identical to 'ggplot2' \code{\link[ggplot2]{geom_text}}
+  except that it interprets \code{npcx} and \code{npcy} positions in
+  \code{npc} units. It translates \code{npcx} and \code{npcy} coordinates
+  using a pseudo-aesthetic with a fixed scale. The generation of grobs is
+  done with calls to functions imported from package 'ggplot2'.
 }
-\note{
-This geom is identical to 'ggplot2' \code{geom_text()} except that it
-  interprets \code{x} and \code{y} positions in \code{npc} units. It
-  translates \code{x} and \code{y} coordinates from \code{npc} units to
-  native data units and calls functions from 'ggplot2''s \code{GeomText()}.
-}
-\section{\code{geom_label_npc()}}{
- Currently \code{geom_label_npc()} does not
-  support the \code{angle} aesthetic and is slower in rendering than
-  \code{geom_text_npc()}. The \code{fill} aesthetic controls the background
-  colour of the label.
-}
-
 \section{Alignment}{
- You can modify the alignment of the whole table with the
-  `vjust` and `hjust` aesthetics. These can either be a number between 0
+ With textual positions and groups a shift is added to
+  successive labels to avoid overlaps. The shift is based on grouping,
+  however unused levels are not dropped. In plots with faceting, if not
+  all groups appear in each panel, there will be blank spaces in between
+  labels. To solve this pass numeric values for the npc coordinates of each
+  label instead of character strings.
+
+ You can modify text alignment with the \code{vjust} and
+  \code{hjust} aesthetics. These can either be a number between 0
   (right/bottom) and 1 (top/left) or a character (\code{"left"},
   \code{"middle"}, \code{"right"}, \code{"bottom"}, \code{"center"},
   \code{"top"}). In addition, you can use special alignments for
-  justification including \code{"inward"} and \code{"outward"}. Inward always
-  aligns text towards the center of the plotting area, and outward aligns it
-  away from the center of the plotting area.
+  justification including \code{"position"}, \code{"inward"} and
+  \code{"outward"}. Inward always aligns text towards the center of the
+  plotting area, and outward aligns it away from the center of the plotting
+  area. If tagged with \code{_mean} or \code{_median} (e.g.,
+  \code{"outward_mean"}) the mean or median of the data in the panel along
+  the corresponding axis is used as center. If the characters following the
+  underscore represent a number (e.g., \code{"outward_10.5"}) the reference
+  point will be this value in data units. Position justification is computed
+  based on the direction of the displacement of the position of the label so
+  that each individual text or label is justified outwards from its original
+  position. The default justification is \code{"position"}.
 
-  With textual positions and groups a shift is added to successive labels to
-  avoid overlaps. The shift is based on grouping, however unused levels are
-  not dropped. In plots with faceting, when if not all groups appear in each
-  panel, there will be blank spaces in between labels. To solve this pass
-  numeric values for the npc coordinates of each label instead of character
-  strings.
+  If no position displacement is applied, or a position function defined in
+  'ggplot2' is used, these geometries behave similarly to the corresponding
+  ones from package 'ggplot2' with a default justification of \code{0.5} and
+  no segment drawn.
+}
+
+\section{Plot boundaries and clipping}{
+ Note that when you change the scale
+  limits for \emph{x} and/or \emph{y} of a plot, text labels stay the same
+  size, as determined by the \code{size} aesthetic, given in millimetres. The
+  actual size as seen in the plotted output is decided during the rendering
+  of the plot to a graphics device. Limits are expanded only to include the
+  anchor point of the labels because the "width" and "height" of a text
+  element are 0 (as seen by ggplot2). Text labels do have height and width,
+  but in grid units, not data units.
 }
 
 \examples{

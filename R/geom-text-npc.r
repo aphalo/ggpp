@@ -3,51 +3,28 @@
 #' \code{geom_text_npc()} adds text directly to the plot.
 #' \code{geom_label_npc()} draws a rectangle behind the text, making it easier
 #' to read. The difference is that \code{x} and \code{y} mappings are expected
-#' to be given in \code{npc} graphic units. They are intended to be used for
-#' positioning text relative to the physical dimensions of a plot. This can be
-#' also achieved with \code{annotate()} except when faceting is used.
+#' to be given in \code{npc} graphic units, using pseudo-aesthetics. Their
+#' intended use is to add annotations to a plot.
 #'
-#' Note that the "width" and "height" of a text element are 0, so stacking and
-#' dodging text will not work by default, and axis limits are not automatically
-#' expanded to include all text. Obviously, labels do have height and width, but
-#' they are physical units, not data units. The amount of space they occupy on
-#' the plot is not constant in data units: when you resize a plot, labels stay
-#' the same size, but the size of the axes changes.
+#' @details This geom is identical to 'ggplot2' \code{\link[ggplot2]{geom_text}}
+#'   except that it interprets \code{npcx} and \code{npcy} positions in
+#'   \code{npc} units. It translates \code{npcx} and \code{npcy} coordinates
+#'   using a pseudo-aesthetic with a fixed scale. The generation of grobs is
+#'   done with calls to functions imported from package 'ggplot2'.
 #'
-#' \code{geom_text_npc()} and \code{geom_label_npc()} add labels for each row in
-#' the data, even if coordinates \emph{x}, \emph{y} are set to single values in
-#' the call to \code{geom_label_npc()} or \code{geom_text_npc()}. To add labels
-#' at specified points use \code{\link{annotate}} with \code{annotate(geom =
-#' "text_npc", ...)} or \code{annotate(geom = "label_npc", ...)}.
+#' @inheritSection geom_text_s Plot boundaries and clipping
 #'
-#' @note This geom is identical to 'ggplot2' \code{geom_text()} except that it
-#'   interprets \code{x} and \code{y} positions in \code{npc} units. It
-#'   translates \code{x} and \code{y} coordinates from \code{npc} units to
-#'   native data units and calls functions from 'ggplot2''s \code{GeomText()}.
+#' @inheritSection geom_text_s Alignment
 #'
-#' @section \code{geom_label_npc()}: Currently \code{geom_label_npc()} does not
-#'   support the \code{angle} aesthetic and is slower in rendering than
-#'   \code{geom_text_npc()}. The \code{fill} aesthetic controls the background
-#'   colour of the label.
-#'
-#' @section Alignment: You can modify the alignment of the whole table with the
-#'   `vjust` and `hjust` aesthetics. These can either be a number between 0
-#'   (right/bottom) and 1 (top/left) or a character (\code{"left"},
-#'   \code{"middle"}, \code{"right"}, \code{"bottom"}, \code{"center"},
-#'   \code{"top"}). In addition, you can use special alignments for
-#'   justification including \code{"inward"} and \code{"outward"}. Inward always
-#'   aligns text towards the center of the plotting area, and outward aligns it
-#'   away from the center of the plotting area.
-#'
-#'   With textual positions and groups a shift is added to successive labels to
-#'   avoid overlaps. The shift is based on grouping, however unused levels are
-#'   not dropped. In plots with faceting, when if not all groups appear in each
-#'   panel, there will be blank spaces in between labels. To solve this pass
-#'   numeric values for the npc coordinates of each label instead of character
-#'   strings.
+#' @section Alignment: With textual positions and groups a shift is added to
+#'   successive labels to avoid overlaps. The shift is based on grouping,
+#'   however unused levels are not dropped. In plots with faceting, if not
+#'   all groups appear in each panel, there will be blank spaces in between
+#'   labels. To solve this pass numeric values for the npc coordinates of each
+#'   label instead of character strings.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
-#'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs
+#'   \code{\link[ggplot2]{aes}}. Only needs
 #'   to be set at the layer level if you are overriding the plot defaults.
 #' @param data A layer specific data set - only needed if you want to override
 #'   the plot defaults.
@@ -77,8 +54,6 @@
 #' @seealso \code{\link[ggplot2]{geom_text}}
 #'
 #' @rdname geom_text_npc
-#'
-#' @return A plot layer instance.
 #'
 #' @export
 #' @examples

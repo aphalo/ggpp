@@ -1,27 +1,25 @@
 #' Points linked by a segment
 #'
-#' The \code{"point_s"} geom provides a superset of the capabilities of geom
-#' \code{"point"} from package 'ggplot2' by allowing plotting of segments
-#' joining the original position of displaced observations to their current
-#' potition rendered as points or graphic symbols. Displacements by position
-#' functions from packages 'ggpp' and 'ggrepel' are supported.
+#' The geometry \code{"geom_point_s"} provides a super set of the capabilities of
+#' geom \code{\link[ggplot2]{geom_point}} from package 'ggplot2' by allowing
+#' plotting of segments joining the original position of displaced observations
+#' to their current position rendered as points or graphic symbols. The most
+#' common use is to add data labels to a plot to highlight individual points.
 #'
-#' @details The plotting of segments is similar in idea at that available in
+#' @details The plotting of segments is similar in idea to that implemented in
 #'   \code{\link[ggrepel]{geom_text_repel}} and relies on position functions
-#'   that rename instead of removing the original original \code{x} and \code{y}
+#'   that rename instead of removing the original \code{x} and \code{y}
 #'   coordinates from the \code{data} object.
 #'
 #'   By default this geom uses \code{\link{position_nudge_center}} which is backwards
 #'   compatible with \code{\link[ggplot2]{position_nudge}} but provides additional control
-#'   on the direction of the nudging. In contrast to \code{\link[ggplot2]{position_nudge}},
-#'   \code{\link{position_nudge_center}} and all other position functions defined in
-#'   packaged 'ggpp' and 'ggrepel' keep the original coordinates thus allowing
-#'   the plotting of connecting segments and arrows.
+#'   on the direction of the nudging.
 #'
-#' @seealso \code{\link[ggplot2]{geom_point}}, \code{\link{geom_text_s}},
-#'   \code{\link{position_nudge_keep}}, \code{\link{position_nudge_to}},
-#'   \code{\link{position_jitternudge}}, \code{\link{position_dodgenudge}} and
-#'   \code{\link{position_stacknudge}}.
+#' @inheritSection geom_text_s Position functions
+#'
+#' @inherit geom_grob note return
+#
+#' @seealso \code{\link[ggplot2]{geom_point}}.
 #'
 #' @param mapping Set of aesthetic mappings created by
 #'   \code{\link[ggplot2]{aes}}. If specified and \code{inherit.aes = TRUE} (the
@@ -58,8 +56,8 @@
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
 #'
-#' @return A plot layer instance.
 #' @export
+#'
 #' @examples
 #'
 #' # Same output as with geom_point()
@@ -106,7 +104,8 @@ geom_point_s <- function(mapping = NULL, data = NULL,
     if (!missing(position) && position != "identity") {
       rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")
     }
-    # We do not keep the original positions if they will not be used
+    # We drop original positions if they are not needed for segments
+    # (Justification is not supported)
     position <-
       position_nudge_center(nudge_x, nudge_y,
                             kept.origin = ifelse(add.segments,

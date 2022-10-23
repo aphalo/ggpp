@@ -740,8 +740,8 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
 
 ### geom_text_s(), geom_label_s(), and geom_point_s()
 
-With package 'ggrepel' we have become used to easily add text and labels linked
-to the labelled observations or points by a line segment or arrow. However,
+With package 'ggrepel' we have become used to easily add data labels linked
+to the observations or points by a line segment or arrow. However,
 sometimes a plot has few text labels and repulsion is unnecessary. In such cases
 nudging or dodging may be enough, or even preferable so as to achieve consistent
 positions irrespective of plot scaling or graphic device used for rendering.
@@ -759,8 +759,11 @@ the original and nudged or displaced positions. Passing `add.segments = FALSE`
 disables the drawing of segments. The equivalent geometry for points connected
 by segments to their original positions is `geom_point_s()`.
 
-These geometries still lack some of the advanced features found in 'ggrepel'
-for the formatting of the segments.
+These geometries do not use like those in package 'ggrepel' special aesthetics 
+to set the properties of segments. These geometries allow the user to select to
+which graphic elements to apply the mapped aesthetics. In addition 
+`geom_label_s()` adds support for `linewidth` and `linetype` aesthetics for
+the box.
 
 ```{r}
 my.cars <- mtcars[c(TRUE, FALSE, FALSE, FALSE), ]
@@ -772,10 +775,25 @@ ggplot(my.cars, aes(wt, mpg, label = name)) +
               vjust = 0.5,
               angle = 90,
               nudge_y = -1.5, 
-              nudge_x = c(0, 0, -0.05, +0.05, 0, 0 ,0, 0),
               arrow = arrow(length = grid::unit(1.5, "mm"))) +
   scale_colour_discrete(l = 40) +
   expand_limits(y = 0)
+```
+
+```{r}
+my.cars <- mtcars[c(TRUE, FALSE, FALSE, FALSE), ]
+my.cars$name <- rownames(my.cars)
+my.cars <- my.cars[order(my.cars$wt), ]
+ggplot(my.cars, aes(wt, mpg, label = name)) +
+  geom_point() +
+  geom_label_s(aes(colour = factor(cyl)),
+               size = 2.5,
+               linewidth = 0.5,
+               colour.target = c("box", "segment"),
+               nudge_x = 0.2,
+               arrow = arrow(length = grid::unit(1.5, "mm"))) +
+  scale_colour_discrete(l = 40) +
+  expand_limits(x = 6.5)
 ```
 
 ### Normalised Parent Coordinates
