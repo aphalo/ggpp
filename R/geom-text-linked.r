@@ -530,6 +530,7 @@ compute_just2d <- function(data,
       ab_orig <- paste(ab, "_orig", sep = "")
       position <- just == "position"
       if (!all(unique(ab_orig) %in% colnames(data))) {
+        # this needs to be silent as it is normal behaviour
         just[position] <- "middle"
       } else {
         just[position] <-
