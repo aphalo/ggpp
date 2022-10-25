@@ -4,7 +4,7 @@ test_that("text_linked_just", {
   df <- data.frame(
     x = c(1, 1, 2, 2, 1.5),
     y = c(1, 2, 1, 2, 1.5),
-    text = c("bottom-left", "bottom-right", "top-left", "top-right", "center")
+    text = c("bottom-left", "top-left", "bottom-right", "top-right", "center")
   )
 
   vdiffr::expect_doppelganger("geom_text_s1",

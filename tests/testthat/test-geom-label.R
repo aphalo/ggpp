@@ -4,7 +4,7 @@ test_that("multiple_rows_tb", {
   df <- data.frame(
     x = c(0, 0, 1, 1, 0.5),
     y = c(0, 1, 0, 1, 0.5),
-    text = c("bottom-left", "bottom-right", "top-left", "top-right", "center"),
+    text = c("bottom-left", "top-left", "bottom-right", "top-right", "center"),
     to.parse = c("alpha^2", "beta[2]", "delta[a]", "gamma^{2345}", "sqrt(a, b)=infinity")
   )
   vdiffr::expect_doppelganger("geom_label_npc1",
