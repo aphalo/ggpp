@@ -1,27 +1,16 @@
 context("stat_quadrant_counts")
 
 library(ggplot2)
-library(tibble)
-
-make_data_tbl <- function(nrow = 100, rfun = rnorm, ...) {
-  if (nrow %% 2) {
-    nrow <- nrow + 1
-  }
-
-  set.seed(1001)
-
-  tibble::tibble(
-    x = rfun(nrow, ...),
-    y = rfun(nrow, ...),
-    group = rep(c("A", "B"), c(nrow / 2, nrow / 2))
-  )
-}
 
 test_that("stat_quadrant_counts", {
-  p <- ggplot(make_data_tbl(6), aes(x, y)) +
-    geom_point() +
+  df <- data.frame(
+    x = c(2.2, -0.2, -0.2, -2.5, -0.6, -0.1),
+    y = c(1.1, -0.6, -0.9, -1.6, 0.3, 1.6),
+    group = c("A", "A", "A", "B", "B", "B")
+  )
+  p <- ggplot(df, aes(x, y)) +
     stat_quadrant_counts()
-  result <- layer_data(p, i = 2)[, c("npcx", "npcy", "label")] # 2nd layer returns the quadrant statistics.
+  result <- layer_data(p)[, c("npcx", "npcy", "label")]
   expected <- data.frame(
     npcx = c(0.95, 0.05, 0.05, 0.95),
     npcy = c(0.95, 0.05, 0.95, 0.05),
