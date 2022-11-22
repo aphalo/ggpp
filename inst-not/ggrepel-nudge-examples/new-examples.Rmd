@@ -21,6 +21,16 @@ options(warnPartialMatchArgs = FALSE,
 eval_flag <- TRUE # evaluate all code chunks
 ```
 
+## Introduction
+
+The very popular R package 'ggrepel' does a great job at avoiding overlaps among data labels and between them and observations plotted as points. A difficulty that stems from the use of an algorithm based on random displacements is that the final location of the data labels can bacome more disordered than necessary and when including smooth regression lines the data labels may partly occlude the fitted line and/or the confidence band when drawn.
+
+Package 'ggpp' defined new position functions that save the starting position like `position_nudge_repel()` does but come in multiple flavours. Their use together with repulsive geoms from 'ggrepel' makes it possible to give to the data labels an initial "push" in a non-random direction. This helps a lot, something that initially was a surprise to me, in obtaining more orderly displacement of the data labels away from a cloud of observations.
+
+Another problem sometimes encountered when using position functions is that combinations of pairs of displacements would be required. 'ggpp' does also provide such new position functions which can also be used together with repulsive geomeries from package 'ggrepel'.
+
+In the rest of this article I provide examples, both from scratch and as answers to issues raised in the 'ggrepel' and 'ggpp' git repositories.
+
 ## Preliminaries
 
 We load all the packages used in the examples.
@@ -39,7 +49,7 @@ library(lubridate)
 
 ## `geom_dotplot` _issue #207 raised by svenbioinf_
 
-Q: When creating a plot with geom_dotplot, geom_text_repel does not draw the label arrows to the exact point location but rather to the center. (See points B1,B2,B3) Is there any way to do this?
+Q: When creating a plot with `geom_dotplot()`, `geom_text_repel()` does not draw the label arrows to the exact point location but rather to the center. (See points B1,B2,B3) Is there any way to do this?
 
 ```{r}
 df <- data.frame(name = c("A1","A2","B1","B2","B3"),
@@ -52,7 +62,9 @@ ggplot(df, aes(x = group,y = value,label = name)) +
                   box.padding = 1, max.overlaps = 10)
 ```
 
-A: As `geom_dotplot()` does not have a `stat` formal parameter and modifies the data it is impossible to access the positions of the points! As `group` is a factor a hypothetical `stat_dotplot()` would not work either, one would need to define a new geom `geom_labelled_dotoplot` to do the labelling in the same layer.
+A1: As `geom_dotplot()` does not have a `stat` formal parameter and modifies the data it is impossible to access the positions of the points! As `group` is a factor a hypothetical `stat_dotplot()` would not work either, one would need to define a new geom `geom_labelled_dotoplot` to do the labelling in the same layer.
+
+A2: `geom_point()` could be used together with a newly defined position function. This new function, possibly named `position_dotplot()`, would displace the observations' coordinates using the same methods as `geom_dotplot()` uses to stack the dots. This function does not yet exist, but would allow a simple solution within the grammar of graphics.  
 
 ## Repel from `geom_segment()` _issue #207 raised by ekatko1_
 
@@ -115,11 +127,31 @@ ggplot(df, aes(x=PC1, y = PC2, label=Species)) +
   coord_fixed()
 ```
 
+In a plot of sparse data we may try to dispense with repulsion and rely purely on nudging using `geom_label_s()` from package 'ggpp'. For the current example this results in overlapping data labels.
+
+```{r}
+## We nudge the labels manually
+ggplot(df, aes(x=PC1, y = PC2, label=Species)) +
+  geom_hline(aes(yintercept = 0), size=.2) +
+  geom_vline(aes(xintercept = 0), size=.2) +
+  geom_segment(aes(x=0, y=0, xend=PC1, yend=PC2), 
+               arrow = arrow(length = unit(0.1, "inches"))) +
+  geom_label_s(position = position_nudge_center(x = 0.2, y = 0.3,
+                                                center_x = 0, center_y = 0),
+               linewidth = 0,
+               label.padding = unit(0.1, "lines"),
+               fill = rgb(red = 1, green = 1, blue = 1, alpha = 0.75)) +
+  xlim(-5, 5) +
+  ylim(-2, 2) +
+  # Stadard settings for displaying biplots
+  coord_fixed()
+```
+
 ## Point `scale_size_area()` _issue #205 raised by sangwon-hyun_
 
 Q: When using `scale_size_area()`, `point.size` needs to be adjusted, probably by a square root. It seems this should be the default behavior without the user specifying it.
 
-A: Rather than automating this, adding a `parameter` called `point.size.area` seems an approach consistent with 'ggplot2' and very easy to implement. Meanwhile, an equivalent manual approach is as follows.
+A1: Rather than automating this, adding a `parameter` called `point.size.area` seems an approach consistent with 'ggplot2' and very easy to implement. Meanwhile, an equivalent manual approach is as follows.
 
 ```{r}
 size_from_area <- function(x) {sqrt(max(0, x) / pi)}
@@ -129,13 +161,28 @@ ggplot(df, aes(1, b, size = b)) +
   geom_point() +
   scale_size_area() +
   geom_text_repel(aes(label = round(b,2), 
-                      point.size = size_from_area(b),
-                      point.padding = size_from_area(b) / 30),
-                  label.padding = 0,
-                  box.pading = 0,
+                      point.size = size_from_area(b) * 2),
+                  box.padding = 0,
                   min.segment.length = 0,
                   direction = "x")
 ```
+A2: In this case we can dispense with repulsion.
+
+```{r}
+size_from_area <- function(x) {sqrt(max(0, x) / pi)}
+
+df <- data.frame(b = exp(seq(2, 4, length.out = 10)))
+ggplot(df, aes(1, b, size = b)) + 
+  geom_point() +
+  scale_size_area() +
+  geom_text_s(aes(label = round(b,2), 
+                  point.padding = size_from_area(b) / 15),
+              position = position_nudge_to(x = c(1.01, 0.99)),
+              label.padding = 0,
+              box.pading = 0) +
+  xlim(0.9, 1.1)
+```
+
 
 ## Allow sorting of labels _issue #201 raised by z3tt_
 
@@ -202,7 +249,7 @@ ggplot(mpg.summaries,
 
 ## Line labels to the right of plot without overlapping _issue #185 raised by ericpgreen_
 
-A: The original issue included a much more complex solution to this problem involving in addition formatting unrelated to 'ggreprl'. The simplification is achieved by using nudging.
+A: The original issue included a much more complex solution to this problem involving in addition formatting unrelated to 'ggrepel'. The simplification is achieved by using nudging.
 
 ```{r}
 keep <- c("Israel", "United States", "European Union", "China",
@@ -221,6 +268,31 @@ data %>%
                          as.character(location), 
                          "")) -> owid
 
+ggplot(owid,
+       aes(x = date, 
+           y = total_vaccinations_per_hundred,
+           color = location)) +
+  geom_line() +
+  geom_text_repel(aes(label = label),
+                  size = 3,
+                  position = position_nudge_to(x = max(owid$date) + days(20)),
+                  segment.curvature = -0.1,
+                  segment.square = TRUE,
+                  segment.color = 'grey',
+                  point.size = 0,
+                  box.padding = 0.1,
+                  point.padding = 0.1,
+                  hjust = "left",
+                  direction="y") + 
+  scale_x_date(expand = expansion(mult = c(0.05, 0.2))) +
+  labs(title = "Cumulative COVID-19 vaccination doses administered per 100 people",
+       y = "",
+       x = "Date (year-month)") +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+```{r}
 ggplot(owid,
        aes(x = date, 
            y = total_vaccinations_per_hundred,
