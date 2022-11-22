@@ -7,7 +7,7 @@ output:
   rmarkdown::html_vignette:
     toc: yes
 vignette: >
-  %\VignetteIndexEntry{Position functions}
+  %\VignetteIndexEntry{Combining repulsion and nudging}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -240,7 +240,8 @@ It is useful when labeling curves than end at different positions along the _x_ 
 keep <- c("Israel", "United States", "European Union", "China", "South Africa", "Qatar",
           "Argentina", "Chile", "Brazil", "Ukraine", "Indonesia", "Bangladesh")
 
-data <- readr::read_csv("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv", lazy = FALSE, show_col_types = FALSE) 
+data <- read.csv("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv")
+data$date <- ymd(data$date)
 
 data %>%
   filter(location %in% keep) %>%

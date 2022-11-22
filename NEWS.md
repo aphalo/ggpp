@@ -16,6 +16,9 @@ editor_options:
     `segment.alpha`, and `segment.size` in `geom_label_s()`
     and `geom_text_s()`. (Segments are links, and not meant
     to inform about data values on their own.)
+-   Add vignette "Combining repulsion and nudging" describing the plot features
+    made possible by use of packages 'ggpp' (>= 0.5.0) and 'ggrepel' 
+    (>= 0.9.2) together.
 
 # ggpp 0.4.5
 

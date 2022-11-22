@@ -82,6 +82,8 @@ navbar:
       menu:
       - text: 'Extensions to the Grammar of Graphics'
         href: articles/grammar-extensions.html
+      - text: 'Combining repulsion and nudging'
+        href: articles/nudge-examples.html
     tutorials:
       text: Resources
       menu:
@@ -92,6 +94,8 @@ navbar:
       - text: ------
       - text: Package 'ggpmisc'
         href: https://docs.r4photobiology.info/ggpmisc/
+      - text: Package 'ggrepel'
+        href: https://ggrepel.slowkow.com/
       - text: Package 'gginnards'
         href: https://docs.r4photobiology.info/gginnards/
       - text: Resources about 'ggplot2'
