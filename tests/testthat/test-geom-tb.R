@@ -192,3 +192,23 @@ test_that("parsed_tb", {
                                            parse = TRUE)
   )
 })
+
+test_that("pos_or_nudge", {
+  tb <- tibble(a = 2:4, b = 4:2)
+  my.tb <- tibble(x = 0, y = 0, tb = list(tb))
+  expect_error(geom_table(data = my.tb,
+                          mapping = aes(x, y, label = tb),
+                          position = "stack",
+                          nudge_x = 0.5,
+                          nudge_y = 0.5),
+               "You must specify either `position` or `nudge_x`/`nudge_y`.")
+})
+
+test_that("string_left_hjust", {
+  tb <- tibble(a = 2:4, b = 4:2)
+  my.tb <- tibble(x = 0, y = 0, tb = list(tb))
+x <- geom_table(data = my.tb,
+                mapping = aes(x, y, label = tb),
+                table.hjust = "left")
+expect_equal(x$geom_params$table.hjust, 0)
+})
