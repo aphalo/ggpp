@@ -16,10 +16,10 @@ extensions enhance the support of data labels and annotations in plots.
 New geometries support insets in plots, data labels, marginal marks and
 the use of native plot coordinates (npc). Position functions implement
 new approaches to nudging usable with any geometry, but especially
-useful together with `geom_text_s()` and `geom_label_s()`. **Their
-support in ‘ggrepel’ still under development. See:
-(<https://ggrepel.slowkow.com>) for installation instructions and news
-about future releases.**
+useful together with `geom_text_s()` and `geom_label_s()` from this
+package and `geom_text_repel()` and `geom_label_repel()` from package
+‘ggrepel’ (\>= 0.9.2). See: (<https://ggrepel.slowkow.com>) for
+installation instructions and news about releases.
 
 ## Extended Grammar of graphics
 
@@ -70,9 +70,10 @@ position. This makes them compatible with `geom_text_s()`,
 arrows connecting the original positions to the displaced positions.
 They remain backwards compatible and can be used in all geometries that
 have a `position` formal parameter. This is similar to the approach used
-in package ‘ggrepel’ (\<= 0.9.1) but uses different naming that allows
-them to remain backwards compatible with ‘ggplot2’. Future versions of
-‘ggrepel’ are likely to be compatible with this new naming.
+in package ‘ggrepel’ (\<= 0.9.1) but uses a different naming convention
+that allows the new position functions to remain backwards compatible
+with ‘ggplot2’. Starting from version 0.9.2 the geometries from package
+‘ggrepel’ are fully compatible with this new naming convention.
 
 Position functions `position_nudge_keep()`, `position_nudge_to()`,
 `position_nudge_center()` and `position_nudge_line()` implement
@@ -91,6 +92,23 @@ that use stacking, dodging or jitter. Functions
 `position_fill_keep()`, `position_dodge_keep()`,
 `position_dosge2_keep()` behave like the positions from ‘ggplot2’ but
 keep in the `data` object the original coordinates.
+
+| Position                  | Main use       | Displacement                    | Most used with              |
+|---------------------------|----------------|---------------------------------|-----------------------------|
+| `position_nudge_keep()`   | nudge          | x, y (fixed distance)           | data labels                 |
+| `position_jitter_keep()`  | jitter         | x, y (random)                   | dot plots                   |
+| `position_stack_keep()`   | stack          | vertical (absolute)             | column and bar plots        |
+| `position_fill_keep()`    | fill           | vertical (relative, fractional) | column plots                |
+| `position_dodge_keep()`   | dodge          | sideways (absolute)             | column and bar plots        |
+| `position_dosge2_keep()`  | dodge2         | sideways (absolute)             | box plots                   |
+| `position_nudge_to()`     | nudge          | x, y (fixed position)           | data labels                 |
+| `position_nudge_center()` | nudge          | x, y (away or towards target)   | data labels                 |
+| `position_nudge_line()`   | nudge          | x, y (away or towards target)   | data labels                 |
+| `position_stacknudge()`   | stack + nudge  | combined, see above             | data labels in column plots |
+| `position_fillnudge()`    | fill + nudge   | combined, see above             | data labels in column plots |
+| `position_jitternudge()`  | jitter + nudge | combined, see above             | data labels in dot plots    |
+| `position_dodgenudge()`   | dodge + nudge  | combined, see above             | data labels in column plots |
+| `position_dodge2nudge()`  | dodge2 + nudge | combined, see above             | data labels in box plots    |
 
 ### Aesthetics and scales
 
@@ -111,12 +129,12 @@ plotted with `geom_table()`.
 
 Four statistics, `stat_dens2d_filter()`, `stat_dens2d_label()`,
 `stat_dens1d_filter()` and `stat_dens1d_label()`, implement tagging or
-selective labelling of observations based on the local 2D density of
+selective labeling of observations based on the local 2D density of
 observations in a panel. Another two statistics,
 `stat_dens1d_filter_g()` and `stat_dens1d_filter_g()` compute the
 density by group instead of by plot panel. These six statistics are
 designed to work well together with `geom_text_repel()` and
-`geom_label_repel()` from package ‘ggrepel’.
+`geom_label_repel()` from package ‘ggrepel’ (\>= 0.8.0).
 
 The statistics `stat_apply_panel()` and `stat_apply_group()` are useful
 for applying arbitrary functions returning numeric vectors like
@@ -127,10 +145,14 @@ and passing them to a geom.
 ## Justification
 
 Justifications `"outward_mean"`, `"inward_mean"`, `"outward_median"` and
-`"inward_median"` implementing outward and inward justification relative
-to the centroid of the data instead of to the center of the $x$ or $y$
+`"inward_median"` implement outward and inward justification relative to
+the centroid of the data instead of to the center of the $x$ or $y$
 scales. Justification outward or inward from an arbitrary origin is also
-supported.
+supported. Justification `"position"` implements justification at the
+edge nearest to the original position. This works only together with
+position functions that save the original location using the naming
+convention implemented in ‘ggpp’, otherwise default justification
+falls-back to `"center"`/`"middle"`.
 
 ## History
 
@@ -261,7 +283,7 @@ Guide*, is available at (<https://docs.r4photobiology.info/ggpp/>).
 News about updates are regularly posted at
 (<https://www.r4photobiology.info/>).
 
-Chapter 7 in Aphalo (2020) explains both basic concepts of the gramamr
+Chapter 7 in Aphalo (2020) explains both basic concepts of the grammar
 of graphics as implemented in ‘ggplot2’ as well as extensions to this
 grammar including several of those made available by packages ‘ggpp’ and
 ‘ggpmisc’.
@@ -281,7 +303,7 @@ publications, please cite according to:
 citation("ggpp")
 ```
 
-## Acknowledgement
+## Acknowledgements
 
 Being an extension to package ‘ggplot2’, some of the code in package
 ‘ggpp’ has been created by using as a template that from layer functions
@@ -292,6 +314,10 @@ relevant to ‘ggpp’, such as support for `orientation` for flipping of
 layers. This package does consequently indirectly include significant
 contributions from several of the authors and maintainers of ‘ggplot2’,
 listed at (<https://ggplot2.tidyverse.org/>).
+
+Coordination of development through a friendly exchange of ideas and
+reciprocal contributions by Kamil Slowikowski to ‘ggpp’ and by myself to
+‘ggrepel’ has made the two packages fully inter-compatible.
 
 ## References
 

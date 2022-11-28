@@ -82,7 +82,7 @@ GeomLabelS <-
                      linetype = "solid",
                      hjust = "position",
                      vjust = "position",
-                     alpha = NA,
+                     alpha = 0.75, # ensure that occluded data are visible by default
                      family = "",
                      fontface = 1,
                      lineheight = 1.2
