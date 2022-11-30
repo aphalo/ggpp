@@ -496,9 +496,10 @@ GeomTextS <-
 # when just is "outward" or "inward" or one of its variants and the geom
 # supports the angle aesthetics we need to take into account that justification
 # is relative to the text, rather than the plot axes. By using compute_split()
-# we add support for definitions of of "inward" and "outward" relative to
+# we add support for definitions of "inward" and "outward" relative to
 # arbitrary positions along the axis.
-# this function can handle either hjust or vjust, but only one at a time.
+#
+# This function can handle either hjust or vjust, but only one at a time.
 compute_just2d <- function(data,
                            coord,
                            panel_params,

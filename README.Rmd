@@ -56,7 +56,7 @@ label is anchored. These requires also a change in the behaviour of
 position functions, that we will describe in the next section.
 
 | Geometry                                   | Main use                        | Aesthetics                                                                                                | Segment |
-|-----------------|-----------------|-----------------------|-----------------|
+|--------------------------------------------|---------------------------------|-----------------------------------------------------------------------------------------------------------|---------|
 | `geom_text_s()`                            | data labels                     | x, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                           | yes     |
 | `geom_label_s()`                           | data labels                     | x, y, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust       | yes     |
 | `geom_text_npc()`                          | annotations                     | npcx, npcy, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                     | no      |
@@ -109,7 +109,7 @@ that use stacking, dodging or jitter. Functions
 keep in the `data` object the original coordinates.
 
 | Position                  | Main use       | Displacement                    | Most used with              |
-|------------------|------------------|------------------|------------------|
+|---------------------------|----------------|---------------------------------|-----------------------------|
 | `position_nudge_keep()`   | nudge          | x, y (fixed distance)           | data labels                 |
 | `position_jitter_keep()`  | jitter         | x, y (random)                   | dot plots                   |
 | `position_stack_keep()`   | stack          | vertical (absolute)             | column and bar plots        |
