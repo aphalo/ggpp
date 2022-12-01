@@ -10,7 +10,6 @@
 #' as annotations to plots, but contrary to layer function \code{annotate()},
 #' \code{\link{geom_grob_npc}} is data driven and respects grouping and facets,
 #' thus plot insets can differ among panels.
-
 #'
 #' @details You can modify the size of insets with the \code{vp.width} and
 #'   \code{vp.height} aesthetics. These can take a number between 0 (smallest
@@ -65,8 +64,7 @@
 #'   \code{npcy} pseudo-aesthetics.
 #'
 #' @seealso \code{\link[grid]{grid-package}}, \code{\link[ggplot2]{geom_text}},
-#'   \code{\link[ggplot2]{geom_label}} and other documentation of package
-#'   'ggplot2'.
+#'   and other documentation of package 'ggplot2'.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}}. Only needs to be set at the layer level if you
@@ -92,8 +90,22 @@
 #' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
 #'   starting position of each text label. The units for \code{nudge_x} and
 #'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
+#' @param default.colour A colour definition to use for elements not targeted by
+#'   the colour aesthetic.
+#' @param colour.target A vector of character strings; \code{"all"},
+#'   \code{"text"}, \code{"box"} and \code{"segment"}.
+#' @param default.alpha numeric in [0..1] A transparency value to use for
+#'   elements not targeted by the alpha aesthetic.
+#' @param alpha.target A vector of character strings; \code{"all"},
+#'   \code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
+#'   \code{"box.fill"}.
 #' @param add.segments logical Display connecting segments or arrows between
 #'   original positions and displaced ones if both are available.
+#' @param box.padding,point.padding numeric By how much each end of the segments
+#'   should shortened in mm.
+#' @param segment.linewidth numeric Width of the segments or arrows in mm.
+#' @param min.segment.length numeric Segments shorter that the minimum length
+#'   are not rendered, in mm.
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
 #'
@@ -125,7 +137,7 @@
 #'   geom_grob(data = df,
 #'             aes(x, y, label = grob),
 #'             nudge_x = 0.5,
-#'             segment.colour = "red")
+#'             colour = "red")
 #'
 #' # with nudging plotting of segments can be disabled
 #' ggplot(data = mtcars,
@@ -143,7 +155,15 @@ geom_grob <- function(mapping = NULL,
                       ...,
                       nudge_x = 0,
                       nudge_y = 0,
+                      default.colour = "black",
+                      colour.target = "all",
+                      default.alpha = 1,
+                      alpha.target = "all",
                       add.segments = TRUE,
+                      box.padding = 0.25,
+                      point.padding = 1e-06,
+                      segment.linewidth = 0.5,
+                      min.segment.length = 0,
                       arrow = NULL,
                       na.rm = FALSE,
                       show.legend = FALSE,
@@ -167,7 +187,15 @@ geom_grob <- function(mapping = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
+      default.colour = default.colour,
+      colour.target = colour.target,
+      default.alpha = default.alpha,
+      alpha.target = alpha.target,
       add.segments = add.segments,
+      box.padding = box.padding,
+      point.padding = point.padding,
+      segment.linewidth = segment.linewidth,
+      min.segment.length = min.segment.length,
       arrow = arrow,
       na.rm = na.rm,
       ...
@@ -184,8 +212,16 @@ grob_draw_panel_fun <-
   function(data,
            panel_params,
            coord,
+           default.colour = "black",
+           colour.target = "all",
+           default.alpha = 1,
+           alpha.target = "all",
            na.rm = FALSE,
            add.segments = TRUE,
+           box.padding = 0.25,
+           point.padding = 1e-06,
+           segment.linewidth = 1,
+           min.segment.length = 0,
            arrow = NULL) {
 
     if (nrow(data) == 0) {
@@ -224,12 +260,25 @@ grob_draw_panel_fun <-
                        just = data$hjust,
                        a = "x", b = "y")
     }
+    if (add.segments) {
+      segments.data <-
+        shrink_segments(data,
+                        point.padding = point.padding,
+                        box.padding = box.padding,
+                        min.segment.length = min.segment.length)
+    }
 
     # loop needed as gpar is not vectorized
     all.grobs <- grid::gList()
     user.grobs <- data[["label"]]
     for (row.idx in 1:nrow(data)) {
       row <- data[row.idx, , drop = FALSE]
+      grob.alpha <-
+        ifelse(any(alpha.target %in% c("all", "grob")),
+               row$alpha, default.alpha)
+      segment.alpha <-
+        ifelse(any(alpha.target %in% c("all", "segment")),
+               row$alpha, default.alpha)
       user.grob <- user.grobs[[row.idx]]
 
       user.grob$vp <-
@@ -246,16 +295,25 @@ grob_draw_panel_fun <-
       user.grob$name <- paste("inset.grob", row.idx, sep = ".")
 
       if (add.segments) {
+        segment.row <- segments.data[row.idx, , drop = FALSE]
+        if (segment.row$too.short) {
+          segment.grob <- grid::nullGrob()
+        } else {
           segment.grob <-
-          grid::segmentsGrob(x0 = row$x,
-                             y0 = row$y,
-                             x1 = row$x_orig,
-                             y1 = row$y_orig,
-                             arrow = arrow,
-                             gp = grid::gpar(col = ggplot2::alpha(row$segment.colour,
-                                                                  row$segment.alpha)),
-                             name = paste("inset.grob.segment", row.idx, sep = "."))
-          all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
+            grid::segmentsGrob(x0 = segment.row$x,
+                               y0 = segment.row$y,
+                               x1 = segment.row$x_orig,
+                               y1 = segment.row$y_orig,
+                               arrow = arrow,
+                               gp = grid::gpar(
+                                 col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
+                                   ifelse(any(colour.target %in% c("all", "segment")),
+                                          ggplot2::alpha(row$colour, segment.alpha),
+                                          ggplot2::alpha(default.colour, segment.alpha)),
+                                 lwd = (if (segment.linewidth == 0) 1 else segment.linewidth) * .stroke),
+                               name = paste("grob.s.segment", row$group, row.idx, sep = "."))
+        }
+        all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
       } else {
         all.grobs <- grid::gList(all.grobs, user.grob)
       }
@@ -281,11 +339,7 @@ GeomGrob <-
                      alpha = NA,
                      family = "",
                      fontface = 1,
-                     vp.width = 1/5, vp.height = 1/5,
-                     segment.linetype = 1,
-                     segment.colour = "grey33",
-                     segment.size = 0.5,
-                     segment.alpha = 1
+                     vp.width = 1/5, vp.height = 1/5
                    ),
 
                    draw_panel = grob_draw_panel_fun,
@@ -327,7 +381,9 @@ geom_grob_npc <- function(mapping = NULL,
 #' @usage NULL
 #'
 grobnpc_draw_panel_fun <-
-  function(data, panel_params, coord,
+  function(data,
+           panel_params,
+           coord,
            na.rm = FALSE) {
 
     if (nrow(data) == 0) {

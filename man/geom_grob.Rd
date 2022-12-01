@@ -13,7 +13,15 @@ geom_grob(
   ...,
   nudge_x = 0,
   nudge_y = 0,
+  default.colour = "black",
+  colour.target = "all",
+  default.alpha = 1,
+  alpha.target = "all",
   add.segments = TRUE,
+  box.padding = 0.25,
+  point.padding = 1e-06,
+  segment.linewidth = 0.5,
+  min.segment.length = 0,
   arrow = NULL,
   na.rm = FALSE,
   show.legend = FALSE,
@@ -53,8 +61,29 @@ can include aesthetics whose values you want to set, not map. See
 starting position of each text label. The units for \code{nudge_x} and
 \code{nudge_y} are the same as for the data units on the x-axis and y-axis.}
 
+\item{default.colour}{A colour definition to use for elements not targeted by
+the colour aesthetic.}
+
+\item{colour.target}{A vector of character strings; \code{"all"},
+\code{"text"}, \code{"box"} and \code{"segment"}.}
+
+\item{default.alpha}{numeric in [0..1] A transparency value to use for
+elements not targeted by the alpha aesthetic.}
+
+\item{alpha.target}{A vector of character strings; \code{"all"},
+\code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
+\code{"box.fill"}.}
+
 \item{add.segments}{logical Display connecting segments or arrows between
 original positions and displaced ones if both are available.}
+
+\item{box.padding, point.padding}{numeric By how much each end of the segments
+should shortened in mm.}
+
+\item{segment.linewidth}{numeric Width of the segments or arrows in mm.}
+
+\item{min.segment.length}{numeric Segments shorter that the minimum length
+are not rendered, in mm.}
 
 \item{arrow}{specification for arrow heads, as created by
 \code{\link[grid]{arrow}}}
@@ -192,7 +221,7 @@ ggplot(data = mtcars,
   geom_grob(data = df,
             aes(x, y, label = grob),
             nudge_x = 0.5,
-            segment.colour = "red")
+            colour = "red")
 
 # with nudging plotting of segments can be disabled
 ggplot(data = mtcars,
@@ -211,7 +240,6 @@ The idea of implementing a \code{geom_custom()} for grobs has
 }
 \seealso{
 \code{\link[grid]{grid-package}}, \code{\link[ggplot2]{geom_text}},
-  \code{\link[ggplot2]{geom_label}} and other documentation of package
-  'ggplot2'.
+  and other documentation of package 'ggplot2'.
 }
 \concept{geometries adding layers with insets.}

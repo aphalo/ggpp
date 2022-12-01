@@ -80,7 +80,7 @@ navbar:
     articles:
       text: Articles
       menu:
-      - text: 'Extensions to the Grammar of Graphics'
+      - text: 'Annotations and data labels'
         href: articles/grammar-extensions.html
       - text: 'Combining repulsion and nudging'
         href: articles/nudge-examples.html

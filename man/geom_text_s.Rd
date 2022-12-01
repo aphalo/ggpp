@@ -174,11 +174,12 @@ Geometries \code{geom_text_s()} and \code{geom_label_s()} have an
   aesthetic with multiple meanings is not allowed, thus, the approach used in
   our geoms attempts to enforce this.
 }
-\section{Under development}{
- Aesthetic \code{segment.linetype} is not yet
-  implemented. The rendered plot may still slightly change slightly in future
-  versions. In particular justification based on the position displacement
-  needs some improvement.
+\section{Under development!}{
+ These two geometries are still under development
+  and their user interface subject to change. In 'ggpp' (== 0.5.0) support
+  for aesthetics related to segments was removed, and replaced with
+  parameters and a new mechanism for targeting a the usual aesthetics to
+  text, border, and segment was added.
 }
 
 \section{Plot boundaries and clipping}{
