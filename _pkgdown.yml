@@ -78,8 +78,10 @@ navbar:
       icon: fab fa-github fa-lg
       href: https://github.com/aphalo/ggpp/
     articles:
-      text: Articles
+      text: Cheat sheet and articles
       menu:
+      - text: 'Cheat sheet'
+        href: ggpp-cheatsheet.pdf
       - text: 'Annotations and data labels'
         href: articles/grammar-extensions.html
       - text: 'Combining repulsion and nudging'

@@ -2,13 +2,14 @@
 #'
 #' The geometry \code{"geom_point_s"} provides a super set of the capabilities of
 #' geom \code{\link[ggplot2]{geom_point}} from package 'ggplot2' by allowing
-#' plotting of segments joining the original position of displaced observations
+#' plotting of arrows or segments joining the original position of displaced observations
 #' to their current position rendered as points or graphic symbols. The most
-#' common use is to add data labels to a plot to highlight individual points.
+#' common use is to demonstrate the action of different position functions. It
+#' can be also used to highlight observations.
 #'
 #' @details The plotting of segments is similar in idea to that implemented in
 #'   \code{\link[ggrepel]{geom_text_repel}} and relies on position functions
-#'   that rename instead of removing the original \code{x} and \code{y}
+#'   that rename instead of only replacing the original \code{x} and \code{y}
 #'   coordinates from the \code{data} object.
 #'
 #'   By default this geom uses \code{\link{position_nudge_center}} which is backwards
@@ -51,8 +52,22 @@
 #' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
 #'   starting position of each text label. The units for \code{nudge_x} and
 #'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
+#' @param default.colour A colour definition to use for elements not targeted by
+#'   the colour aesthetic.
+#' @param colour.target A vector of character strings; \code{"all"},
+#'   \code{"text"}, \code{"box"} and \code{"segment"}.
+#' @param default.alpha numeric in [0..1] A transparency value to use for
+#'   elements not targeted by the alpha aesthetic.
+#' @param alpha.target A vector of character strings; \code{"all"},
+#'   \code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
+#'   \code{"box.fill"}.
 #' @param add.segments logical Display connecting segments or arrows between
 #'   original positions and displaced ones if both are available.
+#' @param box.padding,point.padding numeric By how much each end of the segments
+#'   should shortened in mm.
+#' @param segment.linewidth numeric Width of the segments or arrows in mm.
+#' @param min.segment.length numeric Segments shorter that the minimum length
+#'   are not rendered, in mm.
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
 #'
@@ -94,8 +109,16 @@ geom_point_s <- function(mapping = NULL, data = NULL,
                          ...,
                          nudge_x = 0,
                          nudge_y = 0,
-                         arrow = NULL,
+                         arrow = grid::arrow(length = unit(1/3, "lines")),
+                         default.colour = "black",
+                         colour.target = "point",
+                         default.alpha = 1,
+                         alpha.target = "all",
                          add.segments = TRUE,
+                         box.padding = 0.25,
+                         point.padding = 1e-06,
+                         segment.linewidth = 0.5,
+                         min.segment.length = 0,
                          na.rm = FALSE,
                          show.legend = NA,
                          inherit.aes = TRUE) {
@@ -121,7 +144,15 @@ geom_point_s <- function(mapping = NULL, data = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
+      default.colour = default.colour,
+      colour.target = colour.target,
+      default.alpha = default.alpha,
+      alpha.target = alpha.target,
       add.segments = add.segments,
+      box.padding = box.padding,
+      point.padding = point.padding,
+      segment.linewidth = segment.linewidth,
+      min.segment.length = min.segment.length,
       arrow = arrow,
       na.rm = na.rm,
       ...
@@ -143,18 +174,22 @@ GeomPointS <-
                      size = 1.5,
                      fill = NA,
                      alpha = NA,
-                     stroke = 0.5,
-                     segment.linetype = 1,
-                     segment.colour = "grey33",
-                     segment.size = 0.5,
-                     segment.alpha = 1
+                     stroke = 0.5
                    ),
 
                    draw_panel = function(data,
                                          panel_params,
                                          coord,
+                                         default.colour = "black",
+                                         colour.target = "point",
+                                         default.alpha = 1,
+                                         alpha.target = "all",
                                          na.rm = FALSE,
                                          arrow = NULL,
+                                         box.padding = 0.25,
+                                         point.padding = 1e-06,
+                                         segment.linewidth = 1,
+                                         min.segment.length = 0,
                                          add.segments = FALSE) {
                      if (is.character(data$shape)) {
                        data$shape <- ggplot2::translate_shape_string(data$shape)
@@ -166,53 +201,78 @@ GeomPointS <-
 
                      add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
 
-                     coords <- coord$transform(data, panel_params)
-                     if (add.segments) {
+                     data <- coord$transform(data, panel_params)
+                     if (all(c("x_orig", "y_orig") %in% colnames(data))) {
                        data_orig <- data.frame(x = data$x_orig, y = data$y_orig)
                        data_orig <- coord$transform(data_orig, panel_params)
+                       data$x_orig <- data_orig$x
+                       data$y_orig <- data_orig$y
                      }
 
-                     # create the grobs
-                     if(add.segments) {
-                       ggname("geom_point_s",
-                              grid::grobTree(
-                                grid::segmentsGrob(
-                                  x0 = data_orig$x,
-                                  y0 = data_orig$y,
-                                  x1 = coords$x,
-                                  y1 = coords$y,
-                                  arrow = arrow,
-                                  gp = grid::gpar(col = ggplot2::alpha(coords$segment.colour,
-                                                                       coords$segment.alpha))
-                                ),
-                                grid::pointsGrob(
-                                  coords$x, coords$y,
-                                  pch = coords$shape,
-                                  gp = gpar(
-                                    col = alpha(coords$colour, coords$alpha),
-                                    fill = alpha(coords$fill, coords$alpha),
-                                    # Stroke is added around the outside of the point
-                                    fontsize = coords$size * .pt + coords$stroke * .stroke / 2,
-                                    lwd = coords$stroke * .stroke / 2
-                                  )
-                                )
-                              )
-                       )
-                     } else {
-                       ggname("geom_point_s",
-                              grid::pointsGrob(
-                                coords$x, coords$y,
-                                pch = coords$shape,
-                                gp = gpar(
-                                  col = alpha(coords$colour, coords$alpha),
-                                  fill = alpha(coords$fill, coords$alpha),
-                                  # Stroke is added around the outside of the point
-                                  fontsize = coords$size * .pt + coords$stroke * .stroke / 2,
-                                  lwd = coords$stroke * .stroke / 2
-                                )
-                              )
-                       )
+                     if (add.segments) {
+                       segments.data <-
+                         shrink_segments(data,
+                                         point.padding = point.padding,
+                                         box.padding = box.padding,
+                                         min.segment.length = min.segment.length)
                      }
+                     # loop needed as gpar is not vectorized
+                     all.grobs <- grid::gList()
+
+                     for (row.idx in 1:nrow(data)) {
+                       row <- data[row.idx, , drop = FALSE]
+                       point.alpha <-
+                         ifelse(any(alpha.target %in% c("all", "points")),
+                                row$alpha, default.alpha)
+                       segment.alpha <-
+                         ifelse(any(alpha.target %in% c("all", "segment")),
+                                row$alpha, default.alpha)
+                       user.grob <- grid::pointsGrob(
+                         row$x, row$y, default.units = "native",
+                         pch = row$shape,
+                         gp = gpar(
+                           col = ifelse(any(colour.target %in% c("all", "point")),
+                                        ggplot2::alpha(row$colour, point.alpha),
+                                        ggplot2::alpha(default.colour, point.alpha)),
+                           fill = alpha(row$fill, point.alpha),
+                           # Stroke is added around the outside of the point
+                           fontsize = row$size * .pt + row$stroke * .stroke / 2,
+                           lwd = row$stroke * .stroke / 2
+                         )
+                       )
+
+                       # give unique name to each grob
+                       user.grob$name <- paste("point.s.grob", row$group, row.idx, sep = ".")
+
+                       if (add.segments) {
+                         segment.row <- segments.data[row.idx, , drop = FALSE]
+                         if (segment.row$too.short) {
+                           segment.grob <- grid::nullGrob()
+                         } else {
+                           segment.grob <-
+                             grid::segmentsGrob(x0 = segment.row$x_orig,
+                                                y0 = segment.row$y_orig,
+                                                x1 = segment.row$x,
+                                                y1 = segment.row$y,
+                                                arrow = arrow,
+                                                gp = grid::gpar(
+                                                  col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
+                                                    ifelse(any(colour.target %in% c("all", "segment")),
+                                                           ggplot2::alpha(row$colour, segment.alpha),
+                                                           ggplot2::alpha(default.colour, segment.alpha)),
+                                                  lwd = (if (segment.linewidth == 0) 1 else segment.linewidth) * .stroke),
+                                                name = paste("text.s.segment", row$group, row.idx, sep = "."))
+                         }
+                         all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
+                       } else {
+                         all.grobs <- grid::gList(all.grobs, user.grob)
+                       }
+                     }
+
+                     # name needs to be unique within plot, so we would to know other layers
+                     #                     grid::grobTree(children = all.grobs, name = "geom.point.s.panel")
+                     grid::grobTree(children = all.grobs)
+
                    },
 
                    draw_key = ggplot2::draw_key_point

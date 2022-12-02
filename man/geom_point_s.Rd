@@ -12,8 +12,16 @@ geom_point_s(
   ...,
   nudge_x = 0,
   nudge_y = 0,
-  arrow = NULL,
+  arrow = grid::arrow(length = unit(1/3, "lines")),
+  default.colour = "black",
+  colour.target = "point",
+  default.alpha = 1,
+  alpha.target = "all",
   add.segments = TRUE,
+  box.padding = 0.25,
+  point.padding = 1e-06,
+  segment.linewidth = 0.5,
+  min.segment.length = 0,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -50,8 +58,29 @@ starting position of each text label. The units for \code{nudge_x} and
 \item{arrow}{specification for arrow heads, as created by
 \code{\link[grid]{arrow}}}
 
+\item{default.colour}{A colour definition to use for elements not targeted by
+the colour aesthetic.}
+
+\item{colour.target}{A vector of character strings; \code{"all"},
+\code{"text"}, \code{"box"} and \code{"segment"}.}
+
+\item{default.alpha}{numeric in [0..1] A transparency value to use for
+elements not targeted by the alpha aesthetic.}
+
+\item{alpha.target}{A vector of character strings; \code{"all"},
+\code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
+\code{"box.fill"}.}
+
 \item{add.segments}{logical Display connecting segments or arrows between
 original positions and displaced ones if both are available.}
+
+\item{box.padding, point.padding}{numeric By how much each end of the segments
+should shortened in mm.}
+
+\item{segment.linewidth}{numeric Width of the segments or arrows in mm.}
+
+\item{min.segment.length}{numeric Segments shorter that the minimum length
+are not rendered, in mm.}
 
 \item{na.rm}{If \code{FALSE} (the default), removes missing values with a
 warning.  If \code{TRUE} silently removes missing values.}
@@ -71,14 +100,15 @@ A plot layer instance.
 \description{
 The geometry \code{"geom_point_s"} provides a super set of the capabilities of
 geom \code{\link[ggplot2]{geom_point}} from package 'ggplot2' by allowing
-plotting of segments joining the original position of displaced observations
+plotting of arrows or segments joining the original position of displaced observations
 to their current position rendered as points or graphic symbols. The most
-common use is to add data labels to a plot to highlight individual points.
+common use is to demonstrate the action of different position functions. It
+can be also used to highlight observations.
 }
 \details{
 The plotting of segments is similar in idea to that implemented in
   \code{\link[ggrepel]{geom_text_repel}} and relies on position functions
-  that rename instead of removing the original \code{x} and \code{y}
+  that rename instead of only replacing the original \code{x} and \code{y}
   coordinates from the \code{data} object.
 
   By default this geom uses \code{\link{position_nudge_center}} which is backwards
