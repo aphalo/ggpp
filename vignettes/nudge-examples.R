@@ -8,13 +8,14 @@ options(warnPartialMatchArgs = FALSE,
         dplyr.summarise.inform = FALSE)
 
 ## ---- message = FALSE---------------------------------------------------------
-# Are the packages used in examples installed?
-eval_ggrepel <- requireNamespace("ggrepel", quietly = TRUE)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
 library(ggpp)
 library(grid)
+# Is a compatible version of 'ggrepel' installed?
+eval_ggrepel <- requireNamespace("ggrepel", quietly = TRUE) &&
+  packageVersion("ggrepel") >= "0.9.2"
 if (eval_ggrepel) library(ggrepel)
 
 old_theme <- theme_set(theme_bw())
@@ -320,6 +321,33 @@ ggplot(df, aes(x, y, label = l)) +
                      keep.fraction = 1/3,
                      shape = "circle open", size = 3) +
   expand_limits(x = c(-3, 3))
+
+## -----------------------------------------------------------------------------
+random_string <- function(len = 3) {
+paste(sample(letters, len, replace = TRUE), collapse = "")
+}
+
+# Make random data.
+set.seed(1001)
+d <- tibble::tibble(
+  x = rnorm(100),
+  y = rnorm(100),
+  group = rep(c("A", "B"), c(50, 50)),
+  lab = replicate(100, { random_string() })
+)
+
+## ---- eval=eval_ggrepel-------------------------------------------------------
+ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+  geom_point() +
+  stat_dens2d_labels(geom = "text_repel", 
+                     keep.fraction = 0.45)
+
+## ---- eval=eval_ggrepel-------------------------------------------------------
+ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+  stat_dens2d_labels(geom = "label_repel", 
+                     keep.fraction = 0.2, 
+                     label.fill = NA) +
+    geom_point()
 
 ## -----------------------------------------------------------------------------
 set.seed(16532)
