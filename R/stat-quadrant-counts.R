@@ -13,8 +13,7 @@
 #' @param data A layer specific dataset - only needed if you want to override
 #'   the plot defaults.
 #' @param geom The geometric object to use display the data
-#' @param position The position adjustment to use for overlapping points on this
-#'   layer
+#' @param position The position adjustment to use on this layer
 #' @param show.legend logical. Should this layer be included in the legends?
 #'   \code{NA}, the default, includes if any aesthetics are mapped. \code{FALSE}
 #'   never includes, and \code{TRUE} always includes.
@@ -125,17 +124,34 @@
 #'   geom_point() +
 #'   stat_quadrant_counts(geom = "text") # use "tex" instead
 #'
-stat_quadrant_counts <- function(mapping = NULL, data = NULL, geom = "text_npc",
+stat_quadrant_counts <- function(mapping = NULL,
+                                 data = NULL,
+                                 geom = "text_npc",
                                  position = "identity",
                                  quadrants = NULL,
                                  pool.along = "none",
-                                 xintercept = 0, yintercept = 0,
-                                 label.x = NULL, label.y = NULL,
-                                 na.rm = FALSE, show.legend = FALSE,
+                                 xintercept = 0,
+                                 yintercept = 0,
+                                 label.x = NULL,
+                                 label.y = NULL,
+                                 na.rm = FALSE,
+                                 show.legend = FALSE,
                                  inherit.aes = TRUE, ...) {
+
+  stopifnot(pool.along %in% c("none", "x", "y"))
+  stopifnot(length(xintercept) == 1 && length(yintercept) == 1)
+  stopifnot(length(quadrants) <= 4)
+  stopifnot(is.null(label.x) || is.numeric(label.x) || is.character(label.x))
+  stopifnot(is.null(label.y) || is.numeric(label.y) || is.character(label.y))
+
   ggplot2::layer(
-    stat = StatQuadrantCounts, data = data, mapping = mapping, geom = geom,
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    stat = StatQuadrantCounts,
+    data = data,
+    mapping = mapping,
+    geom = geom,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
     params = list(na.rm = na.rm,
                   quadrants = quadrants,
                   pool.along = pool.along,
@@ -176,12 +192,6 @@ compute_counts_fun <- function(data,
     }
     z
   }
-
-  stopifnot(pool.along %in% c("none", "x", "y"))
-  stopifnot(length(xintercept) == 1 && length(yintercept) == 1)
-  stopifnot(length(quadrants) <= 4)
-  stopifnot(is.null(label.x) || is.numeric(label.x) || is.character(label.x))
-  stopifnot(is.null(label.y) || is.numeric(label.y) || is.character(label.y))
 
   force(data)
   # compute range of whole data

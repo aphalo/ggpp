@@ -132,6 +132,7 @@ ggplot(my.data, aes(x, y)) +
   \code{geom_vline()} and \code{geom_hline()} are described.
 
 Other Functions for quadrant and volcano plots: 
+\code{\link{stat_panel_counts}()},
 \code{\link{stat_quadrant_counts}()}
 }
 \concept{Functions for quadrant and volcano plots}

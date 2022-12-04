@@ -31,8 +31,7 @@ the plot defaults.}
 
 \item{geom}{The geometric object to use display the data}
 
-\item{position}{The position adjustment to use for overlapping points on this
-layer}
+\item{position}{The position adjustment to use on this layer}
 
 \item{quadrants}{integer vector indicating which quadrants are of interest,
 with a \code{OL} indicating the whole plot.}
@@ -162,6 +161,7 @@ ggplot(my.data, aes(x, y)) +
 }
 \seealso{
 Other Functions for quadrant and volcano plots: 
-\code{\link{geom_quadrant_lines}()}
+\code{\link{geom_quadrant_lines}()},
+\code{\link{stat_panel_counts}()}
 }
 \concept{Functions for quadrant and volcano plots}

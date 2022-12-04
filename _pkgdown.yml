@@ -36,6 +36,7 @@ reference:
     - stat_dens2d_filter
     - stat_dens2d_labels
     - stat_quadrant_counts
+    - stat_panel_counts
     - stat_fmt_tb
     - stat_apply_group
   - title: Positions
