@@ -122,7 +122,7 @@
 #'
 #' ggplot(my.data, aes(x, y)) +
 #'   geom_point() +
-#'   stat_quadrant_counts(geom = "text") # use "tex" instead
+#'   stat_quadrant_counts(geom = "text") # use geom_text()
 #'
 stat_quadrant_counts <- function(mapping = NULL,
                                  data = NULL,

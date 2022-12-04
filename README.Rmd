@@ -158,6 +158,9 @@ for applying arbitrary functions returning numeric vectors like
 `stat_summary_xy()` allow computation of summaries on both *x* and *y*
 and passing them to a geom.
 
+The statistics `stat_quadrant_counts()` and `stat_panel_counts()` make
+it easy to annotate plots with the number of observations.
+
 ## Justification
 
 Justifications `"outward_mean"`, `"inward_mean"`, `"outward_median"` and
