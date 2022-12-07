@@ -160,7 +160,7 @@ geom_plot <- function(mapping = NULL,
                       inherit.aes = FALSE) {
 
   if (!missing(nudge_x) || !missing(nudge_y)) {
-    if (!missing(position) && position != "identity") {
+    if (!missing(position) && !identical(position, "identity")) {
       rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")
     }
     # original position needed for "position" justification
