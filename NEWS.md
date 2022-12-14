@@ -8,7 +8,7 @@ editor_options:
 
 # ggpp 0.5.0
 
--   Add `stat_panel_counts()`.
+-   Add `stat_panel_counts()` and `stat_group_counts()`.
 -   Add parameters `default.colour` and `colour.target` to `geom_label_s()`,
     `geom_text_s()`, `geom_point_s()`, `geom_plot()`, `geom_table()` and `geom_grob()`.
 -   Add parameters `default.alpha` and `alpha.target` to `geom_label_s()`,
