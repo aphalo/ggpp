@@ -37,9 +37,16 @@
 #'   the marginal points. If these are set, data, mapping and show.legend are
 #'   overridden.
 #'
+#' @inheritSection geom_text_s Alignment
+#'
+#' @inheritSection geom_text_s Position functions
+#'
 #' @family Geometries for marginal annotations in ggplots
 #'
 #' @return A plot layer instance.
+#'
+#' @seealso \code{\link[grid]{grid-package}}, \code{\link[ggplot2]{geom_rug}},
+#'   and other documentation of package 'ggplot2'.
 #'
 #' @export
 #'

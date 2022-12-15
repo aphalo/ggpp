@@ -5,10 +5,11 @@
 #'   nudged positions link the original location to the nudged text with a
 #'   segment or arrow.
 #'
-#' @section Under development: Aesthetic \code{segment.linetype} is not yet
-#'   implemented. The rendered plot may still slightly change slightly in future
-#'   versions. In particular justification based on the position displacement
-#'   needs some improvement.
+#' @section Under development!: These two geometries are still under development
+#'   and their user interface subject to change. In 'ggpp' (== 0.5.0) support
+#'   for aesthetics related to segments was removed, and replaced with
+#'   parameters and a new mechanism for targeting a the usual aesthetics to
+#'   text, border, and segment was added.
 #'
 #' @details Geometries \code{geom_text_s()} and \code{geom_label_s()} have an
 #'   interface similar to that of \code{\link[ggplot2]{geom_text}} and
@@ -496,9 +497,10 @@ GeomTextS <-
 # when just is "outward" or "inward" or one of its variants and the geom
 # supports the angle aesthetics we need to take into account that justification
 # is relative to the text, rather than the plot axes. By using compute_split()
-# we add support for definitions of of "inward" and "outward" relative to
+# we add support for definitions of "inward" and "outward" relative to
 # arbitrary positions along the axis.
-# this function can handle either hjust or vjust, but only one at a time.
+#
+# This function can handle either hjust or vjust, but only one at a time.
 compute_just2d <- function(data,
                            coord,
                            panel_params,

@@ -18,10 +18,11 @@ knitr::opts_chunk$set(
 
 # ggpp <img src="man/figures/logo-ggpp.png" align="right" width="150"/>
 
+<!-- badges: start -->
 [![cran
 version](https://www.r-pkg.org/badges/version/ggpp)](https://cran.r-project.org/package=ggpp)
-[![R build
-status](https://github.com/aphalo/ggpp/workflows/R-CMD-check/badge.svg)](https://github.com/aphalo/ggpp/actions)
+[![R-CMD-check](https://github.com/aphalo/ggpp/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/aphalo/ggpp/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
 
 ## Purpose
 
@@ -56,7 +57,7 @@ label is anchored. These requires also a change in the behaviour of
 position functions, that we will describe in the next section.
 
 | Geometry                                   | Main use                        | Aesthetics                                                                                                | Segment |
-|-----------------|-----------------|-----------------------|-----------------|
+|-------------|-------------|---------------------------------|-------------|
 | `geom_text_s()`                            | data labels                     | x, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                           | yes     |
 | `geom_label_s()`                           | data labels                     | x, y, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust       | yes     |
 | `geom_text_npc()`                          | annotations                     | npcx, npcy, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                     | no      |
@@ -109,7 +110,7 @@ that use stacking, dodging or jitter. Functions
 keep in the `data` object the original coordinates.
 
 | Position                  | Main use       | Displacement                    | Most used with              |
-|------------------|------------------|------------------|------------------|
+|-----------------|-----------------|---------------------|------------------|
 | `position_nudge_keep()`   | nudge          | x, y (fixed distance)           | data labels                 |
 | `position_jitter_keep()`  | jitter         | x, y (random)                   | dot plots                   |
 | `position_stack_keep()`   | stack          | vertical (absolute)             | column and bar plots        |
@@ -156,6 +157,9 @@ for applying arbitrary functions returning numeric vectors like
 `cumsum()`, `cummax()` and `diff()`. Statistics `stat_centroid()` and
 `stat_summary_xy()` allow computation of summaries on both *x* and *y*
 and passing them to a geom.
+
+The statistics `stat_quadrant_counts()` and `stat_panel_counts()` make
+it easy to annotate plots with the number of observations.
 
 ## Justification
 

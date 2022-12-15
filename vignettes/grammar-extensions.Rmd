@@ -23,7 +23,6 @@ options(warnPartialMatchArgs = FALSE,
         tibble.print.max = 4,
         tibble.print.min = 4,
         dplyr.summarise.inform = FALSE)
-eval_all <- TRUE  # if TRUE evaluate all code chunks, which is too slow for checks
 ```
 
 ## Preliminaries
@@ -35,16 +34,8 @@ flags to skip examples if they are not available.
 library(ggpp)
 library(tibble)
 library(dplyr)
-eval_ggrepel <- requireNamespace("ggrepel", quietly = TRUE) &&
-  packageVersion("ggrepel") > "0.9.1"
-if (eval_ggrepel) library(ggrepel)
 eval_magick <- requireNamespace("magick", quietly = TRUE)
 ```
-
-**We will use package 'ggrepel' in some examples. Only versions newer than 0.9.1
-are compatible with the position functions from 'ggpp'. The current CRAN version
-is 0.9.1. Consequently, 'ggrepel' will need to be installed from GitHub until
-version 0.9.2 is submitted to CRAN.
 
 # Introduction to the extensions
 
@@ -313,7 +304,7 @@ positions, they rename the variables in `data` containing these
 coordinates. This makes it possible for geometries to draw connecting
 segments or arrows between old and new positions. These functions are
 backwards compatible and can be used in place of those from 'ggplot2'.
-The geometries from 'ggrepel' (> 0.9.1) and many of those from 'ggpp'
+The geometries from 'ggrepel' (>= 0.9.2) and many of those from 'ggpp'
 can make use of the original coordinates kept in data.
 
 | Position (origin kept)                      | Position (origin discarded)       |
@@ -481,7 +472,7 @@ inset tables, giving the same plot as above. In this case single data
 frames, ggplots or grobs do not need to be wrapped in a list, although
 lists are also supported.
 
-```{r, eval=eval_all}
+```{r}
 tb <- mpg %>%
   group_by(cyl) %>%
   summarise(hwy = median(hwy), cty = median(cty))
@@ -631,7 +622,7 @@ The same plot as above can be created using `annotate()`, but be aware
 that when using facets, 'ggplot2' annotations are identical in all
 panels.
 
-```{r, eval=eval_all}
+```{r}
 p <- ggplot(mpg, aes(factor(cyl), hwy, fill = factor(cyl))) +
   stat_summary(geom = "col", fun = mean, width = 2/3) +
   labs(x = "Number of cylinders", y = NULL, title = "Means") +
@@ -699,7 +690,7 @@ distorted, set only one of `width` or `height`). The argument to
 `vp.width` or `vp.height`, also in "npc" units, determines the size of
 the `Grob` relative to the size of the plotting area.
 
-```{r, eval=(eval_all && eval_magick)}
+```{r, eval=eval_magick}
 ggplot() +
   annotate("grob", x = 1, y = 3, vp.width = 0.5,
            label = grid::rasterGrob(image = Isoquercitin, width = 1)) +
@@ -879,7 +870,7 @@ ggplot(data.tb, aes(x, y)) +
 Alternatively, we can pass constant values to `geom_grob_npc()` to
 obtain the same plot. This approach can be handy in simple cases.
 
-```{r, eval=(eval_all && eval_magick)}
+```{r, eval=eval_magick}
 ggplot(data.tb, aes(x, y)) +
   geom_grob_npc(label = list(grid::rasterGrob(image = Robinin, width = 1)), 
                 npcx = 0.02, npcy = 0.95,
@@ -892,7 +883,7 @@ We can also use `annotate()` if the annotation should be the same for
 all panels, or if we have a single figure panel. In this case there is
 no need to wrap a single `grob` in a list.
 
-```{r, eval=(eval_all && eval_magick)}
+```{r, eval=eval_magick}
 ggplot(data.tb, aes(x, y)) +
   annotate("grob_npc", label = grid::rasterGrob(image = Robinin, width = 1), 
                 npcx = 0.02, npcy = 0.95, vp.width = 1/2, vp.height = 1/4) +
@@ -909,7 +900,7 @@ journals' design.
 
 ```{r}
 corner_letters.tb <- tibble(label = LETTERS[1:4],
-                            x = "left", 
+                            x = "right", 
                             y = "top",
                             cyl = c(4,5,6,8))
 ggplot(mpg, aes(displ, hwy)) +
@@ -1013,7 +1004,7 @@ ggplot(my.data, aes(x, y)) +
 Pooling quadrants along the *x*-axis. (`pool.along = "y"` pools along
 *y*.)
 
-```{r, eval=eval_all}
+```{r}
 ggplot(my.data, aes(x, y)) +
   geom_quadrant_lines(colour = "red", pool.along = "x") +
   stat_quadrant_counts(colour = "red", pool.along = "x") +
@@ -1032,7 +1023,7 @@ ggplot(my.data, aes(x, y)) +
 
 Annotation of only specific quadrants.
 
-```{r, eval=eval_all}
+```{r}
 ggplot(my.data, aes(x, y)) +
   geom_quadrant_lines(colour = "red") +
   stat_quadrant_counts(colour = "red", quadrants = c(2, 4)) +
@@ -1123,7 +1114,7 @@ ggplot(data = d, aes(x, y)) +
 
 Keep at most 50 observations.
 
-```{r, eval=eval_all}
+```{r}
 ggplot(data = d, aes(x, y)) +
   geom_point() +
   stat_dens2d_filter(keep.fraction = 1/4, keep.number = 50, colour = "red")
@@ -1131,26 +1122,17 @@ ggplot(data = d, aes(x, y)) +
 
 Keep always 50 observations.
 
-```{r, eval=eval_all}
+```{r}
 ggplot(data = d, aes(x, y)) +
   geom_point() +
   stat_dens2d_filter(keep.fraction = 1, keep.number = 50, colour = "red")
 ```
 
-Highlighting 1/4 of the observations by under-plotting with larger black
-points.
 
-```{r, eval=eval_all}
-ggplot(data = d, aes(x, y, colour = group)) +
-   stat_dens2d_filter(keep.fraction = 0.25,
-                      size = 3,
-                      colour = "black") +
-   geom_point()
-```
-
-A different way of highlighting 1/4 of the observations, using
-over-plotting with a 'hollow' shape. We also shift one group with
-respect to the other.
+Highlighting 1/4 of the observations from the panel, using
+over-plotting with a 'hollow' shape. (We also shift one group with
+respect to the other in `data`, to show that grouping is ignored by
+`stat_dens2d_filter()`. 
 
 ```{r}
 ggplot(data = d, aes(x + rep(c(-2,2), rep(50,2)), 
@@ -1161,8 +1143,8 @@ ggplot(data = d, aes(x + rep(c(-2,2), rep(50,2)),
 ```
 
 Highlight 1/4 of observations from lowest density areas of the plot,
-with density considered separately for each individual group. In this
-case grouping is based on the color aesthetic.
+with density assessed separately for each group. In this
+example grouping is based on the color aesthetic.
 
 ```{r}
 ggplot(data = d, aes(x + rep(c(-2,2), rep(50,2)), 
@@ -1172,7 +1154,7 @@ ggplot(data = d, aes(x + rep(c(-2,2), rep(50,2)),
                       keep.fraction = 0.25)
 ```
 
-The stat `stat_dens1d_labels` *replaces* the values of the label
+The stat `stat_dens2d_labels` *replaces* the values of the label
 (aesthetic) variable in `data` based on density of observations along
 the *x* or *y* axis in the plot panel. The replacement is given by the
 argument passed to `label.fill`, which can be a character string or a
@@ -1187,59 +1169,25 @@ geom used requires a `label` aesthetic.
 
 Label 1/10 of observations from lowest density areas of the plot panels.
 
-```{r, eval=eval_all}
+```{r}
 ggplot(data = d, aes(x, y, label = lab, colour = group)) +
-  stat_dens2d_labels(keep.fraction = 1/10, 
+  stat_dens2d_labels(keep.fraction = 1/5,
+                     position = position_nudge_centre(x = 0.05, y = 0.05),
                      hjust = "outward", vjust = "outward") +
   geom_point()
 ```
 
 Using the geoms from package 'ggrepel' avoids clashes among labels or on
 top of data points. This works with versions 0.6.0 and newer of
-'ggrepel'. One example with `geom_text_repel` follows.
-
-```{r, eval=eval_ggrepel}
-ggplot(data = d, aes(x, y, label = lab, colour = group)) +
-  geom_point() +
-  stat_dens2d_labels(geom = "text_repel", 
-                     keep.fraction = 0.45)
-```
-
-With `geom_label_repel` one usually needs to use a smaller value for
-`keep.fracton`, or a smaller `size`, as labels use more space on the
-plot than the test alone.
-
-Additional arguments can be used to change the angle and position of the
-text, but may give unexpected output when labels are long as the
-repulsion algorithm "sees" always a rectangular bounding box that is not
-rotated. With short labels or angles that are multiples of 90 degrees,
-there is no such problem. Please, see the documentation for
-`ggrepel::geom_text_repel` and `ggrepel::geom_label_repel` for the
-various ways in which both repulsion and formatting of the labels can be
-adjusted.
-
-Using `NA` as argument to `label.fill` makes the observations with
-labels set to `NA` *incomplete*, and such rows in data are skipped when
-rendering the plot, before the repulsion algorithm is active. This can
-lead to overlap between text and points corresponding to unlabelled
-observations. Whether points are occluded depends on the order of layers
-and transparency, the occlusion can remain easily unnoticed with
-`geom_label` and `geom_label_repel`. We keep `geom_point` as the topmost
-layer to ensure that all observations are visible.
-
-```{r, eval=(eval_all && eval_ggrepel)}
-ggplot(data = d, aes(x, y, label = lab, colour = group)) +
-  stat_dens2d_labels(geom = "label_repel", 
-                     keep.fraction = 0.2, 
-                     label.fill = NA) +
-    geom_point()
-```
+'ggrepel'. Please, see vignette _Combining repulsion and nudging_ for
+more examples.
 
 ### stat_dens1d_labels() and stat_dens1d_filter()
 
 These stats are similar to `stat_dens2d_labels()` and
 `stat_dens2d_filter()` but compute the density in a single dimension,
-either the *x* or *y* aesthetics.
+either the *x* or *y* aesthetics. A similar warning as for 2D densities 
+applies to 1D density estimation.
 
 **Warning!** Which observations are selected by the algorithm used,
 based on `stats::density`, depends strongly on the values of parameters
@@ -1287,7 +1235,7 @@ ggplot(data = d, aes(x, y)) +
 We repeat the example above, we highlight 1/4 of observations, but now
 from lowest density region along the *y* axis of the plot panel.
 
-```{r, eval=eval_all}
+```{r}
 ggplot(data = d, aes(x, y)) +
   geom_point() +
   stat_dens1d_filter(keep.fraction = 0.25,
@@ -1311,23 +1259,6 @@ The default value for `geom` is `"text"`. The default value of
 fill label results in observations being omitted. Using `NA` as
 `label.fill` is similar to using `stat_dens2d_filter` as long as the
 geom used requires a `label` aesthetic.
-
-Label 1/10 of observations from lowest density regions along *x* in the
-plot panel. Normally a repulsive geom is most useful.
-
-```{r, eval=eval_ggrepel}
-ggplot(data = d, aes(x, y, label = lab, colour = group)) +
-  geom_point() +
-  stat_dens1d_labels(geom = "text_repel")
-```
-
-Similarly along the *y* axis.
-
-```{r, eval=(eval_all && eval_ggrepel)}
-ggplot(data = d, aes(x, y, label = lab, colour = group)) +
-  geom_point() +
-  stat_dens1d_labels(geom = "text_repel", orientation = "y")
-```
 
 In other respects than `orientation` and the parameters passed
 internally to `stats::density()` the examples given earlier for
@@ -1414,30 +1345,6 @@ ggplot(df, aes(x, y, label = l)) +
   expand_limits(x = 2.5)
 ```
 
-With `position_nudge()` used together with `geom_text_repel()` or
-`geom_label_repel()` segments connecting a nudged and/or repelled label
-and the original position (here indicated by a point) are, by default,
-**not** drawn unless they are longer than a minimum.
-
-```{r, eval=eval_ggrepel}
-ggplot(df, aes(x, y, label = l)) +
-  geom_point() +
-  geom_text_repel(position = position_nudge(x = 0.3),
-                  min.segment.length = 0, 
-                  max.iter = 0)
-```
-
-With `geom_text_repel()` or `geom_label_repel()` we can force drawing of
-segments irespective of their length if we pass `min.segment.length = 0`
-in the call.
-
-```{r, eval=eval_ggrepel}
-ggplot(df, aes(x, y, label = l)) +
-  geom_point() +
-  geom_text_repel(position = position_nudge_keep(x = 0.3),
-                  min.segment.length = 0, max.iter = 0)
-```
-
 `position_nudge_keep()` and all other position functions described below
 save the original positions in `data` in columns `x_orig` and `y_orig`
 and the shifted positions in columns `x` and `y`. Because of this, they
@@ -1461,28 +1368,10 @@ text we ensure the alignment of labels differing in width.
 ggplot(df, aes(x, y, label = ifelse(x < 1, "", l) )) +
   geom_point() +
   geom_text_s(position = position_nudge_to(y = 2.3),
-              segment.color = "red",
+              colour = "red",
               arrow = arrow(length = unit(0.015, "npc")),
               angle = 90) +
   expand_limits(x = 3)
-```
-
-We here the pass a vector of length one as argument for `y`, but `x` and
-`y` also accept vectors of the same length as rows has `data`. In other
-words, it allows manual positioning of text and labels.
-
-```{r, eval=eval_ggrepel}
-ggplot(df, aes(x, y, label = l)) +
-  geom_point(color = "red", size = 3) +
-  geom_text_repel(position = position_nudge_to(y = -2.5), 
-                  size = 3,
-                  color = "red",
-                  angle = 90,
-                  hjust = 0,
-                  box.padding = 0.1,
-                  segment.color = NA,
-                  direction = "x") +
-  geom_rug(sides = "b", length = unit(0.02, "npc"), color = "red")
 ```
 
 ### position_nudge_center()
@@ -1555,88 +1444,6 @@ ggplot(df, aes(x, y, label = l)) +
                                                      names = FALSE)
                                           },
                                           direction = "split")) +
-  expand_limits(x = c(-3, 3))
-```
-
-The labels can be rotated as long as the geometry used supports this. In the
-next few examples nudging is not enough to avoid overlaps, so we use repulsive
-geometries from package 'ggrepel'. **The current CRAN release of 'ggrepel' (==
-0.9.1) does not work correctly with the position functions from 'ggpp'. The
-development version of 'ggrepel' that can be installed from CRAN and released in
-the future as version (== 0.9.2) works correctly. Incompatible versions of
-'ggrepel' do not crash but the segments are not correctly drawn because of the
-different naming conventions previously used in the 'ggpp' and 'ggrepel' to
-store the original positions.**
-
-```{r, eval=eval_ggrepel}
-ggplot(df, aes(x, y, label = l)) +
-  geom_point() +
-  geom_text_repel(angle = 90,
-                  position = position_nudge_center(y = 1,
-                                                   direction = "split")) +
-  expand_limits(y = c(-2, 7))
-```
-
-By requesting nudging along *x* and *y* and setting `direction = "split"`
-nudging is applied according to the quadrants centred on the centroid of the
-data. We however shift the _x_ center point manually to avoid an overlap.
-
-```{r, eval=eval_ggrepel}
-ggplot(df, aes(x, y, label = l)) +
-  geom_point() +
-  geom_text_repel(position = position_nudge_center(x = 0.3,
-                                                   y = 0.3,
-                                                   center_x = -0.5,
-                                                   direction = "split"),
-                  min.segment.length = 0) +
-  expand_limits(x = c(-3, 3))
-```
-
-With `direction = "radial"`, the distance nudged away from the center is
-the same for all labels.
-
-```{r, eval=eval_ggrepel}
-ggplot(df, aes(x, y, label = l)) +
-  geom_point() +
-  geom_text_repel(position = 
-                    position_nudge_center(x = 0.25,
-                                          y = 0.4,
-                                          direction = "radial"),
-                  min.segment.length = 0)
-```
-
-As shown above for `direction = "split"` we can set the coordinates of
-the centre by passing constant values as in this example or functions
-(possibly different for *x* and *y*). We can also set the justification
-the text labels although repulsion usually works best with labels
-justified at the centre, which is the default.
-
-```{r, eval=eval_ggrepel}
-ggplot(df, aes(x, y, label = l)) +
-  geom_point() +
-  geom_text_repel(position = position_nudge_center(x = 0.4,
-                                                   y = 0.4,
-                                                   center_x = -0.5,
-                                                   center_y = 1,
-                                                   direction = "radial"),
-                  min.segment.length = 0) +
-  expand_limits(x = c(-3, 3))
-```
-
-Nudging along one axis, here *x*, and setting the repulsion `direction`
-along the other axis, here *y*, tends to give a pleasant arrangement of
-labels.
-
-```{r, eval=eval_ggrepel}
-ggplot(df, aes(x, y, label = l)) +
-  geom_point() +
-  geom_text_repel(position = 
-                    position_nudge_center(x = 0.2,
-                                          center_x = 0,
-                                          direction = "split"),
-                  aes(hjust = ifelse(x < 0, 1, 0)),
-                  direction = "y",
-                  min.segment.length = 0) +
   expand_limits(x = c(-3, 3))
 ```
 
@@ -1764,7 +1571,7 @@ ggplot(df, aes(x, yy)) +
 
 We can use other geometries.
 
-```{r, eval=eval_ggrepel}
+```{r}
 ggplot(df, aes(x, yy)) +
   geom_point() +
   stat_smooth(method = "loess", formula = y ~ x) +
@@ -1790,75 +1597,6 @@ ggplot(df, aes(x, yy)) +
                                              y = 5,
                                              formula = y ~ poly(x, 2, raw = TRUE),
                                              direction = "split"))
-```
-
-Compared to pure repulsion adding nudging helps "direct" repulsion in
-the desired direction. Compare the two plots bellow using no nudging
-with the two above.
-
-```{r, eval=eval_ggrepel}
-ggplot(df, aes(x, yy)) +
-  geom_point() +
-  stat_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE)) +
-  geom_text_repel(aes(label = l),
-                  box.padding = 0.5,
-                  min.segment.length = Inf)
-```
-
-```{r, eval=eval_ggrepel}
-ggplot(df, aes(x, yy)) +
-  geom_point() +
-  stat_smooth(method = "loess", formula = y ~ x) +
-  geom_label_repel(aes(label = paste("point", l)),
-                  box.padding = 0.5,
-                  min.segment.length = 0) +
-  expand_limits(y = -10, x = c(-13, 13))
-```
-
-Grouping is supported.
-
-```{r}
-df <- data.frame(x = rep(1:10, 2),
-                 y = c(1:10, 10:1),
-                 group = rep(c("a", "b"), c(10, 10)),
-                 l = "+")
-```
-
-```{r}
-ggplot(df, aes(x, y, label = l, color = group)) +
-  geom_line(linetype = "dotted") +
-  geom_text() +
-  geom_text(position = position_nudge_line(x = 0.25, y = 1)) +
-  geom_text(position = position_nudge_line(x = -0.25, y = -1)) +
-  coord_equal(ratio = 0.5)
-```
-
-One needs to ensure that grouping is in effect in the geoms with
-nudging.
-
-```{r}
-ggplot(df, aes(x, y, label = l, color = group, group = group)) +
-  geom_line(linetype = "dotted") +
-  geom_text() +
-  geom_text(color = "red",
-            position = position_nudge_line(x = 1, y = 1)) +
-  geom_text(color = "blue",
-            position = position_nudge_line(x = -1, y = -1)) +
-  coord_equal()
-```
-
-Facets are also supported.
-
-```{r}
-ggplot(df, aes(x, y, label = l)) +
-  geom_line(linetype = "dotted") +
-  geom_text() +
-  geom_text(position = position_nudge_line(x = 1, y = 1),
-            color = "red") +
-  geom_text(position = position_nudge_line(x = -1, y = -1),
-            color = "blue") +
-  facet_wrap(~group) +
-  coord_equal(ratio = 1)
 ```
 
 ## Combined position functions
@@ -1995,9 +1733,7 @@ With no nudging but keeping the original positions we show how points have moved
    geom_point() +
    geom_point_s(position =
                 position_jitter_keep(width = 0.3, height = 2, seed = 123),
-                color = "red",
-                arrow = grid::arrow(length = unit(0.4, "lines")))
-
+                color = "red")
 ```
 
 ## Appendix A: More on density filtering
@@ -2028,7 +1764,7 @@ observations in the denser region of the plot. Although here we first
 plot all data points and later overplot the selected ones this is not
 necessary.
 
-```{r, eval=eval_all}
+```{r}
 ggplot(data = make_data_tbl(300), aes(x, y)) +
   geom_point() +
   stat_dens2d_filter(colour = "red", 
@@ -2039,7 +1775,7 @@ ggplot(data = make_data_tbl(300), aes(x, y)) +
 Here we highlight the observations split in three group equal groups,
 each of a different density of observations.
 
-```{r, eval=eval_all}
+```{r}
 ggplot(data = make_data_tbl(300), aes(x, y)) +
   geom_point() +
   stat_dens2d_filter(colour = "red", 
@@ -2052,7 +1788,7 @@ ggplot(data = make_data_tbl(300), aes(x, y)) +
 The algorithm seems to work well also with other distributions, in this
 example the uniform distribution.
 
-```{r, eval=eval_all}
+```{r}
 ggplot(data = make_data_tbl(300, rfun = runif), aes(x, y)) +
   geom_point() +
   stat_dens2d_filter(colour = "red", keep.fraction = 1/2)
@@ -2060,7 +1796,7 @@ ggplot(data = make_data_tbl(300, rfun = runif), aes(x, y)) +
 
 One example with the gamma distribution, which is asymmetric.
 
-```{r, eval=eval_all}
+```{r}
 ggplot(data = make_data_tbl(300, rfun = rgamma, shape = 2), 
        aes(x, y)) +
   geom_point() +
@@ -2093,7 +1829,7 @@ head(austres.df, 4)
 
 This second example is for a series of yearly values.
 
-```{r, eval=eval_all}
+```{r}
 class(lynx)
 lynx.df <- try_tibble(lynx)
 class(lynx.df)
@@ -2111,7 +1847,7 @@ head(lynx.df, 3)
 In addition we can convert the POSIXct values into numeric values in
 calendar years plus a decimal fraction.
 
-```{r, eval=eval_all}
+```{r}
 lynx_n.df <- try_tibble(lynx, "year", as.numeric = TRUE)
 lapply(lynx_n.df, "class")
 head(lynx_n.df, 3)
@@ -2122,26 +1858,26 @@ head(lynx_n.df, 3)
 `try_tibble()` attempts to handle gracefully objects that are not time
 series.
 
-```{r, eval=eval_all}
+```{r}
 try_tibble(1:5)
 ```
 
-```{r, eval=eval_all}
+```{r}
 try_tibble(letters[1:5])
 ```
 
-```{r, eval=eval_all}
+```{r}
 try_tibble(factor(letters[1:5]))
 ```
 
-```{r, eval=eval_all}
+```{r}
 try_tibble(list(x = rep(1,5), y = 1:5))
 ```
 
-```{r, eval=eval_all}
+```{r}
 try_tibble(data.frame(x = rep(1,5), y = 1:5))
 ```
 
-```{r, eval=eval_all}
+```{r}
 try_tibble(matrix(1:10, ncol = 2))
 ```

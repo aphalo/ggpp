@@ -1,0 +1,24 @@
+\begin{columns}
+      \begin{column}{.25\textwidth}
+\begin{knitrout}\tiny
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(ggpp)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+        \texttt{geom\_plot()}, \texttt{geom\_table()}, and \texttt{geom\_grob()} differ from \texttt{ggplot2::geom\_text()} mainly in that instead of mapping to the \texttt{label} aesthetic a \texttt{character} vector, we map a list of \texttt{gg}, \texttt{data.frame} or \texttt{grob} values.
+      \end{column}
+      %
+      \begin{column}{.25\textwidth}
+        ...
+      \end{column}
+      %
+      \begin{column}{.25\textwidth}
+        ...
+      \begin{column}
+      %
+      \begin{column}{.25\textwidth}
+        ...
+      \begin{column}
+    \end{columns}

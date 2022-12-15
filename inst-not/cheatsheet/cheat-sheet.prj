@@ -1,0 +1,276 @@
+36 Patch Control
+
+1
+1
+1
+ggpp-cheatsheet.Rnw
+87
+3
+0
+
+ggpp-cheatsheet.Rnw
+TeX:RNW
+420491259 0 -1 20 -1 241 38 38 1950 926 1 1 148 250 -1 -1 0 0 49 -1 -1 49 1 0 241 -1  0 -1 0
+set-up-fonts-and-icons.tex
+TeX
+1060859 0 -1 189 -1 201 152 152 2064 1040 1 1 316 175 -1 -1 0 0 21 -1 -1 21 1 0 201 -1  0 0 0
+:\Users\aphalo_2\Documents\Own_posters\R4Photobiology\R4P_poster_A0.Rnw
+TeX:RNW
+1060859 1 -1 1704 -1 1766 228 228 2140 1116 1 1 148 1275 -1 -1 0 0 49 -1 -1 49 1 0 1766 -1  0 -1 0
+:\Program Files\MiKTeX\tex\latex\amsmath\amsmath.sty
+TeX:STY:UNIX
+269594610 7 658 30 658 48 266 266 2178 1154 1 0 787 1550 -1 -1 0 0 -1 -1 -1 -1 1 0 48 658  0 0 0
+:\Users\aphalo_2\Documents\Own_teaching\HY\courses\IPS-141-slides\ecophys_04a.Rnw
+TeX:RNW:UK
+286273531 1 -1 277 -1 322 114 114 2026 1002 1 1 148 200 -1 -1 0 0 -1 -1 -1 -1 1 0 322 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_teaching\HY\courses\IPS-141-slides\shared-tex\set-up-fonts-and-icons.tex
+TeX
+269496315 0 -1 0 -1 0 152 152 2064 1040 1 1 148 0 -1 -1 0 0 -1 -1 -1 -1 1 0 0 -1  0 0 0
+:\Users\aphalo_2\Documents\Own_teaching\HY\courses\IPS-141-slides\ecophys_01.tex
+TeX:UK
+286273531 1 -1 48 -1 71 76 76 1988 964 1 1 148 0 -1 -1 0 0 -1 -1 -1 -1 1 0 71 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\using-r-main-crc.Rnw
+TeX:RNW:UTF-8
+420491259 0 -1 5880 -1 5944 208 208 1244 731 1 1 372 1225 -1 -1 0 0 33 0 0 33 2 0 5944 -1 1 5300 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\R.data.Rnw
+TeX:RNW
+17838075 0 305 133 -1 20005 26 26 977 443 1 1 666 300 -1 -1 0 0 31 -1 -1 31 2 0 20005 -1 1 45934 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\R.functions.Rnw
+TeX:RNW
+17838075 1 -1 14641 -1 15508 130 130 1166 653 1 1 148 375 -1 -1 0 0 264 -1 -1 264 1 0 15508 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\R.stats.rnw
+TeX:RNW
+17838075 0 8 28 -1 237 26 26 931 556 1 1 567 200 -1 -1 0 0 31 -1 -1 31 3 0 237 -1 1 74129 -1 2 77779 -1  0 -1 0
+:\Program Files\MiKTeX\tex\latex\biblatex\biblatex.sty
+TeX:STY:UNIX
+1159154 0 0 1 0 1 456 456 2783 1413 1 0 129 0 -1 -1 0 0 42 0 0 42 1 0 1 0  0 0 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\R.scripts.Rnw
+TeX:RNW
+17838075 0 -1 57426 -1 87097 78 78 1114 601 1 1 652 400 -1 -1 0 0 31 -1 -1 31 3 0 87097 -1 1 75574 -1 2 27591 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\R.as.calculator.Rnw
+TeX:RNW
+17838075 1 -1 75038 -1 75054 26 26 1062 549 1 1 724 400 -1 -1 0 0 31 -1 -1 31 3 0 75054 -1 1 20264 -1 2 31990 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\references.bib
+BibTeX
+1049586 0 340 1 340 1 0 0 820 242 0 1 50 100 -1 -1 0 0 23 0 0 23 1 0 1 340  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\R.intro.Rnw
+TeX:RNW
+17838075 0 44 156 -1 11 182 182 1218 705 1 1 302 0 -1 -1 0 0 261 -1 -1 261 1 0 11 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\usingr.sty
+TeX:STY
+1060850 4 46 122 46 123 234 234 1270 724 0 0 983 375 -1 -1 0 0 25 0 0 25 1 0 123 46  0 0 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\preface.Rnw
+TeX:RNW
+17838075 0 131 126 -1 14049 130 130 1573 499 1 1 162 225 -1 -1 0 0 18 -1 -1 18 1 0 14049 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\R.plotting.Rnw
+TeX:RNW
+17838075 0 -1 8059 -1 17050 130 130 1166 559 1 1 409 300 -1 -1 0 0 31 -1 -1 31 3 0 17050 -1 1 189829 -1 2 160405 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\rbooks.bib
+BibTeX
+1049586 0 840 24 840 25 52 52 872 313 1 1 484 125 -1 -1 0 0 21 0 0 21 1 0 25 840  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\using-r-main-crc.tex
+TeX
+269496315 8 -1 65793 -1 65368 0 0 2327 957 1 1 139 644 -1 -1 0 0 49 -1 -1 49 1 0 65368 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\R.data.io.Rnw
+TeX:RNW
+17838075 0 512 98 -1 42738 0 0 1498 379 1 1 1556 690 -1 -1 0 0 31 -1 -1 31 1 0 42738 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\preface.tex
+TeX
+269496315 0 -1 0 -1 0 228 228 2555 1220 1 1 148 0 -1 -1 0 0 18 -1 -1 18 1 0 0 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\frontmatter\preface.tex
+TeX
+269496315 0 -1 14557 -1 14663 130 130 1573 499 0 1 2612 950 -1 -1 0 0 18 -1 -1 18 1 0 14663 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\.gitignore
+DATA
+273678578 0 10 1 21 1 25 25 1741 444 1 0 71 294 -1 -1 0 0 12 0 0 12 1 0 1 21  0 0 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\manual-edit
+DATA
+273678578 0 0 1 0 1 208 208 1586 651 1 0 71 0 -1 -1 0 0 -1 -1 -1 -1 1 0 1 0  0 0 0
+:\ProgramData\MiKTeX\2.9\miktex\log\miktex-fc-cache_admin.log
+DATA
+273678578 0 0 1 0 1 32 32 2042 643 1 0 87 0 -1 -1 0 0 -1 -1 -1 -1 1 0 1 0  0 0 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\README.md
+DATA
+273678578 0 18 48 8 1 182 182 1133 599 1 0 73 128 -1 -1 0 0 11 0 0 11 1 0 1 8  0 0 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\from-Rob-Calver\Krantz_v1.15\Example\chapters\chapter1\ch1.tex
+TeX:UNIX
+269594619 0 -1 0 -1 0 104 104 1547 492 0 1 41 -1296 -1 -1 0 0 -1 -1 -1 -1 1 0 0 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\submission\cover-letter.tex
+TeX
+269496315 0 -1 5043 -1 6354 104 104 1114 453 0 1 1129 240 -1 -1 0 0 14 -1 -1 14 1 0 6354 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\from-Rob-Calver\Krantz_v1.15\Example\Run_This_Example.tex
+TeX:UNIX
+269594619 1 -1 697 -1 854 130 130 1495 644 0 1 41 384 -1 -1 0 0 86 -1 -1 86 1 0 854 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\from-Rob-Calver\Krantz_v1.15\User_Guides\README_Krantz.pdf
+DATA:UNIX
+273776882 0 0 1 0 1 0 0 1443 388 1 0 73 0 -1 -1 0 0 -1 -1 -1 -1 1 0 1 0  0 0 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\using-r-main.Rnw
+TeX:RNW:UTF-8
+420491259 0 -1 0 -1 217 208 208 1244 731 1 1 254 80 -1 -1 0 0 198 -1 -1 198 2 0 217 -1 1 6003 -1  0 -1 0
+:\aphalo\Documents\RAnalyses\anders.flame.test\kumpula_flame_2017\2017-02-24_Kumpula_FLMS00416.csv
+DATA
+273678578 0 0 1 0 1 26 26 1468 414 1 0 73 0 -1 -1 0 0 -1 -1 -1 -1 1 0 1 0  0 0 0
+:\server\php\php.ini
+DATA
+273678578 0 478 16 478 20 160 160 1871 812 1 0 225 3056 -1 -1 0 0 6 0 0 6 1 0 20 478  0 0 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\using-r-main.tex
+TeX
+269496315 0 -1 290730 -1 290730 104 104 1169 433 0 1 185 336 -1 -1 0 0 73 -1 -1 73 1 0 290730 -1  0 -1 0
+:\aphalo\Documents\RAnalyses\anders.flame.test\kumpula_flame_201704\2017-04-01_Kumpula_FLMS00416.csv
+DATA
+273678578 0 21 34677 21 34660 52 52 2056 741 1 0 43526 -4720 -1 -1 0 0 -1 -1 -1 -1 1 0 34660 21  0 0 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\bits\Dualex_Ws_uvr8_oex.R
+R:UNIX
+269583346 0 0 1 0 1 0 0 1607 390 0 0 25 0 -1 -1 0 0 85 0 0 85 1 0 1 0  0 0 0
+:\Users\aphalo\AppData\Local\SquirrelTemp\SquirrelSetup.log
+DATA
+273678578 0 0 1 0 1 0 0 1027 418 1 0 86 0 -1 -1 0 0 69 0 0 69 1 0 1 0  0 0 0
+:\Program Files\MiKTeX 2.9\tex\latex\fontspec\fontspec.sty
+TeX:STY:LaTeX3:UNIX
+269594610 0 28 1 40 31 64 64 1068 391 0 0 326 420 -1 -1 0 0 3 0 0 3 1 0 31 40  0 0 0
+:\aphalo\Documents\RPackages\learnr-pkg\inst\extdata\areatable.dat
+DATA
+273678578 0 0 1 0 1 96 96 1246 475 1 0 86 0 -1 -1 0 0 301 0 0 301 1 0 1 0  0 0 0
+:\aphalo\Documents\Own_editor_tasks\UV4Plants_Bulletin-2017-1\typeset\aphalo-prutchi-review.tex
+TeX
+269496315 0 -1 3399 -1 3404 32 32 1792 410 0 1 41 416 -1 -1 0 0 3618 -1 -1 3618 1 0 3404 -1  0 -1 0
+:\aphalo\Documents\Own_editor_tasks\UV4Plants_Bulletin-2016-2\typeset\aphalo-diez-review.tex
+TeX
+269496315 0 -1 0 -1 0 32 32 1792 410 0 1 44 0 -1 -1 0 0 -1 -1 -1 -1 1 0 0 -1  0 -1 0
+:\aphalo\Documents\Own_research_data\Suonenjoki\NELDER92\RAWDATA\BIRCH\FNBAREA.DAT
+DATA
+273678578 0 0 1 0 1 104 104 1064 575 1 0 73 0 -1 -1 0 0 8 0 0 8 1 0 1 0  0 0 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\cover\learnr-cover.ai
+DATA
+273744114 0 0 1 0 1 130 130 1090 601 1 0 73 0 -1 -1 0 0 -1 -1 -1 -1 1 0 1 0  0 0 0
+:\aphalo\Documents\Own_research_data\Suonenjoki\NELDER92\BIRCH\final92.opj
+DATA:UNIX
+273776882 0 0 1 0 1 104 104 1064 575 1 0 73 0 -1 -1 0 0 -1 -1 -1 -1 1 0 1 0  0 0 0
+:\aphalo\Documents\Own_research_data\Suonenjoki\NELDER92\BIRCH\area_means.dat
+DATA
+273678578 0 0 1 0 1 208 208 1168 679 1 0 73 0 -1 -1 0 0 227 0 0 227 1 0 1 0  0 0 0
+:\aphalo\Documents\Own_research_data\Suonenjoki\NELDER92\BIRCH\FINAL2\FNB2DWT.DAT
+DATA
+273678578 0 0 1 0 1 52 52 1012 523 1 0 73 0 -1 -1 0 0 -1 -1 -1 -1 1 0 1 0  0 0 0
+:\aphalo\Documents\Own_research_data\Suonenjoki\NELDER92\BIRCH\FINAL1\dwtable.dat
+DATA
+273678578 0 0 1 0 1 26 26 986 497 1 0 73 0 -1 -1 0 0 -1 -1 -1 -1 1 0 1 0  0 0 0
+:\aphalo\Documents\Own_research_data\Suonenjoki\NELDER92\BIRCH\FINAL1\areatable.dat
+DATA
+273678578 0 0 1 0 1 0 0 978 431 1 0 73 0 -1 -1 0 0 301 0 0 301 1 0 1 0  0 0 0
+:\aphalo\Documents\Own_research_data\Suonenjoki\NELDER92\RAWDATA\BIRCH\FNBLVDWT.DAT
+DATA
+273678578 0 0 1 0 1 182 182 1142 653 1 0 73 0 -1 -1 0 0 -1 -1 -1 -1 1 0 1 0  0 0 0
+:\aphalo\Documents\Own_research_data\Suonenjoki\NELDER92\BIRCH\FINAL1\FNBSRDWT.DAT
+DATA
+273678578 0 0 1 0 1 130 130 1090 601 1 0 73 0 -1 -1 0 0 8 0 0 8 1 0 1 0  0 0 0
+:\aphalo\Documents\Own_research_data\Suonenjoki\NELDER92\BIRCH\FINAL1\FNBLVDWT.DAT
+DATA
+273678578 0 0 1 0 1 156 156 1116 627 1 0 73 0 -1 -1 0 0 -1 -1 -1 -1 1 0 1 0  0 0 0
+:\Users\aphalo\AppData\Roaming\WinEdt Team\_history\D\aphalo\Documents\Own_manuscripts\Books\using-r\using-r-main.tex.sav
+TeX
+269496315 0 4179 20 -1 141168 26 26 838 264 0 1 201 0 -1 -1 0 0 73 -1 -1 73 1 0 141168 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\.git\gitHeadInfo.gin
+DATA:UNIX
+273776882 0 0 1 17 1 78 78 1029 495 1 0 73 272 -1 -1 0 0 14 0 0 14 1 0 1 17  0 0 0
+:\aphalo\Documents\Own_research_data\Suonenjoki\NELDER92\BIRCH\FINAL1\FNBAREA.DAT
+DATA
+273678578 0 0 1 0 1 52 52 1030 483 1 0 73 0 -1 -1 0 0 -1 -1 -1 -1 1 0 1 0  0 0 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\data\areatable.dat
+DATA
+273678578 0 0 1 0 1 0 0 978 431 1 0 73 0 -1 -1 0 0 -1 -1 -1 -1 1 0 1 0  0 0 0
+:\aphalo\Documents\Own_research_data\Suonenjoki\NELDER92\BIRCH\FINAL1\area_transposed.dat
+DATA
+273678578 0 0 1 0 1 26 26 1004 457 1 0 73 0 -1 -1 0 0 -1 -1 -1 -1 1 0 1 0  0 0 0
+:\Users\aphalo\AppData\Roaming\WinEdt Team\_history\D\aphalo\Documents\Own_manuscripts\Books\using-r\R.data.Rnw.sav
+TeX:RNW
+269496315 0 -1 0 -1 65791 0 0 812 238 0 1 41 240 -1 -1 0 0 -1 -1 -1 -1 1 0 65791 -1  0 -1 0
+:\aphalo\Documents\Own_research_data\Suonenjoki\NELDER93\BIRCH\FINAL\stem_shoot.opj
+DATA:UNIX
+273776882 0 0 1 0 1 32 32 1354 422 1 0 86 0 -1 -1 0 0 -1 -1 -1 -1 1 0 1 0  0 0 0
+:\aphalo\Documents\Own_research_data\Helsinki\Summer2016\Viikki-field\August-1\CR6Series_TableMinute.dat
+DATA
+273678578 0 0 1 0 1 156 156 852 577 1 0 73 0 -1 -1 0 0 -1 -1 -1 -1 1 0 1 0  0 0 0
+:\aphalo\Documents\Own_manuscripts\Books\r4photobiology\software.Rnw
+TeX:RNW
+269496315 1 -1 7875 -1 10254 104 104 904 386 0 1 41 368 -1 -1 0 0 -1 -1 -1 -1 1 0 10254 -1  0 -1 0
+:\aphalo\Documents\Own_manuscripts\Books\r4photobiology\r4p-main-koma.Rnw
+TeX:RNW
+269496315 2 -1 4912 -1 4918 128 128 1454 575 0 1 224 -2980 -1 -1 0 0 73 -1 -1 73 1 0 4918 -1  0 -1 0
+:\aphalo\Documents\Own_manuscripts\Books\r4photobiology\data-acquisition.Rnw
+TeX:RNW
+269496315 0 -1 0 -1 0 52 52 1020 277 0 1 41 -128 -1 -1 0 0 -1 -1 -1 -1 1 0 0 -1  0 -1 0
+:\aphalo\Documents\Own_research_data\Edinburgh\HEDERA\1989\F2BUNCE.DAT
+DATA
+273678578 0 0 1 0 1 64 64 1252 325 1 0 86 0 -1 -1 0 0 -1 -1 -1 -1 1 0 1 0  0 0 0
+:\aphalo\Documents\Own_manuscripts\Books\r4photobiology\plots.Rnw
+TeX:RNW
+269496315 1 -1 81514 -1 81534 78 78 926 482 0 1 187 306 -1 -1 0 0 26 -1 -1 26 1 0 81534 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\R.scripts.tex
+TeX
+269496315 2 -1 988 -1 994 52 52 1412 575 0 1 223 456 -1 -1 0 0 43 -1 -1 43 1 0 994 -1  0 -1 0
+:\aphalo\Documents\Own_manuscripts\Books\r4photobiology\r4photobiology.sty
+TeX:STY
+269496306 1 0 1 3 1 52 52 801 394 0 0 27 63 -1 -1 0 0 55 0 0 55 1 0 1 3  0 0 0
+:\aphalo\Documents\Own_manuscripts\Books\r4photobiology\colour.Rnw
+TeX:RNW
+269496315 0 -1 0 -1 0 52 52 900 456 0 1 43 -2852 -1 -1 0 0 -1 -1 -1 -1 1 0 0 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\R.plot-gantt.Rnw
+TeX:RNW
+269496315 0 -1 515 -1 498 0 0 1399 469 0 1 56 336 -1 -1 0 0 25 -1 -1 25 1 0 498 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\Rplots.tex
+TeX
+269496315 0 -1 0 -1 0 96 96 1495 565 0 1 45 0 -1 -1 0 0 -1 -1 -1 -1 1 0 0 -1  0 -1 0
+:\Program Files\MiKTeX 2.9\tex\latex\gitinfo2\gitinfo2.sty
+TeX:STY:UNIX
+269594610 0 0 1 0 1 130 130 879 472 0 0 25 0 -1 -1 0 0 15 0 0 15 1 0 1 0  0 0 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\abbrev.sty
+TeX:STY
+269496306 0 245 45 245 51 156 156 1107 573 0 0 475 3655 -1 -1 0 0 -1 -1 -1 -1 1 0 51 245  0 0 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\R.functions.tex
+TeX
+269496315 0 -1 0 -1 0 208 208 1568 731 0 1 41 0 -1 -1 0 0 30 -1 -1 30 1 0 0 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\R.intro.tex
+TeX
+269496315 0 -1 0 -1 0 182 182 1542 705 0 1 41 0 -1 -1 0 0 22 -1 -1 22 1 0 0 -1  0 -1 0
+:\Users\aphalo_2\Documents\Own_manuscripts\Books\learnr-book-crc\R.plotting.tex
+TeX
+269496315 0 -1 0 -1 0 104 104 1490 533 0 1 41 0 -1 -1 0 0 -1 -1 -1 -1 1 0 0 -1  0 0 0
+:\aphalo\Documents\Own_teaching\HY\courses\ExpDesignCourse\First reading assignment\Assignment 1.txt
+ASCII
+273688443 0 0 1 0 1 26 26 1006 307 1 0 79 0 -1 -1 0 0 69 0 0 69 1 0 1 0  0 0 0
+:\aphalo\Documents\Own_applications\Helsinki Prof 2016\summary.tex
+TeX:UTF-8
+286273531 0 -1 10404 -1 9835 52 52 1032 333 0 1 266 170 -1 -1 0 0 68 -1 -1 68 1 0 9835 -1  0 -1 0
+:\aphalo\Documents\PRIVATE\Banco\Transactions_FI5822002100009455_20150101_20150609.txt
+ASCII
+273688443 0 0 1 0 1 175 175 1816 750 1 0 79 0 -1 -1 0 0 34 0 0 34 1 0 1 0  0 0 0
+:\aphalo\Documents\Own_research_data\Spectra\spectra_from_Raimo_Silvenoinen\T_NO74.DX
+DATA
+273678578 0 0 1 0 1 150 150 1791 714 1 0 78 0 -1 -1 0 0 30 0 0 30 1 0 1 0  0 0 0
+:\Program Files (x86)\MiKTeX 2.9\miktex\config\update-2015-05-31-22-55.log
+DATA
+273678578 0 0 1 0 1 75 75 1393 685 1 0 78 -1275 -1 -1 0 0 -1 -1 -1 -1 1 0 1 0  0 0 0
+:\aphalo\Documents\RPackages\photobiologygg\vignettes\userguidegg.tex
+TeX:UTF-8
+17838075 8 -1 20371 -1 20313 175 175 1568 594 0 1 113 288 -1 -1 0 0 23 -1 -1 23 1 0 20313 -1  0 -1 0
+:\aphalo\Documents\Own_CV\CV\pja.bib
+BibTeX
+1049586 0 1585 1 1600 24 75 75 1791 513 1 1 301 448 -1 -1 0 0 43 0 0 43 1 0 24 1600  0 -1 0
+:\aphalo\Documents\Own_teaching\HY\courses\R_course\lectures\reproducible\latex_books.bib
+BibTeX
+1049586 0 268 7 276 1 175 175 1866 689 0 1 41 592 -1 -1 0 0 18 0 0 18 1 0 1 276  0 -1 0
+:\aphalo\Documents\RPackages\photobiology\vignettes\userguide.Rnw
+TeX:RNW:UTF-8
+17838075 0 -1 19014 -1 18795 150 150 1543 569 0 1 248 80 -1 -1 0 0 23 -1 -1 23 1 0 18795 -1  0 -1 0
+:\aphalo\Documents\Own_talks\UseR2015\abstract\offered_abstract.txt
+ASCII
+5252987 1 0 1 7 1 100 100 1443 670 1 0 73 119 -1 -1 0 0 198 0 0 198 1 0 1 7  0 0 0
+:\Users\aphalo\AppData\Local\RStudio-Desktop\monitored\user-settings\user-settings
+TeX:UNIX
+269594619 0 -1 0 -1 0 200 200 1568 675 0 1 41 -101 -1 -1 0 0 -1 -1 -1 -1 1 0 0 -1  0 0 0
+
+*ggpp-cheatsheet.Rnw
+>
+*set-up-fonts-and-icons
+<

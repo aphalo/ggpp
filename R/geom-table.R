@@ -109,8 +109,22 @@
 #' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
 #'   starting position of each text label. The units for \code{nudge_x} and
 #'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
+#' @param default.colour A colour definition to use for elements not targeted by
+#'   the colour aesthetic.
+#' @param colour.target A vector of character strings; \code{"all"},
+#'   \code{"text"}, \code{"box"} and \code{"segment"}.
+#' @param default.alpha numeric in [0..1] A transparency value to use for
+#'   elements not targeted by the alpha aesthetic.
+#' @param alpha.target A vector of character strings; \code{"all"},
+#'   \code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
+#'   \code{"box.fill"}.
 #' @param add.segments logical Display connecting segments or arrows between
 #'   original positions and displaced ones if both are available.
+#' @param box.padding,point.padding numeric By how much each end of the segments
+#'   should shortened in mm.
+#' @param segment.linewidth numeric Width of the segments or arrows in mm.
+#' @param min.segment.length numeric Segments shorter that the minimum length
+#'   are not rendered, in mm.
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
 #'
@@ -212,7 +226,15 @@ geom_table <- function(mapping = NULL, data = NULL,
                        ...,
                        nudge_x = 0,
                        nudge_y = 0,
+                       default.colour = "black",
+                       colour.target = "segment",
+                       default.alpha = 1,
+                       alpha.target = "segment",
                        add.segments = TRUE,
+                       box.padding = 0.25,
+                       point.padding = 1e-06,
+                       segment.linewidth = 0.5,
+                       min.segment.length = 0,
                        arrow = NULL,
                        table.theme = NULL,
                        table.rownames = FALSE,
@@ -252,7 +274,15 @@ geom_table <- function(mapping = NULL, data = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
+      default.colour = default.colour,
+      colour.target = colour.target,
+      default.alpha = default.alpha,
+      alpha.target = alpha.target,
       add.segments = add.segments,
+      box.padding = box.padding,
+      point.padding = point.padding,
+      segment.linewidth = segment.linewidth,
+      min.segment.length = min.segment.length,
       arrow = arrow,
       table.theme = table.theme,
       table.rownames = table.rownames,
@@ -277,12 +307,20 @@ gtb_draw_panel_fun <-
            panel_params,
            coord,
            add.segments = TRUE,
+           box.padding = 0.25,
+           point.padding = 1e-06,
+           segment.linewidth = 1,
+           min.segment.length = 0,
            arrow = NULL,
            table.theme = NULL,
            table.rownames = FALSE,
            table.colnames = TRUE,
            table.hjust = 0.5,
            parse = FALSE,
+           default.colour = "black",
+           colour.target = "all",
+           default.alpha = 1,
+           alpha.target = "all",
            na.rm = FALSE) {
 
     if (nrow(data) == 0) {
@@ -322,6 +360,13 @@ gtb_draw_panel_fun <-
                        just = data$hjust,
                        a = "x", b = "y")
     }
+    if (add.segments) {
+      segments.data <-
+        shrink_segments(data,
+                        point.padding = point.padding,
+                        box.padding = box.padding,
+                        min.segment.length = min.segment.length)
+    }
 
     # replace NULL with default
     if (is.null(table.theme)) {
@@ -334,6 +379,12 @@ gtb_draw_panel_fun <-
 
     for (row.idx in 1:nrow(data)) {
       row <- data[row.idx, , drop = FALSE]
+      table.alpha <-
+        ifelse(any(alpha.target %in% c("all", "table")),
+               row$alpha, default.alpha)
+      segment.alpha <-
+        ifelse(any(alpha.target %in% c("all", "segment")),
+               row$alpha, default.alpha)
 
       # Build the table
       if (is.function(table.theme)) {
@@ -398,22 +449,30 @@ gtb_draw_panel_fun <-
       user.grob$name <- paste("inset.table", row.idx, sep = ".")
 
       if (add.segments) {
-        segment.grob <-
-          grid::segmentsGrob(x0 = row$x,
-                             y0 = row$y,
-                             x1 = row$x_orig,
-                             y1 = row$y_orig,
-                             arrow = arrow,
-                             gp = grid::gpar(col = ggplot2::alpha(row$segment.colour,
-                                                                  row$segment.alpha)),
-                             name = paste("inset.table.segment", row.idx, sep = "."))
+        segment.row <- segments.data[row.idx, , drop = FALSE]
+        if (segment.row$too.short) {
+          segment.grob <- grid::nullGrob()
+        } else {
+          segment.grob <-
+            grid::segmentsGrob(x0 = segment.row$x,
+                               y0 = segment.row$y,
+                               x1 = segment.row$x_orig,
+                               y1 = segment.row$y_orig,
+                               arrow = arrow,
+                               gp = grid::gpar(
+                                 col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
+                                   ifelse(any(colour.target %in% c("all", "segment")),
+                                          ggplot2::alpha(row$colour, segment.alpha),
+                                          ggplot2::alpha(default.colour, segment.alpha)),
+                                 lwd = (if (segment.linewidth == 0) 1 else segment.linewidth) * .stroke),
+                               name = paste("table.s.segment", row$group, row.idx, sep = "."))
+        }
         all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
       } else {
         all.grobs <- grid::gList(all.grobs, user.grob)
       }
     }
-
-#    grid::grobTree(children = all.grobs, name = "geom.table.panel")
+  #    grid::grobTree(children = all.grobs, name = "geom.table.panel")
     grid::grobTree(children = all.grobs)
 
   }
@@ -436,11 +495,7 @@ GeomTable <-
             alpha = 1,
             family = "",
             fontface = 1,
-            lineheight = 1.2,
-            segment.linetype = 1,
-            segment.colour = "grey33",
-            segment.size = 0.5,
-            segment.alpha = 1
+            lineheight = 1.2
           ),
 
           draw_panel = gtb_draw_panel_fun,

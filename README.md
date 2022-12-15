@@ -3,10 +3,12 @@
 
 # ggpp <img src="man/figures/logo-ggpp.png" align="right" width="150"/>
 
+<!-- badges: start -->
+
 [![cran
 version](https://www.r-pkg.org/badges/version/ggpp)](https://cran.r-project.org/package=ggpp)
-[![R build
-status](https://github.com/aphalo/ggpp/workflows/R-CMD-check/badge.svg)](https://github.com/aphalo/ggpp/actions)
+[![R-CMD-check](https://github.com/aphalo/ggpp/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/aphalo/ggpp/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
 
 ## Purpose
 
@@ -141,6 +143,9 @@ for applying arbitrary functions returning numeric vectors like
 `cumsum()`, `cummax()` and `diff()`. Statistics `stat_centroid()` and
 `stat_summary_xy()` allow computation of summaries on both *x* and *y*
 and passing them to a geom.
+
+The statistics `stat_quadrant_counts()` and `stat_panel_counts()` make
+it easy to annotate plots with the number of observations.
 
 ## Justification
 

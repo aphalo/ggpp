@@ -36,6 +36,7 @@ reference:
     - stat_dens2d_filter
     - stat_dens2d_labels
     - stat_quadrant_counts
+    - stat_panel_counts
     - stat_fmt_tb
     - stat_apply_group
   - title: Positions
@@ -78,9 +79,11 @@ navbar:
       icon: fab fa-github fa-lg
       href: https://github.com/aphalo/ggpp/
     articles:
-      text: Articles
+      text: Cheat sheet and articles
       menu:
-      - text: 'Extensions to the Grammar of Graphics'
+      - text: 'Cheat sheet'
+        href: ggpp-cheatsheet.pdf
+      - text: 'Annotations and data labels'
         href: articles/grammar-extensions.html
       - text: 'Combining repulsion and nudging'
         href: articles/nudge-examples.html

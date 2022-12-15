@@ -6,7 +6,8 @@
 %   R/geom-text-npc.r, R/position-nudge-center.R, R/position-nudge-line.R,
 %   R/position-nudge-stack.R, R/position-nudge-to.R, R/stat-apply.R,
 %   R/stat-dens1d-filter.r, R/stat-dens1d-labels.r, R/stat-dens2d-filter.r,
-%   R/stat-dens2d-labels.r, R/stat-fmt-tb.R, R/stat-quadrant-counts.R
+%   R/stat-dens2d-labels.r, R/stat-fmt-tb.R, R/stat-group-counts.R,
+%   R/stat-panel-counts.R, R/stat-quadrant-counts.R
 \docType{data}
 \name{grob_draw_panel_fun}
 \alias{grob_draw_panel_fun}
@@ -52,6 +53,10 @@
 \alias{StatDens2dLabels}
 \alias{fmt_tb_compute_group_fun}
 \alias{StatFmtTb}
+\alias{compute_panel_counts_fun}
+\alias{StatPanelCounts}
+\alias{compute_group_counts_fun}
+\alias{StatGroupCounts}
 \alias{compute_counts_fun}
 \alias{StatQuadrantCounts}
 \title{\code{Stat*} Objects}
