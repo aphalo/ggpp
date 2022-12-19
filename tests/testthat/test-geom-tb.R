@@ -193,7 +193,7 @@ test_that("parsed_tb", {
   )
 })
 
-test_that("pos_or_nudge", {
+test_that("geom_table_pos_or_nudge", {
   tb <- tibble(a = 2:4, b = 4:2)
   my.tb <- tibble(x = 0, y = 0, tb = list(tb))
   expect_error(geom_table(data = my.tb,
@@ -204,11 +204,24 @@ test_that("pos_or_nudge", {
                "You must specify either `position` or `nudge_x`/`nudge_y`.")
 })
 
-test_that("string_left_hjust", {
+test_that("geom_table_string_left_hjust", {
   tb <- tibble(a = 2:4, b = 4:2)
   my.tb <- tibble(x = 0, y = 0, tb = list(tb))
 x <- geom_table(data = my.tb,
                 mapping = aes(x, y, label = tb),
                 table.hjust = "left")
 expect_equal(x$geom_params$table.hjust, 0)
+})
+
+test_that("geom_table_npc_string_center_hjust", {
+  tb <- tibble(a = 2:4, b = 4:2)
+  my.tb <- tibble(x = 0, y = 0, tb = list(tb))
+  p <- ggplot() +
+    geom_table_npc(data = my.tb,
+                   table.hjust = "center",
+                   mapping = aes(npcx = x, npcy = y, label = tb))
+  expect_equal(p$layers[[1]]$geom_params$table.hjust, 0.5)
+
+  result <- layer_data(p)[, c("npcx", "npcy", "label", "hjust", "vjust")]
+  expect_identical(result$label[[1]], tb)
 })
