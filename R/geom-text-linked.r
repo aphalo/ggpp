@@ -379,7 +379,7 @@ GeomTextS <-
                                          add.segments = TRUE,
                                          box.padding = 0.25,
                                          point.padding = 1e-06,
-                                         segment.linewidth = 1,
+                                         segment.linewidth = 0.5,
                                          min.segment.length = 0,
                                          arrow = NULL) {
 
@@ -475,7 +475,7 @@ GeomTextS <-
                                                     ifelse(any(colour.target %in% c("all", "segment")),
                                                            ggplot2::alpha(row$colour, segment.alpha),
                                                            ggplot2::alpha(default.colour, segment.alpha)),
-                                                  lwd = (if (segment.linewidth == 0) 1 else segment.linewidth) * .stroke),
+                                                  lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
                                                 name = paste("text.s.segment", row$group, row.idx, sep = "."))
                          }
                          all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
@@ -484,7 +484,7 @@ GeomTextS <-
                        }
                      }
 
-                     # name needs to be unique within plot, so we would to know other layers
+                     # name needs to be unique within plot, so we would need to know other layers
 #                     grid::grobTree(children = all.grobs, name = "geom.text.s.panel")
                      grid::grobTree(children = all.grobs)
 
@@ -510,9 +510,7 @@ compute_just2d <- function(data,
                            just,
                            a = "x",
                            b = a) {
-  if (just == "away") {
-    just <- "position"
-  }
+  just <- ifelse(just == "away", "position", just)
   if (a != b) {
     angle <- data$angle
   } else {
