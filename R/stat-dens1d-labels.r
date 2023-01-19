@@ -8,12 +8,33 @@
 #'   to \code{rownames(data)}, with a message.
 #'
 #' @details \code{stat_dens1d_labels()} is designed to work together with
-#'   statistics from package 'ggrepel'. To avoid text labels being plotted over
+#'   geometries from packages 'ggrepel'. To avoid text labels being plotted over
 #'   unlabelled points the corresponding rows in data need to be retained but
-#'   labels replaced with the empty character string, \code{""}. This makes
-#'   \code{\link{stat_dens1d_filter}} unsuitable for the task. Non-the-less
-#'   \code{stat_dens1d_labels()} could be useful in some other cases, as the
+#'   labels replaced with the empty character string, \code{""}. Function
+#'   \code{\link{stat_dens1d_filter}} cannot be used with the repulsive geoms
+#'   from 'ggrepel' because it drops the observations. Non-the-less
+#'   \code{stat_dens1d_labels()} can be useful in some other cases, as the
 #'   substitution character string can be set by the user.
+#'
+#'   The local density of observations along \emph{x} or \emph{y} is computed
+#'   with function \code{\link[stats]{density}} and used to select observations,
+#'   passing to the geom all the rows in its \code{data} input but with with the
+#'   text of labels replaced in those "not kept". The default is to select
+#'   observations in sparse regions of the plot, but the selection can be
+#'   inverted so that only observations in the densest regions are returned.
+#'   Specific observations can be protected from having the label replaced by
+#'   passing a suitable argument to \code{keep.these}. Logical and integer
+#'   vectors function as indexes to rows in \code{data}, while a character
+#'   vector is compared to values in the variable mapped to the \code{label}
+#'   aesthetic. A function passed as argument to keep.these will receive as
+#'   argument the values in the variable mapped to \code{label} and should
+#'   return a character, logical or numeric vector as described above.
+#'
+#'   How many labels are retained intact in addition to those in
+#'   \code{keep.these} is controlled with arguments passed to \code{keep.number}
+#'   and \code{keep.fraction}. \code{keep.number} sets the maximum number of
+#'   observations selected, whenever \code{keep.fraction} results in fewer
+#'   observations selected, it is obeyed.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be
@@ -29,6 +50,10 @@
 #' @param keep.sparse logical If \code{TRUE}, the default, observations from the
 #'   more sparse regions are retained, if \code{FALSE} those from the densest
 #'   regions.
+#' @param keep.these character vector, integer vector, logical vector or
+#'   function that takes the variable mapped to the \code{label} aesthetic as
+#'   first argument and returns a character vector or a logical vector. These
+#'   rows from \code{data} are selected irrespective of the local density.
 #' @param invert.selection logical If \code{TRUE}, the complement of the
 #'   selected rows are returned.
 #' @param bw numeric or character The smoothing bandwidth to be used. If
@@ -155,6 +180,7 @@ stat_dens1d_labels <-
            keep.fraction = 0.10,
            keep.number = Inf,
            keep.sparse = TRUE,
+           keep.these = FALSE,
            invert.selection = FALSE,
            bw = "SJ",
            kernel = "gaussian",
@@ -172,6 +198,7 @@ stat_dens1d_labels <-
                     keep.fraction = keep.fraction,
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
+                    keep.these = keep.these,
                     invert.selection = invert.selection,
                     bw = bw,
                     adjust = adjust,
@@ -189,6 +216,7 @@ dens1d_labs_compute_fun <-
            keep.fraction,
            keep.number,
            keep.sparse,
+           keep.these,
            invert.selection,
            bw,
            kernel,
@@ -209,13 +237,32 @@ dens1d_labs_compute_fun <-
     }
 
     force(data)
-    if (nrow(data) * keep.fraction > keep.number) {
-      keep.fraction <- keep.number / nrow(data)
-    }
-
     if (!exists("label", data)) {
       message("Mapping missing 'label' aesthetic to 'rownames(data)'.")
       data[["label"]] <- rownames(data)
+    }
+
+    if (length(keep.these)) {
+      if (is.function(keep.these)) {
+        keep.these <- keep.these(data$label) # character or logical vector
+      }
+      if (is.character(keep.these)) {
+        keep.these <- keep.these == data$label # logical vector
+      }
+      if (is.numeric(keep.these)) {
+        temp <- logical(nrow(data))
+        temp[keep.these] <- TRUE
+        keep.these <- temp
+      }
+      if (anyNA(keep.these)) {
+        warning("Discarding 'NA's in keep.these")
+        keep.these <- ifelse(is.na(keep.these),
+                             FALSE,
+                             keep.these)
+      }
+    }
+    if (nrow(data) * keep.fraction > keep.number) {
+      keep.fraction <- keep.number / nrow(data)
     }
 
     if (keep.fraction == 1) {
@@ -260,11 +307,11 @@ dens1d_labs_compute_fun <-
         }
       }
       if (invert.selection){
-        data[["label"]] <- ifelse(!keep,
+        data[["label"]] <- ifelse(!(keep | keep.these),
                                   data[["label"]],
                                   label.fill)
       } else {
-        data[["label"]] <- ifelse(keep,
+        data[["label"]] <- ifelse(keep | keep.these,
                                   data[["label"]],
                                   label.fill)
       }
@@ -283,5 +330,5 @@ StatDens1dLabels <-
     ggplot2::Stat,
     compute_panel =
       dens1d_labs_compute_fun,
-    required_aes = "x|y" # c("x", "y")
+    required_aes = "x|y"
   )

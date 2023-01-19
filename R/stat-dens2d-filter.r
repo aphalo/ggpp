@@ -4,9 +4,10 @@
 #'   regions of a plot panel with high density of observations, based on the
 #'   values mapped to both \code{x} and \code{y} aesthetics.
 #'   \code{stat_dens2d_filter_g} does the filtering by group instead of by
-#'   panel. This second stat is useful for highlighting observations, while
-#'   the first one tends to be most useful when the aim is to prevent clashes
-#'   among text labels.
+#'   panel. This second stat is useful for highlighting observations, while the
+#'   first one tends to be most useful when the aim is to prevent clashes among
+#'   text labels. If there is no mapping to \code{label} in \code{data}, the
+#'   mapping is silently set to \code{rownames(data)}.
 #'
 #' @details The local density of observations in 2D (\emph{x} and \emph{y}) is
 #'   computed with function \code{\link[MASS]{kde2d}} and used to select
@@ -14,18 +15,20 @@
 #'   input. The default is to select observations in sparse regions of the plot,
 #'   but the selection can be inverted so that only observations in the densest
 #'   regions are returned. Specific observations can be protected from being
-#'   deselected by passing a suitable argument to \code{protected}. Logical and
-#'   integer vector works always as indexes to rows in \code{data}, while a
-#'   character vector works only if a character variable has been mapped to the
-#'   \code{label} aesthetic. A function passed as argument to protected will
-#'   receive as argument whatever variable has been mapped to \code{label} and
-#'   should return a character or logical vector as described.
+#'   deselected and "kept" by passing a suitable argument to \code{keep.these}.
+#'   Logical and integer vectors work as indexes to rows in \code{data}, while a
+#'   character vector values are compared to the character values mapped to the
+#'   \code{label} aesthetic. A function passed as argument to keep.these will
+#'   receive as argument the values in the variable mapped to \code{label} and
+#'   should return a character, logical or numeric vector as described above. If
+#'   no variable has been mapped to \code{label}, row names are used in its
+#'   place.
 #'
-#'   How many unprotected rows are retained is controlled with arguments passed
-#'   to \code{keep.number} and \code{keep.fraction}. \code{keep.number} sets the
-#'   maximum number of observations selected, whenever \code{keep.fraction}
-#'   results in fewer observations selected, it is obeyed.
-#'
+#'   How many rows are retained in addition to those in \code{keep.these} is
+#'   controlled with arguments passed to \code{keep.number} and
+#'   \code{keep.fraction}. \code{keep.number} sets the maximum number of
+#'   observations selected, whenever \code{keep.fraction} results in fewer
+#'   observations selected, it is obeyed.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs
@@ -41,10 +44,10 @@
 #' @param keep.sparse logical If \code{TRUE}, the default, observations from the
 #'   more sparse regions are retained, if \code{FALSE} those from the densest
 #'   regions.
-#' @param protected character vector, integer vector, logical vector or function
-#'   that takes the variable mapped to the label aesthetic as first argument and
-#'   returns a character vector or a logical vector. Protected labels are
-#'   selected irrespective of the local density.
+#' @param keep.these character vector, integer vector, logical vector or
+#'   function that takes the variable mapped to the \code{label} aesthetic as
+#'   first argument and returns a character vector or a logical vector. These
+#'   rows from \code{data} are selected irrespective of the local density.
 #' @param invert.selection logical If \code{TRUE}, the complement of the
 #'   selected rows are returned.
 #' @param h vector of bandwidths for x and y directions. Defaults to normal
@@ -71,10 +74,10 @@
 #'   rows in input \code{data} retained based on a 2D-density-based filtering
 #'   criterion.
 #'
-#' @seealso \code{\link[MASS]{kde2d}} used internally. Parameters \code{n},
-#'   \code{h} in these statistics correspond to the parameters with the same
-#'   name in this imported function. Limits are set to the limits of the plot
-#'   scales.
+#' @seealso \code{\link{stat_dens2d_labels}} and \code{\link[MASS]{kde2d}} used
+#'   internally. Parameters \code{n}, \code{h} in these statistics correspond to
+#'   the parameters with the same name in this imported function. Limits are set
+#'   to the limits of the plot scales.
 #'
 #' @family statistics returning a subset of data
 #'
@@ -145,17 +148,17 @@
 #' ggplot(data = d, aes(x, y, label = lab, colour = group)) +
 #'   geom_point() +
 #'   stat_dens2d_filter(geom = "text",
-#'                      protected = function(x) {grepl("^u", x)})
+#'                      keep.these = function(x) {grepl("^u", x)})
 #'
 #' ggplot(data = d, aes(x, y, label = lab, colour = group)) +
 #'   geom_point() +
 #'   stat_dens2d_filter(geom = "text",
-#'                      protected = function(x) {grepl("^u", x)})
+#'                      keep.these = function(x) {grepl("^u", x)})
 #'
 #' ggplot(data = d, aes(x, y, label = lab, colour = group)) +
 #'   geom_point() +
 #'   stat_dens2d_filter(geom = "text",
-#'                      protected = 1:30)
+#'                      keep.these = 1:30)
 #'
 #' # repulsive labels with ggrepel::geom_text_repel()
 #' ggrepel.installed <- requireNamespace("ggrepel", quietly = TRUE)
@@ -169,7 +172,7 @@
 #'   ggplot(data = d, aes(x, y, label = lab, colour = group)) +
 #'     geom_point() +
 #'     stat_dens2d_filter(geom = "text_repel",
-#'                      protected = function(x) {grepl("^u", x)})
+#'                        keep.these = function(x) {grepl("^u", x)})
 #' }
 #'
 #' @export
@@ -180,7 +183,7 @@ stat_dens2d_filter <-
            keep.fraction = 0.10,
            keep.number = Inf,
            keep.sparse = TRUE,
-           protected = FALSE,
+           keep.these = FALSE,
            invert.selection = FALSE,
            na.rm = TRUE, show.legend = FALSE,
            inherit.aes = TRUE,
@@ -194,7 +197,7 @@ stat_dens2d_filter <-
                     keep.fraction = keep.fraction,
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
-                    protected = protected,
+                    keep.these = keep.these,
                     invert.selection = invert.selection,
                     h = h,
                     n = n,
@@ -212,7 +215,7 @@ stat_dens2d_filter_g <-
            keep.fraction = 0.10,
            keep.number = Inf,
            keep.sparse = TRUE,
-           protected = FALSE,
+           keep.these = FALSE,
            invert.selection = FALSE,
            na.rm = TRUE, show.legend = FALSE,
            inherit.aes = TRUE,
@@ -226,7 +229,7 @@ stat_dens2d_filter_g <-
                     keep.fraction = keep.fraction,
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
-                    protected = protected,
+                    keep.these = keep.these,
                     invert.selection = invert.selection,
                     h = h,
                     n = n,
@@ -240,7 +243,7 @@ dens2d_flt_compute_fun <-
            keep.fraction,
            keep.number,
            keep.sparse,
-           protected,
+           keep.these,
            invert.selection,
            h,
            n) {
@@ -253,28 +256,28 @@ dens2d_flt_compute_fun <-
     }
 
     force(data)
-    if (length(protected)) {
-      if (is.function(protected)) {
-        protected <- protected(data$label) # character or logical vector
+    if (!exists("label", data)) {
+#      message("Mapping missing 'label' aesthetic to 'rownames(data)'")
+      data[["label"]] <- rownames(data)
+    }
+
+    if (length(keep.these)) {
+      if (is.function(keep.these)) {
+        keep.these <- keep.these(data$label) # character or logical vector
       }
-      if (is.character(protected)) {
-        if (!exists("label", data)) {
-          warning("No mapping to 'label': ignoring character valued 'protected'")
-          protected <- FALSE
-        } else {
-          protected <- protected == data$label # logical vector
-        }
+      if (is.character(keep.these)) {
+        keep.these <- keep.these == data$label # logical vector
       }
-      if (is.numeric(protected)) {
+      if (is.numeric(keep.these)) {
         temp <- logical(nrow(data))
-        temp[protected] <- TRUE
-        protected <- temp
+        temp[keep.these] <- TRUE
+        keep.these <- temp
       }
-      if (anyNA(protected)) {
-        warning("Discarding 'NA's in protected")
-        protected <- ifelse(is.na(protected),
+      if (anyNA(keep.these)) {
+        warning("Discarding 'NA's in keep.these")
+        keep.these <- ifelse(is.na(keep.these),
                             FALSE,
-                            protected)
+                            keep.these)
       }
     }
     if (nrow(data) * keep.fraction > keep.number) {
@@ -313,9 +316,9 @@ dens2d_flt_compute_fun <-
       }
     }
     if (invert.selection){
-      data[!(keep | protected), ]
+      data[!(keep | keep.these), ]
     } else {
-      data[keep | protected, ]
+      data[keep | keep.these, ]
     }
   }
 

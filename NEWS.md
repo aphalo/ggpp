@@ -8,7 +8,9 @@ editor_options:
 
 # ggpp 0.5.1
 
--   Add parameter `protected` to `stat_dens2d_filter()` and `stat_dens2d_filter_g()`.
+-   Add parameter `keep.these` to `stat_dens2d_filter()`, 
+    `stat_dens2d_filter_g()`, `stat_dens1d_filter()` and 
+    `stat_dens1d_filter_g()`.
 
 # ggpp 0.5.0
 
