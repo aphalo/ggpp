@@ -500,6 +500,9 @@ GeomTextS <-
 # we add support for definitions of "inward" and "outward" relative to
 # arbitrary positions along the axis.
 #
+# We support "position" (could be called "away") when nudging or other
+# displacement has been applied and the original postion saved.
+#
 # This function can handle either hjust or vjust, but only one at a time.
 compute_just2d <- function(data,
                            coord,
@@ -507,6 +510,9 @@ compute_just2d <- function(data,
                            just,
                            a = "x",
                            b = a) {
+  if (just == "away") {
+    just <- "position"
+  }
   if (a != b) {
     angle <- data$angle
   } else {
