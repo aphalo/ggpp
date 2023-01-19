@@ -13,6 +13,7 @@ stat_dens2d_filter(
   keep.fraction = 0.1,
   keep.number = Inf,
   keep.sparse = TRUE,
+  protected = FALSE,
   invert.selection = FALSE,
   na.rm = TRUE,
   show.legend = FALSE,
@@ -30,6 +31,7 @@ stat_dens2d_filter_g(
   keep.fraction = 0.1,
   keep.number = Inf,
   keep.sparse = TRUE,
+  protected = FALSE,
   invert.selection = FALSE,
   na.rm = TRUE,
   show.legend = FALSE,
@@ -62,6 +64,11 @@ number.}
 \item{keep.sparse}{logical If \code{TRUE}, the default, observations from the
 more sparse regions are retained, if \code{FALSE} those from the densest
 regions.}
+
+\item{protected}{character vector, integer vector, logical vector or function
+that takes the variable mapped to the label aesthetic as first argument and
+returns a character vector or a logical vector. Protected labels are
+selected irrespective of the local density.}
 
 \item{invert.selection}{logical If \code{TRUE}, the complement of the
 selected rows are returned.}
@@ -102,6 +109,25 @@ A plot layer instance. Using as output \code{data} a subset of the
   panel. This second stat is useful for highlighting observations, while
   the first one tends to be most useful when the aim is to prevent clashes
   among text labels.
+}
+\details{
+The local density of observations in 2D (\emph{x} and \emph{y}) is
+  computed with function \code{\link[MASS]{kde2d}} and used to select
+  observations, passing to the geom a subset of the rows in its \code{data}
+  input. The default is to select observations in sparse regions of the plot,
+  but the selection can be inverted so that only observations in the densest
+  regions are returned. Specific observations can be protected from being
+  deselected by passing a suitable argument to \code{protected}. Logical and
+  integer vector works always as indexes to rows in \code{data}, while a
+  character vector works only if a character variable has been mapped to the
+  \code{label} aesthetic. A function passed as argument to protected will
+  receive as argument whatever variable has been mapped to \code{label} and
+  should return a character or logical vector as described.
+
+  How many unprotected rows are retained is controlled with arguments passed
+  to \code{keep.number} and \code{keep.fraction}. \code{keep.number} sets the
+  maximum number of observations selected, whenever \code{keep.fraction}
+  results in fewer observations selected, it is obeyed.
 }
 \examples{
 
@@ -167,6 +193,21 @@ ggplot(data = d, aes(x, y, label = lab, colour = group)) +
   geom_point() +
   stat_dens2d_filter(geom = "text")
 
+ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+  geom_point() +
+  stat_dens2d_filter(geom = "text",
+                     protected = function(x) {grepl("^u", x)})
+
+ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+  geom_point() +
+  stat_dens2d_filter(geom = "text",
+                     protected = function(x) {grepl("^u", x)})
+
+ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+  geom_point() +
+  stat_dens2d_filter(geom = "text",
+                     protected = 1:30)
+
 # repulsive labels with ggrepel::geom_text_repel()
 ggrepel.installed <- requireNamespace("ggrepel", quietly = TRUE)
 if (ggrepel.installed) {
@@ -175,11 +216,19 @@ if (ggrepel.installed) {
   ggplot(data = d, aes(x, y, label = lab, colour = group)) +
     geom_point() +
     stat_dens2d_filter(geom = "text_repel")
+
+  ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+    geom_point() +
+    stat_dens2d_filter(geom = "text_repel",
+                     protected = function(x) {grepl("^u", x)})
 }
 
 }
 \seealso{
-\code{\link[MASS]{kde2d}} used internally.
+\code{\link[MASS]{kde2d}} used internally. Parameters \code{n},
+  \code{h} in these statistics correspond to the parameters with the same
+  name in this imported function. Limits are set to the limits of the plot
+  scales.
 
 Other statistics returning a subset of data: 
 \code{\link{stat_dens1d_filter}()},

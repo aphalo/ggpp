@@ -62,6 +62,8 @@ Other contributors:
 \itemize{
   \item Kamil Slowikowski (\href{https://orcid.org/0000-0002-2843-6370}{ORCID}) [contributor]
   \item Michał Krassowski (\href{https://orcid.org/0000-0002-9638-7785}{ORCID}) [contributor]
+  \item Daniel Sabanés Bové [contributor]
+  \item Stella Banjo [contributor]
 }
 
 }

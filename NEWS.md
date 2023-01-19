@@ -6,6 +6,10 @@ editor_options:
     wrap: 72
 ---
 
+# ggpp 0.5.1
+
+-   Add parameter `protected` to `stat_dens2d_filter()` and `stat_dens2d_filter_g()`.
+
 # ggpp 0.5.0
 
 -   Add `stat_panel_counts()` and `stat_group_counts()`.
