@@ -119,8 +119,8 @@ GeomXMarginPoint <-
       col = alpha(data$colour, data$alpha),
       fill = alpha(data$fill, data$alpha),
       # Stroke is added around the outside of the point
-      fontsize = data$size * .pt + data$stroke * .stroke / 2,
-      lwd = data$stroke * .stroke / 2
+      fontsize = data$size * .pt + data$stroke * ggplot2::.stroke / 2,
+      lwd = data$stroke * ggplot2::.stroke / 2
     )
     if (!flipped && !is.null(data$xintercept) ) {
       if (grepl("b", sides)) {
@@ -238,8 +238,8 @@ GeomYMarginPoint <-
               col = alpha(data$colour, data$alpha),
               fill = alpha(data$fill, data$alpha),
               # Stroke is added around the outside of the point
-              fontsize = data$size * .pt + data$stroke * .stroke / 2,
-              lwd = data$stroke * .stroke / 2
+              fontsize = data$size * .pt + data$stroke * ggplot2::.stroke / 2,
+              lwd = data$stroke * ggplot2::.stroke / 2
             )
             if (!flipped && !is.null(data$yintercept)) {
               if (grepl("l", sides)) {

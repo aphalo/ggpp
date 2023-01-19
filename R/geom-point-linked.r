@@ -236,8 +236,8 @@ GeomPointS <-
                                         ggplot2::alpha(default.colour, point.alpha)),
                            fill = alpha(row$fill, point.alpha),
                            # Stroke is added around the outside of the point
-                           fontsize = row$size * .pt + row$stroke * .stroke / 2,
-                           lwd = row$stroke * .stroke / 2
+                           fontsize = row$size * .pt + row$stroke * ggplot2::.stroke / 2,
+                           lwd = row$stroke * ggplot2::.stroke / 2
                          )
                        )
 
@@ -260,7 +260,7 @@ GeomPointS <-
                                                     ifelse(any(colour.target %in% c("all", "segment")),
                                                            ggplot2::alpha(row$colour, segment.alpha),
                                                            ggplot2::alpha(default.colour, segment.alpha)),
-                                                  lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * .stroke),
+                                                  lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
                                                 name = paste("text.s.segment", row$group, row.idx, sep = "."))
                          }
                          all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
