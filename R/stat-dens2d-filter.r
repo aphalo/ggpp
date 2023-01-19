@@ -257,7 +257,7 @@ dens2d_flt_compute_fun <-
 
     force(data)
     if (!exists("label", data)) {
-#      message("Mapping missing 'label' aesthetic to 'rownames(data)'")
+#      message("Mapping 'rownames(data)' to missing 'label' aesthetic")
       data[["label"]] <- rownames(data)
     }
 
