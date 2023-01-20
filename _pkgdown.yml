@@ -12,6 +12,7 @@ reference:
     desc: Scales control de mapping of data to aesthetics.
     contents:
     - scale_continuous_npc
+    - compute_npcx
   - title: Geoms
     desc: Geoms, short for geometric objects, describe the type of plot you will produce.
     contents:
