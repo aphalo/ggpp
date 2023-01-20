@@ -266,7 +266,7 @@ dens2d_flt_compute_fun <-
         keep.these <- keep.these(data$label) # character or logical vector
       }
       if (is.character(keep.these)) {
-        keep.these <- keep.these == data$label # logical vector
+        keep.these <- data$label %in% keep.these # logical vector
       }
       if (is.numeric(keep.these)) {
         temp <- logical(nrow(data))
