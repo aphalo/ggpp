@@ -201,6 +201,12 @@ stat_dens1d_filter <-
            na.rm = TRUE,
            show.legend = FALSE,
            inherit.aes = TRUE) {
+    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
+      stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
+    }
+    if (is.na(keep.number) || keep.number < 0) {
+      stop("Out of range or missing value for 'keep.number': ", keep.number)
+    }
     ggplot2::layer(
       stat = StatDens1dFilter, data = data, mapping = mapping, geom = geom,
       position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -239,6 +245,12 @@ stat_dens1d_filter_g <-
            n = 512,
            orientation = "x",
            ...) {
+    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
+      stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
+    }
+    if (is.na(keep.number) || keep.number < 0) {
+      stop("Out of range or missing value for 'keep.number': ", keep.number)
+    }
     ggplot2::layer(
       stat = StatDens1dFilterG, data = data, mapping = mapping, geom = geom,
       position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -270,69 +282,19 @@ dens1d_flt_compute_fun <-
            adjust,
            n,
            orientation) {
-
-    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
-      stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
-    }
-    if (is.na(keep.number) || keep.number < 0) {
-      stop("Out of range or missing value for 'keep.number': ", keep.number)
-    }
-
-    force(data)
-    force(data)
-    if (!exists("label", data)) {
-      #      message("Mapping 'rownames(data)' to missing 'label' aesthetic")
-      data[["label"]] <- rownames(data)
-    }
-
-    if (length(keep.these)) {
-      if (is.function(keep.these)) {
-        keep.these <- keep.these(data$label) # character or logical vector
-      }
-      if (is.character(keep.these)) {
-        keep.these <- data$label %in% keep.these # logical vector
-      }
-      if (is.numeric(keep.these)) {
-        temp <- logical(nrow(data))
-        temp[keep.these] <- TRUE
-        keep.these <- temp
-      }
-      if (anyNA(keep.these)) {
-        warning("Discarding 'NA's in keep.these")
-        keep.these <- ifelse(is.na(keep.these),
-                             FALSE,
-                             keep.these)
-      }
-    }
-    if (nrow(data) * keep.fraction > keep.number) {
-      keep.fraction <- keep.number / nrow(data)
-    }
-
-    if (keep.fraction == 1) {
-      keep <- TRUE
-    } else if (keep.fraction == 0) {
-      keep <- FALSE
-    } else {
-      dens <-
-        stats::density(data[[orientation]],
-                       bw = bw, kernel = kernel, adjust = adjust, n = n,
-                       from = scales[[orientation]]$dimension()[1],
-                       to = scales[[orientation]]$dimension()[2])
-
-      fdens <- stats::splinefun(dens$x, dens$y)
-      dens <- fdens(data[[orientation]])
-
-      if (keep.sparse) {
-        keep <- dens < stats::quantile(dens, keep.fraction, names = FALSE)
-      } else {
-        keep <- dens >= stats::quantile(dens, 1 - keep.fraction, names = FALSE)
-      }
-    }
-    if (invert.selection){
-      data[!(keep | keep.these), ]
-    } else {
-      data[keep | keep.these, ]
-    }
+    dens1d_labs_compute_fun(data = data,
+                            scales = scales,
+                            keep.fraction = keep.fraction,
+                            keep.number = keep.number,
+                            keep.sparse = keep.sparse,
+                            keep.these = keep.these,
+                            invert.selection = invert.selection,
+                            bw = bw,
+                            kernel = kernel,
+                            adjust = adjust,
+                            n = n,
+                            orientation = orientation,
+                            label.fill = NULL)
   }
 
 #' @rdname ggpp-ggproto

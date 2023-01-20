@@ -66,7 +66,7 @@ apply to both directions.}
 \item{n}{Number of grid points in each direction. Can be scalar or a length-2
 integer vector}
 
-\item{label.fill}{character vector of length 1 or a function.}
+\item{label.fill}{character vector of length 1, a function or \code{NULL}.}
 
 \item{na.rm}{a logical value indicating whether NA values should be stripped
 before the computation proceeds.}
@@ -98,9 +98,12 @@ A plot layer instance. Using as output \code{data} the input
   unlabelled points the corresponding rows in data need to be retained but
   labels replaced with the empty character string, \code{""}. Function
   \code{\link{stat_dens2d_filter}} cannot be used with the repulsive geoms
-  from 'ggrepel' because it drops the observations. Non-the-less
-  \code{stat_dens2d_labels()} can be useful in some other cases, as the
-  substitution character string can be set by the user.
+  from 'ggrepel' because it drops the observations.
+
+  \code{stat_dens2d_labels()} can be useful also in other situations, as the
+  substitution character string can be set by the user by passing an argument
+  to \code{label.fill}. If this argument is \code{NULL} the unselected rows
+  are filtered out.
 
   The local density of observations in 2D (\emph{x} and \emph{y}) is computed
   with function \code{\link[MASS]{kde2d}} and used to select observations,

@@ -12,9 +12,12 @@
 #'   unlabelled points the corresponding rows in data need to be retained but
 #'   labels replaced with the empty character string, \code{""}. Function
 #'   \code{\link{stat_dens2d_filter}} cannot be used with the repulsive geoms
-#'   from 'ggrepel' because it drops the observations. Non-the-less
-#'   \code{stat_dens2d_labels()} can be useful in some other cases, as the
-#'   substitution character string can be set by the user.
+#'   from 'ggrepel' because it drops the observations.
+#'
+#'   \code{stat_dens2d_labels()} can be useful also in other situations, as the
+#'   substitution character string can be set by the user by passing an argument
+#'   to \code{label.fill}. If this argument is \code{NULL} the unselected rows
+#'   are filtered out.
 #'
 #'   The local density of observations in 2D (\emph{x} and \emph{y}) is computed
 #'   with function \code{\link[MASS]{kde2d}} and used to select observations,
@@ -61,7 +64,7 @@
 #'   apply to both directions.
 #' @param n Number of grid points in each direction. Can be scalar or a length-2
 #'   integer vector
-#' @param label.fill character vector of length 1 or a function.
+#' @param label.fill character vector of length 1, a function or \code{NULL}.
 #' @param position The position adjustment to use for overlapping points on this
 #'   layer
 #' @param show.legend logical. Should this layer be included in the legends?
@@ -181,6 +184,17 @@ stat_dens2d_labels <-
            na.rm = TRUE,
            show.legend = FALSE,
            inherit.aes = TRUE) {
+
+    if (length(label.fill) > 1L) {
+      stop("Length for 'label.fill' is not 1: ", label.fill)
+    }
+    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
+      stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
+    }
+    if (is.na(keep.number) || keep.number < 0) {
+      stop("Out of range or missing value for 'keep.number': ", keep.number)
+    }
+
     ggplot2::layer(
       stat = StatDens2dLabels, data = data, mapping = mapping, geom = geom,
       position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -209,42 +223,14 @@ dens2d_labs_compute_fun <-
            n,
            label.fill) {
 
-    if (length(label.fill) != 1L) {
-      stop("Length for 'label.fill' is not 1: ", label.fill)
-    }
-
-    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
-      stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
-    }
-    if (is.na(keep.number) || keep.number < 0) {
-      stop("Out of range or missing value for 'keep.number': ", keep.number)
-    }
-
     force(data)
     if (!exists("label", data)) {
-      message("Mapping 'rownames(data)' to missing 'label' aesthetic")
+#      message("Mapping 'rownames(data)' to missing 'label' aesthetic")
       data[["label"]] <- rownames(data)
     }
 
-    if (length(keep.these)) {
-      if (is.function(keep.these)) {
-        keep.these <- keep.these(data$label) # character or logical vector
-      }
-      if (is.character(keep.these)) {
-        keep.these <- data$label %in% keep.these # logical vector
-      }
-      if (is.numeric(keep.these)) {
-        temp <- logical(nrow(data))
-        temp[keep.these] <- TRUE
-        keep.these <- temp
-      }
-      if (anyNA(keep.these)) {
-        warning("Discarding 'NA's in keep.these")
-        keep.these <- ifelse(is.na(keep.these),
-                             FALSE,
-                             keep.these)
-      }
-    }
+    keep.these <- keep_these2logical(keep.these = keep.these, data = data)
+
     if (nrow(data) * keep.fraction > keep.number) {
       keep.fraction <- keep.number / nrow(data)
     }
@@ -281,7 +267,13 @@ dens2d_labs_compute_fun <-
       }
     }
 
-    if (is.function(label.fill)) {
+    if (is.null(label.fill)) {
+      if (invert.selection){
+        data <- data[!(keep | keep.these), ]
+      } else {
+        data <- data[keep | keep.these, ]
+      }
+    } else if (is.function(label.fill)) {
       if (invert.selection){
         data[["label"]] <- ifelse(!(keep | keep.these),
                                   data[["label"]],
@@ -327,3 +319,41 @@ StatDens2dLabels <-
       dens2d_labs_compute_fun,
     required_aes = c("x", "y")
   )
+
+
+# Utils for stats that subset data
+
+#' Convert keep.these argument into logical vector
+#'
+#' @param keep.these character vector, integer vector, logical vector or
+#'   function that takes the variable mapped to the \code{label} aesthetic as
+#'   first argument and returns a character vector or a logical vector. These
+#'   rows from \code{data} are selected irrespective of the local density.
+#' @param data data.frame The plot layer's data set.
+#'
+#' @keywords internal
+#'
+keep_these2logical <- function(keep.these, data) {
+  if (length(keep.these)) {
+    if (is.function(keep.these)) {
+      keep.these <- keep.these(data$label) # character or logical vector
+    }
+    if (is.character(keep.these)) {
+      keep.these <- data$label %in% keep.these # logical vector
+    }
+    if (is.numeric(keep.these)) {
+      temp <- logical(nrow(data))
+      temp[keep.these] <- TRUE
+      keep.these <- temp
+    }
+    if (anyNA(keep.these)) {
+      warning("Discarding 'NA's in keep.these")
+      keep.these <- ifelse(is.na(keep.these),
+                           FALSE,
+                           keep.these)
+    }
+  } else { # replace NULL and vectors with length zero with FALSE
+    keep.these <- FALSE
+  }
+  keep.these
+}

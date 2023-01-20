@@ -12,9 +12,12 @@
 #'   unlabelled points the corresponding rows in data need to be retained but
 #'   labels replaced with the empty character string, \code{""}. Function
 #'   \code{\link{stat_dens1d_filter}} cannot be used with the repulsive geoms
-#'   from 'ggrepel' because it drops the observations. Non-the-less
-#'   \code{stat_dens1d_labels()} can be useful in some other cases, as the
-#'   substitution character string can be set by the user.
+#'   from 'ggrepel' because it drops the observations.
+#'
+#'   \code{stat_dens1d_labels()} can be useful also in other situations, as the
+#'   substitution character string can be set by the user by passing an argument
+#'   to \code{label.fill}. If this argument is \code{NULL} the unselected rows
+#'   are filtered out.
 #'
 #'   The local density of observations along \emph{x} or \emph{y} is computed
 #'   with function \code{\link[stats]{density}} and used to select observations,
@@ -191,6 +194,17 @@ stat_dens1d_labels <-
            na.rm = TRUE,
            show.legend = FALSE,
            inherit.aes = TRUE) {
+
+    if (length(label.fill) > 1L) {
+      stop("Length for 'label.fill' is not 1: ", label.fill)
+    }
+    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
+      stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
+    }
+    if (is.na(keep.number) || keep.number < 0) {
+      stop("Out of range or missing value for 'keep.number': ", keep.number)
+    }
+
     ggplot2::layer(
       stat = StatDens1dLabels, data = data, mapping = mapping, geom = geom,
       position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -225,42 +239,14 @@ dens1d_labs_compute_fun <-
            orientation,
            label.fill) {
 
-    if (length(label.fill) != 1L) {
-      stop("Length for 'label.fill' is not 1: ", label.fill)
-    }
-
-    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
-      stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
-    }
-    if (is.na(keep.number) || keep.number < 0) {
-      stop("Out of range or missing value for 'keep.number': ", keep.number)
-    }
-
     force(data)
     if (!exists("label", data)) {
-      message("Mapping 'rownames(data)' to missing 'label' aesthetic")
+#      message("Mapping 'rownames(data)' to missing 'label' aesthetic")
       data[["label"]] <- rownames(data)
     }
 
-    if (length(keep.these)) {
-      if (is.function(keep.these)) {
-        keep.these <- keep.these(data$label) # character or logical vector
-      }
-      if (is.character(keep.these)) {
-        keep.these <- data$label %in% keep.these # logical vector
-      }
-      if (is.numeric(keep.these)) {
-        temp <- logical(nrow(data))
-        temp[keep.these] <- TRUE
-        keep.these <- temp
-      }
-      if (anyNA(keep.these)) {
-        warning("Discarding 'NA's in keep.these")
-        keep.these <- ifelse(is.na(keep.these),
-                             FALSE,
-                             keep.these)
-      }
-    }
+    keep.these <- keep_these2logical(keep.these = keep.these, data = data)
+
     if (nrow(data) * keep.fraction > keep.number) {
       keep.fraction <- keep.number / nrow(data)
     }
@@ -286,7 +272,13 @@ dens1d_labs_compute_fun <-
       }
     }
 
-    if (is.function(label.fill)) {
+    if (is.null(label.fill)) {
+      if (invert.selection){
+        data <- data[!(keep | keep.these), ]
+      } else {
+        data <- data[keep | keep.these, ]
+      }
+    } else if (is.function(label.fill)) {
       if (invert.selection){
         data[["label"]] <- ifelse(!keep,
                                   data[["label"]],
