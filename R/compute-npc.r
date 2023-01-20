@@ -15,7 +15,7 @@
 #' @return A numeric vector with values in the range [0..1] representing
 #'   npc coordinates.
 #'
-#' @keywords internal
+#' @export
 #'
 #'
 compute_npcx <- function(x, group = 1L, h.step = 0.1, margin.npc = 0.05, each.len = 1) {
@@ -49,6 +49,7 @@ compute_npcx <- function(x, group = 1L, h.step = 0.1, margin.npc = 0.05, each.le
 
 #' @rdname compute_npcx
 #'
+#' @export
 #'
 compute_npcy <- function(y, group = 1L, v.step = 0.1, margin.npc = 0.05, each.len = 1) {
   group <- abs(group)
