@@ -49,6 +49,31 @@ test_that("geom_quadrant_lines", {
   expected$linetype <- "dashed"
 
   expect_equal(df_res, expected)
+
+  # pool.along works as expected.
+  res <- ggplot(tst.df, aes(x = x, y = y)) +
+    geom_point() +
+    geom_quadrant_lines(
+      pool.along = "y",
+      xintercept = 0.5,
+      yintercept = 10,
+      colour = "blue",
+      linetype = "dashed"
+    )
+
+  vdiffr::expect_doppelganger("geom_quadrant_lines_pool_y", res)
+
+  res <- ggplot(tst.df, aes(x = x, y = y)) +
+    geom_point() +
+    geom_quadrant_lines(
+      pool.along = "x",
+      xintercept = 0.5,
+      yintercept = 10,
+      colour = "blue",
+      linetype = "dashed"
+    )
+
+  vdiffr::expect_doppelganger("geom_quadrant_lines_pool_x", res)
 })
 
 
