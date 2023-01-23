@@ -14,6 +14,7 @@ stat_dens1d_filter(
   keep.fraction = 0.1,
   keep.number = Inf,
   keep.sparse = TRUE,
+  keep.these = FALSE,
   invert.selection = FALSE,
   bw = "SJ",
   kernel = "gaussian",
@@ -33,6 +34,7 @@ stat_dens1d_filter_g(
   keep.fraction = 0.1,
   keep.number = Inf,
   keep.sparse = TRUE,
+  keep.these = FALSE,
   invert.selection = FALSE,
   na.rm = TRUE,
   show.legend = FALSE,
@@ -72,6 +74,11 @@ number.}
 \item{keep.sparse}{logical If \code{TRUE}, the default, observations from the
 more sparse regions are retained, if \code{FALSE} those from the densest
 regions.}
+
+\item{keep.these}{character vector, integer vector, logical vector or
+function that takes the variable mapped to the \code{label} aesthetic as
+first argument and returns a character vector or a logical vector. These
+rows from \code{data} are selected irrespective of the local density.}
 
 \item{invert.selection}{logical If \code{TRUE}, the complement of the
 selected rows are returned.}
@@ -119,6 +126,28 @@ A plot layer instance. Using as output \code{data} a subset of the
   panel. This second stat is useful for highlighting observations, while the
   first one tends to be most useful when the aim is to prevent clashes among
   text labels.
+}
+\details{
+The 1D density of observations of \emph{x} or \emph{y} is computed
+  with function \code{\link[stats]{density}} and used to select observations,
+  passing to the geom a subset of the rows in its \code{data} input. The
+  default is to select observations in sparse regions of the plot, but the
+  selection can be inverted so that only observations in the densest regions
+  are returned. Specific observations can be protected from being deselected
+  and "kept" by passing a suitable argument to \code{keep.these}. Logical and
+  integer vectors work as indexes to rows in \code{data}, while a values in a
+  character vector are compared to the character values mapped to the
+  \code{label} aesthetic. A function passed as argument to keep.these will
+  receive as argument the values in the variable mapped to \code{label} and
+  should return a character, logical or numeric vector as described above. If
+  no variable has been mapped to \code{label}, row names are used in its
+  place.
+
+  How many rows are retained in addition to those in \code{keep.these} is
+  controlled with arguments passed to \code{keep.number} and
+  \code{keep.fraction}. \code{keep.number} sets the maximum number of
+  observations selected, whenever \code{keep.fraction} results in fewer
+  observations selected, it is obeyed.
 }
 \examples{
 

@@ -4,9 +4,31 @@
 #'   regions of a plot panel with high density of observations, based on the
 #'   values mapped to both \code{x} and \code{y} aesthetics.
 #'   \code{stat_dens2d_filter_g} does the filtering by group instead of by
-#'   panel. This second stat is useful for highlighting observations, while
-#'   the first one tends to be most useful when the aim is to prevent clashes
-#'   among text labels.
+#'   panel. This second stat is useful for highlighting observations, while the
+#'   first one tends to be most useful when the aim is to prevent clashes among
+#'   text labels. If there is no mapping to \code{label} in \code{data}, the
+#'   mapping is silently set to \code{rownames(data)}.
+#'
+#' @details The local density of observations in 2D (\emph{x} and \emph{y}) is
+#'   computed with function \code{\link[MASS]{kde2d}} and used to select
+#'   observations, passing to the geom a subset of the rows in its \code{data}
+#'   input. The default is to select observations in sparse regions of the plot,
+#'   but the selection can be inverted so that only observations in the densest
+#'   regions are returned. Specific observations can be protected from being
+#'   deselected and "kept" by passing a suitable argument to \code{keep.these}.
+#'   Logical and integer vectors work as indexes to rows in \code{data}, while a
+#'   character vector values are compared to the character values mapped to the
+#'   \code{label} aesthetic. A function passed as argument to keep.these will
+#'   receive as argument the values in the variable mapped to \code{label} and
+#'   should return a character, logical or numeric vector as described above. If
+#'   no variable has been mapped to \code{label}, row names are used in its
+#'   place.
+#'
+#'   How many rows are retained in addition to those in \code{keep.these} is
+#'   controlled with arguments passed to \code{keep.number} and
+#'   \code{keep.fraction}. \code{keep.number} sets the maximum number of
+#'   observations selected, whenever \code{keep.fraction} results in fewer
+#'   observations selected, it is obeyed.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs
@@ -22,6 +44,10 @@
 #' @param keep.sparse logical If \code{TRUE}, the default, observations from the
 #'   more sparse regions are retained, if \code{FALSE} those from the densest
 #'   regions.
+#' @param keep.these character vector, integer vector, logical vector or
+#'   function that takes the variable mapped to the \code{label} aesthetic as
+#'   first argument and returns a character vector or a logical vector. These
+#'   rows from \code{data} are selected irrespective of the local density.
 #' @param invert.selection logical If \code{TRUE}, the complement of the
 #'   selected rows are returned.
 #' @param h vector of bandwidths for x and y directions. Defaults to normal
@@ -48,7 +74,10 @@
 #'   rows in input \code{data} retained based on a 2D-density-based filtering
 #'   criterion.
 #'
-#' @seealso \code{\link[MASS]{kde2d}} used internally.
+#' @seealso \code{\link{stat_dens2d_labels}} and \code{\link[MASS]{kde2d}} used
+#'   internally. Parameters \code{n}, \code{h} in these statistics correspond to
+#'   the parameters with the same name in this imported function. Limits are set
+#'   to the limits of the plot scales.
 #'
 #' @family statistics returning a subset of data
 #'
@@ -116,6 +145,21 @@
 #'   geom_point() +
 #'   stat_dens2d_filter(geom = "text")
 #'
+#' ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+#'   geom_point() +
+#'   stat_dens2d_filter(geom = "text",
+#'                      keep.these = function(x) {grepl("^u", x)})
+#'
+#' ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+#'   geom_point() +
+#'   stat_dens2d_filter(geom = "text",
+#'                      keep.these = function(x) {grepl("^u", x)})
+#'
+#' ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+#'   geom_point() +
+#'   stat_dens2d_filter(geom = "text",
+#'                      keep.these = 1:30)
+#'
 #' # repulsive labels with ggrepel::geom_text_repel()
 #' ggrepel.installed <- requireNamespace("ggrepel", quietly = TRUE)
 #' if (ggrepel.installed) {
@@ -124,6 +168,11 @@
 #'   ggplot(data = d, aes(x, y, label = lab, colour = group)) +
 #'     geom_point() +
 #'     stat_dens2d_filter(geom = "text_repel")
+#'
+#'   ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+#'     geom_point() +
+#'     stat_dens2d_filter(geom = "text_repel",
+#'                        keep.these = function(x) {grepl("^u", x)})
 #' }
 #'
 #' @export
@@ -134,12 +183,21 @@ stat_dens2d_filter <-
            keep.fraction = 0.10,
            keep.number = Inf,
            keep.sparse = TRUE,
+           keep.these = FALSE,
            invert.selection = FALSE,
            na.rm = TRUE, show.legend = FALSE,
            inherit.aes = TRUE,
            h = NULL,
            n = NULL,
            ...) {
+
+    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
+      stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
+    }
+    if (is.na(keep.number) || keep.number < 0) {
+      stop("Out of range or missing value for 'keep.number': ", keep.number)
+    }
+
     ggplot2::layer(
       stat = StatDens2dFilter, data = data, mapping = mapping, geom = geom,
       position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -147,6 +205,7 @@ stat_dens2d_filter <-
                     keep.fraction = keep.fraction,
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
+                    keep.these = keep.these,
                     invert.selection = invert.selection,
                     h = h,
                     n = n,
@@ -164,12 +223,21 @@ stat_dens2d_filter_g <-
            keep.fraction = 0.10,
            keep.number = Inf,
            keep.sparse = TRUE,
+           keep.these = FALSE,
            invert.selection = FALSE,
            na.rm = TRUE, show.legend = FALSE,
            inherit.aes = TRUE,
            h = NULL,
            n = NULL,
            ...) {
+
+    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
+      stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
+    }
+    if (is.na(keep.number) || keep.number < 0) {
+      stop("Out of range or missing value for 'keep.number': ", keep.number)
+    }
+
     ggplot2::layer(
       stat = StatDens2dFilterG, data = data, mapping = mapping, geom = geom,
       position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -177,6 +245,7 @@ stat_dens2d_filter_g <-
                     keep.fraction = keep.fraction,
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
+                    keep.these = keep.these,
                     invert.selection = invert.selection,
                     h = h,
                     n = n,
@@ -190,58 +259,21 @@ dens2d_flt_compute_fun <-
            keep.fraction,
            keep.number,
            keep.sparse,
+           keep.these,
            invert.selection,
            h,
            n) {
 
-    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
-      stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
-    }
-    if (is.na(keep.number) || keep.number < 0) {
-      stop("Out of range or missing value for 'keep.number': ", keep.number)
-    }
-
-    force(data)
-    if (nrow(data) * keep.fraction > keep.number) {
-      keep.fraction <- keep.number / nrow(data)
-    }
-
-    if (keep.fraction == 1) {
-      keep <- TRUE
-    } else if (keep.fraction == 0) {
-      keep <- FALSE
-    } else {
-
-      if (is.null(h)) {
-        h <- c(MASS::bandwidth.nrd(data$x), MASS::bandwidth.nrd(data$y))
-      }
-
-      if (is.null(n)) {
-        n <- trunc(sqrt(nrow(data))) * 8L
-      }
-
-      kk <-  MASS::kde2d(
-        data$x, data$y, h = h, n = n,
-        lims = c(scales$x$dimension(), scales$y$dimension()))
-
-      dimnames(kk$z) <- list(kk$x, kk$y)
-
-      # Identify points that are in the low density regions of the plot.
-      kx <- cut(data$x, kk$x, labels = FALSE, include.lowest = TRUE)
-      ky <- cut(data$y, kk$y, labels = FALSE, include.lowest = TRUE)
-      kz <- sapply(seq_along(kx), function(i) kk$z[kx[i], ky[i]])
-
-      if (keep.sparse) {
-        keep <- kz < stats::quantile(kz, keep.fraction, names = FALSE)
-      } else {
-        keep <- kz >= stats::quantile(kz, 1 - keep.fraction, names = FALSE)
-      }
-    }
-    if (invert.selection){
-      data[!keep, ]
-    } else {
-      data[keep, ]
-    }
+    dens2d_labs_compute_fun(data = data,
+                            scales = scales,
+                            keep.fraction = keep.fraction,
+                            keep.number = keep.number,
+                            keep.sparse = keep.sparse,
+                            keep.these = keep.these,
+                            invert.selection = invert.selection,
+                            h = h,
+                            n = n,
+                            label.fill = NULL)
   }
 
 #' @rdname ggpp-ggproto
@@ -269,3 +301,4 @@ StatDens2dFilterG <-
       dens2d_flt_compute_fun,
     required_aes = c("x", "y")
   )
+

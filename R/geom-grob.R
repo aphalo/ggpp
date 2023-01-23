@@ -220,7 +220,7 @@ grob_draw_panel_fun <-
            add.segments = TRUE,
            box.padding = 0.25,
            point.padding = 1e-06,
-           segment.linewidth = 1,
+           segment.linewidth = 0.5,
            min.segment.length = 0,
            arrow = NULL) {
 
@@ -310,7 +310,7 @@ grob_draw_panel_fun <-
                                    ifelse(any(colour.target %in% c("all", "segment")),
                                           ggplot2::alpha(row$colour, segment.alpha),
                                           ggplot2::alpha(default.colour, segment.alpha)),
-                                 lwd = (if (segment.linewidth == 0) 1 else segment.linewidth) * .stroke),
+                                 lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
                                name = paste("grob.s.segment", row$group, row.idx, sep = "."))
         }
         all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)

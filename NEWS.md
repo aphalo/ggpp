@@ -6,6 +6,12 @@ editor_options:
     wrap: 72
 ---
 
+# ggpp 0.5.1
+
+-   Add parameter `keep.these` to `stat_dens2d_labels()`, `stat_dens2d_filter()`, 
+    `stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and 
+    `stat_dens1d_filter_g()`.
+
 # ggpp 0.5.0
 
 -   Add `stat_panel_counts()` and `stat_group_counts()`.

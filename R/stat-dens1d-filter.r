@@ -8,6 +8,27 @@
 #'   first one tends to be most useful when the aim is to prevent clashes among
 #'   text labels.
 #'
+#' @details The 1D density of observations of \emph{x} or \emph{y} is computed
+#'   with function \code{\link[stats]{density}} and used to select observations,
+#'   passing to the geom a subset of the rows in its \code{data} input. The
+#'   default is to select observations in sparse regions of the plot, but the
+#'   selection can be inverted so that only observations in the densest regions
+#'   are returned. Specific observations can be protected from being deselected
+#'   and "kept" by passing a suitable argument to \code{keep.these}. Logical and
+#'   integer vectors work as indexes to rows in \code{data}, while a values in a
+#'   character vector are compared to the character values mapped to the
+#'   \code{label} aesthetic. A function passed as argument to keep.these will
+#'   receive as argument the values in the variable mapped to \code{label} and
+#'   should return a character, logical or numeric vector as described above. If
+#'   no variable has been mapped to \code{label}, row names are used in its
+#'   place.
+#'
+#'   How many rows are retained in addition to those in \code{keep.these} is
+#'   controlled with arguments passed to \code{keep.number} and
+#'   \code{keep.fraction}. \code{keep.number} sets the maximum number of
+#'   observations selected, whenever \code{keep.fraction} results in fewer
+#'   observations selected, it is obeyed.
+#'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be
 #'   set at the layer level if you are overriding the plot defaults.
@@ -22,6 +43,10 @@
 #' @param keep.sparse logical If \code{TRUE}, the default, observations from the
 #'   more sparse regions are retained, if \code{FALSE} those from the densest
 #'   regions.
+#' @param keep.these character vector, integer vector, logical vector or
+#'   function that takes the variable mapped to the \code{label} aesthetic as
+#'   first argument and returns a character vector or a logical vector. These
+#'   rows from \code{data} are selected irrespective of the local density.
 #' @param invert.selection logical If \code{TRUE}, the complement of the
 #'   selected rows are returned.
 #' @param bw numeric or character The smoothing bandwidth to be used. If
@@ -166,6 +191,7 @@ stat_dens1d_filter <-
            keep.fraction = 0.10,
            keep.number = Inf,
            keep.sparse = TRUE,
+           keep.these = FALSE,
            invert.selection = FALSE,
            bw = "SJ",
            kernel = "gaussian",
@@ -175,6 +201,12 @@ stat_dens1d_filter <-
            na.rm = TRUE,
            show.legend = FALSE,
            inherit.aes = TRUE) {
+    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
+      stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
+    }
+    if (is.na(keep.number) || keep.number < 0) {
+      stop("Out of range or missing value for 'keep.number': ", keep.number)
+    }
     ggplot2::layer(
       stat = StatDens1dFilter, data = data, mapping = mapping, geom = geom,
       position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -182,6 +214,7 @@ stat_dens1d_filter <-
                     keep.fraction = keep.fraction,
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
+                    keep.these = keep.these,
                     invert.selection = invert.selection,
                     bw = bw,
                     adjust = adjust,
@@ -202,6 +235,7 @@ stat_dens1d_filter_g <-
            keep.fraction = 0.10,
            keep.number = Inf,
            keep.sparse = TRUE,
+           keep.these = FALSE,
            invert.selection = FALSE,
            na.rm = TRUE, show.legend = FALSE,
            inherit.aes = TRUE,
@@ -211,6 +245,12 @@ stat_dens1d_filter_g <-
            n = 512,
            orientation = "x",
            ...) {
+    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
+      stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
+    }
+    if (is.na(keep.number) || keep.number < 0) {
+      stop("Out of range or missing value for 'keep.number': ", keep.number)
+    }
     ggplot2::layer(
       stat = StatDens1dFilterG, data = data, mapping = mapping, geom = geom,
       position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -218,6 +258,7 @@ stat_dens1d_filter_g <-
                     keep.fraction = keep.fraction,
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
+                    keep.these = keep.these,
                     invert.selection = invert.selection,
                     bw = bw,
                     kernel = kernel,
@@ -234,50 +275,26 @@ dens1d_flt_compute_fun <-
            keep.fraction,
            keep.number,
            keep.sparse,
+           keep.these,
            invert.selection,
            bw,
            kernel,
            adjust,
            n,
            orientation) {
-
-    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
-      stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
-    }
-    if (is.na(keep.number) || keep.number < 0) {
-      stop("Out of range or missing value for 'keep.number': ", keep.number)
-    }
-
-    force(data)
-    if (nrow(data) * keep.fraction > keep.number) {
-      keep.fraction <- keep.number / nrow(data)
-    }
-
-    if (keep.fraction == 1) {
-      keep <- TRUE
-    } else if (keep.fraction == 0) {
-      keep <- FALSE
-    } else {
-      dens <-
-        stats::density(data[[orientation]],
-                       bw = bw, kernel = kernel, adjust = adjust, n = n,
-                       from = scales[[orientation]]$dimension()[1],
-                       to = scales[[orientation]]$dimension()[2])
-
-      fdens <- stats::splinefun(dens$x, dens$y)
-      dens <- fdens(data[[orientation]])
-
-      if (keep.sparse) {
-        keep <- dens < stats::quantile(dens, keep.fraction, names = FALSE)
-      } else {
-        keep <- dens >= stats::quantile(dens, 1 - keep.fraction, names = FALSE)
-      }
-    }
-    if (invert.selection){
-      data[!keep, ]
-    } else {
-      data[keep, ]
-    }
+    dens1d_labs_compute_fun(data = data,
+                            scales = scales,
+                            keep.fraction = keep.fraction,
+                            keep.number = keep.number,
+                            keep.sparse = keep.sparse,
+                            keep.these = keep.these,
+                            invert.selection = invert.selection,
+                            bw = bw,
+                            kernel = kernel,
+                            adjust = adjust,
+                            n = n,
+                            orientation = orientation,
+                            label.fill = NULL)
   }
 
 #' @rdname ggpp-ggproto
@@ -290,7 +307,7 @@ StatDens1dFilter <-
     ggplot2::Stat,
     compute_panel =
       dens1d_flt_compute_fun,
-    required_aes = "x|y" # c("x", "y")
+    required_aes = "x|y"
   )
 
 #' @rdname ggpp-ggproto
@@ -303,5 +320,5 @@ StatDens1dFilterG <-
     ggplot2::Stat,
     compute_group =
       dens1d_flt_compute_fun,
-    required_aes = "x|y" # c("x", "y")
+    required_aes = "x|y"
   )
