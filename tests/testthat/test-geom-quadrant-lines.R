@@ -9,7 +9,7 @@ test_that("geom_quadrant_lines", {
     group = c("A", "A", "A", "B", "B", "B")
   )
 
-  # Test default behaviour.
+  # Test default behavior.
   res <- ggplot(tst.df, aes(x = x, y = y)) +
     geom_point() +
     geom_quadrant_lines()
@@ -93,7 +93,7 @@ test_that("geom_vhlines", {
     )
   )
 
-  # geom_vhlines works with custome values.
+  # geom_vhlines works with custom values.
   res <- ggplot(tst.df, aes(x = x, y = y)) +
     geom_point() +
     geom_vhlines(
