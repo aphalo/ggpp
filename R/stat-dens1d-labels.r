@@ -184,6 +184,7 @@ stat_dens1d_labels <-
            keep.number = Inf,
            keep.sparse = TRUE,
            keep.these = FALSE,
+           xintercept = NA,
            invert.selection = FALSE,
            bw = "SJ",
            kernel = "gaussian",
@@ -213,6 +214,7 @@ stat_dens1d_labels <-
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
                     keep.these = keep.these,
+                    xintercept = xintercept,
                     invert.selection = invert.selection,
                     bw = bw,
                     adjust = adjust,
@@ -231,6 +233,7 @@ dens1d_labs_compute_fun <-
            keep.number,
            keep.sparse,
            keep.these,
+           xintercept,
            invert.selection,
            bw,
            kernel,
@@ -247,28 +250,52 @@ dens1d_labs_compute_fun <-
 
     keep.these <- keep_these2logical(keep.these = keep.these, data = data)
 
-    if (nrow(data) * keep.fraction > keep.number) {
-      keep.fraction <- keep.number / nrow(data)
+    if (!is.na(xintercept) &&
+        xintercept < max(data[[orientation]]) &&
+        xintercept > min(data[[orientation]])) {
+      selectors <-c(low.tail = data[[orientation]] <= xintercept,
+                    high-tail = data[[orientation]] > xintercept)
+      if (length(keep.fraction) == 1L) {
+        keep.fraction <- rep(keep.fraction, 2)
+      }
+      if (length(keep.fraction) == 1L) {
+        keep.fraction <- rep(keep.fraction, 2)
+      }
+      if (length(keep.number) == 1L) {
+        keep.number <- rep(keep.number, 2)
+      }
+      num.rows <- sapply(selector, length)
+    } else {
+      num.rows <- nrow(data)
+      selector <- rep(TRUE, num.rows)
     }
 
-    if (keep.fraction == 1) {
-      keep <- TRUE
-    } else if (keep.fraction == 0) {
-      keep <- FALSE
-    } else {
-      dens <-
-        stats::density(data[[orientation]],
-                       bw = bw, kernel = kernel, adjust = adjust, n = n,
-                       from = scales[[orientation]]$dimension()[1],
-                       to = scales[[orientation]]$dimension()[2])
+    if (num.rows * keep.fraction > keep.number) {
+      keep.fraction <- keep.number / num.rows
+    }
 
-      fdens <- stats::splinefun(dens$x, dens$y)
-      dens <- fdens(data[[orientation]])
+    dens <-
+      stats::density(data[[orientation]],
+                     bw = bw, kernel = kernel, adjust = adjust, n = n,
+                     from = scales[[orientation]]$dimension()[1],
+                     to = scales[[orientation]]$dimension()[2])
 
-      if (keep.sparse) {
-        keep <- dens < stats::quantile(dens, keep.fraction, names = FALSE)
+    fdens <- stats::splinefun(dens$x, dens$y) # y contains estimate of density
+
+    keep <- keep.these
+    for (i in seq_along(selector)) {
+      if (keep.fraction[i] == 1) {
+        keep <- TRUE
+      } else if (keep.fraction[i] == 0) {
+        keep <- keep
       } else {
-        keep <- dens >= stats::quantile(dens, 1 - keep.fraction, names = FALSE)
+        dens <- fdens(data[[orientation]][selector[i]])
+
+        if (keep.sparse) {
+          keep <- dens < stats::quantile(dens, keep.fraction, names = FALSE)
+        } else {
+          keep <- dens >= stats::quantile(dens, 1 - keep.fraction, names = FALSE)
+        }
       }
     }
 
