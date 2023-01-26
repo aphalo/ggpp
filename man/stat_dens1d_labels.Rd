@@ -14,7 +14,8 @@ stat_dens1d_labels(
   keep.number = Inf,
   keep.sparse = TRUE,
   keep.these = FALSE,
-  xintercept = NA,
+  pool.along = "x",
+  xintercept = 0,
   invert.selection = FALSE,
   bw = "SJ",
   kernel = "gaussian",
@@ -60,8 +61,11 @@ function that takes the variable mapped to the \code{label} aesthetic as
 first argument and returns a character vector or a logical vector. These
 rows from \code{data} are selected irrespective of the local density.}
 
-\item{xintercept}{numeric The split point for the data filtering. If
-\code{NA} the data are not split.}
+\item{pool.along}{character, one of \code{"none"} or \code{"x"},
+indicating if selection should be done pooling the observations along the
+\emph{x} aesthetic, or separately on either side of \code{xintercept}.}
+
+\item{xintercept}{numeric The split point for the data filtering.}
 
 \item{invert.selection}{logical If \code{TRUE}, the complement of the
 selected rows are returned.}
@@ -151,6 +155,15 @@ A plot layer instance. Using as output \code{data} the input
   and \code{keep.number} and \code{keep.fraction} are applied separately to
   each tail with density still computed jointly from all observations.
 }
+\note{
+Which points are kept and which not depends on how dense and flexible
+  is the density curve estimate. This depends on the values passed as
+  arguments to parameters \code{n}, \code{bw} and \code{kernel}. It is
+  also important to be aware that both \code{geom_text()} and
+  \code{geom_text_repel()} can avoid overplotting by discarding labels at
+  the plot rendering stage, i.e., what is plotted may differ from what is
+  returned by this statistic.
+}
 \examples{
 
 random_string <-
@@ -188,12 +201,17 @@ if (ggrepel.installed) {
 
   ggplot(data = d, aes(x, y)) +
     geom_point() +
-    stat_dens1d_labels(geom = "text_repel", xintercept = 0)
+    stat_dens1d_labels(geom = "text_repel", pool.along = "none")
 
   ggplot(data = d, aes(x, y)) +
     geom_point() +
     stat_dens1d_labels(geom = "text_repel",
-                       keep.number = c(0, 20), xintercept = 0)
+                       keep.number = c(0, 10), pool.along = "none")
+
+  ggplot(data = d, aes(x, y)) +
+    geom_point() +
+    stat_dens1d_labels(geom = "text_repel",
+                       keep.fraction = c(0, 0.2), pool.along = "none")
 
 # using defaults, along y-axis
   ggplot(data = d, aes(x, y, label = lab)) +

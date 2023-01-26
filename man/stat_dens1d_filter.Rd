@@ -15,7 +15,8 @@ stat_dens1d_filter(
   keep.number = Inf,
   keep.sparse = TRUE,
   keep.these = FALSE,
-  xintercept = NA,
+  pool.along = "x",
+  xintercept = 0,
   invert.selection = FALSE,
   bw = "SJ",
   kernel = "gaussian",
@@ -36,7 +37,8 @@ stat_dens1d_filter_g(
   keep.number = Inf,
   keep.sparse = TRUE,
   keep.these = FALSE,
-  xintercept = NA,
+  pool.along = "x",
+  xintercept = 0,
   invert.selection = FALSE,
   na.rm = TRUE,
   show.legend = FALSE,
@@ -81,6 +83,10 @@ regions.}
 function that takes the variable mapped to the \code{label} aesthetic as
 first argument and returns a character vector or a logical vector. These
 rows from \code{data} are selected irrespective of the local density.}
+
+\item{pool.along}{character, one of \code{"none"} or \code{"x"},
+indicating if selection should be done pooling the observations along the
+\emph{x} aesthetic, or separately on either side of \code{xintercept}.}
 
 \item{xintercept}{numeric The split point for the data filtering. If
 \code{NA} the data are not split.}
@@ -157,6 +163,15 @@ The 1D density of observations of \emph{x} or \emph{y} is computed
   within the \emph{x} range of the data, the data are split into two groups
   and \code{keep.number} and \code{keep.fraction} are applied separately to
   each tail with density still computed jointly from all observations.
+}
+\note{
+Which points are kept and which not depends on how dense and flexible
+  is the density curve estimate. This depends on the values passed as
+  arguments to parameters \code{n}, \code{bw} and \code{kernel}. It is
+  also important to be aware that both \code{geom_text()} and
+  \code{geom_text_repel()} can avoid overplotting by discarding labels at
+  the plot rendering stage, i.e., what is plotted may differ from what is
+  returned by this statistic.
 }
 \examples{
 

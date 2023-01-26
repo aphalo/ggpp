@@ -46,6 +46,14 @@
 #'   and \code{keep.number} and \code{keep.fraction} are applied separately to
 #'   each tail with density still computed jointly from all observations.
 #'
+#' @note Which points are kept and which not depends on how dense and flexible
+#'   is the density curve estimate. This depends on the values passed as
+#'   arguments to parameters \code{n}, \code{bw} and \code{kernel}. It is
+#'   also important to be aware that both \code{geom_text()} and
+#'   \code{geom_text_repel()} can avoid overplotting by discarding labels at
+#'   the plot rendering stage, i.e., what is plotted may differ from what is
+#'   returned by this statistic.
+#'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be
 #'   set at the layer level if you are overriding the plot defaults.
@@ -64,8 +72,10 @@
 #'   function that takes the variable mapped to the \code{label} aesthetic as
 #'   first argument and returns a character vector or a logical vector. These
 #'   rows from \code{data} are selected irrespective of the local density.
-#' @param xintercept numeric The split point for the data filtering. If
-#'   \code{NA} the data are not split.
+#' @param pool.along character, one of \code{"none"} or \code{"x"},
+#'   indicating if selection should be done pooling the observations along the
+#'   \emph{x} aesthetic, or separately on either side of \code{xintercept}.
+#' @param xintercept numeric The split point for the data filtering.
 #' @param invert.selection logical If \code{TRUE}, the complement of the
 #'   selected rows are returned.
 #' @param bw numeric or character The smoothing bandwidth to be used. If
@@ -142,12 +152,17 @@
 #'
 #'   ggplot(data = d, aes(x, y)) +
 #'     geom_point() +
-#'     stat_dens1d_labels(geom = "text_repel", xintercept = 0)
+#'     stat_dens1d_labels(geom = "text_repel", pool.along = "none")
 #'
 #'   ggplot(data = d, aes(x, y)) +
 #'     geom_point() +
 #'     stat_dens1d_labels(geom = "text_repel",
-#'                        keep.number = c(0, 20), xintercept = 0)
+#'                        keep.number = c(0, 10), pool.along = "none")
+#'
+#'   ggplot(data = d, aes(x, y)) +
+#'     geom_point() +
+#'     stat_dens1d_labels(geom = "text_repel",
+#'                        keep.fraction = c(0, 0.2), pool.along = "none")
 #'
 #' # using defaults, along y-axis
 #'   ggplot(data = d, aes(x, y, label = lab)) +
@@ -202,7 +217,8 @@ stat_dens1d_labels <-
            keep.number = Inf,
            keep.sparse = TRUE,
            keep.these = FALSE,
-           xintercept = NA,
+           pool.along = "x",
+           xintercept = 0,
            invert.selection = FALSE,
            bw = "SJ",
            kernel = "gaussian",
@@ -232,6 +248,7 @@ stat_dens1d_labels <-
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
                     keep.these = keep.these,
+                    pool.along = pool.along,
                     xintercept = xintercept,
                     invert.selection = invert.selection,
                     bw = bw,
@@ -251,6 +268,7 @@ dens1d_labs_compute_fun <-
            keep.number,
            keep.sparse,
            keep.these,
+           pool.along,
            xintercept,
            invert.selection,
            bw,
@@ -268,7 +286,7 @@ dens1d_labs_compute_fun <-
 
     keep.these <- keep_these2logical(keep.these = keep.these, data = data)
 
-    if (!is.na(xintercept) &&
+    if (pool.along != "x" &&
         xintercept < max(data[[orientation]]) &&
         xintercept > min(data[[orientation]])) {
 

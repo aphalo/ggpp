@@ -33,6 +33,14 @@
 #'   and \code{keep.number} and \code{keep.fraction} are applied separately to
 #'   each tail with density still computed jointly from all observations.
 #'
+#' @note Which points are kept and which not depends on how dense and flexible
+#'   is the density curve estimate. This depends on the values passed as
+#'   arguments to parameters \code{n}, \code{bw} and \code{kernel}. It is
+#'   also important to be aware that both \code{geom_text()} and
+#'   \code{geom_text_repel()} can avoid overplotting by discarding labels at
+#'   the plot rendering stage, i.e., what is plotted may differ from what is
+#'   returned by this statistic.
+#'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be
 #'   set at the layer level if you are overriding the plot defaults.
@@ -51,6 +59,9 @@
 #'   function that takes the variable mapped to the \code{label} aesthetic as
 #'   first argument and returns a character vector or a logical vector. These
 #'   rows from \code{data} are selected irrespective of the local density.
+#' @param pool.along character, one of \code{"none"} or \code{"x"},
+#'   indicating if selection should be done pooling the observations along the
+#'   \emph{x} aesthetic, or separately on either side of \code{xintercept}.
 #' @param xintercept numeric The split point for the data filtering. If
 #'   \code{NA} the data are not split.
 #' @param invert.selection logical If \code{TRUE}, the complement of the
@@ -198,7 +209,8 @@ stat_dens1d_filter <-
            keep.number = Inf,
            keep.sparse = TRUE,
            keep.these = FALSE,
-           xintercept = NA,
+           pool.along = "x",
+           xintercept = 0,
            invert.selection = FALSE,
            bw = "SJ",
            kernel = "gaussian",
@@ -224,6 +236,7 @@ stat_dens1d_filter <-
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
                     keep.these = keep.these,
+                    pool.along = pool.along,
                     xintercept = xintercept,
                     invert.selection = invert.selection,
                     bw = bw,
@@ -246,7 +259,8 @@ stat_dens1d_filter_g <-
            keep.number = Inf,
            keep.sparse = TRUE,
            keep.these = FALSE,
-           xintercept = NA,
+           pool.along = "x",
+           xintercept = 0,
            invert.selection = FALSE,
            na.rm = TRUE, show.legend = FALSE,
            inherit.aes = TRUE,
@@ -272,6 +286,7 @@ stat_dens1d_filter_g <-
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
                     keep.these = keep.these,
+                    pool.along = pool.along,
                     xintercept = xintercept,
                     invert.selection = invert.selection,
                     bw = bw,
@@ -290,6 +305,7 @@ dens1d_flt_compute_fun <-
            keep.number,
            keep.sparse,
            keep.these,
+           pool.along,
            xintercept,
            invert.selection,
            bw,
@@ -303,6 +319,7 @@ dens1d_flt_compute_fun <-
                             keep.number = keep.number,
                             keep.sparse = keep.sparse,
                             keep.these = keep.these,
+                            pool.along = pool.along,
                             xintercept = xintercept,
                             invert.selection = invert.selection,
                             bw = bw,
