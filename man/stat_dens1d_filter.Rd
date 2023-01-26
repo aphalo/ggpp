@@ -15,6 +15,7 @@ stat_dens1d_filter(
   keep.number = Inf,
   keep.sparse = TRUE,
   keep.these = FALSE,
+  xintercept = NA,
   invert.selection = FALSE,
   bw = "SJ",
   kernel = "gaussian",
@@ -35,6 +36,7 @@ stat_dens1d_filter_g(
   keep.number = Inf,
   keep.sparse = TRUE,
   keep.these = FALSE,
+  xintercept = NA,
   invert.selection = FALSE,
   na.rm = TRUE,
   show.legend = FALSE,
@@ -64,12 +66,12 @@ layer}
 can include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
 
-\item{keep.fraction}{numeric [0..1]. The fraction of the observations (or
-rows) in \code{data} to be retained.}
+\item{keep.fraction}{numeric vector of length 1 or 2 [0..1]. The fraction of
+the observations (or rows) in \code{data} to be retained.}
 
-\item{keep.number}{integer Set the maximum number of observations to retain,
-effective only if obeying \code{keep.fraction} would result in a larger
-number.}
+\item{keep.number}{integer vector of length 1 or 2. Set the maximum number of
+observations to retain, effective only if obeying \code{keep.fraction}
+would result in a larger number.}
 
 \item{keep.sparse}{logical If \code{TRUE}, the default, observations from the
 more sparse regions are retained, if \code{FALSE} those from the densest
@@ -79,6 +81,9 @@ regions.}
 function that takes the variable mapped to the \code{label} aesthetic as
 first argument and returns a character vector or a logical vector. These
 rows from \code{data} are selected irrespective of the local density.}
+
+\item{xintercept}{numeric The split point for the data filtering. If
+\code{NA} the data are not split.}
 
 \item{invert.selection}{logical If \code{TRUE}, the complement of the
 selected rows are returned.}
@@ -125,7 +130,8 @@ A plot layer instance. Using as output \code{data} a subset of the
   \code{stat_dens1d_filter_g} does the same filtering by group instead of by
   panel. This second stat is useful for highlighting observations, while the
   first one tends to be most useful when the aim is to prevent clashes among
-  text labels.
+  text labels. By default the data are handled all together, but it is also
+  possible to control labeling separately in each tail.
 }
 \details{
 The 1D density of observations of \emph{x} or \emph{y} is computed
@@ -147,7 +153,10 @@ The 1D density of observations of \emph{x} or \emph{y} is computed
   controlled with arguments passed to \code{keep.number} and
   \code{keep.fraction}. \code{keep.number} sets the maximum number of
   observations selected, whenever \code{keep.fraction} results in fewer
-  observations selected, it is obeyed.
+  observations selected, it is obeyed. If `xintercept` is a finite value
+  within the \emph{x} range of the data, the data are split into two groups
+  and \code{keep.number} and \code{keep.fraction} are applied separately to
+  each tail with density still computed jointly from all observations.
 }
 \examples{
 

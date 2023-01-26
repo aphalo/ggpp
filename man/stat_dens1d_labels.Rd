@@ -14,6 +14,7 @@ stat_dens1d_labels(
   keep.number = Inf,
   keep.sparse = TRUE,
   keep.these = FALSE,
+  xintercept = NA,
   invert.selection = FALSE,
   bw = "SJ",
   kernel = "gaussian",
@@ -43,12 +44,12 @@ layer}
 can include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
 
-\item{keep.fraction}{numeric [0..1]. The fraction of the observations (or
-rows) in \code{data} to be retained.}
+\item{keep.fraction}{numeric vector of length 1 or 2 [0..1]. The fraction of
+the observations (or rows) in \code{data} to be retained.}
 
-\item{keep.number}{integer Set the maximum number of observations to retain,
-effective only if obeying \code{keep.fraction} would result in a larger
-number.}
+\item{keep.number}{integer vector of length 1 or 2. Set the maximum number of
+observations to retain, effective only if obeying \code{keep.fraction}
+would result in a larger number.}
 
 \item{keep.sparse}{logical If \code{TRUE}, the default, observations from the
 more sparse regions are retained, if \code{FALSE} those from the densest
@@ -58,6 +59,9 @@ regions.}
 function that takes the variable mapped to the \code{label} aesthetic as
 first argument and returns a character vector or a logical vector. These
 rows from \code{data} are selected irrespective of the local density.}
+
+\item{xintercept}{numeric The split point for the data filtering. If
+\code{NA} the data are not split.}
 
 \item{invert.selection}{logical If \code{TRUE}, the complement of the
 selected rows are returned.}
@@ -103,13 +107,17 @@ A plot layer instance. Using as output \code{data} the input
 \code{stat_dens1d_labels()} Sets values mapped to the
   \code{label} aesthetic to \code{""} or a user provided character string
   based on the local density in regions of a plot panel. Its main use is
-  together with repulsive geoms from package \code{\link[ggrepel]{ggrepel}}.
+  together with repulsive geoms from package \code{\link[ggrepel]{ggrepel}}
+  to restrict labeling to the low density tails of a distribution. By default
+  the data are handled all together, but it is also possible to control
+  labeling separately in each tail.
+
   If there is no mapping to \code{label} in \code{data}, the mapping is set
   to \code{rownames(data)}, with a message.
 }
 \details{
 \code{stat_dens1d_labels()} is designed to work together with
-  geometries from packages 'ggrepel'. To avoid text labels being plotted over
+  geometries from package 'ggrepel'. To avoid text labels being plotted over
   unlabelled points the corresponding rows in data need to be retained but
   labels replaced with the empty character string, \code{""}. Function
   \code{\link{stat_dens1d_filter}} cannot be used with the repulsive geoms
@@ -138,7 +146,10 @@ A plot layer instance. Using as output \code{data} the input
   \code{keep.these} is controlled with arguments passed to \code{keep.number}
   and \code{keep.fraction}. \code{keep.number} sets the maximum number of
   observations selected, whenever \code{keep.fraction} results in fewer
-  observations selected, it is obeyed.
+  observations selected, it is obeyed. If `xintercept` is a finite value
+  within the \emph{x} range of the data, the data are split into two groups
+  and \code{keep.number} and \code{keep.fraction} are applied separately to
+  each tail with density still computed jointly from all observations.
 }
 \examples{
 
@@ -174,6 +185,15 @@ if (ggrepel.installed) {
   ggplot(data = d, aes(x, y)) +
     geom_point() +
     stat_dens1d_labels(geom = "text_repel")
+
+  ggplot(data = d, aes(x, y)) +
+    geom_point() +
+    stat_dens1d_labels(geom = "text_repel", xintercept = 0)
+
+  ggplot(data = d, aes(x, y)) +
+    geom_point() +
+    stat_dens1d_labels(geom = "text_repel",
+                       keep.number = c(0, 20), xintercept = 0)
 
 # using defaults, along y-axis
   ggplot(data = d, aes(x, y, label = lab)) +

@@ -3,12 +3,16 @@
 #' @description \code{stat_dens1d_labels()} Sets values mapped to the
 #'   \code{label} aesthetic to \code{""} or a user provided character string
 #'   based on the local density in regions of a plot panel. Its main use is
-#'   together with repulsive geoms from package \code{\link[ggrepel]{ggrepel}}.
+#'   together with repulsive geoms from package \code{\link[ggrepel]{ggrepel}}
+#'   to restrict labeling to the low density tails of a distribution. By default
+#'   the data are handled all together, but it is also possible to control
+#'   labeling separately in each tail.
+#'
 #'   If there is no mapping to \code{label} in \code{data}, the mapping is set
 #'   to \code{rownames(data)}, with a message.
 #'
 #' @details \code{stat_dens1d_labels()} is designed to work together with
-#'   geometries from packages 'ggrepel'. To avoid text labels being plotted over
+#'   geometries from package 'ggrepel'. To avoid text labels being plotted over
 #'   unlabelled points the corresponding rows in data need to be retained but
 #'   labels replaced with the empty character string, \code{""}. Function
 #'   \code{\link{stat_dens1d_filter}} cannot be used with the repulsive geoms
@@ -37,7 +41,10 @@
 #'   \code{keep.these} is controlled with arguments passed to \code{keep.number}
 #'   and \code{keep.fraction}. \code{keep.number} sets the maximum number of
 #'   observations selected, whenever \code{keep.fraction} results in fewer
-#'   observations selected, it is obeyed.
+#'   observations selected, it is obeyed. If `xintercept` is a finite value
+#'   within the \emph{x} range of the data, the data are split into two groups
+#'   and \code{keep.number} and \code{keep.fraction} are applied separately to
+#'   each tail with density still computed jointly from all observations.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be
@@ -45,11 +52,11 @@
 #' @param data A layer specific dataset - only needed if you want to override
 #'   the plot defaults.
 #' @param geom The geometric object to use display the data.
-#' @param keep.fraction numeric [0..1]. The fraction of the observations (or
-#'   rows) in \code{data} to be retained.
-#' @param keep.number integer Set the maximum number of observations to retain,
-#'   effective only if obeying \code{keep.fraction} would result in a larger
-#'   number.
+#' @param keep.fraction numeric vector of length 1 or 2 [0..1]. The fraction of
+#'   the observations (or rows) in \code{data} to be retained.
+#' @param keep.number integer vector of length 1 or 2. Set the maximum number of
+#'   observations to retain, effective only if obeying \code{keep.fraction}
+#'   would result in a larger number.
 #' @param keep.sparse logical If \code{TRUE}, the default, observations from the
 #'   more sparse regions are retained, if \code{FALSE} those from the densest
 #'   regions.
@@ -57,6 +64,8 @@
 #'   function that takes the variable mapped to the \code{label} aesthetic as
 #'   first argument and returns a character vector or a logical vector. These
 #'   rows from \code{data} are selected irrespective of the local density.
+#' @param xintercept numeric The split point for the data filtering. If
+#'   \code{NA} the data are not split.
 #' @param invert.selection logical If \code{TRUE}, the complement of the
 #'   selected rows are returned.
 #' @param bw numeric or character The smoothing bandwidth to be used. If
@@ -131,6 +140,15 @@
 #'     geom_point() +
 #'     stat_dens1d_labels(geom = "text_repel")
 #'
+#'   ggplot(data = d, aes(x, y)) +
+#'     geom_point() +
+#'     stat_dens1d_labels(geom = "text_repel", xintercept = 0)
+#'
+#'   ggplot(data = d, aes(x, y)) +
+#'     geom_point() +
+#'     stat_dens1d_labels(geom = "text_repel",
+#'                        keep.number = c(0, 20), xintercept = 0)
+#'
 #' # using defaults, along y-axis
 #'   ggplot(data = d, aes(x, y, label = lab)) +
 #'     geom_point() +
@@ -199,10 +217,10 @@ stat_dens1d_labels <-
     if (length(label.fill) > 1L) {
       stop("Length for 'label.fill' is not 1: ", label.fill)
     }
-    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
+    if (any(is.na(keep.fraction) | keep.fraction < 0 | keep.fraction > 1)) {
       stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
     }
-    if (is.na(keep.number) || keep.number < 0) {
+    if (any(is.na(keep.number) | keep.number < 0)) {
       stop("Out of range or missing value for 'keep.number': ", keep.number)
     }
 
@@ -253,26 +271,26 @@ dens1d_labs_compute_fun <-
     if (!is.na(xintercept) &&
         xintercept < max(data[[orientation]]) &&
         xintercept > min(data[[orientation]])) {
-      selectors <-c(low.tail = data[[orientation]] <= xintercept,
-                    high-tail = data[[orientation]] > xintercept)
-      if (length(keep.fraction) == 1L) {
-        keep.fraction <- rep(keep.fraction, 2)
-      }
+
+      selectors <-list(low.tail = data[[orientation]] <= xintercept,
+                       high.tail = data[[orientation]] > xintercept)
       if (length(keep.fraction) == 1L) {
         keep.fraction <- rep(keep.fraction, 2)
       }
       if (length(keep.number) == 1L) {
         keep.number <- rep(keep.number, 2)
       }
-      num.rows <- sapply(selector, length)
+      num.rows <- sapply(selectors, sum) # selectors are logical
     } else {
       num.rows <- nrow(data)
-      selector <- rep(TRUE, num.rows)
+      selectors <- list(all = rep(TRUE, num.rows))
     }
 
-    if (num.rows * keep.fraction > keep.number) {
-      keep.fraction <- keep.number / num.rows
-    }
+    # vectorized
+    keep.fraction <-
+      ifelse(num.rows * keep.fraction > keep.number,
+             keep.number / num.rows,
+             keep.fraction)
 
     dens <-
       stats::density(data[[orientation]],
@@ -281,29 +299,31 @@ dens1d_labs_compute_fun <-
                      to = scales[[orientation]]$dimension()[2])
 
     fdens <- stats::splinefun(dens$x, dens$y) # y contains estimate of density
+    dens <- fdens(data[[orientation]])
 
     keep <- keep.these
-    for (i in seq_along(selector)) {
+    for (i in seq_along(selectors)) {
       if (keep.fraction[i] == 1) {
         keep <- TRUE
       } else if (keep.fraction[i] == 0) {
         keep <- keep
       } else {
-        dens <- fdens(data[[orientation]][selector[i]])
-
         if (keep.sparse) {
-          keep <- dens < stats::quantile(dens, keep.fraction, names = FALSE)
+          keep[ selectors[[i]] ] <-
+            keep[ selectors[[i]] ] |
+            dens[ selectors[[i]] ] < stats::quantile(dens[ selectors[[i]] ], keep.fraction[i], names = FALSE)
         } else {
-          keep <- dens >= stats::quantile(dens, 1 - keep.fraction, names = FALSE)
+          keep[ selectors[[i]] ] <- keep[ selectors[[i]] ] |
+            dens[ selectors[[i]] ] >= stats::quantile(dens[ selectors[[i]] ], 1 - keep.fraction[i], names = FALSE)
         }
       }
     }
 
     if (is.null(label.fill)) {
       if (invert.selection){
-        data <- data[!(keep | keep.these), ]
+        data <- data[!keep, ]
       } else {
-        data <- data[keep | keep.these, ]
+        data <- data[keep, ]
       }
     } else if (is.function(label.fill)) {
       if (invert.selection){
@@ -326,11 +346,11 @@ dens1d_labs_compute_fun <-
         }
       }
       if (invert.selection){
-        data[["label"]] <- ifelse(!(keep | keep.these),
+        data[["label"]] <- ifelse(!keep,
                                   data[["label"]],
                                   label.fill)
       } else {
-        data[["label"]] <- ifelse(keep | keep.these,
+        data[["label"]] <- ifelse(keep,
                                   data[["label"]],
                                   label.fill)
       }

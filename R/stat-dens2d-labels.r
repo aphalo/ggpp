@@ -341,10 +341,17 @@ keep_these2logical <- function(keep.these, data) {
     if (is.character(keep.these)) {
       keep.these <- data$label %in% keep.these # logical vector
     }
-    if (is.numeric(keep.these)) {
-      temp <- logical(nrow(data))
+    if (is.numeric(keep.these)) { # positional indices
+      temp <- rep(FALSE, times = nrow(data))
       temp[keep.these] <- TRUE
       keep.these <- temp
+    }
+    if (is.logical(keep.these)) { # logical indices, if short recycle
+      if (length(keep.these) >= 1L && length(keep.these) < nrow(data)) {
+        keep.these <- rep(keep.these, length.out = nrow(data))
+      } else if (length(keep.these) > nrow(data)) {
+        stop("Logical vector 'keep.these' longer than data")
+      }
     }
     if (anyNA(keep.these)) {
       warning("Discarding 'NA's in keep.these")
@@ -353,7 +360,7 @@ keep_these2logical <- function(keep.these, data) {
                            keep.these)
     }
   } else { # replace NULL and vectors with length zero with FALSE
-    keep.these <- FALSE
+    keep.these <- rep(FALSE, nrow(data))
   }
   keep.these
 }

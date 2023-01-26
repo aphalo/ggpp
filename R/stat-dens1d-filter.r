@@ -6,7 +6,8 @@
 #'   \code{stat_dens1d_filter_g} does the same filtering by group instead of by
 #'   panel. This second stat is useful for highlighting observations, while the
 #'   first one tends to be most useful when the aim is to prevent clashes among
-#'   text labels.
+#'   text labels. By default the data are handled all together, but it is also
+#'   possible to control labeling separately in each tail.
 #'
 #' @details The 1D density of observations of \emph{x} or \emph{y} is computed
 #'   with function \code{\link[stats]{density}} and used to select observations,
@@ -27,7 +28,10 @@
 #'   controlled with arguments passed to \code{keep.number} and
 #'   \code{keep.fraction}. \code{keep.number} sets the maximum number of
 #'   observations selected, whenever \code{keep.fraction} results in fewer
-#'   observations selected, it is obeyed.
+#'   observations selected, it is obeyed. If `xintercept` is a finite value
+#'   within the \emph{x} range of the data, the data are split into two groups
+#'   and \code{keep.number} and \code{keep.fraction} are applied separately to
+#'   each tail with density still computed jointly from all observations.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be
@@ -35,11 +39,11 @@
 #' @param data A layer specific dataset - only needed if you want to override
 #'   the plot defaults.
 #' @param geom The geometric object to use display the data.
-#' @param keep.fraction numeric [0..1]. The fraction of the observations (or
-#'   rows) in \code{data} to be retained.
-#' @param keep.number integer Set the maximum number of observations to retain,
-#'   effective only if obeying \code{keep.fraction} would result in a larger
-#'   number.
+#' @param keep.fraction numeric vector of length 1 or 2 [0..1]. The fraction of
+#'   the observations (or rows) in \code{data} to be retained.
+#' @param keep.number integer vector of length 1 or 2. Set the maximum number of
+#'   observations to retain, effective only if obeying \code{keep.fraction}
+#'   would result in a larger number.
 #' @param keep.sparse logical If \code{TRUE}, the default, observations from the
 #'   more sparse regions are retained, if \code{FALSE} those from the densest
 #'   regions.
@@ -47,6 +51,8 @@
 #'   function that takes the variable mapped to the \code{label} aesthetic as
 #'   first argument and returns a character vector or a logical vector. These
 #'   rows from \code{data} are selected irrespective of the local density.
+#' @param xintercept numeric The split point for the data filtering. If
+#'   \code{NA} the data are not split.
 #' @param invert.selection logical If \code{TRUE}, the complement of the
 #'   selected rows are returned.
 #' @param bw numeric or character The smoothing bandwidth to be used. If
@@ -192,6 +198,7 @@ stat_dens1d_filter <-
            keep.number = Inf,
            keep.sparse = TRUE,
            keep.these = FALSE,
+           xintercept = NA,
            invert.selection = FALSE,
            bw = "SJ",
            kernel = "gaussian",
@@ -201,12 +208,14 @@ stat_dens1d_filter <-
            na.rm = TRUE,
            show.legend = FALSE,
            inherit.aes = TRUE) {
-    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
+
+    if (any(is.na(keep.fraction) | keep.fraction < 0 | keep.fraction > 1)) {
       stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
     }
-    if (is.na(keep.number) || keep.number < 0) {
+    if (any(is.na(keep.number) | keep.number < 0)) {
       stop("Out of range or missing value for 'keep.number': ", keep.number)
     }
+
     ggplot2::layer(
       stat = StatDens1dFilter, data = data, mapping = mapping, geom = geom,
       position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -215,6 +224,7 @@ stat_dens1d_filter <-
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
                     keep.these = keep.these,
+                    xintercept = xintercept,
                     invert.selection = invert.selection,
                     bw = bw,
                     adjust = adjust,
@@ -236,6 +246,7 @@ stat_dens1d_filter_g <-
            keep.number = Inf,
            keep.sparse = TRUE,
            keep.these = FALSE,
+           xintercept = NA,
            invert.selection = FALSE,
            na.rm = TRUE, show.legend = FALSE,
            inherit.aes = TRUE,
@@ -245,12 +256,14 @@ stat_dens1d_filter_g <-
            n = 512,
            orientation = "x",
            ...) {
-    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
+
+    if (any(is.na(keep.fraction) | keep.fraction < 0 | keep.fraction > 1)) {
       stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
     }
-    if (is.na(keep.number) || keep.number < 0) {
+    if (any(is.na(keep.number) | keep.number < 0)) {
       stop("Out of range or missing value for 'keep.number': ", keep.number)
     }
+
     ggplot2::layer(
       stat = StatDens1dFilterG, data = data, mapping = mapping, geom = geom,
       position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -259,6 +272,7 @@ stat_dens1d_filter_g <-
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
                     keep.these = keep.these,
+                    xintercept = xintercept,
                     invert.selection = invert.selection,
                     bw = bw,
                     kernel = kernel,
@@ -276,6 +290,7 @@ dens1d_flt_compute_fun <-
            keep.number,
            keep.sparse,
            keep.these,
+           xintercept,
            invert.selection,
            bw,
            kernel,
@@ -288,6 +303,7 @@ dens1d_flt_compute_fun <-
                             keep.number = keep.number,
                             keep.sparse = keep.sparse,
                             keep.these = keep.these,
+                            xintercept = xintercept,
                             invert.selection = invert.selection,
                             bw = bw,
                             kernel = kernel,
