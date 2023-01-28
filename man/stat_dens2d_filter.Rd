@@ -24,7 +24,7 @@ stat_dens2d_filter(
   inherit.aes = TRUE,
   h = NULL,
   n = NULL,
-  return.dens = FALSE
+  return.density = FALSE
 )
 
 stat_dens2d_filter_g(
@@ -46,7 +46,7 @@ stat_dens2d_filter_g(
   inherit.aes = TRUE,
   h = NULL,
   n = NULL,
-  return.dens = FALSE
+  return.density = FALSE
 )
 }
 \arguments{
@@ -110,8 +110,8 @@ apply to both directions.}
 \item{n}{Number of grid points in each direction. Can be scalar or a
 length-2 integer vector}
 
-\item{return.dens}{logical vector of lenght 1. If \code{TRUE} add columns
-\code{"dens.2d"} and \code{"keep.obs"} to the returned data frame.}
+\item{return.density}{logical vector of lenght 1. If \code{TRUE} add columns
+\code{"density"} and \code{"keep.obs"} to the returned data frame.}
 }
 \value{
 A plot layer instance. Using as output \code{data} a subset of the

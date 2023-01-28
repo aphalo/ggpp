@@ -69,8 +69,8 @@
 #' @param n Number of grid points in each direction. Can be scalar or a length-2
 #'   integer vector
 #' @param label.fill character vector of length 1, a function or \code{NULL}.
-#' @param return.dens logical vector of lenght 1. If \code{TRUE} add columns
-#'   \code{"dens.2d"} and \code{"keep.obs"} to the returned data frame.
+#' @param return.density logical vector of lenght 1. If \code{TRUE} add columns
+#'   \code{"density"} and \code{"keep.obs"} to the returned data frame.
 #' @param position The position adjustment to use for overlapping points on this
 #'   layer
 #' @param show.legend logical. Should this layer be included in the legends?
@@ -168,6 +168,22 @@
 #'     geom_point() +
 #'     stat_dens2d_labels(geom = "debug")
 #'
+#'   ggplot(data = d, aes(x, y, label = lab)) +
+#'     geom_point() +
+#'     stat_dens2d_labels(geom = "debug", return.density = TRUE)
+#'
+#'   ggplot(data = d, aes(x, y, label = lab)) +
+#'     geom_point() +
+#'     stat_dens2d_labels(geom = "debug", label.fill = NULL)
+#'
+#'   ggplot(data = d, aes(x, y, label = lab)) +
+#'     geom_point() +
+#'     stat_dens2d_labels(geom = "debug", label.fill = FALSE, return.density = TRUE)
+#'
+#'   ggplot(data = d, aes(x, y, label = lab)) +
+#'     geom_point() +
+#'     stat_dens2d_labels(geom = "debug", label.fill = NULL, return.density = TRUE)
+#'
 #'   ggplot(data = d, aes(x, y)) +
 #'     geom_point() +
 #'     stat_dens2d_labels(geom = "debug")
@@ -190,7 +206,7 @@ stat_dens2d_labels <-
            h = NULL,
            n = NULL,
            label.fill = "",
-           return.dens = FALSE,
+           return.density = FALSE,
            na.rm = TRUE,
            show.legend = FALSE,
            inherit.aes = TRUE) {
@@ -220,7 +236,7 @@ stat_dens2d_labels <-
                     h = h,
                     n = n,
                     label.fill = label.fill,
-                    return.dens = return.dens,
+                    return.density = return.density,
                     ...)
     )
   }
@@ -239,7 +255,7 @@ dens2d_labs_compute_fun <-
            h,
            n,
            label.fill,
-           return.dens) {
+           return.density) {
 
     force(data)
     if (!exists("label", data) && !is.null(label.fill)) {
@@ -358,9 +374,9 @@ dens2d_labs_compute_fun <-
       keep <- !keep
     }
 
-    if (return.dens) {
+    if (return.density) {
       data[["keep.obs"]] <- keep
-      data[["dens.2d"]] <- kz
+      data[["density"]] <- kz
     }
 
     if (is.null(label.fill)) {
@@ -378,8 +394,8 @@ dens2d_labs_compute_fun <-
         data[["label"]][!keep] <- ""
       } # if FALSE data is not modified
     } else {
-          stop("'label.fill' is :", mode(label.fill),
-               "instead of 'character' or 'function'.")
+          stop("'label.fill' is : ", mode(label.fill),
+               " instead of 'character' or 'function'.")
     }
     data
 }

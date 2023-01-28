@@ -82,6 +82,8 @@
 #' @param n numeric Number of equally spaced points at which the density is to
 #'   be estimated for applying the cut point. See \code{\link{density}} for
 #'   details.
+#' @param return.density logical vector of lenght 1. If \code{TRUE} add columns
+#'   \code{"density"} and \code{"keep.obs"} to the returned data frame.
 #' @param orientation	character The aesthetic along which density is computed.
 #'   Given explicitly by setting orientation to either \code{"x"} or \code{"y"}.
 #' @param position The position adjustment to use for overlapping points on this
@@ -220,6 +222,7 @@ stat_dens1d_filter <-
            kernel = "gaussian",
            adjust = 1,
            n = 512,
+           return.density = FALSE,
            orientation = "x",
            na.rm = TRUE,
            show.legend = FALSE,
@@ -247,6 +250,7 @@ stat_dens1d_filter <-
                     adjust = adjust,
                     kernel = kernel,
                     n = n,
+                    return.density = return.density,
                     orientation = orientation,
                     ...)
     )
@@ -272,6 +276,7 @@ stat_dens1d_filter_g <-
            adjust = 1,
            kernel = "gaussian",
            n = 512,
+           return.density = FALSE,
            orientation = "x",
            ...) {
 
@@ -297,6 +302,7 @@ stat_dens1d_filter_g <-
                     kernel = kernel,
                     adjust = adjust,
                     n = n,
+                    return.density = return.density,
                     orientation = orientation,
                     ...)
     )
@@ -316,6 +322,7 @@ dens1d_flt_compute_fun <-
            kernel,
            adjust,
            n,
+           return.density,
            orientation) {
     dens1d_labs_compute_fun(data = data,
                             scales = scales,
@@ -330,6 +337,7 @@ dens1d_flt_compute_fun <-
                             kernel = kernel,
                             adjust = adjust,
                             n = n,
+                            return.density = return.density,
                             orientation = orientation,
                             label.fill = NULL)
   }

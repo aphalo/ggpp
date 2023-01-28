@@ -22,6 +22,7 @@ stat_dens1d_filter(
   kernel = "gaussian",
   adjust = 1,
   n = 512,
+  return.density = FALSE,
   orientation = "x",
   na.rm = TRUE,
   show.legend = FALSE,
@@ -47,6 +48,7 @@ stat_dens1d_filter_g(
   adjust = 1,
   kernel = "gaussian",
   n = 512,
+  return.density = FALSE,
   orientation = "x",
   ...
 )
@@ -109,6 +111,9 @@ sensitivity to local changes in density.}
 \item{n}{numeric Number of equally spaced points at which the density is to
 be estimated for applying the cut point. See \code{\link{density}} for
 details.}
+
+\item{return.density}{logical vector of lenght 1. If \code{TRUE} add columns
+\code{"density"} and \code{"keep.obs"} to the returned data frame.}
 
 \item{orientation}{character The aesthetic along which density is computed.
 Given explicitly by setting orientation to either \code{"x"} or \code{"y"}.}

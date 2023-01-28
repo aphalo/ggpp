@@ -94,6 +94,8 @@
 #' @param n numeric Number of equally spaced points at which the density is to
 #'   be estimated for applying the cut point. See \code{\link{density}} for
 #'   details.
+#' @param return.density logical vector of lenght 1. If \code{TRUE} add columns
+#'   \code{"density"} and \code{"keep.obs"} to the returned data frame.
 #' @param orientation	character The aesthetic along which density is computed.
 #'   Given explicitly by setting orientation to either "x" or "y".
 #' @param label.fill character vector of length 1 or a function.
@@ -207,6 +209,22 @@
 #'   ggplot(data = d, aes(x, y, label = lab)) +
 #'     geom_point() +
 #'     stat_dens1d_labels(geom = "debug")
+#'
+#'   ggplot(data = d, aes(x, y, label = lab)) +
+#'     geom_point() +
+#'     stat_dens1d_labels(geom = "debug", return.density = TRUE)
+#'
+#'   ggplot(data = d, aes(x, y, label = lab)) +
+#'     geom_point() +
+#'     stat_dens1d_labels(geom = "debug", label.fill = NULL, return.density = TRUE)
+#'
+#'   ggplot(data = d, aes(x, y, label = lab)) +
+#'     geom_point() +
+#'     stat_dens1d_labels(geom = "debug", label.fill = NA, return.density = TRUE)
+#'
+#'   ggplot(data = d, aes(x, y, label = lab)) +
+#'     geom_point() +
+#'     stat_dens1d_labels(geom = "debug", label.fill = FALSE, return.density = TRUE)
 #' }
 #'
 #' @export
@@ -230,6 +248,7 @@ stat_dens1d_labels <-
            n = 512,
            orientation = "x",
            label.fill = "",
+           return.density = FALSE,
            na.rm = TRUE,
            show.legend = FALSE,
            inherit.aes = TRUE) {
@@ -261,6 +280,7 @@ stat_dens1d_labels <-
                     n = n,
                     orientation = orientation,
                     label.fill = label.fill,
+                    return.density = return.density,
                     ...)
     )
   }
@@ -281,7 +301,7 @@ dens1d_labs_compute_fun <-
            n,
            orientation,
            label.fill,
-           return.dens = TRUE) {
+           return.density) {
 
     force(data)
     if (!exists("label", data) && !is.null(label.fill)) {
@@ -351,9 +371,9 @@ dens1d_labs_compute_fun <-
       keep <- !keep
     }
 
-    if (return.dens) {
+    if (return.density) {
       data[["keep.obs"]] <- keep
-      data[["dens.1d"]] <- dens
+      data[["density"]] <- dens
     }
 
     if (is.null(label.fill)) {
@@ -371,8 +391,8 @@ dens1d_labs_compute_fun <-
         data[["label"]][!keep] <- ""
       } # if FALSE data is not modified
     } else {
-      stop("'label.fill' is :", mode(label.fill),
-           "instead of 'character' or 'function'.")
+      stop("'label.fill' is : ", mode(label.fill),
+           " instead of 'character' or 'function'.")
     }
     data
   }

@@ -23,6 +23,7 @@ stat_dens1d_labels(
   n = 512,
   orientation = "x",
   label.fill = "",
+  return.density = FALSE,
   na.rm = TRUE,
   show.legend = FALSE,
   inherit.aes = TRUE
@@ -90,6 +91,9 @@ details.}
 Given explicitly by setting orientation to either "x" or "y".}
 
 \item{label.fill}{character vector of length 1 or a function.}
+
+\item{return.density}{logical vector of lenght 1. If \code{TRUE} add columns
+\code{"density"} and \code{"keep.obs"} to the returned data frame.}
 
 \item{na.rm}{a logical value indicating whether NA values should be stripped
 before the computation proceeds.}
@@ -256,6 +260,22 @@ if (gginnards.installed) {
   ggplot(data = d, aes(x, y, label = lab)) +
     geom_point() +
     stat_dens1d_labels(geom = "debug")
+
+  ggplot(data = d, aes(x, y, label = lab)) +
+    geom_point() +
+    stat_dens1d_labels(geom = "debug", return.density = TRUE)
+
+  ggplot(data = d, aes(x, y, label = lab)) +
+    geom_point() +
+    stat_dens1d_labels(geom = "debug", label.fill = NULL, return.density = TRUE)
+
+  ggplot(data = d, aes(x, y, label = lab)) +
+    geom_point() +
+    stat_dens1d_labels(geom = "debug", label.fill = NA, return.density = TRUE)
+
+  ggplot(data = d, aes(x, y, label = lab)) +
+    geom_point() +
+    stat_dens1d_labels(geom = "debug", label.fill = FALSE, return.density = TRUE)
 }
 
 }
