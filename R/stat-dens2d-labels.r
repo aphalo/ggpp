@@ -69,6 +69,8 @@
 #' @param n Number of grid points in each direction. Can be scalar or a length-2
 #'   integer vector
 #' @param label.fill character vector of length 1, a function or \code{NULL}.
+#' @param return.dens logical vector of lenght 1. If \code{TRUE} add columns
+#'   \code{"dens.2d"} and \code{"keep.obs"} to the returned data frame.
 #' @param position The position adjustment to use for overlapping points on this
 #'   layer
 #' @param show.legend logical. Should this layer be included in the legends?
@@ -188,6 +190,7 @@ stat_dens2d_labels <-
            h = NULL,
            n = NULL,
            label.fill = "",
+           return.dens = FALSE,
            na.rm = TRUE,
            show.legend = FALSE,
            inherit.aes = TRUE) {
@@ -217,6 +220,7 @@ stat_dens2d_labels <-
                     h = h,
                     n = n,
                     label.fill = label.fill,
+                    return.dens = return.dens,
                     ...)
     )
   }
@@ -234,7 +238,8 @@ dens2d_labs_compute_fun <-
            invert.selection,
            h,
            n,
-           label.fill) {
+           label.fill,
+           return.dens) {
 
     force(data)
     if (!exists("label", data) && !is.null(label.fill)) {
@@ -243,7 +248,7 @@ dens2d_labs_compute_fun <-
 
     keep.these <- keep_these2logical(keep.these = keep.these, data = data)
 
-    # check if split needed
+    # discard redundant splits
     if (pool.along != "xy") {
       if (pool.along == "y" &&
           !(xintercept < max(data[["x"]]) &&
@@ -268,6 +273,7 @@ dens2d_labs_compute_fun <-
       }
     }
 
+    # make list of logical vectors
     if (pool.along == "y") {
        selectors <-list(q12 = data[["x"]] <= xintercept,
                         q34 = data[["x"]] > xintercept)
@@ -310,7 +316,7 @@ dens2d_labs_compute_fun <-
     keep.fraction[too.large.frac] <-
       keep.number[too.large.frac] / num.rows[too.large.frac]
 
-    # we estimate the density
+    # estimate 2D density
     if (is.null(h)) {
       h <- c(MASS::bandwidth.nrd(data$x), MASS::bandwidth.nrd(data$y))
     }
@@ -322,13 +328,13 @@ dens2d_labs_compute_fun <-
       lims = c(scales$x$dimension(), scales$y$dimension()))
     dimnames(kk[["z"]]) <- list(kk[["x"]], kk[["y"]])
 
-    # Identify points that are in the density regions of the plot.
+    # compute 2D density at each onservations coordinates
     kx <- cut(data$x, kk$x, labels = FALSE, include.lowest = TRUE)
     ky <- cut(data$y, kk$y, labels = FALSE, include.lowest = TRUE)
     kz <- sapply(seq_along(kx), function(i) kk$z[kx[i], ky[i]])
 
-    # we may have a list of 1, 2, or 4 selectors
-    # and vectors of the same length
+    # we construct one logical vector by adding observations/label to be kept
+    # we may have a list of 1, 2, or 4 logical vectors
     keep <- keep.these
     for (i in seq_along(selectors)) {
       if (keep.fraction[i] == 1) {
@@ -348,35 +354,33 @@ dens2d_labs_compute_fun <-
       }
     }
 
-    if (is.null(label.fill)) {
-      if (invert.selection){
-        data <- data[!keep, ]
-      } else {
-        data <- data[keep, ]
-      }
-    } else if (is.function(label.fill)) {
-      if (invert.selection){
-        data[["label"]][keep] <- label.fill(data[["label"]][keep])
-      } else {
-        data[["label"]][!keep] <- label.fill(data[["label"]][!keep])
-      }
-    } else {
-      if (!is.character(label.fill)) {
-        if (is.na(label.fill)) {
-          # NA_logical_, the default NA, cannot be assigned to character
-          label.fill <- NA_character_
-        } else {
-          stop("'label.fill' is :", mode(label.fill),
-               "instead of 'character' or 'function'.")
-        }
-      }
-      if (invert.selection){
-        data[["label"]][keep] <- label.fill
-      } else {
-        data[["label"]][!keep] <- label.fill
-      }
+    if (invert.selection){
+      keep <- !keep
     }
 
+    if (return.dens) {
+      data[["keep.obs"]] <- keep
+      data[["dens.2d"]] <- kz
+    }
+
+    if (is.null(label.fill)) {
+      data <- data[keep, ]
+    } else if (is.na(label.fill)) {
+      # NA_logical_, the default NA, cannot always be assigned to character
+      label.fill <- NA_character_
+      data[["label"]][!keep] <- label.fill
+    } else if (is.character(label.fill)) {
+      data[["label"]][!keep] <- label.fill
+    } else if (is.function(label.fill)) {
+      data[["label"]][!keep] <- label.fill(data[["label"]][!keep])
+    } else if (is.logical(label.fill)) {
+      if (label.fill) {
+        data[["label"]][!keep] <- ""
+      } # if FALSE data is not modified
+    } else {
+          stop("'label.fill' is :", mode(label.fill),
+               "instead of 'character' or 'function'.")
+    }
     data
 }
 

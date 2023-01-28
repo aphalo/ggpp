@@ -10,6 +10,7 @@ stat_dens2d_filter(
   data = NULL,
   geom = "point",
   position = "identity",
+  ...,
   keep.fraction = 0.1,
   keep.number = Inf,
   keep.sparse = TRUE,
@@ -23,7 +24,7 @@ stat_dens2d_filter(
   inherit.aes = TRUE,
   h = NULL,
   n = NULL,
-  ...
+  return.dens = FALSE
 )
 
 stat_dens2d_filter_g(
@@ -31,6 +32,7 @@ stat_dens2d_filter_g(
   data = NULL,
   geom = "point",
   position = "identity",
+  ...,
   keep.fraction = 0.1,
   keep.number = Inf,
   keep.sparse = TRUE,
@@ -44,7 +46,7 @@ stat_dens2d_filter_g(
   inherit.aes = TRUE,
   h = NULL,
   n = NULL,
-  ...
+  return.dens = FALSE
 )
 }
 \arguments{
@@ -59,6 +61,10 @@ the plot defaults.}
 
 \item{position}{The position adjustment to use for overlapping points on this
 layer}
+
+\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
+can include aesthetics whose values you want to set, not map. See
+\code{\link[ggplot2]{layer}} for more details.}
 
 \item{keep.fraction}{numeric [0..1]. The fraction of the observations (or
 rows) in \code{data} to be retained.}
@@ -104,9 +110,8 @@ apply to both directions.}
 \item{n}{Number of grid points in each direction. Can be scalar or a
 length-2 integer vector}
 
-\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
-can include aesthetics whose values you want to set, not map. See
-\code{\link[ggplot2]{layer}} for more details.}
+\item{return.dens}{logical vector of lenght 1. If \code{TRUE} add columns
+\code{"dens.2d"} and \code{"keep.obs"} to the returned data frame.}
 }
 \value{
 A plot layer instance. Using as output \code{data} a subset of the

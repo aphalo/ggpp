@@ -15,7 +15,7 @@ editor_options:
 `stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and
 `stat_dens1d_filter_g()` to allow separate control of kept observations or
 labels in each tail (1D) or in each quadrant (2D) of the density distribution,
-still using whole data set estimate of the local density.
+still using an estimate of the local density computed from the whole data set.
 
 # ggpp 0.5.0
 

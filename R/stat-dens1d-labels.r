@@ -280,7 +280,8 @@ dens1d_labs_compute_fun <-
            adjust,
            n,
            orientation,
-           label.fill) {
+           label.fill,
+           return.dens = TRUE) {
 
     force(data)
     if (!exists("label", data) && !is.null(label.fill)) {
@@ -289,6 +290,7 @@ dens1d_labs_compute_fun <-
 
     keep.these <- keep_these2logical(keep.these = keep.these, data = data)
 
+    # discard redundant splits and make list of logical vectors
     if (pool.along != "x" &&
         xintercept < max(data[[orientation]]) &&
         xintercept > min(data[[orientation]])) {
@@ -312,15 +314,19 @@ dens1d_labs_compute_fun <-
     keep.fraction[too.large.frac] <-
       keep.number[too.large.frac] / num.rows[too.large.frac]
 
+    # density on a grid
     dens <-
       stats::density(data[[orientation]],
                      bw = bw, kernel = kernel, adjust = adjust, n = n,
                      from = scales[[orientation]]$dimension()[1],
                      to = scales[[orientation]]$dimension()[2])
 
+    # estimate density at each observations coordinates
     fdens <- stats::splinefun(dens$x, dens$y) # y contains estimate of density
     dens <- fdens(data[[orientation]])
 
+    # we construct one logical vector by adding observations/label to be kept
+    # we may have a list of 1 or 2 logical vectors
     keep <- keep.these
     for (i in seq_along(selectors)) {
       if (keep.fraction[i] == 1) {
@@ -331,43 +337,43 @@ dens1d_labs_compute_fun <-
         if (keep.sparse) {
           keep[ selectors[[i]] ] <-
             keep[ selectors[[i]] ] |
-            dens[ selectors[[i]] ] < stats::quantile(dens[ selectors[[i]] ], keep.fraction[i], names = FALSE)
+            dens[ selectors[[i]] ] < stats::quantile(dens[ selectors[[i]] ],
+                                                     keep.fraction[i], names = FALSE)
         } else {
           keep[ selectors[[i]] ] <- keep[ selectors[[i]] ] |
-            dens[ selectors[[i]] ] >= stats::quantile(dens[ selectors[[i]] ], 1 - keep.fraction[i], names = FALSE)
+            dens[ selectors[[i]] ] >= stats::quantile(dens[ selectors[[i]] ],
+                                                      1 - keep.fraction[i], names = FALSE)
         }
       }
+    }
+
+    if (invert.selection){
+      keep <- !keep
+    }
+
+    if (return.dens) {
+      data[["keep.obs"]] <- keep
+      data[["dens.1d"]] <- dens
     }
 
     if (is.null(label.fill)) {
-      if (invert.selection){
-        data <- data[!keep, ]
-      } else {
-        data <- data[keep, ]
-      }
+      data <- data[keep, ]
+    } else if (is.na(label.fill)) {
+      # NA_logical_, the default NA, cannot always be assigned to character
+      label.fill <- NA_character_
+      data[["label"]][!keep] <- label.fill
+    } else if (is.character(label.fill)) {
+      data[["label"]][!keep] <- label.fill
     } else if (is.function(label.fill)) {
-      if (invert.selection){
-        data[["label"]][keep] <- label.fill(data[["label"]][keep])
-      } else {
-        data[["label"]][!keep] <- label.fill(data[["label"]][!keep])
-      }
+      data[["label"]][!keep] <- label.fill(data[["label"]][!keep])
+    } else if (is.logical(label.fill)) {
+      if (label.fill) {
+        data[["label"]][!keep] <- ""
+      } # if FALSE data is not modified
     } else {
-      if (!is.character(label.fill)) {
-        if (is.na(label.fill)) {
-          # NA_logical_, the default NA, cannot be assigned to character
-          label.fill <- NA_character_
-        } else {
-          stop("'label.fill' is :", mode(label.fill),
-               "instead of 'character' or 'function'.")
-        }
-      }
-      if (invert.selection){
-        data[["label"]][keep] <- label.fill
-      } else {
-        data[["label"]][!keep] <- label.fill
-      }
+      stop("'label.fill' is :", mode(label.fill),
+           "instead of 'character' or 'function'.")
     }
-
     data
   }
 

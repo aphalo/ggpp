@@ -59,6 +59,8 @@
 #'   apply to both directions.
 #' @param n Number of grid points in each direction. Can be scalar or a
 #'   length-2 integer vector
+#' @param return.dens logical vector of lenght 1. If \code{TRUE} add columns
+#'   \code{"dens.2d"} and \code{"keep.obs"} to the returned data frame.
 #' @param position The position adjustment to use for overlapping points on this
 #'   layer
 #' @param show.legend logical. Should this layer be included in the legends?
@@ -184,6 +186,7 @@
 stat_dens2d_filter <-
   function(mapping = NULL, data = NULL,
            geom = "point", position = "identity",
+           ...,
            keep.fraction = 0.10,
            keep.number = Inf,
            keep.sparse = TRUE,
@@ -196,7 +199,7 @@ stat_dens2d_filter <-
            inherit.aes = TRUE,
            h = NULL,
            n = NULL,
-           ...) {
+           return.dens = FALSE) {
 
     if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
       stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
@@ -219,6 +222,7 @@ stat_dens2d_filter <-
                     invert.selection = invert.selection,
                     h = h,
                     n = n,
+                    return.dens = return.dens,
                     ...)
     )
   }
@@ -229,7 +233,9 @@ stat_dens2d_filter <-
 #'
 stat_dens2d_filter_g <-
   function(mapping = NULL, data = NULL,
-           geom = "point", position = "identity",
+           geom = "point",
+           position = "identity",
+           ...,
            keep.fraction = 0.10,
            keep.number = Inf,
            keep.sparse = TRUE,
@@ -242,7 +248,7 @@ stat_dens2d_filter_g <-
            inherit.aes = TRUE,
            h = NULL,
            n = NULL,
-           ...) {
+           return.dens = FALSE) {
 
     if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
       stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
@@ -265,6 +271,7 @@ stat_dens2d_filter_g <-
                     invert.selection = invert.selection,
                     h = h,
                     n = n,
+                    return.dens = return.dens,
                     ...)
     )
   }
@@ -281,7 +288,8 @@ dens2d_flt_compute_fun <-
            yintercept,
            invert.selection,
            h,
-           n) {
+           n,
+           return.dens) {
 
     dens2d_labs_compute_fun(data = data,
                             scales = scales,
@@ -295,6 +303,7 @@ dens2d_flt_compute_fun <-
                             invert.selection = invert.selection,
                             h = h,
                             n = n,
+                            return.dens = return.dens,
                             label.fill = NULL)
   }
 
