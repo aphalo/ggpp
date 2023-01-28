@@ -48,6 +48,10 @@
 #'   function that takes the variable mapped to the \code{label} aesthetic as
 #'   first argument and returns a character vector or a logical vector. These
 #'   rows from \code{data} are selected irrespective of the local density.
+#' @param pool.along character, one of \code{"none"} or \code{"x"},
+#'   indicating if selection should be done pooling the observations along the
+#'   \emph{x} aesthetic, or separately on either side of \code{xintercept}.
+#' @param xintercept,yintercept numeric The split points for the data filtering.
 #' @param invert.selection logical If \code{TRUE}, the complement of the
 #'   selected rows are returned.
 #' @param h vector of bandwidths for x and y directions. Defaults to normal
@@ -184,6 +188,9 @@ stat_dens2d_filter <-
            keep.number = Inf,
            keep.sparse = TRUE,
            keep.these = FALSE,
+           pool.along = "xy",
+           xintercept = 0,
+           yintercept = 0,
            invert.selection = FALSE,
            na.rm = TRUE, show.legend = FALSE,
            inherit.aes = TRUE,
@@ -206,6 +213,9 @@ stat_dens2d_filter <-
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
                     keep.these = keep.these,
+                    pool.along = pool.along,
+                    xintercept = xintercept,
+                    yintercept = yintercept,
                     invert.selection = invert.selection,
                     h = h,
                     n = n,
@@ -224,6 +234,9 @@ stat_dens2d_filter_g <-
            keep.number = Inf,
            keep.sparse = TRUE,
            keep.these = FALSE,
+           pool.along = "xy",
+           xintercept = 0,
+           yintercept = 0,
            invert.selection = FALSE,
            na.rm = TRUE, show.legend = FALSE,
            inherit.aes = TRUE,
@@ -246,6 +259,9 @@ stat_dens2d_filter_g <-
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
                     keep.these = keep.these,
+                    pool.along = pool.along,
+                    xintercept = xintercept,
+                    yintercept = yintercept,
                     invert.selection = invert.selection,
                     h = h,
                     n = n,
@@ -260,6 +276,9 @@ dens2d_flt_compute_fun <-
            keep.number,
            keep.sparse,
            keep.these,
+           pool.along,
+           xintercept,
+           yintercept,
            invert.selection,
            h,
            n) {
@@ -270,6 +289,9 @@ dens2d_flt_compute_fun <-
                             keep.number = keep.number,
                             keep.sparse = keep.sparse,
                             keep.these = keep.these,
+                            pool.along = pool.along,
+                            xintercept = xintercept,
+                            yintercept = yintercept,
                             invert.selection = invert.selection,
                             h = h,
                             n = n,

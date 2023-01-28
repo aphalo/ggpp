@@ -42,9 +42,13 @@
 #'   and \code{keep.fraction}. \code{keep.number} sets the maximum number of
 #'   observations selected, whenever \code{keep.fraction} results in fewer
 #'   observations selected, it is obeyed. If `xintercept` is a finite value
-#'   within the \emph{x} range of the data, the data are split into two groups
-#'   and \code{keep.number} and \code{keep.fraction} are applied separately to
-#'   each tail with density still computed jointly from all observations.
+#'   within the \emph{x} range of the data and \code{pool.along} is passed
+#'   \code{"none"} the data as are split into two groups and \code{keep.number}
+#'   and \code{keep.fraction} are applied separately to each tail with density
+#'   still computed jointly from all observations. If the length of
+#'   \code{keep.number} and \code{keep.fraction} is one, this value is used for
+#'   both tails, if their length is two, the first value is use for the left
+#'   tail and the second value for the right tail.
 #'
 #' @note Which points are kept and which not depends on how dense and flexible
 #'   is the density curve estimate. This depends on the values passed as
@@ -279,8 +283,7 @@ dens1d_labs_compute_fun <-
            label.fill) {
 
     force(data)
-    if (!exists("label", data)) {
-#      message("Mapping 'rownames(data)' to missing 'label' aesthetic")
+    if (!exists("label", data) && !is.null(label.fill)) {
       data[["label"]] <- rownames(data)
     }
 
@@ -292,23 +295,22 @@ dens1d_labs_compute_fun <-
 
       selectors <-list(low.tail = data[[orientation]] <= xintercept,
                        high.tail = data[[orientation]] > xintercept)
-      if (length(keep.fraction) == 1L) {
-        keep.fraction <- rep(keep.fraction, 2)
+      if (length(keep.fraction) != 2L) {
+        keep.fraction <- rep_len(keep.fraction, length.out = 2)
       }
-      if (length(keep.number) == 1L) {
-        keep.number <- rep(keep.number, 2)
+      if (length(keep.number) != 2L) {
+        keep.number <- rep_len(keep.number, length.out = 2)
       }
       num.rows <- sapply(selectors, sum) # selectors are logical
     } else {
       num.rows <- nrow(data)
-      selectors <- list(all = rep(TRUE, num.rows))
+      selectors <- list(all = rep.int(TRUE, times = num.rows))
     }
 
     # vectorized
-    keep.fraction <-
-      ifelse(num.rows * keep.fraction > keep.number,
-             keep.number / num.rows,
-             keep.fraction)
+    too.large.frac <- num.rows * keep.fraction > keep.number
+    keep.fraction[too.large.frac] <-
+      keep.number[too.large.frac] / num.rows[too.large.frac]
 
     dens <-
       stats::density(data[[orientation]],
@@ -345,13 +347,9 @@ dens1d_labs_compute_fun <-
       }
     } else if (is.function(label.fill)) {
       if (invert.selection){
-        data[["label"]] <- ifelse(!keep,
-                                  data[["label"]],
-                                  label.fill(data[["label"]]))
+        data[["label"]][keep] <- label.fill(data[["label"]][keep])
       } else {
-        data[["label"]] <- ifelse(keep,
-                                  data[["label"]],
-                                  label.fill(data[["label"]]))
+        data[["label"]][!keep] <- label.fill(data[["label"]][!keep])
       }
     } else {
       if (!is.character(label.fill)) {
@@ -364,13 +362,9 @@ dens1d_labs_compute_fun <-
         }
       }
       if (invert.selection){
-        data[["label"]] <- ifelse(!keep,
-                                  data[["label"]],
-                                  label.fill)
+        data[["label"]][keep] <- label.fill
       } else {
-        data[["label"]] <- ifelse(keep,
-                                  data[["label"]],
-                                  label.fill)
+        data[["label"]][!keep] <- label.fill
       }
     }
 

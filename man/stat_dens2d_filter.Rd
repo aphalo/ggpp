@@ -14,6 +14,9 @@ stat_dens2d_filter(
   keep.number = Inf,
   keep.sparse = TRUE,
   keep.these = FALSE,
+  pool.along = "xy",
+  xintercept = 0,
+  yintercept = 0,
   invert.selection = FALSE,
   na.rm = TRUE,
   show.legend = FALSE,
@@ -32,6 +35,9 @@ stat_dens2d_filter_g(
   keep.number = Inf,
   keep.sparse = TRUE,
   keep.these = FALSE,
+  pool.along = "xy",
+  xintercept = 0,
+  yintercept = 0,
   invert.selection = FALSE,
   na.rm = TRUE,
   show.legend = FALSE,
@@ -69,6 +75,12 @@ regions.}
 function that takes the variable mapped to the \code{label} aesthetic as
 first argument and returns a character vector or a logical vector. These
 rows from \code{data} are selected irrespective of the local density.}
+
+\item{pool.along}{character, one of \code{"none"} or \code{"x"},
+indicating if selection should be done pooling the observations along the
+\emph{x} aesthetic, or separately on either side of \code{xintercept}.}
+
+\item{xintercept, yintercept}{numeric The split points for the data filtering.}
 
 \item{invert.selection}{logical If \code{TRUE}, the complement of the
 selected rows are returned.}

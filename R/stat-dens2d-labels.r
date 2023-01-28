@@ -57,6 +57,10 @@
 #'   function that takes the variable mapped to the \code{label} aesthetic as
 #'   first argument and returns a character vector or a logical vector. These
 #'   rows from \code{data} are selected irrespective of the local density.
+#' @param pool.along character, one of \code{"none"} or \code{"x"},
+#'   indicating if selection should be done pooling the observations along the
+#'   \emph{x} aesthetic, or separately on either side of \code{xintercept}.
+#' @param xintercept,yintercept numeric The split points for the data filtering.
 #' @param invert.selection logical If \code{TRUE}, the complement of the
 #'   selected rows are returned.
 #' @param h vector of bandwidths for x and y directions. Defaults to normal
@@ -177,6 +181,9 @@ stat_dens2d_labels <-
            keep.number = Inf,
            keep.sparse = TRUE,
            keep.these = FALSE,
+           pool.along = "xy",
+           xintercept = 0,
+           yintercept = 0,
            invert.selection = FALSE,
            h = NULL,
            n = NULL,
@@ -203,6 +210,9 @@ stat_dens2d_labels <-
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
                     keep.these = keep.these,
+                    pool.along = pool.along,
+                    xintercept = xintercept,
+                    yintercept = yintercept,
                     invert.selection = invert.selection,
                     h = h,
                     n = n,
@@ -218,70 +228,137 @@ dens2d_labs_compute_fun <-
            keep.number,
            keep.sparse,
            keep.these,
+           pool.along,
+           xintercept,
+           yintercept,
            invert.selection,
            h,
            n,
            label.fill) {
 
     force(data)
-    if (!exists("label", data)) {
-#      message("Mapping 'rownames(data)' to missing 'label' aesthetic")
+    if (!exists("label", data) && !is.null(label.fill)) {
       data[["label"]] <- rownames(data)
     }
 
     keep.these <- keep_these2logical(keep.these = keep.these, data = data)
 
-    if (nrow(data) * keep.fraction > keep.number) {
-      keep.fraction <- keep.number / nrow(data)
+    # check if split needed
+    if (pool.along != "xy") {
+      if (pool.along == "y" &&
+          !(xintercept < max(data[["x"]]) &&
+            xintercept > min(data[["x"]]))) {
+        pool.along <- "xy"
+      } else if (pool.along == "x" &&
+                 !(yintercept < max(data[["y"]]) &&
+                   yintercept > min(data[["y"]]))) {
+        pool.along <- "xy"
+      } else if (pool.along == "none") {
+        if (!(xintercept < max(data[["x"]]) &&
+              xintercept > min(data[["x"]])) &&
+            !(yintercept < max(data[["y"]]) &&
+              yintercept > min(data[["y"]]))) {
+          pool.along <- "xy"
+        } else if (!(xintercept < max(data[["x"]]) &&
+                     xintercept > min(data[["x"]]))) {
+          pool.along <- "x"
+        } else {
+          pool.along <- "y"
+        }
+      }
     }
 
-    if (keep.fraction == 1) {
-      keep <- TRUE
-    } else if (keep.fraction == 0) {
-      keep <- FALSE
+    if (pool.along == "y") {
+       selectors <-list(q12 = data[["x"]] <= xintercept,
+                        q34 = data[["x"]] > xintercept)
+      if (length(keep.fraction) != 2L) {
+        keep.fraction <- rep_len(keep.fraction, length.out = 2)
+      }
+      if (length(keep.number) != 2L) {
+        keep.number <- rep_len(keep.number, length.out = 2)
+      }
+      num.rows <- sapply(selectors, sum) # selectors are logical
+    } else if (pool.along == "x") {
+      selectors <-list(q23 = data[["y"]] <= yintercept,
+                       q41 = data[["y"]] > yintercept)
+      if (length(keep.fraction) != 2L) {
+        keep.fraction <- rep_len(keep.fraction, length.out = 2)
+      }
+      if (length(keep.number) != 2L) {
+        keep.number <- rep_len(keep.number, length.out = 2)
+      }
+      num.rows <- sapply(selectors, sum) # selectors are logical
+    } else if (pool.along == "none") {
+      selectors <-list(q1 = data[["y"]] >= yintercept & data[["x"]] >= xintercept,
+                       q2 = data[["y"]] < yintercept & data[["x"]] >= xintercept,
+                       q3 = data[["y"]] < yintercept & data[["x"]] < xintercept,
+                       q4 = data[["y"]] > yintercept & data[["x"]] < xintercept)
+      if (length(keep.fraction) != 4L) {
+        keep.fraction <- rep_len(keep.fraction, length.out = 4)
+      }
+      if (length(keep.number) != 4L) {
+        keep.number <- rep_len(keep.number, length.out = 4)
+      }
+      num.rows <- sapply(selectors, sum) # selectors are logical
     } else {
+      num.rows <- nrow(data)
+      selectors <- list(all = rep.int(TRUE, times = num.rows))
+    }
 
-      if (is.null(h)) {
-        h <- c(MASS::bandwidth.nrd(data$x), MASS::bandwidth.nrd(data$y))
-      }
+    # vectorized
+    too.large.frac <- num.rows * keep.fraction > keep.number
+    keep.fraction[too.large.frac] <-
+      keep.number[too.large.frac] / num.rows[too.large.frac]
 
-      if (is.null(n)) {
-        n <- trunc(sqrt(nrow(data))) * 8L
-      }
+    # we estimate the density
+    if (is.null(h)) {
+      h <- c(MASS::bandwidth.nrd(data$x), MASS::bandwidth.nrd(data$y))
+    }
+    if (is.null(n)) {
+      n <- trunc(sqrt(nrow(data))) * 8L
+    }
+    kk <-  MASS::kde2d(
+      data[["x"]], data[["y"]], h = h, n = n,
+      lims = c(scales$x$dimension(), scales$y$dimension()))
+    dimnames(kk[["z"]]) <- list(kk[["x"]], kk[["y"]])
 
-      kk <-  MASS::kde2d(
-        data$x, data$y, h = h, n = n,
-        lims = c(scales$x$dimension(), scales$y$dimension()))
+    # Identify points that are in the density regions of the plot.
+    kx <- cut(data$x, kk$x, labels = FALSE, include.lowest = TRUE)
+    ky <- cut(data$y, kk$y, labels = FALSE, include.lowest = TRUE)
+    kz <- sapply(seq_along(kx), function(i) kk$z[kx[i], ky[i]])
 
-      dimnames(kk$z) <- list(kk$x, kk$y)
-
-      # Identify points that are in the low density regions of the plot.
-      kx <- cut(data$x, kk$x, labels = FALSE, include.lowest = TRUE)
-      ky <- cut(data$y, kk$y, labels = FALSE, include.lowest = TRUE)
-      kz <- sapply(seq_along(kx), function(i) kk$z[kx[i], ky[i]])
-
-      if (keep.sparse) {
-        keep <- kz < stats::quantile(kz, keep.fraction, names = FALSE)
+    # we may have a list of 1, 2, or 4 selectors
+    # and vectors of the same length
+    keep <- keep.these
+    for (i in seq_along(selectors)) {
+      if (keep.fraction[i] == 1) {
+        keep <- TRUE
+      } else if (keep.fraction[i] == 0) {
+        keep <- keep
       } else {
-        keep <- kz >= stats::quantile(kz, 1 - keep.fraction, names = FALSE)
+        if (keep.sparse) {
+          keep[ selectors[[i]] ] <-
+            kz[ selectors[[i]] ] < stats::quantile(kz[ selectors[[i]] ],
+                                                   keep.fraction[i], names = FALSE)
+        } else {
+          keep[ selectors[[i]] ] <-
+            kz[ selectors[[i]] ] >= stats::quantile(kz[ selectors[[i]] ],
+                                                    1 - keep.fraction[i], names = FALSE)
+        }
       }
     }
 
     if (is.null(label.fill)) {
       if (invert.selection){
-        data <- data[!(keep | keep.these), ]
+        data <- data[!keep, ]
       } else {
-        data <- data[keep | keep.these, ]
+        data <- data[keep, ]
       }
     } else if (is.function(label.fill)) {
       if (invert.selection){
-        data[["label"]] <- ifelse(!(keep | keep.these),
-                                  data[["label"]],
-                                  label.fill(data[["label"]]))
+        data[["label"]][keep] <- label.fill(data[["label"]][keep])
       } else {
-        data[["label"]] <- ifelse(keep | keep.these,
-                                  data[["label"]],
-                                  label.fill(data[["label"]]))
+        data[["label"]][!keep] <- label.fill(data[["label"]][!keep])
       }
     } else {
       if (!is.character(label.fill)) {
@@ -294,13 +371,9 @@ dens2d_labs_compute_fun <-
         }
       }
       if (invert.selection){
-        data[["label"]] <- ifelse(!(keep | keep.these),
-                                  data[["label"]],
-                                  label.fill)
+        data[["label"]][keep] <- label.fill
       } else {
-        data[["label"]] <- ifelse(keep | keep.these,
-                                  data[["label"]],
-                                  label.fill)
+        data[["label"]][!keep] <- label.fill
       }
     }
 
@@ -355,9 +428,7 @@ keep_these2logical <- function(keep.these, data) {
     }
     if (anyNA(keep.these)) {
       warning("Discarding 'NA's in keep.these")
-      keep.these <- ifelse(is.na(keep.these),
-                           FALSE,
-                           keep.these)
+      keep.these[is.na(keep.these)] <- FALSE
     }
   } else { # replace NULL and vectors with length zero with FALSE
     keep.these <- rep(FALSE, nrow(data))

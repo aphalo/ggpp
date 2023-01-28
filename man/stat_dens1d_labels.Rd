@@ -151,9 +151,13 @@ A plot layer instance. Using as output \code{data} the input
   and \code{keep.fraction}. \code{keep.number} sets the maximum number of
   observations selected, whenever \code{keep.fraction} results in fewer
   observations selected, it is obeyed. If `xintercept` is a finite value
-  within the \emph{x} range of the data, the data are split into two groups
-  and \code{keep.number} and \code{keep.fraction} are applied separately to
-  each tail with density still computed jointly from all observations.
+  within the \emph{x} range of the data and \code{pool.along} is passed
+  \code{"none"} the data as are split into two groups and \code{keep.number}
+  and \code{keep.fraction} are applied separately to each tail with density
+  still computed jointly from all observations. If the length of
+  \code{keep.number} and \code{keep.fraction} is one, this value is used for
+  both tails, if their length is two, the first value is use for the left
+  tail and the second value for the right tail.
 }
 \note{
 Which points are kept and which not depends on how dense and flexible

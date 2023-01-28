@@ -8,13 +8,14 @@ editor_options:
 
 # ggpp 0.5.1
 
--   Add parameter `keep.these` to `stat_dens2d_labels()`, `stat_dens2d_filter()`, 
-    `stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and 
-    `stat_dens1d_filter_g()`.
--   Update `stat_dens1d_labels()`, `stat_dens1d_filter()` and 
-    `stat_dens1d_filter_g()` to allow separate control of kept observations or
-    labels in each tail (or two regions) of the density distribution, still
-    using whole data set estimate of the local density.
+-   Add parameter `keep.these` to `stat_dens2d_labels()`, `stat_dens2d_filter()`,
+`stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and
+`stat_dens1d_filter_g()`.
+-   Update `stat_dens2d_labels()`, `stat_dens2d_filter()`,
+`stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and
+`stat_dens1d_filter_g()` to allow separate control of kept observations or
+labels in each tail (1D) or in each quadrant (2D) of the density distribution,
+still using whole data set estimate of the local density.
 
 # ggpp 0.5.0
 
