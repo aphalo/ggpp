@@ -29,6 +29,21 @@ test_that("numbers_x_tb", {
                                 stat_dens1d_filter(colour = "red",
                                                    keep.fraction = 1/2)
   )
+  vdiffr::expect_doppelganger("stat_d1d_flt_03a",
+                              ggplot(data = make_data_tbl(20), aes(x, y)) +
+                                geom_point() +
+                                stat_dens1d_filter(colour = "red")
+  )
+  vdiffr::expect_doppelganger("stat_d1d_flt_03",
+                              ggplot(data = make_data_tbl(20), aes(x, y)) +
+                                geom_point() +
+                                stat_dens1d_filter(colour = "red")
+  )
+  vdiffr::expect_doppelganger("stat_d1d_flt_03",
+                              ggplot(data = make_data_tbl(20), aes(x, y)) +
+                                geom_point() +
+                                stat_dens1d_filter(colour = "red")
+  )
   vdiffr::expect_doppelganger("stat_d1d_flt_03",
                               ggplot(data = make_data_tbl(20), aes(x, y)) +
                                 geom_point() +
@@ -248,6 +263,258 @@ make_labs_tbl <- function(nrow = 100, rfun = rnorm, ...) {
   )
 }
 
+test_that("labels_x_params", {
+          vdiffr::expect_doppelganger("stat_d1d_lbl_fill_x01",
+                                      ggplot(data = make_labs_tbl(20), aes(x, y, label = lab)) +
+                                        geom_point() +
+                                        stat_dens1d_labels(colour = "red", label.fill = "")
+          )
+          vdiffr::expect_doppelganger("stat_d1d_lbl_fill_x02",
+                                      ggplot(data = make_labs_tbl(20), aes(x, y, label = lab)) +
+                                        geom_point() +
+                                        stat_dens1d_labels(colour = "red", label.fill = NA)
+          )
+          vdiffr::expect_doppelganger("stat_d1d_lbl_fill_x03",
+                                      ggplot(data = make_labs_tbl(20), aes(x, y, label = lab)) +
+                                        geom_point() +
+                                        stat_dens1d_labels(colour = "red", label.fill = "z")
+          )
+          # BUG to be fixed!!
+          # vdiffr::expect_doppelganger("stat_d1d_lbl_fill_x04",
+          #                             ggplot(data = make_labs_tbl(20), aes(x, y, label = lab)) +
+          #                               geom_point() +
+          #                               stat_dens1d_labels(colour = "red", label.fill = toupper)
+          # )
+          vdiffr::expect_doppelganger("stat_d1d_lbl_fill_x05",
+                                      ggplot(data = make_labs_tbl(20), aes(x, y, label = lab)) +
+                                        geom_point() +
+                                        stat_dens1d_labels(label.fill = FALSE)
+          )
+          vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_x01",
+                                      ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                        geom_point() +
+                                        stat_dens1d_labels(colour = "red", keep.fraction = 1/3)
+          )
+          vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_x02",
+                                      ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                        geom_point() +
+                                        stat_dens1d_labels(colour = "red",
+                                                           keep.fraction = 1/3,
+                                                           pool.along = "none")
+          )
+          vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_x03",
+                                      ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                        geom_point() +
+                                        stat_dens1d_labels(colour = "red",
+                                                           keep.fraction = 1/3,
+                                                           pool.along = "none",
+                                                           xintercept = -1)
+          )
+          vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_x04",
+                                      ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                        geom_point() +
+                                        stat_dens1d_labels(colour = "red",
+                                                           keep.fraction = 1/3,
+                                                           pool.along = "none",
+                                                           xintercept = 1)
+          )
+          vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_x05",
+                                      ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                        geom_point() +
+                                        stat_dens1d_labels(colour = "red",
+                                                           keep.fraction = 1/3,
+                                                           pool.along = "none",
+                                                           xintercept = -3)
+          )
+          vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_x06",
+                                      ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                        geom_point() +
+                                        stat_dens1d_labels(colour = "red",
+                                                           keep.fraction = 1/3,
+                                                           pool.along = "none",
+                                                           xintercept = 3)
+          )
+          vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_x07",
+                                      ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                        geom_point() +
+                                        stat_dens1d_labels(colour = "red",
+                                                           keep.fraction = 1,
+                                                           keep.number = 6)
+          )
+          vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_x08",
+                                      ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                        geom_point() +
+                                        stat_dens1d_labels(colour = "red",
+                                                           keep.fraction = 1,
+                                                           keep.number = 3,
+                                                           pool.along = "none")
+          )
+          vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_x09",
+                                      ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                        geom_point() +
+                                        stat_dens1d_labels(colour = "red",
+                                                           keep.fraction = 1,
+                                                           keep.number = c(1, 5),
+                                                           pool.along = "none")
+          )
+          vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_x10",
+                                      ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                        geom_point() +
+                                        stat_dens1d_labels(colour = "red",
+                                                           keep.fraction = 1,
+                                                           keep.number = c(5, 1),
+                                                           pool.along = "none")
+          )
+          vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_x11",
+                                      ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                        geom_point() +
+                                        stat_dens1d_labels(colour = "red",
+                                                           keep.fraction = c(1/3, 0),
+                                                           pool.along = "none")
+          )
+          vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_x12",
+                                      ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                        geom_point() +
+                                        stat_dens1d_labels(colour = "red",
+                                                           keep.fraction = c(0, 1/3),
+                                                           pool.along = "none")
+          )
+})
+
+test_that("labels_y_params", {
+  vdiffr::expect_doppelganger("stat_d1d_lbl_fill_y01",
+                              ggplot(data = make_labs_tbl(20), aes(x, y, label = lab)) +
+                                geom_point() +
+                                stat_dens1d_labels(colour = "red", label.fill = "",
+                                                   orientation = "y")
+  )
+  vdiffr::expect_doppelganger("stat_d1d_lbl_fill_y02",
+                              ggplot(data = make_labs_tbl(20), aes(x, y, label = lab)) +
+                                geom_point() +
+                                stat_dens1d_labels(colour = "red", label.fill = NA,
+                                                   orientation = "y")
+  )
+  vdiffr::expect_doppelganger("stat_d1d_lbl_fill_y03",
+                              ggplot(data = make_labs_tbl(20), aes(x, y, label = lab)) +
+                                geom_point() +
+                                stat_dens1d_labels(colour = "red", label.fill = "z",
+                                                   orientation = "y")
+  )
+  # BUG to be fixed!!
+  # vdiffr::expect_doppelganger("stat_d1d_lbl_fill_y04",
+  #                             ggplot(data = make_labs_tbl(20), aes(x, y, label = lab)) +
+  #                               geom_point() +
+  #                               stat_dens1d_labels(colour = "red", label.fill = toupper,
+  #                                                  orientation = "y")
+  # )
+  vdiffr::expect_doppelganger("stat_d1d_lbl_fill_y05",
+                              ggplot(data = make_labs_tbl(20), aes(x, y, label = lab)) +
+                                geom_point() +
+                                stat_dens1d_labels(label.fill = FALSE,
+                                                   orientation = "y")
+  )
+  vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_y01",
+                              ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                geom_point() +
+                                stat_dens1d_labels(colour = "red", keep.fraction = 1/3,
+                                                   orientation = "y")
+  )
+  vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_y02",
+                              ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                geom_point() +
+                                stat_dens1d_labels(colour = "red",
+                                                   keep.fraction = 1/3,
+                                                   pool.along = "none",
+                                                   orientation = "y")
+  )
+  vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_y03",
+                              ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                geom_point() +
+                                stat_dens1d_labels(colour = "red",
+                                                   keep.fraction = 1/3,
+                                                   pool.along = "none",
+                                                   xintercept = -1,
+                                                   orientation = "y")
+  )
+  vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_y04",
+                              ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                geom_point() +
+                                stat_dens1d_labels(colour = "red",
+                                                   keep.fraction = 1/3,
+                                                   pool.along = "none",
+                                                   xintercept = 1,
+                                                   orientation = "y")
+  )
+  vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_y05",
+                              ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                geom_point() +
+                                stat_dens1d_labels(colour = "red",
+                                                   keep.fraction = 1/3,
+                                                   pool.along = "none",
+                                                   xintercept = -3,
+                                                   orientation = "y")
+  )
+  vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_y06",
+                              ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                geom_point() +
+                                stat_dens1d_labels(colour = "red",
+                                                   keep.fraction = 1/3,
+                                                   pool.along = "none",
+                                                   xintercept = 3,
+                                                   orientation = "y")
+  )
+  vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_y07",
+                              ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                geom_point() +
+                                stat_dens1d_labels(colour = "red",
+                                                   keep.fraction = 1,
+                                                   keep.number = 6,
+                                                   orientation = "y")
+  )
+  vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_y08",
+                              ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                geom_point() +
+                                stat_dens1d_labels(colour = "red",
+                                                   keep.fraction = 1,
+                                                   keep.number = 3,
+                                                   pool.along = "none",
+                                                   orientation = "y")
+  )
+  vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_y09",
+                              ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                geom_point() +
+                                stat_dens1d_labels(colour = "red",
+                                                   keep.fraction = 1,
+                                                   keep.number = c(1, 5),
+                                                   pool.along = "none",
+                                                   orientation = "y")
+  )
+  vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_y10",
+                              ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                geom_point() +
+                                stat_dens1d_labels(colour = "red",
+                                                   keep.fraction = 1,
+                                                   keep.number = c(5, 1),
+                                                   pool.along = "none",
+                                                   orientation = "y")
+  )
+  vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_y11",
+                              ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                geom_point() +
+                                stat_dens1d_labels(colour = "red",
+                                                   keep.fraction = c(1/3, 0),
+                                                   pool.along = "none",
+                                                   orientation = "y")
+  )
+  vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_y12",
+                              ggplot(data = make_labs_tbl(18), aes(x, y, label = lab)) +
+                                geom_point() +
+                                stat_dens1d_labels(colour = "red",
+                                                   keep.fraction = c(0, 1/3),
+                                                   pool.along = "none",
+                                                   orientation = "y")
+  )
+})
 
 test_that("labels_x_tb", {
   vdiffr::expect_doppelganger("stat_d1d_lbl_x01",
