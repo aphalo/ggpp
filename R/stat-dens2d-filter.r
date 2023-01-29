@@ -48,6 +48,10 @@
 #'   function that takes the variable mapped to the \code{label} aesthetic as
 #'   first argument and returns a character vector or a logical vector. These
 #'   rows from \code{data} are selected irrespective of the local density.
+#' @param pool.along character, one of \code{"none"} or \code{"x"},
+#'   indicating if selection should be done pooling the observations along the
+#'   \emph{x} aesthetic, or separately on either side of \code{xintercept}.
+#' @param xintercept,yintercept numeric The split points for the data filtering.
 #' @param invert.selection logical If \code{TRUE}, the complement of the
 #'   selected rows are returned.
 #' @param h vector of bandwidths for x and y directions. Defaults to normal
@@ -55,6 +59,8 @@
 #'   apply to both directions.
 #' @param n Number of grid points in each direction. Can be scalar or a
 #'   length-2 integer vector
+#' @param return.density logical vector of lenght 1. If \code{TRUE} add columns
+#'   \code{"density"} and \code{"keep.obs"} to the returned data frame.
 #' @param position The position adjustment to use for overlapping points on this
 #'   layer
 #' @param show.legend logical. Should this layer be included in the legends?
@@ -160,19 +166,17 @@
 #'   stat_dens2d_filter(geom = "text",
 #'                      keep.these = 1:30)
 #'
-#' # repulsive labels with ggrepel::geom_text_repel()
-#' ggrepel.installed <- requireNamespace("ggrepel", quietly = TRUE)
-#' if (ggrepel.installed) {
-#'   library(ggrepel)
+#' # looking under the hood with gginnards::geom_debug()
+#' gginnards.installed <- requireNamespace("ggrepel", quietly = TRUE)
+#' if (gginnards.installed) {
+#'   library(gginnards)
+#'
+#'   ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+#'     stat_dens2d_filter(geom = "debug")
 #'
 #'   ggplot(data = d, aes(x, y, label = lab, colour = group)) +
 #'     geom_point() +
-#'     stat_dens2d_filter(geom = "text_repel")
-#'
-#'   ggplot(data = d, aes(x, y, label = lab, colour = group)) +
-#'     geom_point() +
-#'     stat_dens2d_filter(geom = "text_repel",
-#'                        keep.these = function(x) {grepl("^u", x)})
+#'     stat_dens2d_filter(geom = "debug", return.density = TRUE)
 #' }
 #'
 #' @export
@@ -180,21 +184,25 @@
 stat_dens2d_filter <-
   function(mapping = NULL, data = NULL,
            geom = "point", position = "identity",
+           ...,
            keep.fraction = 0.10,
            keep.number = Inf,
            keep.sparse = TRUE,
            keep.these = FALSE,
+           pool.along = "xy",
+           xintercept = 0,
+           yintercept = 0,
            invert.selection = FALSE,
            na.rm = TRUE, show.legend = FALSE,
            inherit.aes = TRUE,
            h = NULL,
            n = NULL,
-           ...) {
+           return.density = FALSE) {
 
-    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
+    if (any(is.na(keep.fraction) | keep.fraction < 0 | keep.fraction > 1)) {
       stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
     }
-    if (is.na(keep.number) || keep.number < 0) {
+    if (any(is.na(keep.number) | keep.number < 0)) {
       stop("Out of range or missing value for 'keep.number': ", keep.number)
     }
 
@@ -206,9 +214,13 @@ stat_dens2d_filter <-
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
                     keep.these = keep.these,
+                    pool.along = pool.along,
+                    xintercept = xintercept,
+                    yintercept = yintercept,
                     invert.selection = invert.selection,
                     h = h,
                     n = n,
+                    return.density = return.density,
                     ...)
     )
   }
@@ -219,17 +231,22 @@ stat_dens2d_filter <-
 #'
 stat_dens2d_filter_g <-
   function(mapping = NULL, data = NULL,
-           geom = "point", position = "identity",
+           geom = "point",
+           position = "identity",
+           ...,
            keep.fraction = 0.10,
            keep.number = Inf,
            keep.sparse = TRUE,
            keep.these = FALSE,
+           pool.along = "xy",
+           xintercept = 0,
+           yintercept = 0,
            invert.selection = FALSE,
            na.rm = TRUE, show.legend = FALSE,
            inherit.aes = TRUE,
            h = NULL,
            n = NULL,
-           ...) {
+           return.density = FALSE) {
 
     if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
       stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
@@ -246,9 +263,13 @@ stat_dens2d_filter_g <-
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
                     keep.these = keep.these,
+                    pool.along = pool.along,
+                    xintercept = xintercept,
+                    yintercept = yintercept,
                     invert.selection = invert.selection,
                     h = h,
                     n = n,
+                    return.density = return.density,
                     ...)
     )
   }
@@ -260,9 +281,13 @@ dens2d_flt_compute_fun <-
            keep.number,
            keep.sparse,
            keep.these,
+           pool.along,
+           xintercept,
+           yintercept,
            invert.selection,
            h,
-           n) {
+           n,
+           return.density) {
 
     dens2d_labs_compute_fun(data = data,
                             scales = scales,
@@ -270,9 +295,13 @@ dens2d_flt_compute_fun <-
                             keep.number = keep.number,
                             keep.sparse = keep.sparse,
                             keep.these = keep.these,
+                            pool.along = pool.along,
+                            xintercept = xintercept,
+                            yintercept = yintercept,
                             invert.selection = invert.selection,
                             h = h,
                             n = n,
+                            return.density = return.density,
                             label.fill = NULL)
   }
 

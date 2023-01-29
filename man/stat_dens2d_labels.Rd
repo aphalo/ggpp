@@ -14,10 +14,14 @@ stat_dens2d_labels(
   keep.number = Inf,
   keep.sparse = TRUE,
   keep.these = FALSE,
+  pool.along = "xy",
+  xintercept = 0,
+  yintercept = 0,
   invert.selection = FALSE,
   h = NULL,
   n = NULL,
   label.fill = "",
+  return.density = FALSE,
   na.rm = TRUE,
   show.legend = FALSE,
   inherit.aes = TRUE
@@ -56,6 +60,12 @@ function that takes the variable mapped to the \code{label} aesthetic as
 first argument and returns a character vector or a logical vector. These
 rows from \code{data} are selected irrespective of the local density.}
 
+\item{pool.along}{character, one of \code{"none"} or \code{"x"},
+indicating if selection should be done pooling the observations along the
+\emph{x} aesthetic, or separately on either side of \code{xintercept}.}
+
+\item{xintercept, yintercept}{numeric The split points for the data filtering.}
+
 \item{invert.selection}{logical If \code{TRUE}, the complement of the
 selected rows are returned.}
 
@@ -67,6 +77,9 @@ apply to both directions.}
 integer vector}
 
 \item{label.fill}{character vector of length 1, a function or \code{NULL}.}
+
+\item{return.density}{logical vector of lenght 1. If \code{TRUE} add columns
+\code{"density"} and \code{"keep.obs"} to the returned data frame.}
 
 \item{na.rm}{a logical value indicating whether NA values should be stripped
 before the computation proceeds.}
@@ -194,6 +207,22 @@ if (gginnards.installed) {
   ggplot(data = d, aes(x, y, label = lab)) +
     geom_point() +
     stat_dens2d_labels(geom = "debug")
+
+  ggplot(data = d, aes(x, y, label = lab)) +
+    geom_point() +
+    stat_dens2d_labels(geom = "debug", return.density = TRUE)
+
+  ggplot(data = d, aes(x, y, label = lab)) +
+    geom_point() +
+    stat_dens2d_labels(geom = "debug", label.fill = NULL)
+
+  ggplot(data = d, aes(x, y, label = lab)) +
+    geom_point() +
+    stat_dens2d_labels(geom = "debug", label.fill = FALSE, return.density = TRUE)
+
+  ggplot(data = d, aes(x, y, label = lab)) +
+    geom_point() +
+    stat_dens2d_labels(geom = "debug", label.fill = NULL, return.density = TRUE)
 
   ggplot(data = d, aes(x, y)) +
     geom_point() +
