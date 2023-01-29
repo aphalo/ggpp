@@ -28,11 +28,9 @@ test_that("stat_dens2d_filter_g, change default arguments", {
 })
 
 test_that("stat_dens2d_filter_g, incorrect argument", {
-  p1 <- ggplot(data = d, aes(x, y, colour = group)) +
+  expect_error(ggplot(data = d, aes(x, y, colour = group)) +
     geom_point() +
     stat_dens2d_filter_g(colour = "black",
-                         shape = 1, size = 3, keep.fraction = 2)
-
-  result <- expect_warning(layer_data(p1))
+                         shape = 1, size = 3, keep.fraction = 2))
 })
 

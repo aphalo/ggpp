@@ -30,11 +30,9 @@ test_that("stat_dens1d_filter_g, change default arguments", {
 })
 
 test_that("stat_dens1d_filter_g, incorrect argument", {
-  p1 <- ggplot(data = d, aes(xg, y, colour = group)) +
+  expect_error(ggplot(data = d, aes(xg, y, colour = group)) +
     geom_point() +
     geom_rug(sides = "b") +
     stat_dens1d_filter_g(colour = "black",
-                         shape = 1, size = 3, keep.fraction = 2, adjust = 2)
-
-  result <- expect_warning(layer_data(p1))
+                         shape = 1, size = 3, keep.fraction = 2, adjust = 2))
 })
