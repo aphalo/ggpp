@@ -199,10 +199,10 @@ stat_dens2d_filter <-
            n = NULL,
            return.density = FALSE) {
 
-    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
+    if (any(is.na(keep.fraction) | keep.fraction < 0 | keep.fraction > 1)) {
       stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
     }
-    if (is.na(keep.number) || keep.number < 0) {
+    if (any(is.na(keep.number) | keep.number < 0)) {
       stop("Out of range or missing value for 'keep.number': ", keep.number)
     }
 

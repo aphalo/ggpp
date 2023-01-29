@@ -214,10 +214,13 @@ stat_dens2d_labels <-
     if (length(label.fill) > 1L) {
       stop("Length for 'label.fill' is not 1: ", label.fill)
     }
-    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
+    if (is.numeric(label.fill)) {
+      stop("'label.fill' should not be a 'numeric' value: ", label.fill)
+    }
+    if (any(is.na(keep.fraction) | keep.fraction < 0 | keep.fraction > 1)) {
       stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
     }
-    if (is.na(keep.number) || keep.number < 0) {
+    if (any(is.na(keep.number) | keep.number < 0)) {
       stop("Out of range or missing value for 'keep.number': ", keep.number)
     }
 
@@ -283,7 +286,8 @@ dens2d_labs_compute_fun <-
         } else if (!(xintercept < max(data[["x"]]) &&
                      xintercept > min(data[["x"]]))) {
           pool.along <- "x"
-        } else {
+        } else if (!(yintercept < max(data[["y"]]) &&
+                     yintercept > min(data[["y"]]))) {
           pool.along <- "y"
         }
       }
@@ -354,10 +358,8 @@ dens2d_labs_compute_fun <-
     keep <- keep.these
     for (i in seq_along(selectors)) {
       if (keep.fraction[i] == 1) {
-        keep <- TRUE
-      } else if (keep.fraction[i] == 0) {
-        keep <- keep
-      } else {
+        keep[ selectors[[i]] ] <- TRUE
+      } else if (keep.fraction[i] != 0) {
         if (keep.sparse) {
           keep[ selectors[[i]] ] <-
             kz[ selectors[[i]] ] < stats::quantile(kz[ selectors[[i]] ],

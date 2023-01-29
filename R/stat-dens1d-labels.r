@@ -353,10 +353,8 @@ dens1d_labs_compute_fun <-
     keep <- keep.these
     for (i in seq_along(selectors)) {
       if (keep.fraction[i] == 1) {
-        keep <- TRUE
-      } else if (keep.fraction[i] == 0) {
-        keep <- keep
-      } else {
+        keep[ selectors[[i]] ] <- TRUE
+      } else if (keep.fraction[i] != 0) {
         if (keep.sparse) {
           keep[ selectors[[i]] ] <-
             keep[ selectors[[i]] ] |
