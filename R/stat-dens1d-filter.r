@@ -193,14 +193,17 @@
 #'   geom_point() +
 #'   stat_dens1d_filter(geom = "text", hjust = "outward")
 #'
-#' # repulsive labels with ggrepel::geom_text_repel()
-#' ggrepel.installed <- requireNamespace("ggrepel", quietly = TRUE)
-#' if (ggrepel.installed) {
-#'   library(ggrepel)
+#' # looking under the hood with gginnards::geom_debug()
+#' gginnards.installed <- requireNamespace("ggrepel", quietly = TRUE)
+#' if (gginnards.installed) {
+#'   library(gginnards)
 #'
 #'   ggplot(data = d, aes(x, y, label = lab, colour = group)) +
-#'     geom_point() +
-#'     stat_dens1d_filter(geom = "text_repel")
+#'     stat_dens1d_filter(geom = "debug")
+#'
+#'   ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+#'     stat_dens1d_filter(geom = "debug", return.density = TRUE)
+#'
 #' }
 #'
 #' @export
