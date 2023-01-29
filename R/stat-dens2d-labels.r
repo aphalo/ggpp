@@ -381,14 +381,14 @@ dens2d_labs_compute_fun <-
 
     if (is.null(label.fill)) {
       data <- data[keep, ]
+    } else if (is.function(label.fill)) {
+      data[["label"]][!keep] <- label.fill(data[["label"]][!keep])
     } else if (is.na(label.fill)) {
       # NA_logical_, the default NA, cannot always be assigned to character
       label.fill <- NA_character_
       data[["label"]][!keep] <- label.fill
     } else if (is.character(label.fill)) {
       data[["label"]][!keep] <- label.fill
-    } else if (is.function(label.fill)) {
-      data[["label"]][!keep] <- label.fill(data[["label"]][!keep])
     } else if (is.logical(label.fill)) {
       if (label.fill) {
         data[["label"]][!keep] <- ""

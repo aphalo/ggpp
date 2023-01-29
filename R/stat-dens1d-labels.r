@@ -254,7 +254,10 @@ stat_dens1d_labels <-
            inherit.aes = TRUE) {
 
     if (length(label.fill) > 1L) {
-      stop("Length for 'label.fill' is not 1: ", label.fill)
+      stop("Length for 'label.fill' is not 0 or 1: ", label.fill)
+    }
+    if (is.numeric(label.fill)) {
+      stop("'label.fill' should not be a 'numeric' value: ", label.fill)
     }
     if (any(is.na(keep.fraction) | keep.fraction < 0 | keep.fraction > 1)) {
       stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
@@ -378,14 +381,14 @@ dens1d_labs_compute_fun <-
 
     if (is.null(label.fill)) {
       data <- data[keep, ]
+    } else if (is.function(label.fill)) {
+      data[["label"]][!keep] <- label.fill(data[["label"]][!keep])
     } else if (is.na(label.fill)) {
       # NA_logical_, the default NA, cannot always be assigned to character
       label.fill <- NA_character_
       data[["label"]][!keep] <- label.fill
     } else if (is.character(label.fill)) {
       data[["label"]][!keep] <- label.fill
-    } else if (is.function(label.fill)) {
-      data[["label"]][!keep] <- label.fill(data[["label"]][!keep])
     } else if (is.logical(label.fill)) {
       if (label.fill) {
         data[["label"]][!keep] <- ""
