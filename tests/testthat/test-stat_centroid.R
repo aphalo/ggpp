@@ -46,15 +46,15 @@ test_that("stat_centroid, changed default shape and size", {
 
 test_that("stat_centroid, geom 'rug' function median applied", {
   p1 <- ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-    stat_centroid(geom = "rug", size = 1.5, .fun = median) +
+    stat_centroid(geom = "rug", linewidth = 1.5, .fun = median) +
     geom_point()
 
-  result <- layer_data(p1)[, c("x", "y", "size", "linetype")]
+  result <- layer_data(p1)[, c("x", "y", "linewidth", "linetype")]
 
   expected <- data.frame(
     x = c(3,3),
     y = c(0.3912557, 0.1983447),
-    size = c(1.5, 1.5),
+    linewidth = c(1.5, 1.5),
     linetype = c(1, 1)
   )
   expect_identical(format(result, digits = 7), format(expected, digits = 7))
