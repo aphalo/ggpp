@@ -81,9 +81,9 @@ test_that("annotation_* has dummy data assigned and don't inherit aes", {
   expect_false(raster$inherit.aes)
 })
 
-context("ggpmisc_annotate")
+context("ggpp_annotate")
 
-test_that("ggpmisc::annotate works with npc pseudo-aesthetics", {
+test_that("ggpp::annotate works with npc pseudo-aesthetics", {
 
 p <- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
 
