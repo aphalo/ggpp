@@ -597,7 +597,7 @@ test_that("labels_params", {
                                 geom_point() +
                                 stat_dens2d_labels(colour = "red",
                                                    keep.fraction = 1,
-                                                   keep.number = 3,
+                                                   keep.number = 12,
                                                    pool.along = "none")
   )
 

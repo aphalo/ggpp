@@ -16,6 +16,7 @@ editor_options:
 `stat_dens1d_filter_g()` to allow separate control of kept observations or
 labels in each tail (1D) or in each quadrant (2D) of the density distribution,
 still using an estimate of the local density computed from the whole data set.
+-   Improv unit test coverage.
 
 # ggpp 0.5.0
 
