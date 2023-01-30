@@ -544,7 +544,7 @@ test_that("labels_x_params", {
                                         geom_point() +
                                         stat_dens1d_labels(colour = "red",
                                                            keep.fraction = 1,
-                                                           keep.number = 3,
+                                                           keep.number = 6,
                                                            pool.along = "none")
           )
           vdiffr::expect_doppelganger("stat_d1d_lbl_keep_frac_x09",
@@ -673,7 +673,7 @@ test_that("labels_y_params", {
                                 geom_point() +
                                 stat_dens1d_labels(colour = "red",
                                                    keep.fraction = 1,
-                                                   keep.number = 3,
+                                                   keep.number = 6,
                                                    pool.along = "none",
                                                    orientation = "y")
   )

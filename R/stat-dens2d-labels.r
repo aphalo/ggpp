@@ -8,16 +8,16 @@
 #'   to \code{rownames(data)}, with a message.
 #'
 #' @details \code{stat_dens2d_labels()} is designed to work together with
-#'   geometries from packages 'ggrepel'. To avoid text labels being plotted over
-#'   unlabelled points the corresponding rows in data need to be retained but
+#'   geometries from package 'ggrepel'. To avoid text labels being plotted over
+#'   unlabelled points all the rows in data need to be retained but
 #'   labels replaced with the empty character string, \code{""}. Function
 #'   \code{\link{stat_dens2d_filter}} cannot be used with the repulsive geoms
-#'   from 'ggrepel' because it drops the observations.
+#'   from 'ggrepel' because it drops observations.
 #'
 #'   \code{stat_dens2d_labels()} can be useful also in other situations, as the
 #'   substitution character string can be set by the user by passing an argument
 #'   to \code{label.fill}. If this argument is \code{NULL} the unselected rows
-#'   are filtered out.
+#'   are filtered out identically as by \code{stat_dens2d_filter}.
 #'
 #'   The local density of observations in 2D (\emph{x} and \emph{y}) is computed
 #'   with function \code{\link[MASS]{kde2d}} and used to select observations,
@@ -29,9 +29,9 @@
 #'   passing a suitable argument to \code{keep.these}. Logical and integer
 #'   vectors function as indexes to rows in \code{data}, while a character
 #'   vector is compared to values in the variable mapped to the \code{label}
-#'   aesthetic. A function passed as argument to keep.these will receive as
-#'   argument the values in the variable mapped to \code{label} and should
-#'   return a character, logical or numeric vector as described above.
+#'   aesthetic. A function passed as argument to \code{keep.these} will receive
+#'   as its first argument the values in the variable mapped to \code{label} and
+#'   should return a character, logical or numeric vector as described above.
 #'
 #'   How many labels are retained intact in addition to those in
 #'   \code{keep.these} is controlled with arguments passed to \code{keep.number}
@@ -301,6 +301,9 @@ dens2d_labs_compute_fun <-
         keep.fraction <- rep_len(keep.fraction, length.out = 2)
       }
       if (length(keep.number) != 2L) {
+        if (length(keep.number) == 1L) {
+          keep.number <- keep.number %/% 2
+        }
         keep.number <- rep_len(keep.number, length.out = 2)
       }
       num.rows <- sapply(selectors, sum) # selectors are logical
@@ -311,6 +314,9 @@ dens2d_labs_compute_fun <-
         keep.fraction <- rep_len(keep.fraction, length.out = 2)
       }
       if (length(keep.number) != 2L) {
+        if (length(keep.number) == 1L) {
+          keep.number <- keep.number %/% 2
+        }
         keep.number <- rep_len(keep.number, length.out = 2)
       }
       num.rows <- sapply(selectors, sum) # selectors are logical
@@ -323,10 +329,15 @@ dens2d_labs_compute_fun <-
         keep.fraction <- rep_len(keep.fraction, length.out = 4)
       }
       if (length(keep.number) != 4L) {
+        if (length(keep.number) == 1L) {
+          keep.number <- keep.number %/% 4
+        }
         keep.number <- rep_len(keep.number, length.out = 4)
       }
       num.rows <- sapply(selectors, sum) # selectors are logical
     } else {
+      keep.fraction <- keep.fraction[[1]] # can be a vector or a list
+      keep.number <- keep.number[[1]]
       num.rows <- nrow(data)
       selectors <- list(all = rep.int(TRUE, times = num.rows))
     }
