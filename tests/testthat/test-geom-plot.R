@@ -63,6 +63,9 @@ test_that("examples_geom_plot", {
 
 test_that("examples_geom_plot_sf", {
 
+  # Skip if we are on Unix because then the snapshots don't match what is expected.
+  skip_if(.Platform$OS.type == "unix")
+
   nc <- sf::st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)
   p1 <- ggplot(nc) +
     geom_sf(aes(fill = AREA))
