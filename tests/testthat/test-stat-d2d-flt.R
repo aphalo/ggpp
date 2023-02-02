@@ -438,7 +438,7 @@ test_that("labels_params", {
       stat_dens2d_labels(keep.fraction = 1)
   )
 
-  testthat::expect_no_error(
+  testthat::expect_warning(
     ggplot(data = make_labs_tbl(20), aes(x, y, label = lab)) +
       stat_dens2d_labels(keep.fraction = rep(0.1, 2))
   )
@@ -455,7 +455,7 @@ test_that("labels_params", {
                          pool.along = "none")
   )
 
-  testthat::expect_no_error(
+  testthat::expect_error(
     ggplot(data = make_labs_tbl(160), aes(x, y, label = lab)) +
       stat_dens2d_labels(keep.fraction = rep(0.1, 6),
                          pool.along = "none")
@@ -479,7 +479,7 @@ test_that("labels_params", {
                          pool.along = "xy")
   )
 
-  testthat::expect_no_error(
+  testthat::expect_warning(
     ggplot(data = make_labs_tbl(20), aes(x, y, label = lab)) +
       stat_dens2d_labels(keep.fraction = rep(0.1, 5))
   )

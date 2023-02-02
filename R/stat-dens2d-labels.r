@@ -223,6 +223,21 @@ stat_dens2d_labels <-
     if (any(is.na(keep.number) | keep.number < 0)) {
       stop("Out of range or missing value for 'keep.number': ", keep.number)
     }
+    max.expected.length <- c(none = 4L, x = 2L, y = 2L, xy = 1L)[pool.along]
+    if (length(keep.fraction) > max.expected.length) {
+      if (max.expected.length == 4L) {
+        stop("Length of 'keep.fraction' should not exceed 4")
+      } else {
+        warning("'keep.fraction' is too long, did you forget to set 'pool.along'?")
+      }
+    }
+    if (length(keep.number) > max.expected.length) {
+      if (max.expected.length == 4L) {
+        stop("Length of 'keep.number' should not exceed 4")
+      } else {
+        warning("'keep.number' is too long, did you forget to set 'pool.along'?")
+      }
+    }
 
     ggplot2::layer(
       stat = StatDens2dLabels, data = data, mapping = mapping, geom = geom,

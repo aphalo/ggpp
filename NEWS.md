@@ -10,13 +10,18 @@ editor_options:
 
 -   Add parameter `keep.these` to `stat_dens2d_labels()`, `stat_dens2d_filter()`,
 `stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and
-`stat_dens1d_filter_g()`.
+`stat_dens1d_filter_g()` allowing forcing the inclusion of specific observations
+irrespective of the local density.
 -   Update `stat_dens2d_labels()`, `stat_dens2d_filter()`,
 `stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and
 `stat_dens1d_filter_g()` to allow separate control of kept observations or
 labels in each tail (1D) or in each quadrant (2D) of the density distribution,
 still using an estimate of the local density computed from the whole data set.
--   Improv unit test coverage.
+-   Add parameter `return.density` to `stat_dens2d_labels()`, `stat_dens2d_filter()`,
+`stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and
+`stat_dens1d_filter_g()` to request the local density estimate at the position
+of each observation to be returned in numeric variable `density` and the outcome
+of the test in logical variable `keep`.
 
 # ggpp 0.5.0
 
