@@ -3,7 +3,6 @@
 ^\.Rhistory
 vignettes/figure
 inst-not
-test
 data-raw
 ^CONDUCT\.md$
 ^_pkgdown\.yml$
