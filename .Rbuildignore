@@ -3,8 +3,8 @@
 ^\.Rhistory
 vignettes/figure
 inst-not
+tests-not
 data-raw
-tests/testthat/test-sf-compatibility\.R
 ^CONDUCT\.md$
 ^_pkgdown\.yml$
 ^pkgdown$
