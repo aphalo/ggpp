@@ -45,9 +45,8 @@ the plot defaults.}
 \item{position}{The position adjustment to use for overlapping points on this
 layer}
 
-\item{pool.along}{character, one of \code{"none"}, \code{"x"} or \code{"y"},
-indicating which quadrants to pool to calculate counts by pair of
-quadrants.}
+\item{pool.along}{character, one of \code{"none"}, \code{"x"}, \code{"y"}, or
+\code{"xy"} indicating whether to plot or not lines separating quadrants.}
 
 \item{xintercept, yintercept}{numeric vectors the coordinates of the origin of the
 quadrants.}
@@ -83,7 +82,7 @@ lines consistent with the counts by quadrant computed by this stat.
 }
 \details{
 While \code{geom_vhlines()} does not provide defaults for the
-  intercepts and accept vectors of length > 1, \code{geom_quadrant_lines()}
+  intercepts and accepts vectors of length > 1, \code{geom_quadrant_lines()}
   sets by default the intercepts to zero producing the natural quadrants and
   only accepts vectors of length one per panel. That is \code{geom_vhlines()}
   can be used to plot a grid while \code{geom_quadrant_lines()} plots at
@@ -121,6 +120,14 @@ ggplot(my.data, aes(x, y)) +
 ggplot(my.data, aes(x, y)) +
   geom_vhlines(xintercept = c(25, 50, 75),
                yintercept = 10 ,
+               linetype = "dotted",
+               colour = "red") +
+  geom_point() +
+  theme_bw()
+
+ggplot(my.data, aes(x, y)) +
+  geom_vhlines(xintercept = c(25, 50, 75),
+               yintercept = c(10, 5),
                linetype = "dotted",
                colour = "red") +
   geom_point() +
