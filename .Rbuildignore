@@ -4,6 +4,7 @@
 vignettes/figure
 inst-not
 data-raw
+tests/testthat/test-sf-compatibility\.R
 ^CONDUCT\.md$
 ^_pkgdown\.yml$
 ^pkgdown$
