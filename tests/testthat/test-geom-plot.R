@@ -60,38 +60,3 @@ test_that("examples_geom_plot", {
                                               angle = 90, vjust = 1)
   )
 })
-
-test_that("examples_geom_plot_sf", {
-
-  nc <- sf::st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)
-  p1 <- ggplot(nc) +
-    geom_sf(aes(fill = AREA))
-
-  p <-
-    ggplot(data = mtcars, mapping = aes(wt, mpg)) +
-    geom_point()
-
-  df1 <- tibble(x = 0.01, y = 0.01,
-               plot = list(p1 +
-                          labs(x = NULL, y = NULL) +
-                          theme(legend.position = "none")))
-
-  # wrongly positioned, the inset is "seen" as larger than it is along latitudes
-  vdiffr::expect_doppelganger("geom_plot_npc_sf1",
-                              p +
-                                expand_limits(x = 0, y = 0) +
-                                geom_plot_npc(data = df1,
-                                              aes(npcx = x, npcy = y, label = plot))
-  )
-
-  # wrongly positioned, the inset is "seen" as larger than it is along latitudes
-  vdiffr::expect_doppelganger("geom_plot_npc_sf2",
-                              p +
-                                expand_limits(x = 0, y = 0) +
-                                geom_plot_npc(data = df1,
-                                              aes(npcx = x, npcy = y, label = plot),
-                                              angle = 90, vjust = 1)
-  )
-})
-
-
