@@ -183,18 +183,22 @@ test_that("nudge_line", {
     l = letters[1:21]
   )
 
-  vdiffr::expect_doppelganger("nudge_line1",
-                              ggplot(df, aes(x, y, label = l)) +
-                                geom_line() +
-                                geom_point() +
-                                geom_text(position = position_nudge_line())
-  )
-  vdiffr::expect_doppelganger("nudge_line2",
-                              ggplot(df, aes(x, y, label = l)) +
-                                geom_line() +
-                                geom_point() +
-                                geom_text(position = position_nudge_line(xy_relative = -0.03))
-  )
+  { # output under linux does not match snapshots created under Windows
+    skip_on_os(c("mac", "linux", "solaris"))
+    vdiffr::expect_doppelganger("nudge_line1",
+                                ggplot(df, aes(x, y, label = l)) +
+                                  geom_line() +
+                                  geom_point() +
+                                  geom_text(position = position_nudge_line())
+    )
+    vdiffr::expect_doppelganger("nudge_line2",
+                                ggplot(df, aes(x, y, label = l)) +
+                                  geom_line() +
+                                  geom_point() +
+                                  geom_text(position = position_nudge_line(xy_relative = -0.03))
+    )
+  }
+
   vdiffr::expect_doppelganger("nudge_line3",
                               ggplot(df, aes(x, x * 2 + 5, label = l)) +
                                 geom_abline(intercept = 5, slope = 2) +
