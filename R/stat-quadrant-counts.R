@@ -295,5 +295,3 @@ StatQuadrantCounts <-
                                   vjust = "inward"),
                    required_aes = c("x", "y")
   )
-
-

@@ -464,7 +464,7 @@ gtb_draw_panel_fun <-
                                    ifelse(any(colour.target %in% c("all", "segment")),
                                           ggplot2::alpha(row$colour, segment.alpha),
                                           ggplot2::alpha(default.colour, segment.alpha)),
-                                 lwd = (if (segment.linewidth == 0) 1 else segment.linewidth) * .stroke),
+                                 lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
                                name = paste("table.s.segment", row$group, row.idx, sep = "."))
         }
         all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)

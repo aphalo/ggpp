@@ -1,4 +1,4 @@
-\documentclass[DIV=21,a3,landscape,9pt]{scrartcl}
+\documentclass[DIV=25,a3,landscape,9pt]{scrartcl}
 \include{set-up-fonts-and-icons}
 
 \usepackage{multicol}
@@ -23,7 +23,7 @@
 
 <<setup-knitr, include=FALSE, cache=FALSE>>=
 library(knitr)
-opts_chunk$set(fig.path='figure/pos-', fig.align='center', fig.show='hold', size="small",            
+opts_chunk$set(fig.path='figure/pos-', fig.align='center', fig.show='hold', size="small",
                fig.width=7, fig.height=4.2, out.width='0.97\\textwidth')
 @
 
@@ -109,13 +109,15 @@ When adding data labels to data-dense scatter plots we may want to only add labe
 \section*{Summaries}
 
 In most cases \textbf{stat\_summary()} from `ggplot2' has the capabilities we need. Package `ggpp' adds statistics that cater for special cases: summarizing both \textbf{x} and \textbf{y} in the same layer and computing summaries per quadrant of a plot. Finally \textbf{stat\_apply\_group()} applies a function to the \textbf{data} by groups, making it possible to apply functions to compute running and cumulative summaries.\vspace{1ex}
- 
+
 \noindent
+\textbf{stat\_panel\_counts()}\\
+\textbf{stat\_group\_counts()}\\
 \textbf{stat\_quadrant\_counts()}\\
-\textbf{stat\_apply\_group()}\\ 
+\textbf{stat\_apply\_group()}\\
 \textbf{stat\_summary\_xy()}\\
 \textbf{stat\_centroid()}
-    
+
 \section*{Computed nudging}
 
 In package `ggplot2' nudging is applied with function \textbf{position\_nudge()} based on constant values supplied by the user, and the new positions replace the original ones in \textbf{data}. Package `ggpp' provides positions with which the displacements are computed either based on the observations being plotted or based on reference positions supplied by the users, and additionally the original positions renamed in \textbf{data} as \texttt{x\_orig} and \texttt{y\_orig}.\vspace{1ex}

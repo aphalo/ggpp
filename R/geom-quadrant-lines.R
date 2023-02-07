@@ -29,14 +29,13 @@
 #'   \code{\link[ggplot2]{layer}} for more details.
 #' @param na.rm	a logical indicating whether NA values should be stripped before
 #'   the computation proceeds.
-#' @param pool.along character, one of \code{"none"}, \code{"x"} or \code{"y"},
-#'   indicating which quadrants to pool to calculate counts by pair of
-#'   quadrants.
+#' @param pool.along character, one of \code{"none"}, \code{"x"}, \code{"y"}, or
+#'   \code{"xy"} indicating whether to plot or not lines separating quadrants.
 #' @param xintercept,yintercept numeric vectors the coordinates of the origin of the
 #'   quadrants.
 #'
 #' @details While \code{geom_vhlines()} does not provide defaults for the
-#'   intercepts and accept vectors of length > 1, \code{geom_quadrant_lines()}
+#'   intercepts and accepts vectors of length > 1, \code{geom_quadrant_lines()}
 #'   sets by default the intercepts to zero producing the natural quadrants and
 #'   only accepts vectors of length one per panel. That is \code{geom_vhlines()}
 #'   can be used to plot a grid while \code{geom_quadrant_lines()} plots at
@@ -88,6 +87,14 @@
 #'   geom_point() +
 #'   theme_bw()
 #'
+#' ggplot(my.data, aes(x, y)) +
+#'   geom_vhlines(xintercept = c(25, 50, 75),
+#'                yintercept = c(10, 8),
+#'                linetype = "dotted",
+#'                colour = "red") +
+#'   geom_point() +
+#'   theme_bw()
+#'
 geom_quadrant_lines <- function(mapping = NULL,
                                 data = NULL,
                                 stat = "identity",
@@ -97,9 +104,10 @@ geom_quadrant_lines <- function(mapping = NULL,
                                 yintercept = 0,
                                 na.rm = FALSE,
                                 show.legend = FALSE,
-                                inherit.aes = FALSE, ...) {
+                                inherit.aes = FALSE,
+                                ...) {
 
-  stopifnot(pool.along %in% c("none", "x", "y"))
+  stopifnot(pool.along %in% c("none", "x", "y", "xy"))
   stopifnot(length(xintercept) <= 1 && length(yintercept) <= 1)
 
   # Act like an annotation
@@ -136,15 +144,23 @@ geom_quadrant_lines <- function(mapping = NULL,
 GeomQuadrantLines <-
   ggplot2::ggproto(
     "GeomQuadrantLines", Geom,
-    draw_panel = function(data, panel_params, coord, pool.along = "none", lineend = "butt") {
+    draw_panel = function(data,
+                          panel_params,
+                          coord,
+                          pool.along = "none",
+                          lineend = "butt") {
       ranges <- coord$backtransform_range(panel_params)
       data.hline <- data.vline <- data
 
+      if (pool.along == "xy") {
+        return(grid::nullGrob())
+      }
+
       if (!grepl("y", x = pool.along, ignore.case = TRUE)) {
-        data.hline[["x"]]    <- ranges[["x"]][1]
-        data.hline[["xend"]] <- ranges[["x"]][2]
         data.hline[["y"]]    <- data[["yintercept"]][1]
         data.hline[["yend"]] <- data[["yintercept"]][1]
+        data.hline[["x"]]    <- ranges[["x"]][1]
+        data.hline[["xend"]] <- ranges[["x"]][2]
       }
 
       if (!grepl("x", x = pool.along, ignore.case = TRUE)) {
@@ -195,8 +211,9 @@ geom_vhlines <- function(mapping = NULL, data = NULL,
                                 inherit.aes = FALSE, ...) {
   # Act like an annotation
   if (!is.null(xintercept) && !is.null(yintercept)) {
-    data <- as.data.frame(list(xintercept = xintercept,
-                               yintercept = yintercept))
+    num.rows <- max(length(xintercept), length(yintercept))
+    data <- as.data.frame(list(xintercept = rep_len(xintercept, num.rows),
+                               yintercept = rep_len(yintercept, num.rows)))
     mapping <- ggplot2::aes(xintercept = xintercept,
                             yintercept = yintercept)
     show.legend <- FALSE
@@ -230,13 +247,16 @@ GeomVHLines <-
       ranges <- coord$backtransform_range(panel_params)
       data.hline <- data.vline <- data
 
+      # when xintercept and yintercept differ in lengths some lines will
+      # be created more than once, which seems harmless.
+
+      data.hline[["y"]]    <- data[["yintercept"]]
+      data.hline[["yend"]] <- data[["yintercept"]]
       data.hline[["x"]]    <- ranges[["x"]][1]
       data.hline[["xend"]] <- ranges[["x"]][2]
-      data.hline[["y"]]    <- data[["yintercept"]][1]
-      data.hline[["yend"]] <- data[["yintercept"]][1]
 
-      data.vline[["x"]]    <- data[["xintercept"]][1]
-      data.vline[["xend"]] <- data[["xintercept"]][1]
+      data.vline[["x"]]    <- data[["xintercept"]]
+      data.vline[["xend"]] <- data[["xintercept"]]
       data.vline[["y"]]    <- ranges[["y"]][1]
       data.vline[["yend"]] <- ranges[["y"]][2]
 

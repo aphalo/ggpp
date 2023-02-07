@@ -14,7 +14,6 @@ library(dplyr)
 eval_magick <- requireNamespace("magick", quietly = TRUE)
 
 ## ---- message=FALSE-----------------------------------------------------------
-library(ggpp)
 old_theme <- theme_set(theme_bw() + theme(panel.grid = element_blank()))
 
 ## -----------------------------------------------------------------------------
@@ -374,39 +373,91 @@ d <- tibble::tibble(
 
 ## -----------------------------------------------------------------------------
 ggplot(data = d, aes(x, y)) +
+  geom_quadrant_lines(linetype = "dashed") +
   geom_point() +
-  stat_dens2d_filter(keep.fraction = 1/4, colour = "red")
+  stat_dens2d_filter(keep.fraction = 1/4, 
+                     colour = "red")
 
 ## -----------------------------------------------------------------------------
 ggplot(data = d, aes(x, y)) +
+  geom_quadrant_lines(linetype = "dashed") +
   geom_point() +
-  stat_dens2d_filter(keep.fraction = 1/4, keep.number = 50, colour = "red")
+  stat_dens2d_filter(keep.fraction = 1/4, 
+                     colour = "red", 
+                     pool.along = "none")
 
 ## -----------------------------------------------------------------------------
 ggplot(data = d, aes(x, y)) +
+  geom_quadrant_lines(linetype = "dashed") +
   geom_point() +
-  stat_dens2d_filter(keep.fraction = 1, keep.number = 50, colour = "red")
+  stat_dens2d_filter(keep.fraction = c(1/2, 1/4, 0, 1/2),
+                     pool.along = "none",
+                     colour = "red")
+
+## -----------------------------------------------------------------------------
+ggplot(data = d, aes(x, y)) +
+  geom_quadrant_lines(linetype = "dashed") +
+  geom_point() +
+  stat_dens2d_filter(keep.fraction = 1, 
+                     keep.number = 20, 
+                     colour = "red")
+
+## -----------------------------------------------------------------------------
+ggplot(data = d, aes(x, y)) +
+  geom_quadrant_lines(linetype = "dashed") +
+  geom_point() +
+  stat_dens2d_filter(keep.fraction = 1, 
+                     keep.number = 20, 
+                     pool.along = "none", 
+                     colour = "red")
+
+## -----------------------------------------------------------------------------
+ggplot(data = d, aes(x, y)) +
+  geom_quadrant_lines(linetype = "dashed") +
+  geom_point() +
+  stat_dens2d_filter(keep.fraction = 1, 
+                     keep.number = c(1, 2, 3, 0), 
+                     pool.along = "none", 
+                     colour = "red")
+
+## -----------------------------------------------------------------------------
+ggplot(data = d, aes(x, y)) +
+  geom_quadrant_lines(linetype = "dashed") +
+  geom_point(size = 3, colour = "grey50") +
+  stat_dens2d_filter(keep.fraction = 1/2, 
+                     return.density = TRUE,
+                     aes(color = after_stat(density)),
+                     size = 2,
+                     show.legend = TRUE) +
+  scale_color_viridis_c(direction = -1, option = "magma", begin = 0.5)
 
 ## -----------------------------------------------------------------------------
 ggplot(data = d, aes(x + rep(c(-2,2), rep(50,2)), 
-                     y, colour = group)) +
-   geom_point() +
+                     y, 
+                     colour = group)) +
+   geom_point(size = 1) +
    stat_dens2d_filter(shape = 1, size = 3,
                       keep.fraction = 0.25)
 
 ## -----------------------------------------------------------------------------
 ggplot(data = d, aes(x + rep(c(-2,2), rep(50,2)), 
-                     y, colour = group)) +
-   geom_point() +
-   stat_dens2d_filter_g(shape = 1, size = 3,
-                      keep.fraction = 0.25)
+                     y, 
+                     colour = group)) +
+   geom_point(size = 1) +
+   stat_dens2d_filter_g(shape = 1,
+                        size = 3,
+                        keep.fraction = 0.25)
 
 ## -----------------------------------------------------------------------------
 ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+  geom_point() +
   stat_dens2d_labels(keep.fraction = 1/5,
-                     position = position_nudge_centre(x = 0.05, y = 0.05),
-                     hjust = "outward", vjust = "outward") +
-  geom_point()
+                     position = position_nudge_center(x = 0.05, 
+                                                      y = 0.05,
+                                                      center_x = 0,
+                                                      center_y = 0),
+                     vjust = "outward", hjust = "outward") +
+  scale_x_continuous(expand = expansion(c(0.1, 0.1)))
 
 ## ---- eval = FALSE------------------------------------------------------------
 #  random_string <- function(len = 6) {

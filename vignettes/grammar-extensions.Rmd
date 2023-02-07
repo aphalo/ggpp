@@ -37,6 +37,12 @@ library(dplyr)
 eval_magick <- requireNamespace("magick", quietly = TRUE)
 ```
 
+We also set an uncluttered theme as default for 'ggplot2'.
+
+```{r, message=FALSE}
+old_theme <- theme_set(theme_bw() + theme(panel.grid = element_blank()))
+```
+
 # Introduction to the extensions
 
 ## Data labels, annotations and insets
@@ -115,22 +121,14 @@ the native plotting coordinates of the plotting area or viewport. Doing
 so, allows the graphic design flexibility conceptually inherent to
 annotations within a user-friendly syntax.
 
-## Extending 'ggplot2'
+## Support of native plot coordinates 
 
 Based on this insight, a new approach to adding annotations and insets
 was implemented in package 'ggpmisc' (>= 0.3.1) through two new *x* and
 *y* pseudo-aesthetics, *npcx* and *npcy*, and corresponding dumb scales
 and various geometries that make use of them. These scales and
-geometries were implemented as an extension to package 'ggplot2' and are
-currently in package 'ggpp'.
-
-Before showing how this works, we load the package and set an uncluttered theme
-as default.
-
-```{r, message=FALSE}
-library(ggpp)
-old_theme <- theme_set(theme_bw() + theme(panel.grid = element_blank()))
-```
+geometries were are currently in package 'ggpp' and still used in package
+'ggpmisc'.
 
 Native plot coordinates have range 0..1. However, the "npc" geoms from 'ggpp'
 also recognize certain positions by name with the same character strings as used
@@ -261,7 +259,7 @@ have been modified by a *position* function.
 +-------------------------------+---------------------+----------------------+
 | `geom_label_s()`              |                     | `character`          |
 +-------------------------------+---------------------+----------------------+
-| `geom_point_s()`              |                     |                      |
+| `geom_point_s()`              |                     | _not supported_      |
 +-------------------------------+---------------------+----------------------+
 | `geom_plot()`                 | `geom_plot_npc()`   | `list(<ggplot>)`     |
 +-------------------------------+---------------------+----------------------+
@@ -284,7 +282,7 @@ you are dealing with data labels or data points.
 
 ## Positioning data labels
 
-Nudging is normally used to displace text labels so that they do not
+Nudging is normally used to displace text labels so that data labels do not
 overlap the points or lines representing the data being labelled. Two
 enhanced versions of `position_nudge()` are provided,
 `position_nudge_center()` and `position_nudge_line()`. These functions
@@ -297,15 +295,16 @@ A limitation of 'ggplot2' is that only one position function can be used
 in a layer. This makes it difficult to add text labels to stacked or
 dodged bars or columns, or the labelling of points that have been
 jittered. The solution provided by 'ggpp' are wrappers on these position
-functions that add support for nudging.
+functions from 'ggplot2'. These wrappers add support for nudging.
 
-All these new position functions, instead of deleting the original
-positions, they rename the variables in `data` containing these
-coordinates. This makes it possible for geometries to draw connecting
-segments or arrows between old and new positions. These functions are
-backwards compatible and can be used in place of those from 'ggplot2'.
-The geometries from 'ggrepel' (>= 0.9.2) and many of those from 'ggpp'
-can make use of the original coordinates kept in data.
+The position functions defined in 'ggpp', instead of deleting the original
+positions, rename the variables in `data` containing these coordinates. This
+makes it possible for geometries to draw connecting segments or arrows between
+old and new positions. For consistency, positions equivalent to all those
+defined in 'ggplot2' are defined in 'ggpp'. These functions are backwards
+compatible with those from 'ggplot2' and can be used in place of them. The
+geometries from 'ggrepel' (>= 0.9.2) and many of those from 'ggpp' can make use
+of the original coordinates kept in data.
 
 | Position (origin kept)                      | Position (origin discarded)       |
 |---------------------------------------------|-----------------------------------|
@@ -328,56 +327,103 @@ can make use of the original coordinates kept in data.
 
 : Position functions
 
-## Highlighting data features
-
-If maxima or minima are to be labelled in a plot, this can be automated
-so that the feature and its labelling is automated. This is possible
-with `stat_peaks()` and `stat_valleys()`. Marginal annotations with
-symbols and vertical and horizontal lines can be used to highlight
-summary values or events/conditions. The *geoms*
-`geom_quadrant_lines()`, `geom_vhlines()`, `geom_x_margin_arrow()`,
-`geom_x_margin_grob()`, `geom_x_margin_point()`,
-`geom_y_margin_arrow()`, `geom_y_margin_grob()` and
-`geom_y_margin_point()` make such labelling easy.
+There is a storage-use cost in saving the original position, by making the
+`data` member stored in the ggplot object bigger. This may need to be taken into
+consideration when `data` has many rows. In such cases, when a counterpart
+position function that does not keep the original coordinates exists, it is wise
+not to use the new "keep" position functions in combination with geometries that
+cannot make use of the additional information stored by them. When using those
+new position functions with no counterpart in 'ggplot2' the keeping of the
+original position can be disabled by passing `kept.position = "none"` when they
+are called.
 
 ## Local density of observations
 
-There are two aspects to this: highlighting with colours dense or sparse
-regions, or using density to decide which observations to label. In this
-cases we can use `stat_dens1d_labels()` and `stat_dens2d_labels()`,
-`stat_dens1d_filter()` and `stat_dens2d_filter()`, and
-`stat_dens1d_filter_g()` and `stat_dens2d_filter_g()`.
+With stats from 'ggplot2' it is common to plot estimates of empirical density
+curves or empirical density surfaces. There are other uses for density
+estimates: 1) highlighting dense or sparse regions in clouds of observations
+plotted as points, and 2) using density to decide which observations to label
+and which not to label. _If the highlighting or labeling is to be interpreted as
+meaningful as a description of properties of the population then the fitted
+curve of surface should not be too flexible, it should not track local anomalies
+in the distribution of observations. In contrast if the use of the density
+estimate is only used as a way of avoiding overlaps among labels with no intent
+of describing properties of the data, much more flexible curves and surfaces are
+most effective.
+
+Functions `stat_dens1d_filter()` and `stat_dens2d_filter()`, and
+`stat_dens1d_filter_g()` and `stat_dens2d_filter_g()` can be used to 
+filter/subset data based on local density estimates. 
+
+Functions `stat_dens1d_labels()` and `stat_dens2d_labels()` instead of removing
+rows from data, replace or edit the values mapped to the `label` aesthetic
+before they are passed to the geometry. This is especially useful in combination with
+the repulsive geometries from package 'ggrepel' because by retaining all
+observations in data these geometries can repulse labels away from
+observations with and without data labels attached.
+
+Although useful for diverse types of plots, these statistics are most useful
+when creating volcano and quadrant plots. A case where the observations near the
+edges of a cloud of observations are of special interest.
+
+The density estimates used for the "filtering" of data rows or labels can be of
+interest both when selecting the parameters for the fit of the empirical
+density function or possibly even for mapping to an aesthetic. These are 
+optionally returned.
+
+One final twist is that even if the density estimate is in all cases obtained
+from the whole of `data`, the selection criteria can be applied separately,
+and even be different, for each quadrant or tail. For example, we can
+highlight or label the same fraction of observations, or alternatively the same
+number of observations in each quadrant or tail even if the overall density
+of observations is different between tails or among quadrants.
+
+## Highlighting data features
+
+Frequently, maxima or minima are features of interest that may need to be
+labelled or highlighted in a plot. This can be done easily with functions
+`stat_peaks()` and `stat_valleys()`. 
+
+Marginal annotations with symbols and vertical and horizontal lines can be used
+to highlight summary values or events/conditions. The *geoms*
+`geom_quadrant_lines()`, `geom_vhlines()`, `geom_x_margin_arrow()`,
+`geom_x_margin_grob()`, `geom_x_margin_point()`, `geom_y_margin_arrow()`,
+`geom_y_margin_grob()` and `geom_y_margin_point()` make such labelling easy.
+These work similarly to geoms `geom_hline()` and `geom_vline()` from 'ggplot2'
+and plays a similar role. Of course, they can also be used to add annotations
+not derived from the observations.
 
 ## Summary statistics
 
-With some types of data it is common to compute a summary per quadrant,
-rather than based on a prior grouping. The *stat*
-`stat_quadrant_counts()` can de used to annotate plots with the number
-of observations in each quadrant. `stat_summary_xy()` is similar to
-`stat_summary()` from 'ggplot2' but useful when both *x* and *y* are
-continuous variables. It allows the use the same, or different functions
-to summarise the data over *x* and *y*. In contrast `stat_centroid()`
-always applies the same function over *x* and *y*.
+With some types of data it is common to compute a summary per plot quadrant,
+rather than based on a prior grouping. The *stat* `stat_quadrant_counts()` can
+de used to annotate plots with the number of observations in each quadrant,
+selected quadrants, or quadrants pooled along _x_ and/or _y_. Similarly,
+`stat_group_counts()` and `stat_panel_counts()` can be used to annotate plots
+with the number of observations per panel, or per group within each panel.
+
+In many cases, such as rug plots or other representations on plot margins, _x_
+and _y_ summaries can be computed in separate plot layers using the statistics
+from 'ggplot2'. In contrast, in other cases, such as when showing the _x_ and
+_y_ position of the means in the plotting area itself, it is necessary to
+compute summaries for both _x_ and _y_ in the same plot layer. Function
+`stat_summary_xy()` is similar to `stat_summary()` from 'ggplot2' but useful
+when both *x* and *y* are continuous variables. It allows the use of the same,
+or different functions to summarize the data over *x* and *y*. In contrast, its
+simpler counterpart, `stat_centroid()`, always applies the same function over *x*
+and *y*. 
+
+An additional variation is statistic `stat_apply_group`, which can apply
+functions to _x_ and _y_ values in parallel, which is most useful for
+accumulating or differencing consecutive data values.
 
 ## ggplot methods
 
-Being `ggplot()` defined as a generic method in 'ggplot2' makes it
-possible to define specializations, and we provide two for time series
-stored in objects of classes `ts` and `xts` which automatically convert
-these objects into tibbles and set by default the aesthetic mappings for
-`x` and `y` automatically. A companion function `try_tibble()` is also
-exported.
-
-## Thoughts for the future
-
-Although we have discussed data independent scales only for *x* and *y*
-aesthetics, the same consideration applies to other aesthetics like
-*colour*. It seems generally useful to allow aesthetics to use a
-different scale for annotations than for data. Defining
-pseudo-aesthetics for annotations instead of allowing multiple scales
-for each aesthetic in a plot would add flexibility while still keeping
-the guarantee that the meaning of aesthetics' values remains consistent
-across all plot elements representing data.
+That `ggplot()` is defined as a generic method in 'ggplot2' makes it possible to
+define specializations. We provide two `ggplot()` methods for time series stored
+in objects of classes `ts` and `xts`. These methods automatically convert these
+objects into tibbles and set by default the aesthetic mappings for `x` and `y`
+automatically. A companion function `try_tibble()` is also exported.
 
 ## List of references
 
@@ -1054,7 +1100,7 @@ they are independent of grouping, or to use a transformation for the
 scale. However, when grouping is important, these statistics make it
 possible to avoid pre-computation of the data for a layer.
 
-Here we plot the difference in trunck circumference between dates for
+Here we plot the difference in trunk circumference between dates for
 each tree. (As the vector returned by `diff()` is one element shorter
 than its input, we delete the first value of `x` in `.fun.x`.).
 
@@ -1069,18 +1115,35 @@ ggplot(Orange, aes(age, circumference, colour = Tree)) +
 These stats had their origin in an enhancement suggestion for 'ggrepel'
 from Hadley Wickham and discussion with Kamil Slowikowski (ggrepel's
 author) and others. In fact the code is based on code Kamil gave during
-the discussion, but simplified and taking a few further ideas from
+the discussion, but simplified and taking a few additional ideas from
 `ggplot::stat_dens2d`.
+
+---
 
 **Warning!** Which observations are selected by the algorithm used,
 based on `MASS:kde2d`, depends strongly on the values of parameters `h`
 and `n`. You may need to alter the defaults by passing explicit
 arguments to these stats. Beware, though, that what are good values, may
 depend on individual data sets even if they include the same number of
-observations. For the selection of observations to work cleanly, the
-argument for `n` must create a dense grid. Much larger values of `n`
+observations. 
+
+If we want to highlight the outermost observations at the edges of a empirical
+density distribution, values of `n` similar to those in the examples in the
+documentation of `MASS::kde2d` and `ggplot2::stat_dens2d` are suitable.
+
+In contrast, if the aim is to prevent overlaps among labels, by preventing
+observation labeling in regions with _local_ high density we need to fit a
+much more flexible surface based on a very dense grid of estimates. In this
+case, for the selection of observations to work cleanly, much larger values of `n`
 than in the examples in the documentation of `MASS::kde2d` and
-`ggplot2::stat_dens2d` will be needed in most cases.
+`ggplot2::stat_dens2d` are needed in most cases.
+
+Functions `stat_dens2d_labels()` and `stat_dens2d_filter()` will return the
+density estimates if `return.density = TRUE` is passed when called. These
+density estimates can be plotted to visualize the density function being used
+to filter or reset the labels.
+
+---
 
 Some random data with random labels.
 
@@ -1103,31 +1166,93 @@ The stat `stat_dens2d_filter` *filters* observations, in other words
 passes to the geom a subset of the data received as input. The default
 argument for `geom` is `"point"`.
 
-Using defaults except for the color aesthetic. Highlight 1/4 of
-observations from lowest density areas of the plot panel.
+Using defaults except for the color aesthetic. Highlight 1/4 of observations
+from lowest density areas of the whole plot panel (using the default of
+`pool.along = "xy"`) using overplotting of selected black points with red
+points. We also highlight the boundaries of the quadrants.
 
 ```{r}
 ggplot(data = d, aes(x, y)) +
+  geom_quadrant_lines(linetype = "dashed") +
   geom_point() +
-  stat_dens2d_filter(keep.fraction = 1/4, colour = "red")
+  stat_dens2d_filter(keep.fraction = 1/4, 
+                     colour = "red")
 ```
-
-Keep at most 50 observations.
+Highlight 1/4 of observations from lowest density areas in each quadrant of
+the plot. We also highlight the boundaries of the quadrants. Compare the plot
+above to that below.
 
 ```{r}
 ggplot(data = d, aes(x, y)) +
+  geom_quadrant_lines(linetype = "dashed") +
   geom_point() +
-  stat_dens2d_filter(keep.fraction = 1/4, keep.number = 50, colour = "red")
+  stat_dens2d_filter(keep.fraction = 1/4, 
+                     colour = "red", 
+                     pool.along = "none")
 ```
+Highlight a given fraction of observations in each quadrant, by setting `pool.along = "none"`,
+and passing a vector of length four to `keep.fraction`.
 
-Keep always 50 observations.
+Keep at most 20 observations.
 
 ```{r}
 ggplot(data = d, aes(x, y)) +
+  geom_quadrant_lines(linetype = "dashed") +
   geom_point() +
-  stat_dens2d_filter(keep.fraction = 1, keep.number = 50, colour = "red")
+  stat_dens2d_filter(keep.fraction = c(1/2, 1/4, 0, 1/2),
+                     pool.along = "none",
+                     colour = "red")
 ```
 
+Keep always 20 observations by setting `keep.fraction = 1`.
+
+```{r}
+ggplot(data = d, aes(x, y)) +
+  geom_quadrant_lines(linetype = "dashed") +
+  geom_point() +
+  stat_dens2d_filter(keep.fraction = 1, 
+                     keep.number = 20, 
+                     colour = "red")
+```
+
+Keep always 20 observations, 5 per quadrant, by setting `pool.along = "none"`.
+
+```{r}
+ggplot(data = d, aes(x, y)) +
+  geom_quadrant_lines(linetype = "dashed") +
+  geom_point() +
+  stat_dens2d_filter(keep.fraction = 1, 
+                     keep.number = 20, 
+                     pool.along = "none", 
+                     colour = "red")
+```
+
+Keep a given number of observations in each quadrant, by setting `pool.along = "none"`,
+and passing a vector of length four to `keep.number`.
+
+```{r}
+ggplot(data = d, aes(x, y)) +
+  geom_quadrant_lines(linetype = "dashed") +
+  geom_point() +
+  stat_dens2d_filter(keep.fraction = 1, 
+                     keep.number = c(1, 2, 3, 0), 
+                     pool.along = "none", 
+                     colour = "red")
+```
+A more elaborate example, 50% of observations, with color representing the
+local empirical density, only for them.
+
+```{r}
+ggplot(data = d, aes(x, y)) +
+  geom_quadrant_lines(linetype = "dashed") +
+  geom_point(size = 3, colour = "grey50") +
+  stat_dens2d_filter(keep.fraction = 1/2, 
+                     return.density = TRUE,
+                     aes(color = after_stat(density)),
+                     size = 2,
+                     show.legend = TRUE) +
+  scale_color_viridis_c(direction = -1, option = "magma", begin = 0.5)
+```
 
 Highlighting 1/4 of the observations from the panel, using
 over-plotting with a 'hollow' shape. (We also shift one group with
@@ -1136,8 +1261,9 @@ respect to the other in `data`, to show that grouping is ignored by
 
 ```{r}
 ggplot(data = d, aes(x + rep(c(-2,2), rep(50,2)), 
-                     y, colour = group)) +
-   geom_point() +
+                     y, 
+                     colour = group)) +
+   geom_point(size = 1) +
    stat_dens2d_filter(shape = 1, size = 3,
                       keep.fraction = 0.25)
 ```
@@ -1148,10 +1274,12 @@ example grouping is based on the color aesthetic.
 
 ```{r}
 ggplot(data = d, aes(x + rep(c(-2,2), rep(50,2)), 
-                     y, colour = group)) +
-   geom_point() +
-   stat_dens2d_filter_g(shape = 1, size = 3,
-                      keep.fraction = 0.25)
+                     y, 
+                     colour = group)) +
+   geom_point(size = 1) +
+   stat_dens2d_filter_g(shape = 1,
+                        size = 3,
+                        keep.fraction = 0.25)
 ```
 
 The stat `stat_dens2d_labels` *replaces* the values of the label
@@ -1171,16 +1299,19 @@ Label 1/10 of observations from lowest density areas of the plot panels.
 
 ```{r}
 ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+  geom_point() +
   stat_dens2d_labels(keep.fraction = 1/5,
-                     position = position_nudge_centre(x = 0.05, y = 0.05),
-                     hjust = "outward", vjust = "outward") +
-  geom_point()
+                     position = position_nudge_center(x = 0.05, 
+                                                      y = 0.05,
+                                                      center_x = 0,
+                                                      center_y = 0),
+                     vjust = "outward", hjust = "outward") +
+  scale_x_continuous(expand = expansion(c(0.1, 0.1)))
 ```
 
-Using the geoms from package 'ggrepel' avoids clashes among labels or on
-top of data points. This works with versions 0.6.0 and newer of
-'ggrepel'. Please, see vignette _Combining repulsion and nudging_ for
-more examples.
+Using the geoms from package 'ggrepel' avoids clashes among labels and clashes
+of labels with data points. Please, see vignette _Combining repulsion and
+nudging_ for more examples.
 
 ### stat_dens1d_labels() and stat_dens1d_filter()
 

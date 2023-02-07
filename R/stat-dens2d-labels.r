@@ -8,12 +8,36 @@
 #'   to \code{rownames(data)}, with a message.
 #'
 #' @details \code{stat_dens2d_labels()} is designed to work together with
-#'   statistics from package 'ggrepel'. To avoid text labels being plotted over
-#'   unlabelled points the corresponding rows in data need to be retained but
-#'   labels replaced with the empty character string, \code{""}. This makes
-#'   \code{\link{stat_dens2d_filter}} unsuitable for the task. Non-the-less
-#'   \code{stat_dens2d_labels()} could be useful in some other cases, as the
-#'   substitution character string can be set by the user.
+#'   geometries from package 'ggrepel'. To avoid text labels being plotted over
+#'   unlabelled points all the rows in data need to be retained but
+#'   labels replaced with the empty character string, \code{""}. Function
+#'   \code{\link{stat_dens2d_filter}} cannot be used with the repulsive geoms
+#'   from 'ggrepel' because it drops observations.
+#'
+#'   \code{stat_dens2d_labels()} can be useful also in other situations, as the
+#'   substitution character string can be set by the user by passing an argument
+#'   to \code{label.fill}. If this argument is \code{NULL} the unselected rows
+#'   are filtered out identically as by \code{stat_dens2d_filter}.
+#'
+#'   The local density of observations in 2D (\emph{x} and \emph{y}) is computed
+#'   with function \code{\link[MASS]{kde2d}} and used to select observations,
+#'   passing to the geom all the rows in its \code{data} input but with with the
+#'   text of labels replaced in those "not kept". The default is to select
+#'   observations in sparse regions of the plot, but the selection can be
+#'   inverted so that only observations in the densest regions are returned.
+#'   Specific observations can be protected from having the label replaced by
+#'   passing a suitable argument to \code{keep.these}. Logical and integer
+#'   vectors function as indexes to rows in \code{data}, while a character
+#'   vector is compared to values in the variable mapped to the \code{label}
+#'   aesthetic. A function passed as argument to \code{keep.these} will receive
+#'   as its first argument the values in the variable mapped to \code{label} and
+#'   should return a character, logical or numeric vector as described above.
+#'
+#'   How many labels are retained intact in addition to those in
+#'   \code{keep.these} is controlled with arguments passed to \code{keep.number}
+#'   and \code{keep.fraction}. \code{keep.number} sets the maximum number of
+#'   observations selected, whenever \code{keep.fraction} results in fewer
+#'   observations selected, it is obeyed.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs
@@ -29,6 +53,14 @@
 #' @param keep.sparse logical If \code{TRUE}, the default, observations from the
 #'   more sparse regions are retained, if \code{FALSE} those from the densest
 #'   regions.
+#' @param keep.these character vector, integer vector, logical vector or
+#'   function that takes the variable mapped to the \code{label} aesthetic as
+#'   first argument and returns a character vector or a logical vector. These
+#'   rows from \code{data} are selected irrespective of the local density.
+#' @param pool.along character, one of \code{"none"} or \code{"x"},
+#'   indicating if selection should be done pooling the observations along the
+#'   \emph{x} aesthetic, or separately on either side of \code{xintercept}.
+#' @param xintercept,yintercept numeric The split points for the data filtering.
 #' @param invert.selection logical If \code{TRUE}, the complement of the
 #'   selected rows are returned.
 #' @param h vector of bandwidths for x and y directions. Defaults to normal
@@ -36,7 +68,9 @@
 #'   apply to both directions.
 #' @param n Number of grid points in each direction. Can be scalar or a length-2
 #'   integer vector
-#' @param label.fill character vector of length 1 or a function.
+#' @param label.fill character vector of length 1, a function or \code{NULL}.
+#' @param return.density logical vector of lenght 1. If \code{TRUE} add columns
+#'   \code{"density"} and \code{"keep.obs"} to the returned data frame.
 #' @param position The position adjustment to use for overlapping points on this
 #'   layer
 #' @param show.legend logical. Should this layer be included in the legends?
@@ -55,7 +89,10 @@
 #' @return A plot layer instance. Using as output \code{data} the input
 #'   \code{data} after value substitution based on a 2D the filtering criterion.
 #'
-#' @seealso \code{\link[MASS]{kde2d}} used internally.
+#' @seealso \code{\link{stat_dens2d_filter}} and \code{\link[MASS]{kde2d}} used
+#'   internally. Parameters \code{n}, \code{h} in this statistic correspond to
+#'   the parameters with the same name in this imported function. Limits are set
+#'   to the limits of the plot scales.
 #'
 #' @family statistics returning a subset of data
 #'
@@ -81,6 +118,14 @@
 #' ggplot(data = d, aes(x, y, label = lab)) +
 #'   geom_point() +
 #'   stat_dens2d_labels()
+#'
+#' ggplot(data = d, aes(x, y, label = lab)) +
+#'   geom_point() +
+#'   stat_dens2d_labels(keep.these = "zoujdg")
+#'
+#' ggplot(data = d, aes(x, y, label = lab)) +
+#'   geom_point() +
+#'   stat_dens2d_labels(keep.these = function(x) {grepl("^z", x)})
 #'
 #' ggplot(data = d, aes(x, y, label = lab)) +
 #'   geom_point() +
@@ -122,6 +167,26 @@
 #'   ggplot(data = d, aes(x, y, label = lab)) +
 #'     geom_point() +
 #'     stat_dens2d_labels(geom = "debug")
+#'
+#'   ggplot(data = d, aes(x, y, label = lab)) +
+#'     geom_point() +
+#'     stat_dens2d_labels(geom = "debug", return.density = TRUE)
+#'
+#'   ggplot(data = d, aes(x, y, label = lab)) +
+#'     geom_point() +
+#'     stat_dens2d_labels(geom = "debug", label.fill = NULL)
+#'
+#'   ggplot(data = d, aes(x, y, label = lab)) +
+#'     geom_point() +
+#'     stat_dens2d_labels(geom = "debug", label.fill = FALSE, return.density = TRUE)
+#'
+#'   ggplot(data = d, aes(x, y, label = lab)) +
+#'     geom_point() +
+#'     stat_dens2d_labels(geom = "debug", label.fill = NULL, return.density = TRUE)
+#'
+#'   ggplot(data = d, aes(x, y)) +
+#'     geom_point() +
+#'     stat_dens2d_labels(geom = "debug")
 #' }
 #'
 stat_dens2d_labels <-
@@ -133,13 +198,47 @@ stat_dens2d_labels <-
            keep.fraction = 0.10,
            keep.number = Inf,
            keep.sparse = TRUE,
+           keep.these = FALSE,
+           pool.along = "xy",
+           xintercept = 0,
+           yintercept = 0,
            invert.selection = FALSE,
            h = NULL,
            n = NULL,
            label.fill = "",
+           return.density = FALSE,
            na.rm = TRUE,
            show.legend = FALSE,
            inherit.aes = TRUE) {
+
+    if (length(label.fill) > 1L) {
+      stop("Length for 'label.fill' is not 1: ", label.fill)
+    }
+    if (is.numeric(label.fill)) {
+      stop("'label.fill' should not be a 'numeric' value: ", label.fill)
+    }
+    if (any(is.na(keep.fraction) | keep.fraction < 0 | keep.fraction > 1)) {
+      stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
+    }
+    if (any(is.na(keep.number) | keep.number < 0)) {
+      stop("Out of range or missing value for 'keep.number': ", keep.number)
+    }
+    max.expected.length <- c(none = 4L, x = 2L, y = 2L, xy = 1L)[pool.along]
+    if (length(keep.fraction) > max.expected.length) {
+      if (max.expected.length == 4L) {
+        stop("Length of 'keep.fraction' should not exceed 4")
+      } else {
+        warning("'keep.fraction' is too long, did you forget to set 'pool.along'?")
+      }
+    }
+    if (length(keep.number) > max.expected.length) {
+      if (max.expected.length == 4L) {
+        stop("Length of 'keep.number' should not exceed 4")
+      } else {
+        warning("'keep.number' is too long, did you forget to set 'pool.along'?")
+      }
+    }
+
     ggplot2::layer(
       stat = StatDens2dLabels, data = data, mapping = mapping, geom = geom,
       position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -147,10 +246,15 @@ stat_dens2d_labels <-
                     keep.fraction = keep.fraction,
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
+                    keep.these = keep.these,
+                    pool.along = pool.along,
+                    xintercept = xintercept,
+                    yintercept = yintercept,
                     invert.selection = invert.selection,
                     h = h,
                     n = n,
                     label.fill = label.fill,
+                    return.density = return.density,
                     ...)
     )
   }
@@ -161,95 +265,166 @@ dens2d_labs_compute_fun <-
            keep.fraction,
            keep.number,
            keep.sparse,
+           keep.these,
+           pool.along,
+           xintercept,
+           yintercept,
            invert.selection,
            h,
            n,
-           label.fill) {
-
-    if (length(label.fill) != 1L) {
-      stop("Length for 'label.fill' is not 1: ", label.fill)
-    }
-
-    if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
-      stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
-    }
-    if (is.na(keep.number) || keep.number < 0) {
-      stop("Out of range or missing value for 'keep.number': ", keep.number)
-    }
+           label.fill,
+           return.density) {
 
     force(data)
-    if (nrow(data) * keep.fraction > keep.number) {
-      keep.fraction <- keep.number / nrow(data)
-    }
-
-    if (!exists("label", data)) {
-      message("Mapping missing 'label' aesthetic to 'rownames(data)'.")
+    if (!exists("label", data) && !is.null(label.fill)) {
       data[["label"]] <- rownames(data)
     }
 
-    if (keep.fraction == 1) {
-      keep <- TRUE
-    } else if (keep.fraction == 0) {
-      keep <- FALSE
-    } else {
+    keep.these <- keep_these2logical(keep.these = keep.these, data = data)
 
-      if (is.null(h)) {
-        h <- c(MASS::bandwidth.nrd(data$x), MASS::bandwidth.nrd(data$y))
-      }
-
-      if (is.null(n)) {
-        n <- trunc(sqrt(nrow(data))) * 8L
-      }
-
-      kk <-  MASS::kde2d(
-        data$x, data$y, h = h, n = n,
-        lims = c(scales$x$dimension(), scales$y$dimension()))
-
-      dimnames(kk$z) <- list(kk$x, kk$y)
-
-      # Identify points that are in the low density regions of the plot.
-      kx <- cut(data$x, kk$x, labels = FALSE, include.lowest = TRUE)
-      ky <- cut(data$y, kk$y, labels = FALSE, include.lowest = TRUE)
-      kz <- sapply(seq_along(kx), function(i) kk$z[kx[i], ky[i]])
-
-      if (keep.sparse) {
-        keep <- kz < stats::quantile(kz, keep.fraction, names = FALSE)
-      } else {
-        keep <- kz >= stats::quantile(kz, 1 - keep.fraction, names = FALSE)
-      }
-    }
-
-    if (is.function(label.fill)) {
-      if (invert.selection){
-        data[["label"]] <- ifelse(!keep,
-                                  data[["label"]],
-                                  label.fill(data[["label"]]))
-      } else {
-        data[["label"]] <- ifelse(keep,
-                                  data[["label"]],
-                                  label.fill(data[["label"]]))
-      }
-    } else {
-      if (!is.character(label.fill)) {
-        if (is.na(label.fill)) {
-          # NA_logical_, the default NA, cannot be assigned to character
-          label.fill <- NA_character_
-        } else {
-          stop("'label.fill' is :", mode(label.fill),
-               "instead of 'character' or 'function'.")
+    # discard redundant splits
+    if (pool.along != "xy") {
+      if (pool.along == "y" &&
+          !(xintercept < max(data[["x"]]) &&
+            xintercept > min(data[["x"]]))) {
+        pool.along <- "xy"
+      } else if (pool.along == "x" &&
+                 !(yintercept < max(data[["y"]]) &&
+                   yintercept > min(data[["y"]]))) {
+        pool.along <- "xy"
+      } else if (pool.along == "none") {
+        if (!(xintercept < max(data[["x"]]) &&
+              xintercept > min(data[["x"]])) &&
+            !(yintercept < max(data[["y"]]) &&
+              yintercept > min(data[["y"]]))) {
+          pool.along <- "xy"
+        } else if (!(xintercept < max(data[["x"]]) &&
+                     xintercept > min(data[["x"]]))) {
+          pool.along <- "x"
+        } else if (!(yintercept < max(data[["y"]]) &&
+                     yintercept > min(data[["y"]]))) {
+          pool.along <- "y"
         }
       }
-      if (invert.selection){
-        data[["label"]] <- ifelse(!keep,
-                                  data[["label"]],
-                                  label.fill)
-      } else {
-        data[["label"]] <- ifelse(keep,
-                                  data[["label"]],
-                                  label.fill)
+    }
+
+    # make list of logical vectors
+    if (pool.along == "y") {
+       selectors <-list(q12 = data[["x"]] <= xintercept,
+                        q34 = data[["x"]] > xintercept)
+      if (length(keep.fraction) != 2L) {
+        keep.fraction <- rep_len(keep.fraction, length.out = 2)
+      }
+      if (length(keep.number) != 2L) {
+        if (length(keep.number) == 1L) {
+          keep.number <- keep.number %/% 2
+        }
+        keep.number <- rep_len(keep.number, length.out = 2)
+      }
+      num.rows <- sapply(selectors, sum) # selectors are logical
+    } else if (pool.along == "x") {
+      selectors <-list(q23 = data[["y"]] <= yintercept,
+                       q41 = data[["y"]] > yintercept)
+      if (length(keep.fraction) != 2L) {
+        keep.fraction <- rep_len(keep.fraction, length.out = 2)
+      }
+      if (length(keep.number) != 2L) {
+        if (length(keep.number) == 1L) {
+          keep.number <- keep.number %/% 2
+        }
+        keep.number <- rep_len(keep.number, length.out = 2)
+      }
+      num.rows <- sapply(selectors, sum) # selectors are logical
+    } else if (pool.along == "none") {
+      selectors <-list(q1 = data[["y"]] >= yintercept & data[["x"]] >= xintercept,
+                       q2 = data[["y"]] < yintercept & data[["x"]] >= xintercept,
+                       q3 = data[["y"]] < yintercept & data[["x"]] < xintercept,
+                       q4 = data[["y"]] > yintercept & data[["x"]] < xintercept)
+      if (length(keep.fraction) != 4L) {
+        keep.fraction <- rep_len(keep.fraction, length.out = 4)
+      }
+      if (length(keep.number) != 4L) {
+        if (length(keep.number) == 1L) {
+          keep.number <- keep.number %/% 4
+        }
+        keep.number <- rep_len(keep.number, length.out = 4)
+      }
+      num.rows <- sapply(selectors, sum) # selectors are logical
+    } else {
+      keep.fraction <- keep.fraction[[1]] # can be a vector or a list
+      keep.number <- keep.number[[1]]
+      num.rows <- nrow(data)
+      selectors <- list(all = rep.int(TRUE, times = num.rows))
+    }
+
+    # vectorized
+    too.large.frac <- num.rows * keep.fraction > keep.number
+    keep.fraction[too.large.frac] <-
+      keep.number[too.large.frac] / num.rows[too.large.frac]
+
+    # estimate 2D density
+    if (is.null(h)) {
+      h <- c(MASS::bandwidth.nrd(data$x), MASS::bandwidth.nrd(data$y))
+    }
+    if (is.null(n)) {
+      n <- trunc(sqrt(nrow(data))) * 8L
+    }
+    kk <-  MASS::kde2d(
+      data[["x"]], data[["y"]], h = h, n = n,
+      lims = c(scales$x$dimension(), scales$y$dimension()))
+    dimnames(kk[["z"]]) <- list(kk[["x"]], kk[["y"]])
+
+    # compute 2D density at each onservations coordinates
+    kx <- cut(data$x, kk$x, labels = FALSE, include.lowest = TRUE)
+    ky <- cut(data$y, kk$y, labels = FALSE, include.lowest = TRUE)
+    kz <- sapply(seq_along(kx), function(i) kk$z[kx[i], ky[i]])
+
+    # we construct one logical vector by adding observations/label to be kept
+    # we may have a list of 1, 2, or 4 logical vectors
+    keep <- keep.these
+    for (i in seq_along(selectors)) {
+      if (keep.fraction[i] == 1) {
+        keep[ selectors[[i]] ] <- TRUE
+      } else if (keep.fraction[i] != 0) {
+        if (keep.sparse) {
+          keep[ selectors[[i]] ] <-
+            kz[ selectors[[i]] ] < stats::quantile(kz[ selectors[[i]] ],
+                                                   keep.fraction[i], names = FALSE)
+        } else {
+          keep[ selectors[[i]] ] <-
+            kz[ selectors[[i]] ] >= stats::quantile(kz[ selectors[[i]] ],
+                                                    1 - keep.fraction[i], names = FALSE)
+        }
       }
     }
 
+    if (invert.selection){
+      keep <- !keep
+    }
+
+    if (return.density) {
+      data[["keep.obs"]] <- keep
+      data[["density"]] <- kz
+    }
+
+    if (is.null(label.fill)) {
+      data <- data[keep, ]
+    } else if (is.function(label.fill)) {
+      data[["label"]][!keep] <- label.fill(data[["label"]][!keep])
+    } else if (is.na(label.fill)) {
+      # NA_logical_, the default NA, cannot always be assigned to character
+      label.fill <- NA_character_
+      data[["label"]][!keep] <- label.fill
+    } else if (is.character(label.fill)) {
+      data[["label"]][!keep] <- label.fill
+    } else if (is.logical(label.fill)) {
+      if (label.fill) {
+        data[["label"]][!keep] <- ""
+      } # if FALSE data is not modified
+    } else {
+          stop("'label.fill' is : ", mode(label.fill),
+               " instead of 'character' or 'function'.")
+    }
     data
 }
 
@@ -265,3 +440,46 @@ StatDens2dLabels <-
       dens2d_labs_compute_fun,
     required_aes = c("x", "y")
   )
+
+
+# Utils for stats that subset data
+
+#' Convert keep.these argument into logical vector
+#'
+#' @param keep.these character vector, integer vector, logical vector or
+#'   function that takes the variable mapped to the \code{label} aesthetic as
+#'   first argument and returns a character vector or a logical vector. These
+#'   rows from \code{data} are selected irrespective of the local density.
+#' @param data data.frame The plot layer's data set.
+#'
+#' @keywords internal
+#'
+keep_these2logical <- function(keep.these, data) {
+  if (length(keep.these)) {
+    if (is.function(keep.these)) {
+      keep.these <- keep.these(data$label) # character or logical vector
+    }
+    if (is.character(keep.these)) {
+      keep.these <- data$label %in% keep.these # logical vector
+    }
+    if (is.numeric(keep.these)) { # positional indices
+      temp <- rep(FALSE, times = nrow(data))
+      temp[keep.these] <- TRUE
+      keep.these <- temp
+    }
+    if (is.logical(keep.these)) { # logical indices, if short recycle
+      if (length(keep.these) >= 1L && length(keep.these) < nrow(data)) {
+        keep.these <- rep(keep.these, length.out = nrow(data))
+      } else if (length(keep.these) > nrow(data)) {
+        stop("Logical vector 'keep.these' longer than data")
+      }
+    }
+    if (anyNA(keep.these)) {
+      warning("Discarding 'NA's in keep.these")
+      keep.these[is.na(keep.these)] <- FALSE
+    }
+  } else { # replace NULL and vectors with length zero with FALSE
+    keep.these <- rep(FALSE, nrow(data))
+  }
+  keep.these
+}

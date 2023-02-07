@@ -10,16 +10,21 @@ stat_dens2d_filter(
   data = NULL,
   geom = "point",
   position = "identity",
+  ...,
   keep.fraction = 0.1,
   keep.number = Inf,
   keep.sparse = TRUE,
+  keep.these = FALSE,
+  pool.along = "xy",
+  xintercept = 0,
+  yintercept = 0,
   invert.selection = FALSE,
   na.rm = TRUE,
   show.legend = FALSE,
   inherit.aes = TRUE,
   h = NULL,
   n = NULL,
-  ...
+  return.density = FALSE
 )
 
 stat_dens2d_filter_g(
@@ -27,16 +32,21 @@ stat_dens2d_filter_g(
   data = NULL,
   geom = "point",
   position = "identity",
+  ...,
   keep.fraction = 0.1,
   keep.number = Inf,
   keep.sparse = TRUE,
+  keep.these = FALSE,
+  pool.along = "xy",
+  xintercept = 0,
+  yintercept = 0,
   invert.selection = FALSE,
   na.rm = TRUE,
   show.legend = FALSE,
   inherit.aes = TRUE,
   h = NULL,
   n = NULL,
-  ...
+  return.density = FALSE
 )
 }
 \arguments{
@@ -52,6 +62,10 @@ the plot defaults.}
 \item{position}{The position adjustment to use for overlapping points on this
 layer}
 
+\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
+can include aesthetics whose values you want to set, not map. See
+\code{\link[ggplot2]{layer}} for more details.}
+
 \item{keep.fraction}{numeric [0..1]. The fraction of the observations (or
 rows) in \code{data} to be retained.}
 
@@ -62,6 +76,17 @@ number.}
 \item{keep.sparse}{logical If \code{TRUE}, the default, observations from the
 more sparse regions are retained, if \code{FALSE} those from the densest
 regions.}
+
+\item{keep.these}{character vector, integer vector, logical vector or
+function that takes the variable mapped to the \code{label} aesthetic as
+first argument and returns a character vector or a logical vector. These
+rows from \code{data} are selected irrespective of the local density.}
+
+\item{pool.along}{character, one of \code{"none"} or \code{"x"},
+indicating if selection should be done pooling the observations along the
+\emph{x} aesthetic, or separately on either side of \code{xintercept}.}
+
+\item{xintercept, yintercept}{numeric The split points for the data filtering.}
 
 \item{invert.selection}{logical If \code{TRUE}, the complement of the
 selected rows are returned.}
@@ -85,9 +110,8 @@ apply to both directions.}
 \item{n}{Number of grid points in each direction. Can be scalar or a
 length-2 integer vector}
 
-\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
-can include aesthetics whose values you want to set, not map. See
-\code{\link[ggplot2]{layer}} for more details.}
+\item{return.density}{logical vector of lenght 1. If \code{TRUE} add columns
+\code{"density"} and \code{"keep.obs"} to the returned data frame.}
 }
 \value{
 A plot layer instance. Using as output \code{data} a subset of the
@@ -99,9 +123,32 @@ A plot layer instance. Using as output \code{data} a subset of the
   regions of a plot panel with high density of observations, based on the
   values mapped to both \code{x} and \code{y} aesthetics.
   \code{stat_dens2d_filter_g} does the filtering by group instead of by
-  panel. This second stat is useful for highlighting observations, while
-  the first one tends to be most useful when the aim is to prevent clashes
-  among text labels.
+  panel. This second stat is useful for highlighting observations, while the
+  first one tends to be most useful when the aim is to prevent clashes among
+  text labels. If there is no mapping to \code{label} in \code{data}, the
+  mapping is silently set to \code{rownames(data)}.
+}
+\details{
+The local density of observations in 2D (\emph{x} and \emph{y}) is
+  computed with function \code{\link[MASS]{kde2d}} and used to select
+  observations, passing to the geom a subset of the rows in its \code{data}
+  input. The default is to select observations in sparse regions of the plot,
+  but the selection can be inverted so that only observations in the densest
+  regions are returned. Specific observations can be protected from being
+  deselected and "kept" by passing a suitable argument to \code{keep.these}.
+  Logical and integer vectors work as indexes to rows in \code{data}, while a
+  character vector values are compared to the character values mapped to the
+  \code{label} aesthetic. A function passed as argument to keep.these will
+  receive as argument the values in the variable mapped to \code{label} and
+  should return a character, logical or numeric vector as described above. If
+  no variable has been mapped to \code{label}, row names are used in its
+  place.
+
+  How many rows are retained in addition to those in \code{keep.these} is
+  controlled with arguments passed to \code{keep.number} and
+  \code{keep.fraction}. \code{keep.number} sets the maximum number of
+  observations selected, whenever \code{keep.fraction} results in fewer
+  observations selected, it is obeyed.
 }
 \examples{
 
@@ -167,19 +214,40 @@ ggplot(data = d, aes(x, y, label = lab, colour = group)) +
   geom_point() +
   stat_dens2d_filter(geom = "text")
 
-# repulsive labels with ggrepel::geom_text_repel()
-ggrepel.installed <- requireNamespace("ggrepel", quietly = TRUE)
-if (ggrepel.installed) {
-  library(ggrepel)
+ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+  geom_point() +
+  stat_dens2d_filter(geom = "text",
+                     keep.these = function(x) {grepl("^u", x)})
+
+ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+  geom_point() +
+  stat_dens2d_filter(geom = "text",
+                     keep.these = function(x) {grepl("^u", x)})
+
+ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+  geom_point() +
+  stat_dens2d_filter(geom = "text",
+                     keep.these = 1:30)
+
+# looking under the hood with gginnards::geom_debug()
+gginnards.installed <- requireNamespace("ggrepel", quietly = TRUE)
+if (gginnards.installed) {
+  library(gginnards)
+
+  ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+    stat_dens2d_filter(geom = "debug")
 
   ggplot(data = d, aes(x, y, label = lab, colour = group)) +
     geom_point() +
-    stat_dens2d_filter(geom = "text_repel")
+    stat_dens2d_filter(geom = "debug", return.density = TRUE)
 }
 
 }
 \seealso{
-\code{\link[MASS]{kde2d}} used internally.
+\code{\link{stat_dens2d_labels}} and \code{\link[MASS]{kde2d}} used
+  internally. Parameters \code{n}, \code{h} in these statistics correspond to
+  the parameters with the same name in this imported function. Limits are set
+  to the limits of the plot scales.
 
 Other statistics returning a subset of data: 
 \code{\link{stat_dens1d_filter}()},

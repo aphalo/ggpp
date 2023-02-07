@@ -13,6 +13,9 @@ stat_dens1d_labels(
   keep.fraction = 0.1,
   keep.number = Inf,
   keep.sparse = TRUE,
+  keep.these = FALSE,
+  pool.along = "x",
+  xintercept = 0,
   invert.selection = FALSE,
   bw = "SJ",
   kernel = "gaussian",
@@ -20,6 +23,7 @@ stat_dens1d_labels(
   n = 512,
   orientation = "x",
   label.fill = "",
+  return.density = FALSE,
   na.rm = TRUE,
   show.legend = FALSE,
   inherit.aes = TRUE
@@ -42,16 +46,27 @@ layer}
 can include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
 
-\item{keep.fraction}{numeric [0..1]. The fraction of the observations (or
-rows) in \code{data} to be retained.}
+\item{keep.fraction}{numeric vector of length 1 or 2 [0..1]. The fraction of
+the observations (or rows) in \code{data} to be retained.}
 
-\item{keep.number}{integer Set the maximum number of observations to retain,
-effective only if obeying \code{keep.fraction} would result in a larger
-number.}
+\item{keep.number}{integer vector of length 1 or 2. Set the maximum number of
+observations to retain, effective only if obeying \code{keep.fraction}
+would result in a larger number.}
 
 \item{keep.sparse}{logical If \code{TRUE}, the default, observations from the
 more sparse regions are retained, if \code{FALSE} those from the densest
 regions.}
+
+\item{keep.these}{character vector, integer vector, logical vector or
+function that takes the variable mapped to the \code{label} aesthetic as
+first argument and returns a character vector or a logical vector. These
+rows from \code{data} are selected irrespective of the local density.}
+
+\item{pool.along}{character, one of \code{"none"} or \code{"x"},
+indicating if selection should be done pooling the observations along the
+\emph{x} aesthetic, or separately on either side of \code{xintercept}.}
+
+\item{xintercept}{numeric The split point for the data filtering.}
 
 \item{invert.selection}{logical If \code{TRUE}, the complement of the
 selected rows are returned.}
@@ -77,6 +92,9 @@ Given explicitly by setting orientation to either "x" or "y".}
 
 \item{label.fill}{character vector of length 1 or a function.}
 
+\item{return.density}{logical vector of lenght 1. If \code{TRUE} add columns
+\code{"density"} and \code{"keep.obs"} to the returned data frame.}
+
 \item{na.rm}{a logical value indicating whether NA values should be stripped
 before the computation proceeds.}
 
@@ -97,18 +115,63 @@ A plot layer instance. Using as output \code{data} the input
 \code{stat_dens1d_labels()} Sets values mapped to the
   \code{label} aesthetic to \code{""} or a user provided character string
   based on the local density in regions of a plot panel. Its main use is
-  together with repulsive geoms from package \code{\link[ggrepel]{ggrepel}}.
+  together with repulsive geoms from package \code{\link[ggrepel]{ggrepel}}
+  to restrict labeling to the low density tails of a distribution. By default
+  the data are handled all together, but it is also possible to control
+  labeling separately in each tail.
+
   If there is no mapping to \code{label} in \code{data}, the mapping is set
   to \code{rownames(data)}, with a message.
 }
 \details{
 \code{stat_dens1d_labels()} is designed to work together with
-  statistics from package 'ggrepel'. To avoid text labels being plotted over
+  geometries from package 'ggrepel'. To avoid text labels being plotted over
   unlabelled points the corresponding rows in data need to be retained but
-  labels replaced with the empty character string, \code{""}. This makes
-  \code{\link{stat_dens1d_filter}} unsuitable for the task. Non-the-less
-  \code{stat_dens1d_labels()} could be useful in some other cases, as the
-  substitution character string can be set by the user.
+  labels replaced with the empty character string, \code{""}. Function
+  \code{\link{stat_dens1d_filter}} cannot be used with the repulsive geoms
+  from 'ggrepel' because it drops the observations.
+
+  \code{stat_dens1d_labels()} can be useful also in other situations, as the
+  substitution character string can be set by the user by passing an argument
+  to \code{label.fill}. If this argument is \code{NULL} the unselected rows
+  are filtered out.
+
+  The local density of observations along \emph{x} or \emph{y} is computed
+  with function \code{\link[stats]{density}} and used to select observations,
+  passing to the geom all the rows in its \code{data} input but with with the
+  text of labels replaced in those "not kept". The default is to select
+  observations in sparse regions of the plot, but the selection can be
+  inverted so that only observations in the densest regions are returned.
+  Specific observations can be protected from having the label replaced by
+  passing a suitable argument to \code{keep.these}. Logical and integer
+  vectors function as indexes to rows in \code{data}, while a character
+  vector is compared to values in the variable mapped to the \code{label}
+  aesthetic. A function passed as argument to keep.these will receive as
+  argument the values in the variable mapped to \code{label} and should
+  return a character, logical or numeric vector as described above.
+
+  How many labels are retained intact in addition to those in
+  \code{keep.these} is controlled with arguments passed to \code{keep.number}
+  and \code{keep.fraction}. \code{keep.number} sets the maximum number of
+  observations selected, whenever \code{keep.fraction} results in fewer
+  observations selected, it is obeyed. If \code{xintercept} is a finite value
+  within the \emph{x} range of the data and \code{pool.along} is passed
+  \code{"none"} the data are split into two groups and \code{keep.number} and
+  \code{keep.fraction} are applied separately to each tail with density still
+  computed jointly from all observations. If the length of \code{keep.number}
+  and \code{keep.fraction} is one, half this value is used each tail, if
+  their length is two, the first value is use for the left tail and the
+  second value for the right tail (or if using \code{orientation = "y"} the
+  lower and upper tails, respectively).
+}
+\note{
+Which points are kept and which not depends on how dense and flexible
+  is the density curve estimate. This depends on the values passed as
+  arguments to parameters \code{n}, \code{bw} and \code{kernel}. It is
+  also important to be aware that both \code{geom_text()} and
+  \code{geom_text_repel()} can avoid overplotting by discarding labels at
+  the plot rendering stage, i.e., what is plotted may differ from what is
+  returned by this statistic.
 }
 \examples{
 
@@ -144,6 +207,20 @@ if (ggrepel.installed) {
   ggplot(data = d, aes(x, y)) +
     geom_point() +
     stat_dens1d_labels(geom = "text_repel")
+
+  ggplot(data = d, aes(x, y)) +
+    geom_point() +
+    stat_dens1d_labels(geom = "text_repel", pool.along = "none")
+
+  ggplot(data = d, aes(x, y)) +
+    geom_point() +
+    stat_dens1d_labels(geom = "text_repel",
+                       keep.number = c(0, 10), pool.along = "none")
+
+  ggplot(data = d, aes(x, y)) +
+    geom_point() +
+    stat_dens1d_labels(geom = "text_repel",
+                       keep.fraction = c(0, 0.2), pool.along = "none")
 
 # using defaults, along y-axis
   ggplot(data = d, aes(x, y, label = lab)) +
@@ -184,6 +261,22 @@ if (gginnards.installed) {
   ggplot(data = d, aes(x, y, label = lab)) +
     geom_point() +
     stat_dens1d_labels(geom = "debug")
+
+  ggplot(data = d, aes(x, y, label = lab)) +
+    geom_point() +
+    stat_dens1d_labels(geom = "debug", return.density = TRUE)
+
+  ggplot(data = d, aes(x, y, label = lab)) +
+    geom_point() +
+    stat_dens1d_labels(geom = "debug", label.fill = NULL, return.density = TRUE)
+
+  ggplot(data = d, aes(x, y, label = lab)) +
+    geom_point() +
+    stat_dens1d_labels(geom = "debug", label.fill = NA, return.density = TRUE)
+
+  ggplot(data = d, aes(x, y, label = lab)) +
+    geom_point() +
+    stat_dens1d_labels(geom = "debug", label.fill = FALSE, return.density = TRUE)
 }
 
 }
