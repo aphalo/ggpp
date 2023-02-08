@@ -20,27 +20,32 @@ test_that("stat_summary_xy", {
     expect_identical(result, expected)
 
     result <- ggplot(tst.df, aes(x, y)) +
-      stat_summary_xy(.fun.y = mean)
+      stat_summary_xy(.fun.y = mean_se)
     result <- ggplot2::layer_data(result)
-    result <- result$y
-    expected <- mean(tst.df$y)
+    result <- result[,c("y", "ymin", "ymax")]
+    expected <- mean_se(tst.df$y)
     expect_identical(result, expected)
 
     result <- ggplot(tst.df, aes(x, y)) +
       stat_summary_xy(.fun.y = mean_se)
     result <- ggplot2::layer_data(result)
-    result <- result$y
+    result <- result[,c("y", "ymin", "ymax")]
     expected <- mean_se(tst.df$y)
-    expected <- expected$y
     expect_identical(result, expected)
 
     function_passed <- "mean_se"
     result <- ggplot(tst.df, aes(x, y)) +
       stat_summary_xy(.fun.y = function_passed)
     result <- ggplot2::layer_data(result)
-    result <- result$y
+    result <- result[,c("y", "ymin", "ymax")]
     expected <- mean_se(tst.df$y)
-    expected <- expected$y
+    expect_identical(result, expected)
+
+    result <- ggplot(tst.df, aes(x, y)) +
+      stat_summary_xy(.fun.y = function(x) mean(x))
+    result <- ggplot2::layer_data(result)
+    result <- result$y
+    expected <- mean(tst.df$y)
     expect_identical(result, expected)
 
   })
