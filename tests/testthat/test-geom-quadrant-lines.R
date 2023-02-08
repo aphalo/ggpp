@@ -1,14 +1,13 @@
 context("geom_quadrant_lines")
 
 library(ggplot2)
-
-test_that("geom_quadrant_lines works as expected with default values", {
   tst.df <- data.frame(
     x = c(5, -0.2, -0.2, -2.5, -0.6, -0.1),
     y = c(1.1, -0.6, -0.9, -1.6, 0.3, 1.6),
     group = c("A", "A", "A", "B", "B", "B")
   )
 
+test_that("geom_quadrant_lines works as expected with default values", {
   res <- ggplot(tst.df, aes(x = x, y = y)) +
     geom_point() +
     geom_quadrant_lines()
@@ -33,12 +32,6 @@ test_that("geom_quadrant_lines works as expected with default values", {
 })
 
 test_that("geom_quadrant_lines works as expected with custom parameter values", {
-  tst.df <- data.frame(
-    x = c(5, -0.2, -0.2, -2.5, -0.6, -0.1),
-    y = c(1.1, -0.6, -0.9, -1.6, 0.3, 1.6),
-    group = c("A", "A", "A", "B", "B", "B")
-  )
-
   res <- ggplot(tst.df, aes(x = x, y = y)) +
     geom_point() +
     geom_quadrant_lines(
@@ -47,8 +40,6 @@ test_that("geom_quadrant_lines works as expected with custom parameter values", 
       colour = "blue",
       linetype = "dashed"
     )
-
-  df_res <- layer_data(res, 2)
 
   df_res <- layer_data(res, 2)
   gp <- -1L
@@ -94,19 +85,7 @@ test_that("geom_quadrant_lines works as expected with custom parameter values", 
   vdiffr::expect_doppelganger("geom_quadrant_lines_pool_x", res)
 })
 
-test_that("geom_vhlines returns an error neither x nor y intercepts are not provided", {
-  tst.df <- data.frame(
-    x = c(5, -0.2, -0.2, -2.5, -0.6, -0.1),
-    y = c(1.1, -0.6, -0.9, -1.6, 0.3, 1.6),
-    group = c("A", "A", "A", "B", "B", "B")
-  )
-
-  tst.df <- data.frame(
-    x = c(5, -0.2, -0.2, -2.5, -0.6, -0.1),
-    y = c(1.1, -0.6, -0.9, -1.6, 0.3, 1.6),
-    group = c("A", "A", "A", "B", "B", "B")
-  )
-
+test_that("geom_vhlines returns an error if neither x nor y intercept is provided", {
   expect_error(
     print(
       ggplot(tst.df, aes(x = x, y = y)) +
@@ -116,13 +95,7 @@ test_that("geom_vhlines returns an error neither x nor y intercepts are not prov
   )
 })
 
-test_that("geom_vhlines works as expected with custom parameter values", {
-  tst.df <- data.frame(
-    x = c(5, -0.2, -0.2, -2.5, -0.6, -0.1),
-    y = c(1.1, -0.6, -0.9, -1.6, 0.3, 1.6),
-    group = c("A", "A", "A", "B", "B", "B")
-  )
-
+test_that("geom_vhlines works as expected with multiple intercepts", {
   res <- ggplot(tst.df, aes(x = x, y = y)) +
     geom_point() +
     geom_vhlines(
