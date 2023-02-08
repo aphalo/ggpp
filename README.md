@@ -16,7 +16,7 @@ editor_options:
 version](https://www.r-pkg.org/badges/version/ggpp)](https://cran.r-project.org/package=ggpp)
 [![cran checks](https://badges.cranchecks.info/worst/ggpp.svg)](https://cran.r-project.org/web/checks/check_results_ggpp.html)
 [![R-CMD-check](https://github.com/aphalo/ggpp/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/aphalo/ggpp/actions/workflows/R-CMD-check.yaml)
-[![Coverage](https://github.com/aphalo/ggpp/blob/_xml_coverage_reports/data/master/badge.svg)](https://raw.githubusercontent.com/aphalo/ggpp/_xml_coverage_reports/data/master/coverage.xml)
+[![Coverage](https://raw.githubusercontent.com/aphalo/ggpp/_xml_coverage_reports/data/master/badge.svg)](https://raw.githubusercontent.com/aphalo/ggpp/_xml_coverage_reports/data/master/coverage.xml)
 <!-- badges: end -->
 
 ## Purpose
