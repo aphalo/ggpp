@@ -34,4 +34,13 @@ test_that("stat_summary_xy", {
     expected <- expected$y
     expect_identical(result, expected)
 
+    function_passed <- "mean_se"
+    result <- ggplot(tst.df, aes(x, y)) +
+      stat_summary_xy(.fun.y = function_passed)
+    result <- ggplot2::layer_data(result)
+    result <- result$y
+    expected <- mean_se(tst.df$y)
+    expected <- expected$y
+    expect_identical(result, expected)
+
   })
