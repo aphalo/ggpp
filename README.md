@@ -1,35 +1,29 @@
----
-output: github_document
-editor_options: 
-  markdown: 
-    wrap: 72
----
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-
 
 # ggpp <img src="man/figures/logo-ggpp.png" align="right" width="150"/>
 
 <!-- badges: start -->
+
 [![cran
 version](https://www.r-pkg.org/badges/version/ggpp)](https://cran.r-project.org/package=ggpp)
-[![cran checks](https://badges.cranchecks.info/worst/ggpp.svg)](https://cran.r-project.org/web/checks/check_results_ggpp.html)
+[![cran
+checks](https://badges.cranchecks.info/worst/ggpp.svg)](https://cran.r-project.org/web/checks/check_results_ggpp.html)
 [![R-CMD-check](https://github.com/aphalo/ggpp/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/aphalo/ggpp/actions/workflows/R-CMD-check.yaml)
 [![Coverage](https://raw.githubusercontent.com/aphalo/ggpp/_xml_coverage_reports/data/master/badge.svg)](https://raw.githubusercontent.com/aphalo/ggpp/_xml_coverage_reports/data/master/coverage.xml)
 <!-- badges: end -->
 
 ## Purpose
 
-Package '**ggpp**' provides a set of building blocks that extend the
-Grammar of Graphics implemented in package 'ggplot2' (\>= 3.0.0). The
+Package ‘**ggpp**’ provides a set of building blocks that extend the
+Grammar of Graphics implemented in package ‘ggplot2’ (\>= 3.0.0). The
 extensions enhance the support of data labels and annotations in plots.
 New geometries support insets in plots, data labels, marginal marks and
 the use of native plot coordinates (npc). Position functions implement
 new approaches to nudging usable with any geometry, but especially
 useful together with `geom_text_s()` and `geom_label_s()` from this
 package and `geom_text_repel()` and `geom_label_repel()` from package
-'ggrepel' (\>= 0.9.2). See: (<https://ggrepel.slowkow.com>) for
+‘ggrepel’ (\>= 0.9.2). See: (<https://ggrepel.slowkow.com>) for
 installation instructions and news about releases.
 
 ## Extended Grammar of graphics
@@ -44,7 +38,7 @@ exactly that of the data. In other words the location of a data label in
 observation can be inferred. In the case of annotations the location on
 the plotting area is arbitrary, dictated by available graphic design
 considerations and the requirement of not occluding data observations.
-In the table below we list the geometries defined in package 'ggpp',
+In the table below we list the geometries defined in package ‘ggpp’,
 whether they are intended to for data labels, annotations or data, the
 aesthetics and pseudo-aesthetic they obey and whether the can connect
 the original data position to the displaced position where the data
@@ -52,7 +46,7 @@ label is anchored. These requires also a change in the behaviour of
 position functions, that we will describe in the next section.
 
 | Geometry                                   | Main use                        | Aesthetics                                                                                                | Segment |
-|-------------|-------------|---------------------------------|-------------|
+|--------------------------------------------|---------------------------------|-----------------------------------------------------------------------------------------------------------|---------|
 | `geom_text_s()`                            | data labels                     | x, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                           | yes     |
 | `geom_label_s()`                           | data labels                     | x, y, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust       | yes     |
 | `geom_text_npc()`                          | annotations                     | npcx, npcy, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                     | no      |
@@ -68,11 +62,11 @@ position functions, that we will describe in the next section.
 | `geom_quadrant_lines()` , `geom_vhlines()` | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                | no      |
 |                                            |                                 |                                                                                                           |         |
 
-: Geometries defined in package 'ggpp'
+Geometries defined in package ‘ggpp’
 
 ## Position functions
 
-In contrast to position functions from 'ggplot2' all these position
+In contrast to position functions from ‘ggplot2’ all these position
 functions are able keep the original *x* and *y* coordinates under a
 different name in the `data` object when displacing them to a new
 position. This makes them compatible with `geom_text_s()`,
@@ -81,10 +75,10 @@ position. This makes them compatible with `geom_text_s()`,
 arrows connecting the original positions to the displaced positions.
 They remain backwards compatible and can be used in all geometries that
 have a `position` formal parameter. This is similar to the approach used
-in package 'ggrepel' (\<= 0.9.1) but uses a different naming convention
+in package ‘ggrepel’ (\<= 0.9.1) but uses a different naming convention
 that allows the new position functions to remain backwards compatible
-with 'ggplot2'. Starting from version 0.9.2 the geometries from package
-'ggrepel' are fully compatible with this new naming convention.
+with ‘ggplot2’. Starting from version 0.9.2 the geometries from package
+‘ggrepel’ are fully compatible with this new naming convention.
 
 Position functions `position_nudge_keep()`, `position_nudge_to()`,
 `position_nudge_center()` and `position_nudge_line()` implement
@@ -101,11 +95,11 @@ functions. They make it possible to easily nudge labels in plot layers
 that use stacking, dodging or jitter. Functions
 `position_jitter_keep()`, `position_stack_keep()`,
 `position_fill_keep()`, `position_dodge_keep()`,
-`position_dosge2_keep()` behave like the positions from 'ggplot2' but
+`position_dosge2_keep()` behave like the positions from ‘ggplot2’ but
 keep in the `data` object the original coordinates.
 
 | Position                  | Main use       | Displacement                    | Most used with              |
-|-----------------|-----------------|---------------------|------------------|
+|---------------------------|----------------|---------------------------------|-----------------------------|
 | `position_nudge_keep()`   | nudge          | x, y (fixed distance)           | data labels                 |
 | `position_jitter_keep()`  | jitter         | x, y (random)                   | dot plots                   |
 | `position_stack_keep()`   | stack          | vertical (absolute)             | column and bar plots        |
@@ -145,7 +139,7 @@ observations in a panel. Another two statistics,
 `stat_dens1d_filter_g()` and `stat_dens1d_filter_g()` compute the
 density by group instead of by plot panel. These six statistics are
 designed to work well together with `geom_text_repel()` and
-`geom_label_repel()` from package 'ggrepel' (\>= 0.8.0).
+`geom_label_repel()` from package ‘ggrepel’ (\>= 0.8.0).
 
 The statistics `stat_apply_panel()` and `stat_apply_group()` are useful
 for applying arbitrary functions returning numeric vectors like
@@ -165,29 +159,27 @@ scales. Justification outward or inward from an arbitrary origin is also
 supported. Justification `"position"` implements justification at the
 edge nearest to the original position. This works only together with
 position functions that save the original location using the naming
-convention implemented in 'ggpp', otherwise default justification
+convention implemented in ‘ggpp’, otherwise default justification
 falls-back to `"center"`/`"middle"`.
 
 ## History
 
-This package is a "spin-off" from package 'ggpmisc' containing
-extensions to the grammar originally written for use wihtin 'ggpmisc'.
-As 'ggpmisc' had grown in size, splitting it into two packages was
+This package is a “spin-off” from package ‘ggpmisc’ containing
+extensions to the grammar originally written for use wihtin ‘ggpmisc’.
+As ‘ggpmisc’ had grown in size, splitting it into two packages was
 necessary to easy development and maintenance and to facilitate imports
-into other packages. For the time being, package 'ggpmisc' imports and
-re-exports all visible definitions from 'ggpp'.
+into other packages. For the time being, package ‘ggpmisc’ imports and
+re-exports all visible definitions from ‘ggpp’.
 
 ## Examples
 
-The plots below exemplify some of the things that 'ggpp' makes possible
-or makes easier to code compared to 'ggplot' used on its own. Additional
-examples including several combining 'ggpp' and 'ggrepel' are provided
+The plots below exemplify some of the things that ‘ggpp’ makes possible
+or makes easier to code compared to ‘ggplot’ used on its own. Additional
+examples including several combining ‘ggpp’ and ‘ggrepel’ are provided
 in the package vignette.
 
-
-```r
+``` r
 library(ggpp)
-#> Error in library(ggpp): there is no package called 'ggpp'
 library(ggrepel)
 library(dplyr)
 ```
@@ -196,8 +188,7 @@ library(dplyr)
 
 A plot with an inset table.
 
-
-```r
+``` r
 mtcars %>%
   group_by(cyl) %>%
   summarize(wt = mean(wt), mpg = mean(mpg)) %>%
@@ -210,8 +201,9 @@ df <- tibble(x = 5.45, y = 34, tb = list(tb))
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point() +
   geom_table(data = df, aes(x = x, y = y, label = tb))
-#> Error in geom_table(data = df, aes(x = x, y = y, label = tb)): could not find function "geom_table"
 ```
+
+![](man/figures/README-readme-03-1.png)<!-- -->
 
 A plot with an inset plot.
 
@@ -219,8 +211,7 @@ Inset plot positioned using native plot coordinates (npc) and using
 keywords insted of numerical values in the range 0..1 which are also
 accepted.
 
-
-```r
+``` r
 p <- ggplot(mtcars, aes(factor(cyl), mpg, colour = factor(cyl))) +
   stat_boxplot() +
   labs(y = NULL, x = "Engine cylinders (number)") +
@@ -230,37 +221,36 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point(show.legend = FALSE) +
   annotate("plot_npc", npcx = "left", npcy = "bottom", label = p) +
   expand_limits(y = 0, x = 0)
-#> Error in `annotate()`:
-#> ! Can't find geom called "plot_npc"
 ```
+
+![](man/figures/README-readme-06-1.png)<!-- -->
 
 ### Centroids
 
 Means computed on-the-fly and shown as asterisks.
 
-
-```r
+``` r
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point() +
   stat_centroid(shape = "asterisk", size = 6)
-#> Error in stat_centroid(shape = "asterisk", size = 6): could not find function "stat_centroid"
 ```
+
+![](man/figures/README-unnamed-chunk-1-1.png)<!-- -->
 
 Medians computed on-the-fly displayed marginal arrows.
 
-
-```r
+``` r
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point() +
   stat_centroid(geom = "y_margin_arrow", .fun = median,
                 aes(yintercept = after_stat(y)), arrow.length = 0.05)
-#> Error in stat_centroid(geom = "y_margin_arrow", .fun = median, aes(yintercept = after_stat(y)), : could not find function "stat_centroid"
 ```
+
+![](man/figures/README-unnamed-chunk-2-1.png)<!-- -->
 
 ### Nudging and stacking combined
 
-
-```r
+``` r
 df <- data.frame(x1 = c(1, 2, 1, 3, -1),
                  x2 = c("a", "a", "b", "b", "b"),
                  grp = c("some long name", "other name", "some name",
@@ -274,22 +264,21 @@ ggplot(data = df, aes(x2, x1, group = grp)) +
     aes(label = grp),
     position = position_stacknudge(vjust = 1, y = -0.2)) +
   theme(legend.position = "none")
-#> Error in position_stacknudge(vjust = 1, y = -0.2): could not find function "position_stacknudge"
 ```
+
+![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
 
 ## Installation
 
 Installation of the most recent stable version from CRAN:
 
-
-```r
+``` r
 install.packages("ggpp")
 ```
 
 Installation of the current unstable version from GitHub:
 
-
-```r
+``` r
 # install.packages("devtools")
 devtools::install_github("aphalo/ggpp")
 ```
@@ -303,9 +292,9 @@ News about updates are regularly posted at
 (<https://www.r4photobiology.info/>).
 
 Chapter 7 in Aphalo (2020) explains both basic concepts of the grammar
-of graphics as implemented in 'ggplot2' as well as extensions to this
-grammar including several of those made available by packages 'ggpp' and
-'ggpmisc'.
+of graphics as implemented in ‘ggplot2’ as well as extensions to this
+grammar including several of those made available by packages ‘ggpp’ and
+‘ggpmisc’.
 
 ## Contributing
 
@@ -318,26 +307,25 @@ Please report bugs and request new features at
 If you use this package to produce scientific or commercial
 publications, please cite according to:
 
-
-```r
+``` r
 citation("ggpp")
 ```
 
 ## Acknowledgements
 
-Being an extension to package 'ggplot2', some of the code in package
-'ggpp' has been created by using as a template that from layer functions
-and scales in 'ggplot2'. The user interface of 'ggpp' aims at being as
-consistent as possible with 'ggplot2' and the layered grammar of
-graphics (Wickham 2010). New features added in 'ggplot2' are added when
-relevant to 'ggpp', such as support for `orientation` for flipping of
+Being an extension to package ‘ggplot2’, some of the code in package
+‘ggpp’ has been created by using as a template that from layer functions
+and scales in ‘ggplot2’. The user interface of ‘ggpp’ aims at being as
+consistent as possible with ‘ggplot2’ and the layered grammar of
+graphics (Wickham 2010). New features added in ‘ggplot2’ are added when
+relevant to ‘ggpp’, such as support for `orientation` for flipping of
 layers. This package does consequently indirectly include significant
-contributions from several of the authors and maintainers of 'ggplot2',
+contributions from several of the authors and maintainers of ‘ggplot2’,
 listed at (<https://ggplot2.tidyverse.org/>).
 
 Coordination of development through a friendly exchange of ideas and
-reciprocal contributions by Kamil Slowikowski to 'ggpp' and by myself to
-'ggrepel' has made the two packages fully inter-compatible.
+reciprocal contributions by Kamil Slowikowski to ‘ggpp’ and by myself to
+‘ggrepel’ has made the two packages fully inter-compatible.
 
 ## References
 
@@ -345,13 +333,12 @@ Aphalo, Pedro J. (2020) *Learn R: As a Language.* The R Series. Boca
 Raton and London: Chapman and Hall/CRC Press. ISBN: 978-0-367-18253-3.
 350 pp.
 
-Wickham, Hadley. 2010. "A Layered Grammar of Graphics." Journal of
-Computational and Graphical Statistics 19 (1): 3--28.
+Wickham, Hadley. 2010. “A Layered Grammar of Graphics.” Journal of
+Computational and Graphical Statistics 19 (1): 3–28.
 <https://doi.org/10.1198/jcgs.2009.07098>.
 
 ## License
 
-© 2016-2023 Pedro J. Aphalo
-([pedro.aphalo\@helsinki.fi](mailto:pedro.aphalo@helsinki.fi){.email}).
-Released under the GPL, version 2 or greater. This software carries no
-warranty of any kind.
+© 2016-2023 Pedro J. Aphalo (<pedro.aphalo@helsinki.fi>). Released under
+the GPL, version 2 or greater. This software carries no warranty of any
+kind.
