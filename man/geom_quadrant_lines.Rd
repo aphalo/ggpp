@@ -127,7 +127,7 @@ ggplot(my.data, aes(x, y)) +
 
 ggplot(my.data, aes(x, y)) +
   geom_vhlines(xintercept = c(25, 50, 75),
-               yintercept = c(10, 5),
+               yintercept = c(10, 8),
                linetype = "dotted",
                colour = "red") +
   geom_point() +
