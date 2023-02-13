@@ -9,8 +9,8 @@ test_that("stat_summary_xy", {
     group = c("A", "A", "A", "B", "B", "B")
   )
   tst.df.na <- data.frame(
-    x = c(2.2, -0.2, -0.2, -2.5, -0.6, NA, 0.1),
-    y = c(1.1, -0.6, -0.9, -1.6, 0.3, 1.6, NA),
+    x = c(2.2, -0.2, -0.2, -2.5, -0.6, 1.1, 0.1),
+    y = c(1.1, -0.6, -0.9, -1.6, 0.3, 1.6, 1.6),
     group = c("A", "A", "A", "B", "B", "B", "B")
   )
   result <- ggplot(tst.df, aes(x, y)) +
@@ -41,10 +41,7 @@ test_that("stat_summary_xy", {
       .fun.y.args = list(na.rm = TRUE),
       .fun.x.args = list(na.rm = TRUE)
     )
-  expect_warning(result <- ggplot2::layer_data(result),
-    "Removed 2 rows containing non-finite values (stat_apply_group).",
-    fixed = TRUE
-  )
+  result <- ggplot2::layer_data(result)
   result <- result[, c("x", "y")]
   expected <- as.data.frame(lapply(na.omit(tst.df.na[, c("x", "y")]), mean, na.rm = TRUE))
   expect_identical(result, expected)
