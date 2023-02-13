@@ -213,6 +213,32 @@ x <- geom_table(data = my.tb,
 expect_equal(x$geom_params$table.hjust, 0)
 })
 
+test_that("letters_tb_npc", {
+  tb <- tibble(a = LETTERS[2:4], b = letters[4:2])
+  my.tb <- tibble(x = 0, y = 0, tb = list(tb))
+  vdiffr::expect_doppelganger("geom_table_npc_letters",
+                              ggplot() +
+                                geom_table_npc(data = my.tb,
+                                           mapping = aes(npcx = x, npcy = y, label = tb))
+  )
+})
+
+test_that("multiple_rows_tb_npc", {
+  tb <- tibble(Z1 = LETTERS[2:4], z1 = letters[4:2])
+  tbb <- tibble(Z2 = LETTERS[2:4], z2 = letters[4:2])
+  tbbb <- tibble(Z3 = LETTERS[2:4], z3 = letters[4:2])
+  my.tb <- tibble(x = c(0, 0.5, 1),
+                  y = c(1, 0.5, 0),
+                  tb = list(t1 = tb, t2 = tbb, t3 = tbbb))
+  vdiffr::expect_doppelganger("geom_table_npc_multi_row",
+                              ggplot() +
+                                geom_table(data = my.tb,
+                                           mapping = aes(x, y, label = tb)) +
+                                lims(x = c(0, 6), y = c(0, 6))
+  )
+})
+
+# this does not render the plot so it test only the stat function.
 test_that("geom_table_npc_string_center_hjust", {
   tb <- tibble(a = 2:4, b = 4:2)
   my.tb <- tibble(x = 0, y = 0, tb = list(tb))
