@@ -183,6 +183,11 @@ test_that("nudge_line", {
     l = letters[1:21]
   )
 
+  expect_error(ggplot(df, aes(x, y, label = l)) +
+                  geom_text(position = position_nudge_line(kept.origin = "")))
+  expect_error(ggplot(df, aes(x, y, label = l)) +
+                 geom_text(position = position_nudge_line(kept.origin = "zz")))
+
   { # output under linux does not match snapshots created under Windows
     skip_on_os(c("mac", "linux", "solaris"))
     vdiffr::expect_doppelganger("nudge_line1",
@@ -218,6 +223,21 @@ test_that("nudge_line", {
                                 geom_text(aes(label = l),
                                           position = position_nudge_line(method = "lm",
                                                                          direction = "split"))
+  )
+  vdiffr::expect_doppelganger("nudge_line6",
+                              ggplot(subset(df, x >= 0), aes(y, yy)) +
+                                stat_smooth(method = "lm", formula = y ~ x) +
+                                geom_point() +
+                                geom_text(aes(label = l),
+                                          position = position_nudge_line(method = "linear",
+                                                                         direction = "split"))
+  )
+  vdiffr::expect_doppelganger("nudge_line7",
+                              ggplot(subset(df, x >= 0), aes(y, yy)) +
+                                stat_smooth(method = "lm", formula = y ~ x) +
+                                geom_point() +
+                                geom_text(aes(label = l),
+                                          position = position_nudge_line(line_nudge = 1.5))
   )
 })
 

@@ -177,6 +177,11 @@ ggplot(my.df, aes(x = X, y = Y, colour = category)) +
   stat_centroid(geom = "text", aes(label = category)) +
   geom_point()
 
+ggplot(my.df, aes(x = X, y = Y, colour = category)) +
+  stat_summary_xy(geom = "pointrange",
+                  .fun.x = mean, .fun.y = mean_se) +
+  geom_point()
+
 # quantiles
 ggplot(my.df, aes(x = X, y = Y, colour = category)) +
   geom_point() +

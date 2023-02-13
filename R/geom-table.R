@@ -295,188 +295,6 @@ geom_table <- function(mapping = NULL, data = NULL,
   )
 }
 
-# Defined here to avoid a note in check --as-cran as the imports from 'broom'
-# are not seen when the function is defined in-line in the ggproto object.
-#' @rdname ggpp-ggproto
-#'
-#' @format NULL
-#' @usage NULL
-#'
-gtb_draw_panel_fun <-
-  function(data,
-           panel_params,
-           coord,
-           add.segments = TRUE,
-           box.padding = 0.25,
-           point.padding = 1e-06,
-           segment.linewidth = 1,
-           min.segment.length = 0,
-           arrow = NULL,
-           table.theme = NULL,
-           table.rownames = FALSE,
-           table.colnames = TRUE,
-           table.hjust = 0.5,
-           parse = FALSE,
-           default.colour = "black",
-           colour.target = "all",
-           default.alpha = 1,
-           alpha.target = "all",
-           na.rm = FALSE) {
-
-    if (nrow(data) == 0) {
-      return(grid::nullGrob())
-    }
-
-    if (!is.data.frame(data$label[[1]])) {
-      warning("Skipping as object mapped to 'label' is not a list of ",
-              "\"tibble\" or \"data.frame\" objects.")
-      return(grid::nullGrob())
-    }
-
-    add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
-
-    # should be called only once!
-    data <- coord$transform(data, panel_params)
-    if (add.segments) {
-      data_orig <- data.frame(x = data$x_orig, y = data$y_orig)
-      data_orig <- coord$transform(data_orig, panel_params)
-      data$x_orig <- data_orig$x
-      data$y_orig <- data_orig$y
-    }
-
-    if (is.character(data$vjust)) {
-      data$vjust <-
-        compute_just2d(data = data,
-                       coord = coord,
-                       panel_params = panel_params,
-                       just = data$vjust,
-                       a = "y", b = "x")
-    }
-    if (is.character(data$hjust)) {
-      data$hjust <-
-        compute_just2d(data = data,
-                       coord = coord,
-                       panel_params = panel_params,
-                       just = data$hjust,
-                       a = "x", b = "y")
-    }
-    if (add.segments) {
-      segments.data <-
-        shrink_segments(data,
-                        point.padding = point.padding,
-                        box.padding = box.padding,
-                        min.segment.length = min.segment.length)
-    }
-
-    # replace NULL with default
-    if (is.null(table.theme)) {
-      table.theme <-
-        getOption("ggpmisc.ttheme.default", default = ttheme_gtdefault)
-    }
-
-    # loop needed as gpar is not vectorized
-    all.grobs <- grid::gList()
-
-    for (row.idx in 1:nrow(data)) {
-      row <- data[row.idx, , drop = FALSE]
-      table.alpha <-
-        ifelse(any(alpha.target %in% c("all", "table")),
-               row$alpha, default.alpha)
-      segment.alpha <-
-        ifelse(any(alpha.target %in% c("all", "segment")),
-               row$alpha, default.alpha)
-
-      # Build the table
-      if (is.function(table.theme)) {
-        # tableGrob puts all the padding on the same side unless just = 0.5
-        # this makes it difficult to compute a suitable value for table.x
-        # without knowing the width of the column. The code here at least
-        # ensures that whatever its length the whole text is always displayed.
-        table.x <- table.hjust
-        if (is.na(row$fill)) {
-          core.params <-
-            list(fg_params = list(hjust = table.hjust, x = table.x))
-        } else {
-          core.params <-
-            list(fg_params = list(hjust = table.hjust, x = table.x),
-                 bg_params = list(fill = row$fill))
-        }
-        if (is.na(row$colour)) {
-          # use theme's default base_colour
-          this.table.theme <-
-            table.theme(base_size = row$size * .pt,
-                        base_family = row$family,
-                        parse = parse,
-                        rowhead = list(fg_params = list(hjust = 1, x = 0.9)),
-                        colhead = list(fg_params = list(hjust = table.hjust,
-                                                        x = table.x)),
-                        core = core.params)
-        } else {
-          this.table.theme <-
-            # use colour from data$colour
-            table.theme(base_size = row$size * .pt,
-                        base_colour = ggplot2::alpha(row$colour, row$alpha),
-                        base_family = row$family,
-                        parse = parse,
-                        rowhead = list(fg_params = list(hjust = 1, x = 0.9)),
-                        colhead = list(fg_params = list(hjust = table.hjust,
-                                                        x = table.x)),
-                        core = core.params)
-        }
-      } else if (is.list(table.theme)) {
-        this.table.theme <- table.theme
-      }
-      table.tb <- data[["label"]][[row.idx]]
-      user.grob <-
-        gridExtra::tableGrob(
-          d = table.tb,
-          theme = this.table.theme,
-          rows = if (table.rownames) rownames(table.tb) else NULL,
-          cols = if (table.colnames) colnames(table.tb) else NULL
-        )
-
-      user.grob$vp <-
-        grid::viewport(x = grid::unit(row$x, "native"),
-                       y = grid::unit(row$y, "native"),
-                       width = sum(user.grob$widths),
-                       height = sum(user.grob$heights),
-                       just = c(row$hjust, row$vjust),
-                       angle = row$angle,
-                       name = paste("inset.table.vp", row$PANEL,
-                                    "row", row.idx, sep = "."))
-
-      # give unique name to each grob
-      user.grob$name <- paste("inset.table", row.idx, sep = ".")
-
-      if (add.segments) {
-        segment.row <- segments.data[row.idx, , drop = FALSE]
-        if (segment.row$too.short) {
-          segment.grob <- grid::nullGrob()
-        } else {
-          segment.grob <-
-            grid::segmentsGrob(x0 = segment.row$x,
-                               y0 = segment.row$y,
-                               x1 = segment.row$x_orig,
-                               y1 = segment.row$y_orig,
-                               arrow = arrow,
-                               gp = grid::gpar(
-                                 col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
-                                   ifelse(any(colour.target %in% c("all", "segment")),
-                                          ggplot2::alpha(row$colour, segment.alpha),
-                                          ggplot2::alpha(default.colour, segment.alpha)),
-                                 lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
-                               name = paste("table.s.segment", row$group, row.idx, sep = "."))
-        }
-        all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
-      } else {
-        all.grobs <- grid::gList(all.grobs, user.grob)
-      }
-    }
-  #    grid::grobTree(children = all.grobs, name = "geom.table.panel")
-    grid::grobTree(children = all.grobs)
-
-  }
-
 #' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
@@ -498,7 +316,180 @@ GeomTable <-
             lineheight = 1.2
           ),
 
-          draw_panel = gtb_draw_panel_fun,
+          draw_panel = function(data,
+                                panel_params,
+                                coord,
+                                add.segments = TRUE,
+                                box.padding = 0.25,
+                                point.padding = 1e-06,
+                                segment.linewidth = 1,
+                                min.segment.length = 0,
+                                arrow = NULL,
+                                table.theme = NULL,
+                                table.rownames = FALSE,
+                                table.colnames = TRUE,
+                                table.hjust = 0.5,
+                                parse = FALSE,
+                                default.colour = "black",
+                                colour.target = "all",
+                                default.alpha = 1,
+                                alpha.target = "all",
+                                na.rm = FALSE) {
+
+            if (nrow(data) == 0) {
+              return(grid::nullGrob())
+            }
+
+            if (!is.data.frame(data$label[[1]])) {
+              warning("Skipping as object mapped to 'label' is not a list of ",
+                      "\"tibble\" or \"data.frame\" objects.")
+              return(grid::nullGrob())
+            }
+
+            add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
+
+            # should be called only once!
+            data <- coord$transform(data, panel_params)
+            if (add.segments) {
+              data_orig <- data.frame(x = data$x_orig, y = data$y_orig)
+              data_orig <- coord$transform(data_orig, panel_params)
+              data$x_orig <- data_orig$x
+              data$y_orig <- data_orig$y
+            }
+
+            if (is.character(data$vjust)) {
+              data$vjust <-
+                compute_just2d(data = data,
+                               coord = coord,
+                               panel_params = panel_params,
+                               just = data$vjust,
+                               a = "y", b = "x")
+            }
+            if (is.character(data$hjust)) {
+              data$hjust <-
+                compute_just2d(data = data,
+                               coord = coord,
+                               panel_params = panel_params,
+                               just = data$hjust,
+                               a = "x", b = "y")
+            }
+            if (add.segments) {
+              segments.data <-
+                shrink_segments(data,
+                                point.padding = point.padding,
+                                box.padding = box.padding,
+                                min.segment.length = min.segment.length)
+            }
+
+            # replace NULL with default
+            if (is.null(table.theme)) {
+              table.theme <-
+                getOption("ggpmisc.ttheme.default", default = ttheme_gtdefault)
+            }
+
+            # loop needed as gpar is not vectorized
+            all.grobs <- grid::gList()
+
+            for (row.idx in 1:nrow(data)) {
+              row <- data[row.idx, , drop = FALSE]
+              table.alpha <-
+                ifelse(any(alpha.target %in% c("all", "table")),
+                       row$alpha, default.alpha)
+              segment.alpha <-
+                ifelse(any(alpha.target %in% c("all", "segment")),
+                       row$alpha, default.alpha)
+
+              # Build the table
+              if (is.function(table.theme)) {
+                # tableGrob puts all the padding on the same side unless just = 0.5
+                # this makes it difficult to compute a suitable value for table.x
+                # without knowing the width of the column. The code here at least
+                # ensures that whatever its length the whole text is always displayed.
+                table.x <- table.hjust
+                if (is.na(row$fill)) {
+                  core.params <-
+                    list(fg_params = list(hjust = table.hjust, x = table.x))
+                } else {
+                  core.params <-
+                    list(fg_params = list(hjust = table.hjust, x = table.x),
+                         bg_params = list(fill = row$fill))
+                }
+                if (is.na(row$colour)) {
+                  # use theme's default base_colour
+                  this.table.theme <-
+                    table.theme(base_size = row$size * .pt,
+                                base_family = row$family,
+                                parse = parse,
+                                rowhead = list(fg_params = list(hjust = 1, x = 0.9)),
+                                colhead = list(fg_params = list(hjust = table.hjust,
+                                                                x = table.x)),
+                                core = core.params)
+                } else {
+                  this.table.theme <-
+                    # use colour from data$colour
+                    table.theme(base_size = row$size * .pt,
+                                base_colour = ggplot2::alpha(row$colour, row$alpha),
+                                base_family = row$family,
+                                parse = parse,
+                                rowhead = list(fg_params = list(hjust = 1, x = 0.9)),
+                                colhead = list(fg_params = list(hjust = table.hjust,
+                                                                x = table.x)),
+                                core = core.params)
+                }
+              } else if (is.list(table.theme)) {
+                this.table.theme <- table.theme
+              }
+              table.tb <- data[["label"]][[row.idx]]
+              user.grob <-
+                gridExtra::tableGrob(
+                  d = table.tb,
+                  theme = this.table.theme,
+                  rows = if (table.rownames) rownames(table.tb) else NULL,
+                  cols = if (table.colnames) colnames(table.tb) else NULL
+                )
+
+              user.grob$vp <-
+                grid::viewport(x = grid::unit(row$x, "native"),
+                               y = grid::unit(row$y, "native"),
+                               width = sum(user.grob$widths),
+                               height = sum(user.grob$heights),
+                               just = c(row$hjust, row$vjust),
+                               angle = row$angle,
+                               name = paste("inset.table.vp", row$PANEL,
+                                            "row", row.idx, sep = "."))
+
+              # give unique name to each grob
+              user.grob$name <- paste("inset.table", row.idx, sep = ".")
+
+              if (add.segments) {
+                segment.row <- segments.data[row.idx, , drop = FALSE]
+                if (segment.row$too.short) {
+                  segment.grob <- grid::nullGrob()
+                } else {
+                  segment.grob <-
+                    grid::segmentsGrob(x0 = segment.row$x,
+                                       y0 = segment.row$y,
+                                       x1 = segment.row$x_orig,
+                                       y1 = segment.row$y_orig,
+                                       arrow = arrow,
+                                       gp = grid::gpar(
+                                         col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
+                                           ifelse(any(colour.target %in% c("all", "segment")),
+                                                  ggplot2::alpha(row$colour, segment.alpha),
+                                                  ggplot2::alpha(default.colour, segment.alpha)),
+                                         lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
+                                       name = paste("table.s.segment", row$group, row.idx, sep = "."))
+                }
+                all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
+              } else {
+                all.grobs <- grid::gList(all.grobs, user.grob)
+              }
+            }
+            #    grid::grobTree(children = all.grobs, name = "geom.table.panel")
+            grid::grobTree(children = all.grobs)
+
+          },
+
           draw_key = function(...) {
             grid::nullGrob()
           }
@@ -546,119 +537,6 @@ geom_table_npc <- function(mapping = NULL, data = NULL,
   )
 }
 
-# Defined here to avoid a note in check --as-cran as the imports from 'broom'
-# are not seen when the function is defined in-line in the ggproto object.
-#' @rdname ggpp-ggproto
-#'
-#' @format NULL
-#' @usage NULL
-#'
-gtbnpc_draw_panel_fun <-
-  function(data,
-           panel_params,
-           coord,
-           table.theme = NULL,
-           table.rownames = FALSE,
-           table.colnames = TRUE,
-           table.hjust = 0.5,
-           parse = FALSE,
-           na.rm = FALSE) {
-
-    if (nrow(data) == 0) {
-      return(grid::nullGrob())
-    }
-
-    if (!is.data.frame(data$label[[1]])) {
-      warning("Skipping as object mapped to 'label' is not a list of ",
-              "\"tibble\" or \"data.frame\" objects.")
-      return(grid::nullGrob())
-    }
-
-    data$npcx <- compute_npcx(data$npcx)
-    data$npcy <- compute_npcy(data$npcy)
-
-    if (is.character(data$vjust)) {
-      data$vjust <- compute_just(data$vjust, data$npcy)
-    }
-    if (is.character(data$hjust)) {
-      data$hjust <- compute_just(data$hjust, data$npcx)
-    }
-
-    # replace NULL with default
-    if (is.null(table.theme)) {
-      table.theme <-
-        getOption("ggpmisc.ttheme.default", default = ttheme_gtdefault)
-    }
-
-    tb.grobs <- grid::gList()
-
-    for (row.idx in seq_len(nrow(data))) {
-      # if needed, construct the table theme
-      if (is.function(table.theme)) {
-        # text position in cell depends on hjust
-        table.x <- if(table.hjust == 0.5) 0.5 else table.hjust * 0.8 + 0.1
-        if (is.na(data$fill[row.idx])) {
-          core.params <-
-            list(fg_params = list(hjust = table.hjust, x = table.x))
-        } else {
-          core.params <-
-            list(fg_params = list(hjust = table.hjust, x = table.x),
-                 bg_params = list(fill = data$fill[row.idx]))
-        }
-        if (is.na(data$colour[row.idx])) {
-          # use theme's default base_colour
-          this.table.theme <-
-            table.theme(base_size = data$size[row.idx] * .pt,
-                        base_family = data$family[[row.idx]],
-                        parse = parse,
-                        rowhead = list(fg_params = list(hjust = 1, x = 0.9)),
-                        colhead = list(fg_params = list(hjust = table.hjust,
-                                                        x = table.x)),
-                        core = core.params)
-        } else {
-          # use colour from data$colour
-          this.table.theme <-
-            table.theme(base_size = data$size[row.idx] * .pt,
-                        base_colour = ggplot2::alpha(data$colour[row.idx],
-                                                     data$alpha[row.idx]),
-                        base_family = data$family[[row.idx]],
-                        parse = parse,
-                        rowhead = list(fg_params = list(hjust = 1, x = 0.9)),
-                        colhead = list(fg_params = list(hjust = table.hjust,
-                                                        x = table.x)),
-                        core = core.params)
-        }
-      } else if (is.list(table.theme)) {
-        this.table.theme <- table.theme
-      }
-      table.tb <- data[["label"]][[row.idx]]
-      gtb <-
-        gridExtra::tableGrob(
-          d = table.tb,
-          theme = this.table.theme,
-          rows = if (table.rownames) rownames(table.tb) else NULL,
-          cols = if (table.colnames) colnames(table.tb) else NULL
-        )
-
-      gtb$vp <-
-        grid::viewport(x = grid::unit(data$npcx[row.idx], "native"),
-                       y = grid::unit(data$npcy[row.idx], "native"),
-                       width = sum(gtb$widths),
-                       height = sum(gtb$heights),
-                       just = c(data$hjust[row.idx], data$vjust[row.idx]),
-                       angle = data$angle[row.idx],
-                       name = paste("geom_table.panel", data$PANEL[row.idx],
-                                    "row", row.idx, sep = "."))
-
-      # give unique name to each table
-      gtb$name <- paste("table", row.idx, sep = ".")
-
-      tb.grobs[[row.idx]] <- gtb
-    }
-
-    grid::grobTree(children = tb.grobs)
-  }
-
 #' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
@@ -680,7 +558,111 @@ GeomTableNpc <-
             lineheight = 1.2
           ),
 
-          draw_panel = gtbnpc_draw_panel_fun,
+          draw_panel = gtbnpc_draw_panel_fun <-
+            function(data,
+                     panel_params,
+                     coord,
+                     table.theme = NULL,
+                     table.rownames = FALSE,
+                     table.colnames = TRUE,
+                     table.hjust = 0.5,
+                     parse = FALSE,
+                     na.rm = FALSE) {
+
+              if (nrow(data) == 0) {
+                return(grid::nullGrob())
+              }
+
+              if (!is.data.frame(data$label[[1]])) {
+                warning("Skipping as object mapped to 'label' is not a list of ",
+                        "\"tibble\" or \"data.frame\" objects.")
+                return(grid::nullGrob())
+              }
+
+              data$npcx <- compute_npcx(data$npcx)
+              data$npcy <- compute_npcy(data$npcy)
+
+              if (is.character(data$vjust)) {
+                data$vjust <- compute_just(data$vjust, data$npcy)
+              }
+              if (is.character(data$hjust)) {
+                data$hjust <- compute_just(data$hjust, data$npcx)
+              }
+
+              # replace NULL with default
+              if (is.null(table.theme)) {
+                table.theme <-
+                  getOption("ggpmisc.ttheme.default", default = ttheme_gtdefault)
+              }
+
+              tb.grobs <- grid::gList()
+
+              for (row.idx in seq_len(nrow(data))) {
+                # if needed, construct the table theme
+                if (is.function(table.theme)) {
+                  # text position in cell depends on hjust
+                  table.x <- if(table.hjust == 0.5) 0.5 else table.hjust * 0.8 + 0.1
+                  if (is.na(data$fill[row.idx])) {
+                    core.params <-
+                      list(fg_params = list(hjust = table.hjust, x = table.x))
+                  } else {
+                    core.params <-
+                      list(fg_params = list(hjust = table.hjust, x = table.x),
+                           bg_params = list(fill = data$fill[row.idx]))
+                  }
+                  if (is.na(data$colour[row.idx])) {
+                    # use theme's default base_colour
+                    this.table.theme <-
+                      table.theme(base_size = data$size[row.idx] * .pt,
+                                  base_family = data$family[[row.idx]],
+                                  parse = parse,
+                                  rowhead = list(fg_params = list(hjust = 1, x = 0.9)),
+                                  colhead = list(fg_params = list(hjust = table.hjust,
+                                                                  x = table.x)),
+                                  core = core.params)
+                  } else {
+                    # use colour from data$colour
+                    this.table.theme <-
+                      table.theme(base_size = data$size[row.idx] * .pt,
+                                  base_colour = ggplot2::alpha(data$colour[row.idx],
+                                                               data$alpha[row.idx]),
+                                  base_family = data$family[[row.idx]],
+                                  parse = parse,
+                                  rowhead = list(fg_params = list(hjust = 1, x = 0.9)),
+                                  colhead = list(fg_params = list(hjust = table.hjust,
+                                                                  x = table.x)),
+                                  core = core.params)
+                  }
+                } else if (is.list(table.theme)) {
+                  this.table.theme <- table.theme
+                }
+                table.tb <- data[["label"]][[row.idx]]
+                gtb <-
+                  gridExtra::tableGrob(
+                    d = table.tb,
+                    theme = this.table.theme,
+                    rows = if (table.rownames) rownames(table.tb) else NULL,
+                    cols = if (table.colnames) colnames(table.tb) else NULL
+                  )
+
+                gtb$vp <-
+                  grid::viewport(x = grid::unit(data$npcx[row.idx], "native"),
+                                 y = grid::unit(data$npcy[row.idx], "native"),
+                                 width = sum(gtb$widths),
+                                 height = sum(gtb$heights),
+                                 just = c(data$hjust[row.idx], data$vjust[row.idx]),
+                                 angle = data$angle[row.idx],
+                                 name = paste("geom_table.panel", data$PANEL[row.idx],
+                                              "row", row.idx, sep = "."))
+
+                # give unique name to each table
+                gtb$name <- paste("table", row.idx, sep = ".")
+
+                tb.grobs[[row.idx]] <- gtb
+              }
+
+              grid::grobTree(children = tb.grobs)
+            },
 
           draw_key = function(...) {
             grid::nullGrob()

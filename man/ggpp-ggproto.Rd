@@ -29,14 +29,11 @@
 \alias{GeomPointS}
 \alias{GeomQuadrantLines}
 \alias{GeomVHLines}
-\alias{gtb_draw_panel_fun}
 \alias{GeomTable}
-\alias{gtbnpc_draw_panel_fun}
 \alias{GeomTableNpc}
 \alias{GeomTextS}
 \alias{GeomTextNpc}
 \alias{PositionNudgeCenter}
-\alias{quant_compute_panel}
 \alias{PositionNudgeLine}
 \alias{PositionFillAndNudge}
 \alias{PositionNudgeTo}
