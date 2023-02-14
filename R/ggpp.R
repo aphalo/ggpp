@@ -40,6 +40,6 @@
 #'
 #' @importFrom dplyr mutate
 #' @importFrom polynom polynomial
-#'
+#' @importFrom MASS kde2d
 #'
 "_PACKAGE"

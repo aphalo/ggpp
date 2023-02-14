@@ -204,126 +204,6 @@ geom_grob <- function(mapping = NULL,
 }
 
 #' @rdname ggpp-ggproto
-#'
-#' @format NULL
-#' @usage NULL
-#'
-grob_draw_panel_fun <-
-  function(data,
-           panel_params,
-           coord,
-           default.colour = "black",
-           colour.target = "all",
-           default.alpha = 1,
-           alpha.target = "all",
-           na.rm = FALSE,
-           add.segments = TRUE,
-           box.padding = 0.25,
-           point.padding = 1e-06,
-           segment.linewidth = 0.5,
-           min.segment.length = 0,
-           arrow = NULL) {
-
-    if (nrow(data) == 0) {
-      return(grid::nullGrob())
-    }
-
-    if (!grid::is.grob(data$label[[1]])) {
-      warning("Skipping as object mapped to 'label' is not a list of \"grob\" objects.")
-      return(grid::nullGrob())
-    }
-
-    add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
-
-    # should be called only once!
-    data <- coord$transform(data, panel_params)
-    if (add.segments) {
-      data_orig <- data.frame(x = data$x_orig, y = data$y_orig)
-      data_orig <- coord$transform(data_orig, panel_params)
-      data$x_orig <- data_orig$x
-      data$y_orig <- data_orig$y
-    }
-
-    if (is.character(data$vjust)) {
-      data$vjust <-
-        compute_just2d(data = data,
-                       coord = coord,
-                       panel_params = panel_params,
-                       just = data$vjust,
-                       a = "y", b = "x")
-    }
-    if (is.character(data$hjust)) {
-      data$hjust <-
-        compute_just2d(data = data,
-                       coord = coord,
-                       panel_params = panel_params,
-                       just = data$hjust,
-                       a = "x", b = "y")
-    }
-    if (add.segments) {
-      segments.data <-
-        shrink_segments(data,
-                        point.padding = point.padding,
-                        box.padding = box.padding,
-                        min.segment.length = min.segment.length)
-    }
-
-    # loop needed as gpar is not vectorized
-    all.grobs <- grid::gList()
-    user.grobs <- data[["label"]]
-    for (row.idx in 1:nrow(data)) {
-      row <- data[row.idx, , drop = FALSE]
-      grob.alpha <-
-        ifelse(any(alpha.target %in% c("all", "grob")),
-               row$alpha, default.alpha)
-      segment.alpha <-
-        ifelse(any(alpha.target %in% c("all", "segment")),
-               row$alpha, default.alpha)
-      user.grob <- user.grobs[[row.idx]]
-
-      user.grob$vp <-
-        grid::viewport(x = grid::unit(row$x, "native"),
-                       y = grid::unit(row$y, "native"),
-                       width = grid::unit(row$vp.width, "npc"),
-                       height = grid::unit(row$vp.height, "npc"),
-                       just = c(row$hjust, row$vjust),
-                       angle = row$angle,
-                       name = paste("inset.grob.vp", row$PANEL,
-                                    "row", row.idx, sep = "."))
-
-      # give unique name to each grob
-      user.grob$name <- paste("inset.grob", row.idx, sep = ".")
-
-      if (add.segments) {
-        segment.row <- segments.data[row.idx, , drop = FALSE]
-        if (segment.row$too.short) {
-          segment.grob <- grid::nullGrob()
-        } else {
-          segment.grob <-
-            grid::segmentsGrob(x0 = segment.row$x,
-                               y0 = segment.row$y,
-                               x1 = segment.row$x_orig,
-                               y1 = segment.row$y_orig,
-                               arrow = arrow,
-                               gp = grid::gpar(
-                                 col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
-                                   ifelse(any(colour.target %in% c("all", "segment")),
-                                          ggplot2::alpha(row$colour, segment.alpha),
-                                          ggplot2::alpha(default.colour, segment.alpha)),
-                                 lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
-                               name = paste("grob.s.segment", row$group, row.idx, sep = "."))
-        }
-        all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
-      } else {
-        all.grobs <- grid::gList(all.grobs, user.grob)
-      }
-    }
-#    grid::grobTree(children = all.grobs, name = "geom.grob.panel")
-    grid::grobTree(children = all.grobs)
-
-  }
-
-#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export
@@ -342,7 +222,120 @@ GeomGrob <-
                      vp.width = 1/5, vp.height = 1/5
                    ),
 
-                   draw_panel = grob_draw_panel_fun,
+                   draw_panel = function(data,
+                                         panel_params,
+                                         coord,
+                                         default.colour = "black",
+                                         colour.target = "all",
+                                         default.alpha = 1,
+                                         alpha.target = "all",
+                                         na.rm = FALSE,
+                                         add.segments = TRUE,
+                                         box.padding = 0.25,
+                                         point.padding = 1e-06,
+                                         segment.linewidth = 0.5,
+                                         min.segment.length = 0,
+                                         arrow = NULL) {
+
+                     if (nrow(data) == 0) {
+                       return(grid::nullGrob())
+                     }
+
+                     if (!grid::is.grob(data$label[[1]])) {
+                       warning("Skipping as object mapped to 'label' is not a list of \"grob\" objects.")
+                       return(grid::nullGrob())
+                     }
+
+                     add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
+
+                     # should be called only once!
+                     data <- coord$transform(data, panel_params)
+                     if (add.segments) {
+                       data_orig <- data.frame(x = data$x_orig, y = data$y_orig)
+                       data_orig <- coord$transform(data_orig, panel_params)
+                       data$x_orig <- data_orig$x
+                       data$y_orig <- data_orig$y
+                     }
+
+                     if (is.character(data$vjust)) {
+                       data$vjust <-
+                         compute_just2d(data = data,
+                                        coord = coord,
+                                        panel_params = panel_params,
+                                        just = data$vjust,
+                                        a = "y", b = "x")
+                     }
+                     if (is.character(data$hjust)) {
+                       data$hjust <-
+                         compute_just2d(data = data,
+                                        coord = coord,
+                                        panel_params = panel_params,
+                                        just = data$hjust,
+                                        a = "x", b = "y")
+                     }
+                     if (add.segments) {
+                       segments.data <-
+                         shrink_segments(data,
+                                         point.padding = point.padding,
+                                         box.padding = box.padding,
+                                         min.segment.length = min.segment.length)
+                     }
+
+                     # loop needed as gpar is not vectorized
+                     all.grobs <- grid::gList()
+                     user.grobs <- data[["label"]]
+                     for (row.idx in 1:nrow(data)) {
+                       row <- data[row.idx, , drop = FALSE]
+                       grob.alpha <-
+                         ifelse(any(alpha.target %in% c("all", "grob")),
+                                row$alpha, default.alpha)
+                       segment.alpha <-
+                         ifelse(any(alpha.target %in% c("all", "segment")),
+                                row$alpha, default.alpha)
+                       user.grob <- user.grobs[[row.idx]]
+
+                       user.grob$vp <-
+                         grid::viewport(x = grid::unit(row$x, "native"),
+                                        y = grid::unit(row$y, "native"),
+                                        width = grid::unit(row$vp.width, "npc"),
+                                        height = grid::unit(row$vp.height, "npc"),
+                                        just = c(row$hjust, row$vjust),
+                                        angle = row$angle,
+                                        name = paste("inset.grob.vp", row$PANEL,
+                                                     "row", row.idx, sep = "."))
+
+                       # give unique name to each grob
+                       user.grob$name <- paste("inset.grob", row.idx, sep = ".")
+
+                       if (add.segments) {
+                         segment.row <- segments.data[row.idx, , drop = FALSE]
+                         if (segment.row$too.short) {
+                           segment.grob <- grid::nullGrob()
+                         } else {
+                           segment.grob <-
+                             grid::segmentsGrob(x0 = segment.row$x,
+                                                y0 = segment.row$y,
+                                                x1 = segment.row$x_orig,
+                                                y1 = segment.row$y_orig,
+                                                arrow = arrow,
+                                                gp = grid::gpar(
+                                                  col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
+                                                    ifelse(any(colour.target %in% c("all", "segment")),
+                                                           ggplot2::alpha(row$colour, segment.alpha),
+                                                           ggplot2::alpha(default.colour, segment.alpha)),
+                                                  lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
+                                                name = paste("grob.s.segment", row$group, row.idx, sep = "."))
+                         }
+                         all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
+                       } else {
+                         all.grobs <- grid::gList(all.grobs, user.grob)
+                       }
+                     }
+                     #    grid::grobTree(children = all.grobs, name = "geom.grob.panel")
+                     grid::grobTree(children = all.grobs)
+
+                   }
+                   ,
 
                    draw_key = function(...) {
                      grid::nullGrob()
@@ -376,64 +369,6 @@ geom_grob_npc <- function(mapping = NULL,
 }
 
 #' @rdname ggpp-ggproto
-#'
-#' @format NULL
-#' @usage NULL
-#'
-grobnpc_draw_panel_fun <-
-  function(data,
-           panel_params,
-           coord,
-           na.rm = FALSE) {
-
-    if (nrow(data) == 0) {
-      return(grid::nullGrob())
-    }
-
-    if (!grid::is.grob(data$label[[1]])) {
-      warning("Skipping as object mapped to 'label' is not a list of \"grob\".")
-      return(grid::nullGrob())
-    }
-
-    data$npcx <- compute_npcx(data$npcx)
-    data$npcy <- compute_npcy(data$npcy)
-
-    if (is.character(data$vjust)) {
-      data$vjust <- compute_just(data$vjust, data$npcy)
-    }
-    if (is.character(data$hjust)) {
-      data$hjust <- compute_just(data$hjust, data$npcx)
-    }
-
-    user.grobs <- grid::gList()
-
-    for (row.idx in 1:nrow(data)) {
-      userGrob <- data$label[[row.idx]]
-
-      userGrob$vp <-
-        grid::viewport(x = grid::unit(data$npcx[row.idx], "npc"),
-                       y = grid::unit(data$npcy[row.idx], "npc"),
-                       width = grid::unit(data$vp.width[row.idx], "npc"),
-                       height = grid::unit(data$vp.height[row.idx], "npc"),
-                       just = c(data$hjust[row.idx], data$vjust[row.idx]),
-                       angle = data$angle[row.idx],
-                       name = paste("geom_grob.panel", data$PANEL[row.idx],
-                                    "row", row.idx, sep = "."))
-
-      # give unique name to each grob
-      userGrob$name <- paste("inset.grob", row.idx, sep = ".")
-
-      user.grobs[[row.idx]] <- userGrob
-    }
-
-    # grid.name <- paste("geom_grob.panel",
-    #                    data$PANEL[row.idx], sep = ".")
-    #
-    # grid::gTree(children = user.grobs, name = grid.name)
-    grid::gTree(children = user.grobs)
-  }
-
-#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export
@@ -447,7 +382,58 @@ GeomGrobNpc <-
                      vp.width = 1/5, vp.height = 1/5
                    ),
 
-                   draw_panel = grobnpc_draw_panel_fun,
+                   draw_panel = function(data,
+                                         panel_params,
+                                         coord,
+                                         na.rm = FALSE) {
+
+                     if (nrow(data) == 0) {
+                       return(grid::nullGrob())
+                     }
+
+                     if (!grid::is.grob(data$label[[1]])) {
+                       warning("Skipping as object mapped to 'label' is not a list of \"grob\".")
+                       return(grid::nullGrob())
+                     }
+
+                     data$npcx <- compute_npcx(data$npcx)
+                     data$npcy <- compute_npcy(data$npcy)
+
+                     if (is.character(data$vjust)) {
+                       data$vjust <- compute_just(data$vjust, data$npcy)
+                     }
+                     if (is.character(data$hjust)) {
+                       data$hjust <- compute_just(data$hjust, data$npcx)
+                     }
+
+                     user.grobs <- grid::gList()
+
+                     for (row.idx in 1:nrow(data)) {
+                       userGrob <- data$label[[row.idx]]
+
+                       userGrob$vp <-
+                         grid::viewport(x = grid::unit(data$npcx[row.idx], "npc"),
+                                        y = grid::unit(data$npcy[row.idx], "npc"),
+                                        width = grid::unit(data$vp.width[row.idx], "npc"),
+                                        height = grid::unit(data$vp.height[row.idx], "npc"),
+                                        just = c(data$hjust[row.idx], data$vjust[row.idx]),
+                                        angle = data$angle[row.idx],
+                                        name = paste("geom_grob.panel", data$PANEL[row.idx],
+                                                     "row", row.idx, sep = "."))
+
+                       # give unique name to each grob
+                       userGrob$name <- paste("inset.grob", row.idx, sep = ".")
+
+                       user.grobs[[row.idx]] <- userGrob
+                     }
+
+                     # grid.name <- paste("geom_grob.panel",
+                     #                    data$PANEL[row.idx], sep = ".")
+                     #
+                     # grid::gTree(children = user.grobs, name = grid.name)
+                     grid::gTree(children = user.grobs)
+                   },
+
                    draw_key = function(...) {
                      grid::nullGrob()
                    }

@@ -314,179 +314,6 @@ stat_centroid <- function(mapping = NULL,
   )
 }
 
-# Define here to avoid a note in check as the import from 'dplyr' is not seen
-# when the function is defined in-line in the ggproto object.
-#' @rdname ggpp-ggproto
-#'
-#' @format NULL
-#' @usage NULL
-#'
-stat_apply_fun <- function(data,
-                           scales,
-                           .fun.x, .fun.x.args, .fun.x.null,
-                           .fun.y, .fun.y.args, .fun.y.null,
-                           single.row,
-                           na.rm = FALSE) {
-
-  new.data <- data[1, ]
-  unique_value_cols <-
-    sapply(data, function(x) {length(unique(x)) == 1L})
-
-  if (sum(!unique_value_cols) > 2L) {
-    bad.vars <-
-      setdiff(names(data)[!unique_value_cols], c("x", "y"))
-    warning("Non-unique values in columns: ", bad.vars)
-    new.data[ , bad.vars] <- NA
-  }
-
-  if (single.row) {
-    stat_apply_fun_rw(data,
-                      new.data,
-                      scales,
-                      .fun.x, .fun.x.args, .fun.x.null,
-                      .fun.y, .fun.y.args, .fun.y.null)
-  } else {
-    stat_apply_fun_vc(data,
-                      new.data,
-                      scales,
-                      .fun.x, .fun.x.args, .fun.x.null,
-                      .fun.y, .fun.y.args, .fun.y.null)
-  }
-}
-
-# Define here to avoid a note in check as the import from 'dplyr' is not seen
-# when the function is defined in-line in the ggproto object.
-#' @rdname ggpp-ggproto
-#'
-#' @format NULL
-#' @usage NULL
-#'
-stat_apply_fun_vc <- function(data,
-                              new.data,
-                              scales,
-                              .fun.x, .fun.x.args, .fun.x.null,
-                              .fun.y, .fun.y.args, .fun.y.null) {
-
-  if (!.fun.x.null) {
-    args <- c(unname(data["x"]), .fun.x.args)
-    new.x <- do.call(.fun.x, args = args)
-    stopifnot(is.numeric(new.x))
-    x.names <- names(new.x)
-  }
-
-  if (!.fun.y.null) {
-    args <- c(unname(data["y"]), .fun.y.args)
-    new.y <- do.call(.fun.y, args = args)
-    stopifnot(is.numeric(new.y))
-    y.names <- names(new.y)
-  }
-
-  if (.fun.x.null && .fun.y.null) {
-    new.data[["y"]] <- NA_real_
-    new.data[["y"]] <- NA_real_
-  } else if (.fun.y.null) {
-    new.data <- new.data[rep(1L, length(new.x)), ]
-    new.data[["x"]] <- new.x
-    new.data[["y"]] <- NA_real_
-    if (!is.null(x.names)) {
-      new.data[["x.names"]] <- x.names
-    }
-  } else if (.fun.x.null) {
-    new.data <- new.data[rep(1L, length(new.y)), ]
-    new.data[["x"]] <- NA_real_
-    new.data[["y"]] <- new.y
-    if (!is.null(y.names)) {
-      new.data[["y.names"]] <- y.names
-    }
-  } else if (length(new.x) == length(new.y)) {
-    new.data <- new.data[rep(1L, length(new.y)), ]
-    new.data[["x"]] <- new.x
-    new.data[["y"]] <- new.y
-    if (!is.null(x.names)) {
-      new.data[["x.names"]] <- x.names
-    }
-    if (!is.null(y.names)) {
-      new.data[["y.names"]] <- y.names
-    }
-  } else {
-    warning("x and y summaries of different length!")
-    new.data[["y"]] <- NA_real_
-    new.data[["y"]] <- NA_real_
-  }
-
-  new.data
-}
-
-# Define here to avoid a note in check as the import from 'dplyr' is not seen
-# when the function is defined in-line in the ggproto object.
-#' @rdname ggpp-ggproto
-#'
-#' @format NULL
-#' @usage NULL
-#'
-stat_apply_fun_rw <- function(data,
-                              new.data,
-                              scales,
-                              .fun.x, .fun.x.args, .fun.x.null,
-                              .fun.y, .fun.y.args, .fun.y.null) {
-
-  if (!.fun.x.null) {
-    args <- c(unname(data["x"]), .fun.x.args)
-    new.x <- do.call(.fun.x, args = args)
-    if (is.null(new.x)) {
-      stop("'new.x' is NULL.")
-    }
-    if (is.vector(new.x) && (length(new.x) == 1L)) {
-      if(!is.null(names(new.x))) {
-        new.data[["x.names"]] <- names(new.x)
-        new.x <- unname(new.x)
-      }
-      new.data[["x"]] <- new.x
-    } else if (is.data.frame(new.x) && (nrow(new.x) == 1L)) {
-      # functions like mean_se() return columns y, ymin and ymax.
-      names(new.x) <- gsub("y", "x", names(new.x))
-      if ("x" %in% names(new.x)) {
-        new.data <- cbind(new.data[ , setdiff(names(new.data), "x")],
-                          new.x)
-      } else {
-        new.data <- cbind(new.data, new.x)
-      }
-    } else {
-      warning("Object of class '", class(new.x),
-              "' with names '", names(new.x),
-              "' from '.fun.x', is incompatible.")
-    }
-  }
-
-  if (!.fun.y.null) {
-    args <- c(unname(data["y"]), .fun.y.args)
-    new.y <- do.call(.fun.y, args = args)
-    if (is.null(new.y)) {
-      stop("'new.y' is NULL.")
-    }
-    if (is.vector(new.y) && (length(new.y) == 1L)) {
-      if(!is.null(names(new.y))) {
-        new.data[["y.names"]] <- names(new.y)
-        new.y <- unname(new.y)
-      }
-      new.data[["y"]] <- new.y
-    } else if (is.data.frame(new.y) && (nrow(new.y) == 1L)) {
-      if ("y" %in% names(new.y)) {
-        new.data <- cbind(new.data[ , setdiff(names(new.data), "y")],
-                          new.y)
-      } else {
-        new.data <- cbind(new.data, new.y)
-      }
-    } else {
-      warning("Object of class '", class(new.y),
-              "' with names '", names(new.y),
-              "' from '.fun.y', is incompatible.")
-    }
-  }
-
-  new.data
-}
-
 #' \code{Stat*} Objects
 #'
 #' All \code{stat_*} functions (like \code{stat_bin}) return a layer that
@@ -507,7 +334,142 @@ stat_apply_fun_rw <- function(data,
 #' @keywords internal
 StatApplyGroup <-
   ggplot2::ggproto("StatApplyGroup", ggplot2::Stat,
-                   compute_group = stat_apply_fun,
+                   compute_group = function(data,
+                                            scales,
+                                            .fun.x, .fun.x.args, .fun.x.null,
+                                            .fun.y, .fun.y.args, .fun.y.null,
+                                            single.row,
+                                            na.rm = FALSE) {
+
+                     new.data <- data[1, ]
+                     unique_value_cols <-
+                       sapply(data, function(x) {length(unique(x)) == 1L})
+
+                     if (sum(!unique_value_cols) > 2L) {
+                       bad.vars <-
+                         setdiff(names(data)[!unique_value_cols], c("x", "y"))
+                       warning("Non-unique values in columns: ", bad.vars)
+                       new.data[ , bad.vars] <- NA
+                     }
+
+                     if (single.row) {
+                       # stat_apply_fun_rw(data,
+                       #                   new.data,
+                       #                   scales,
+                       #                   .fun.x, .fun.x.args, .fun.x.null,
+                       #                   .fun.y, .fun.y.args, .fun.y.null)
+                       if (!.fun.x.null) {
+                         args <- c(unname(data["x"]), .fun.x.args)
+                         new.x <- do.call(.fun.x, args = args)
+                         if (is.null(new.x)) {
+                           stop("'new.x' is NULL.")
+                         }
+                         if (is.vector(new.x) && (length(new.x) == 1L)) {
+                           if(!is.null(names(new.x))) {
+                             new.data[["x.names"]] <- names(new.x)
+                             new.x <- unname(new.x)
+                           }
+                           new.data[["x"]] <- new.x
+                         } else if (is.data.frame(new.x) && (nrow(new.x) == 1L)) {
+                           # functions like mean_se() return columns y, ymin and ymax.
+                           names(new.x) <- gsub("y", "x", names(new.x))
+                           if ("x" %in% names(new.x)) {
+                             new.data <- cbind(new.data[ , setdiff(names(new.data), "x")],
+                                               new.x)
+                           } else {
+                             new.data <- cbind(new.data, new.x)
+                           }
+                         } else {
+                           warning("Object of class '", class(new.x),
+                                   "' with names '", names(new.x),
+                                   "' from '.fun.x', is incompatible.")
+                         }
+                       }
+
+                       if (!.fun.y.null) {
+                         args <- c(unname(data["y"]), .fun.y.args)
+                         new.y <- do.call(.fun.y, args = args)
+                         if (is.null(new.y)) {
+                           stop("'new.y' is NULL.")
+                         }
+                         if (is.vector(new.y) && (length(new.y) == 1L)) {
+                           if(!is.null(names(new.y))) {
+                             new.data[["y.names"]] <- names(new.y)
+                             new.y <- unname(new.y)
+                           }
+                           new.data[["y"]] <- new.y
+                         } else if (is.data.frame(new.y) && (nrow(new.y) == 1L)) {
+                           if ("y" %in% names(new.y)) {
+                             new.data <- cbind(new.data[ , setdiff(names(new.data), "y")],
+                                               new.y)
+                           } else {
+                             new.data <- cbind(new.data, new.y)
+                           }
+                         } else {
+                           warning("Object of class '", class(new.y),
+                                   "' with names '", names(new.y),
+                                   "' from '.fun.y', is incompatible.")
+                         }
+                       }
+
+                       new.data
+                     } else {
+                       # stat_apply_fun_vc(data,
+                       #                   new.data,
+                       #                   scales,
+                       #                   .fun.x, .fun.x.args, .fun.x.null,
+                       #                   .fun.y, .fun.y.args, .fun.y.null)
+                       if (!.fun.x.null) {
+                         args <- c(unname(data["x"]), .fun.x.args)
+                         new.x <- do.call(.fun.x, args = args)
+                         stopifnot(is.numeric(new.x))
+                         x.names <- names(new.x)
+                       }
+
+                       if (!.fun.y.null) {
+                         args <- c(unname(data["y"]), .fun.y.args)
+                         new.y <- do.call(.fun.y, args = args)
+                         stopifnot(is.numeric(new.y))
+                         y.names <- names(new.y)
+                       }
+
+                       if (.fun.x.null && .fun.y.null) {
+                         new.data[["y"]] <- NA_real_
+                         new.data[["y"]] <- NA_real_
+                       } else if (.fun.y.null) {
+                         new.data <- new.data[rep(1L, length(new.x)), ]
+                         new.data[["x"]] <- new.x
+                         new.data[["y"]] <- NA_real_
+                         if (!is.null(x.names)) {
+                           new.data[["x.names"]] <- x.names
+                         }
+                       } else if (.fun.x.null) {
+                         new.data <- new.data[rep(1L, length(new.y)), ]
+                         new.data[["x"]] <- NA_real_
+                         new.data[["y"]] <- new.y
+                         if (!is.null(y.names)) {
+                           new.data[["y.names"]] <- y.names
+                         }
+                       } else if (length(new.x) == length(new.y)) {
+                         new.data <- new.data[rep(1L, length(new.y)), ]
+                         new.data[["x"]] <- new.x
+                         new.data[["y"]] <- new.y
+                         if (!is.null(x.names)) {
+                           new.data[["x.names"]] <- x.names
+                         }
+                         if (!is.null(y.names)) {
+                           new.data[["y.names"]] <- y.names
+                         }
+                       } else {
+                         warning("x and y summaries of different length!")
+                         new.data[["y"]] <- NA_real_
+                         new.data[["y"]] <- NA_real_
+                       }
+
+                       new.data
+                     }
+                   },
+
                    required_aes = c("x", "y"),
                    extra_params = c("na.rm")
   )

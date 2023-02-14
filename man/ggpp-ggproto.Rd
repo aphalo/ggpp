@@ -9,10 +9,8 @@
 %   R/stat-dens2d-labels.r, R/stat-fmt-tb.R, R/stat-panel-counts.R,
 %   R/stat-quadrant-counts.R
 \docType{data}
-\name{grob_draw_panel_fun}
-\alias{grob_draw_panel_fun}
+\name{GeomGrob}
 \alias{GeomGrob}
-\alias{grobnpc_draw_panel_fun}
 \alias{GeomGrobNpc}
 \alias{GeomLabelS}
 \alias{GeomLabelNpc}
@@ -22,9 +20,7 @@
 \alias{GeomYMarginGrob}
 \alias{GeomXMarginPoint}
 \alias{GeomYMarginPoint}
-\alias{gplot_draw_panel_fun}
 \alias{GeomPlot}
-\alias{gplotnpc_draw_panel_fun}
 \alias{GeomPlotNpc}
 \alias{GeomPointS}
 \alias{GeomQuadrantLines}
@@ -37,9 +33,6 @@
 \alias{PositionNudgeLine}
 \alias{PositionFillAndNudge}
 \alias{PositionNudgeTo}
-\alias{stat_apply_fun}
-\alias{stat_apply_fun_vc}
-\alias{stat_apply_fun_rw}
 \alias{Stats}
 \alias{StatApplyGroup}
 \alias{StatDens1dFilter}
