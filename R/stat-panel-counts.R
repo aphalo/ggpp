@@ -147,85 +147,79 @@ stat_panel_counts <- function(mapping = NULL,
 }
 
 #' @rdname ggpp-ggproto
-#'
-#' @format NULL
-#' @usage NULL
-#'
-compute_panel_counts_fun <- function(data,
-                                     scales,
-                                     label.x,
-                                     label.y,
-                                     npc.used) {
-
-  force(data)
-
-  # total count
-  z <- tibble::tibble(count = nrow(data))
-  # label position
-  if (is.character(label.x)) {
-    if (npc.used) {
-      margin.npc <- 0.05
-    } else {
-      # margin set by scale
-      margin.npc <- 0
-    }
-    label.x <- compute_npcx(x = label.x)
-    if (!npc.used) {
-      if ("x" %in% colnames(data)) {
-        x.expanse <- abs(diff(range(data$x)))
-        x.min <- min(data$x)
-        label.x <- label.x * x.expanse + x.min
-      } else {
-        if (data$PANEL[1] == 1L) { # show only once
-          message("No 'x' mapping; 'label.x' requires a numeric argument in data units")
-        }
-        label.x <- NA_real_
-      }
-    }
-  }
-  if (is.character(label.y)) {
-    if (npc.used) {
-      margin.npc <- 0.05
-    } else {
-      # margin set by scale
-      margin.npc <- 0
-    }
-    label.y <- compute_npcy(y = label.y)
-    if (!npc.used) {
-      if ("y" %in% colnames(data)) {
-        y.expanse <- abs(diff(range(data$y)))
-        y.min <- min(data$y)
-        label.y <- label.y * y.expanse + y.min
-      } else {
-        if (data$PANEL[1] == 1L) { # show only once
-          message("No 'y' mapping; 'label.y' requires a numeric argument in data units")
-        }
-        label.y <- NA_real_
-      }
-    }
-  }
-
-  if (npc.used) {
-    z$npcx <- label.x
-    z$x <- NA_real_
-    z$npcy <- label.y
-    z$y <- NA_real_
-  } else {
-    z$x <- label.x
-    z$npcx <- NA_real_
-    z$y <- label.y
-    z$npcy <- NA_real_
-  }
-  z
-}
-
-#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export
 StatPanelCounts <-
   ggplot2::ggproto("StatPanelCounts", ggplot2::Stat,
-                   compute_panel = compute_panel_counts_fun,
+
+                   compute_panel = function(data,
+                                            scales,
+                                            label.x,
+                                            label.y,
+                                            npc.used) {
+
+                     force(data)
+                     # total count
+                     z <- tibble::tibble(count = nrow(data))
+                     # label position
+                     if (is.character(label.x)) {
+                       if (npc.used) {
+                         margin.npc <- 0.05
+                       } else {
+                         # margin set by scale
+                         margin.npc <- 0
+                       }
+                       label.x <- compute_npcx(x = label.x)
+                       if (!npc.used) {
+                         if ("x" %in% colnames(data)) {
+                           x.expanse <- abs(diff(range(data$x)))
+                           x.min <- min(data$x)
+                           label.x <- label.x * x.expanse + x.min
+                         } else {
+                           if (data$PANEL[1] == 1L) { # show only once
+                             message("No 'x' mapping; 'label.x' requires a numeric argument in data units")
+                           }
+                           label.x <- NA_real_
+                         }
+                       }
+                     }
+                     if (is.character(label.y)) {
+                       if (npc.used) {
+                         margin.npc <- 0.05
+                       } else {
+                         # margin set by scale
+                         margin.npc <- 0
+                       }
+                       label.y <- compute_npcy(y = label.y)
+                       if (!npc.used) {
+                         if ("y" %in% colnames(data)) {
+                           y.expanse <- abs(diff(range(data$y)))
+                           y.min <- min(data$y)
+                           label.y <- label.y * y.expanse + y.min
+                         } else {
+                           if (data$PANEL[1] == 1L) { # show only once
+                             message("No 'y' mapping; 'label.y' requires a numeric argument in data units")
+                           }
+                           label.y <- NA_real_
+                         }
+                       }
+                     }
+
+                     if (npc.used) {
+                       z$npcx <- label.x
+                       z$x <- NA_real_
+                       z$npcy <- label.y
+                       z$y <- NA_real_
+                     } else {
+                       z$x <- label.x
+                       z$npcx <- NA_real_
+                       z$y <- label.y
+                       z$npcy <- NA_real_
+                     }
+                     z
+                   },
+
                    default_aes =
                      ggplot2::aes(npcx = ggplot2::after_stat(npcx),
                                   npcy = ggplot2::after_stat(npcy),
@@ -281,116 +275,111 @@ stat_group_counts <- function(mapping = NULL,
 }
 
 #' @rdname ggpp-ggproto
-#'
-#' @format NULL
-#' @usage NULL
-#'
-compute_group_counts_fun <- function(data,
-                                     params,
-                                     scales,
-                                     label.x,
-                                     label.y,
-                                     vstep,
-                                     hstep,
-                                     npc.used) {
-
-  force(data)
-
-  if (exists("grp.label", data)) {
-    if (length(unique(data[["grp.label"]])) > 1L) {
-      warning("Non-unique value in 'data$grp.label' using group index ", data[["group"]][1], " as label.")
-      grp.label <- as.character(data[["group"]][1])
-    } else {
-      grp.label <- data[["grp.label"]][1]
-    }
-  } else {
-    # if nothing mapped to grp.label we use group index as label
-    grp.label <- as.character(data[["group"]][1])
-  }
-
-  # Build group labels
-  group.idx <- abs(data$group[1])
-  if (length(label.x) >= group.idx) {
-    label.x <- label.x[group.idx]
-  } else if (length(label.x) > 0) {
-    label.x <- label.x[1]
-  }
-  if (length(label.y) >= group.idx) {
-    label.y <- label.y[group.idx]
-  } else if (length(label.y) > 0) {
-    label.y <- label.y[1]
-  }
-
-  # Compute number of observations
-  z <- tibble::tibble(count = nrow(data))
-
-  # Compute label positions
-  if (is.character(label.x)) {
-    if (npc.used) {
-      margin.npc <- 0.05
-    } else {
-      # margin set by scale
-      margin.npc <- 0
-    }
-    label.x <- compute_npcx(x = label.x, group = group.idx, h.step = hstep,
-                            margin.npc = margin.npc)
-    if (!npc.used) {
-      if ("x" %in% colnames(data)) {
-        x.expanse <- abs(diff(range(data$x)))
-        x.min <- min(data$x)
-        label.x <- label.x * x.expanse + x.min
-      } else {
-        if (data$PANEL[1] == 1L && group.idx == 1L) { # show only once
-          message("No 'x' mapping; 'label.x' requires a numeric argument in data units")
-        }
-        label.x <- NA_real_
-      }
-    }
-  }
-  if (is.character(label.y)) {
-    if (npc.used) {
-      margin.npc <- 0.05
-    } else {
-      # margin set by scale
-      margin.npc <- 0
-    }
-    label.y <- compute_npcy(y = label.y, group = group.idx, v.step = vstep,
-                            margin.npc = margin.npc)
-    if (!npc.used) {
-      if ("y" %in% colnames(data)) {
-        y.expanse <- abs(diff(range(data$y)))
-        y.min <- min(data$y)
-        label.y <- label.y * y.expanse + y.min
-      } else {
-        if (data$PANEL[1] == 1L && group.idx == 1L) { # show only once
-          message("No 'y' mapping; 'label.y' requires a numeric argument in data units")
-        }
-        label.y <- NA_real_
-      }
-    }
-  }
-
-  if (npc.used) {
-    z$npcx <- label.x
-    z$x <- NA_real_
-    z$npcy <- label.y
-    z$y <- NA_real_
-  } else {
-    z$x <- label.x
-    z$npcx <- NA_real_
-    z$y <- label.y
-    z$npcy <- NA_real_
-  }
-  z
-}
-
-#' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export
 StatGroupCounts <-
   ggplot2::ggproto("StatGroupCounts", ggplot2::Stat,
-                   compute_group = compute_group_counts_fun,
+
+                   compute_group = function(data,
+                                            params,
+                                            scales,
+                                            label.x,
+                                            label.y,
+                                            vstep,
+                                            hstep,
+                                            npc.used) {
+
+                     force(data)
+
+                     if (exists("grp.label", data)) {
+                       if (length(unique(data[["grp.label"]])) > 1L) {
+                         warning("Non-unique value in 'data$grp.label' using group index ", data[["group"]][1], " as label.")
+                         grp.label <- as.character(data[["group"]][1])
+                       } else {
+                         grp.label <- data[["grp.label"]][1]
+                       }
+                     } else {
+                       # if nothing mapped to grp.label we use group index as label
+                       grp.label <- as.character(data[["group"]][1])
+                     }
+
+                     # Build group labels
+                     group.idx <- abs(data$group[1])
+                     if (length(label.x) >= group.idx) {
+                       label.x <- label.x[group.idx]
+                     } else if (length(label.x) > 0) {
+                       label.x <- label.x[1]
+                     }
+                     if (length(label.y) >= group.idx) {
+                       label.y <- label.y[group.idx]
+                     } else if (length(label.y) > 0) {
+                       label.y <- label.y[1]
+                     }
+
+                     # Compute number of observations
+                     z <- tibble::tibble(count = nrow(data))
+
+                     # Compute label positions
+                     if (is.character(label.x)) {
+                       if (npc.used) {
+                         margin.npc <- 0.05
+                       } else {
+                         # margin set by scale
+                         margin.npc <- 0
+                       }
+                       label.x <- compute_npcx(x = label.x, group = group.idx, h.step = hstep,
+                                               margin.npc = margin.npc)
+                       if (!npc.used) {
+                         if ("x" %in% colnames(data)) {
+                           x.expanse <- abs(diff(range(data$x)))
+                           x.min <- min(data$x)
+                           label.x <- label.x * x.expanse + x.min
+                         } else {
+                           if (data$PANEL[1] == 1L && group.idx == 1L) { # show only once
+                             message("No 'x' mapping; 'label.x' requires a numeric argument in data units")
+                           }
+                           label.x <- NA_real_
+                         }
+                       }
+                     }
+                     if (is.character(label.y)) {
+                       if (npc.used) {
+                         margin.npc <- 0.05
+                       } else {
+                         # margin set by scale
+                         margin.npc <- 0
+                       }
+                       label.y <- compute_npcy(y = label.y, group = group.idx, v.step = vstep,
+                                               margin.npc = margin.npc)
+                       if (!npc.used) {
+                         if ("y" %in% colnames(data)) {
+                           y.expanse <- abs(diff(range(data$y)))
+                           y.min <- min(data$y)
+                           label.y <- label.y * y.expanse + y.min
+                         } else {
+                           if (data$PANEL[1] == 1L && group.idx == 1L) { # show only once
+                             message("No 'y' mapping; 'label.y' requires a numeric argument in data units")
+                           }
+                           label.y <- NA_real_
+                         }
+                       }
+                     }
+
+                     if (npc.used) {
+                       z$npcx <- label.x
+                       z$x <- NA_real_
+                       z$npcy <- label.y
+                       z$y <- NA_real_
+                     } else {
+                       z$x <- label.x
+                       z$npcx <- NA_real_
+                       z$y <- label.y
+                       z$npcy <- NA_real_
+                     }
+                     z
+                   },
+
                    default_aes =
                      ggplot2::aes(npcx = ggplot2::after_stat(npcx),
                                   npcy = ggplot2::after_stat(npcy),
