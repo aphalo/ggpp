@@ -38,4 +38,8 @@
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #'
+#' @importFrom dplyr mutate
+#' @importFrom polynom polynomial
+#'
+#'
 "_PACKAGE"

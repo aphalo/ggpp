@@ -54,7 +54,6 @@
 \alias{StatPanelCounts}
 \alias{compute_group_counts_fun}
 \alias{StatGroupCounts}
-\alias{compute_counts_fun}
 \alias{StatQuadrantCounts}
 \title{\code{Stat*} Objects}
 \description{

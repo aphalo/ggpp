@@ -58,8 +58,6 @@
 #'
 #' @return A \code{"Position"} object.
 #'
-#' @importFrom polynom polynomial
-#'
 #' @export
 #'
 #' @examples
