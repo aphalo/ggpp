@@ -34,3 +34,17 @@ test_that("color: yellow, threshold 0.8, switch to white", {
   res <- dark_or_light("yellow", threshold = 0.8)
   expect_equal(res, "white")
 })
+
+test_that("threshold: off range triggers error", {
+  expect_no_error(dark_or_light("yellow", threshold = 0))
+  expect_no_error(dark_or_light("yellow", threshold = 1))
+  expect_error(dark_or_light("yellow", threshold = -0.1))
+  expect_error(dark_or_light("yellow", threshold = 1.1))
+})
+
+test_that("threshold: length != 1 triggers error", {
+  expect_error(dark_or_light("yellow", threshold = numeric()))
+  expect_error(dark_or_light("yellow", threshold = NULL))
+  expect_error(dark_or_light("yellow", threshold = c(0.45, 0.45)))
+})
+

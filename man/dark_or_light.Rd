@@ -14,12 +14,11 @@ dark_or_light(
 \arguments{
 \item{colors}{A vector of color definitions or color names in the background.}
 
-\item{threshold}{numeric A value in [0..1] indicating the switch point
-between dark and light background.}
+\item{threshold}{numeric A value of luminance in [0..1] indicating the switch
+point between dark and light background.}
 
-\item{dark.color, light.color}{A color definition or color name to return for
-dark and light objects (orveplotted on light and dark backgrounds,
-respectively).}
+\item{dark.color, light.color}{A color definition or color name to return as
+dark and light colors to contrast light and dark backgrounds respectively.}
 }
 \description{
 Chose between a pair of contrasting dark and light colors based on a weighted
@@ -27,10 +26,25 @@ mean of RGB channels of a color. This function implements a simple approach
 to the choice for a color of a plot element to ensure it is visible against a
 background color.
 }
+\details{
+The switch between dark and light color is based on a quick and
+  dirty approximation of the luminance of colors computed from RGB values.
+  This easily computed approximation seems to work well enough. The default
+  threshold chosen for a switch between black and white may need to be
+  adjusted for other pairs of colors. Graphic devices can differ in the color
+  spaces they support, but this is unlikely to affect the choice between
+  black and white or other pairs of colors with large differences in
+  luminance.
+}
+\note{
+The current implementation of \code{dark_or_light()} ignores
+  \code{alpha}, the transparency component, of all its arguments.
+}
 \examples{
 
 dark_or_light("yellow")
 dark_or_light("darkblue")
+dark_or_light(c("darkblue", "yellow", "red"))
 dark_or_light("#FFFFFF")
 dark_or_light("#FFFFFF", dark.color = "darkblue", light.color = "lightgrey")
 dark_or_light("#000000", dark.color = "darkblue", light.color = "lightgrey")
