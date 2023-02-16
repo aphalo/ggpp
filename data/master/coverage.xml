@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage line-rate="0.750156936597615" branch-rate="0" lines-covered="1195" lines-valid="1593" branches-covered="0" branches-valid="0" complexity="0" version="3.6.1" timestamp="2023-02-16 10:01:26">
+<coverage line-rate="0.750156936597615" branch-rate="0" lines-covered="1195" lines-valid="1593" branches-covered="0" branches-valid="0" complexity="0" version="3.6.1" timestamp="2023-02-16 11:25:30">
   <sources/>
   <packages>
     <package name="ggpp" line-rate="0.750156936597615" branch-rate="0" complexity="0">
@@ -3161,25 +3161,25 @@
             </method>
             <method name="keep_these2logical" signature="" line-rate="0.473684210526316" branch-rate="0">
               <lines>
-                <line number="457" hits="9" branch="false"/>
-                <line number="458" hits="9" branch="false"/>
-                <line number="459" hits="0" branch="false"/>
-                <line number="461" hits="9" branch="false"/>
-                <line number="462" hits="0" branch="false"/>
+                <line number="463" hits="9" branch="false"/>
                 <line number="464" hits="9" branch="false"/>
                 <line number="465" hits="0" branch="false"/>
-                <line number="466" hits="0" branch="false"/>
-                <line number="467" hits="0" branch="false"/>
-                <line number="469" hits="9" branch="false"/>
+                <line number="467" hits="9" branch="false"/>
+                <line number="468" hits="0" branch="false"/>
                 <line number="470" hits="9" branch="false"/>
-                <line number="471" hits="9" branch="false"/>
+                <line number="471" hits="0" branch="false"/>
                 <line number="472" hits="0" branch="false"/>
                 <line number="473" hits="0" branch="false"/>
+                <line number="475" hits="9" branch="false"/>
                 <line number="476" hits="9" branch="false"/>
-                <line number="477" hits="0" branch="false"/>
+                <line number="477" hits="9" branch="false"/>
                 <line number="478" hits="0" branch="false"/>
-                <line number="481" hits="0" branch="false"/>
-                <line number="483" hits="9" branch="false"/>
+                <line number="479" hits="0" branch="false"/>
+                <line number="482" hits="9" branch="false"/>
+                <line number="483" hits="0" branch="false"/>
+                <line number="484" hits="0" branch="false"/>
+                <line number="487" hits="0" branch="false"/>
+                <line number="489" hits="9" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -3219,25 +3219,25 @@
             <line number="257" hits="12" branch="false"/>
             <line number="258" hits="12" branch="false"/>
             <line number="259" hits="12" branch="false"/>
-            <line number="457" hits="9" branch="false"/>
-            <line number="458" hits="9" branch="false"/>
-            <line number="459" hits="0" branch="false"/>
-            <line number="461" hits="9" branch="false"/>
-            <line number="462" hits="0" branch="false"/>
+            <line number="463" hits="9" branch="false"/>
             <line number="464" hits="9" branch="false"/>
             <line number="465" hits="0" branch="false"/>
-            <line number="466" hits="0" branch="false"/>
-            <line number="467" hits="0" branch="false"/>
-            <line number="469" hits="9" branch="false"/>
+            <line number="467" hits="9" branch="false"/>
+            <line number="468" hits="0" branch="false"/>
             <line number="470" hits="9" branch="false"/>
-            <line number="471" hits="9" branch="false"/>
+            <line number="471" hits="0" branch="false"/>
             <line number="472" hits="0" branch="false"/>
             <line number="473" hits="0" branch="false"/>
+            <line number="475" hits="9" branch="false"/>
             <line number="476" hits="9" branch="false"/>
-            <line number="477" hits="0" branch="false"/>
+            <line number="477" hits="9" branch="false"/>
             <line number="478" hits="0" branch="false"/>
-            <line number="481" hits="0" branch="false"/>
-            <line number="483" hits="9" branch="false"/>
+            <line number="479" hits="0" branch="false"/>
+            <line number="482" hits="9" branch="false"/>
+            <line number="483" hits="0" branch="false"/>
+            <line number="484" hits="0" branch="false"/>
+            <line number="487" hits="0" branch="false"/>
+            <line number="489" hits="9" branch="false"/>
           </lines>
         </class>
         <class name="stat-fmt-tb.R" filename="R/stat-fmt-tb.R" line-rate="0" branch-rate="0" complexity="0">
