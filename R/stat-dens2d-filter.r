@@ -415,29 +415,35 @@ StatDens2dFilter <-
       keep.number[too.large.frac] / num.rows[too.large.frac]
 
     # estimate 2D density
-    if (is.null(h)) {
-      h <- c(MASS::bandwidth.nrd(data$x), MASS::bandwidth.nrd(data$y))
-    }
-    if (is.null(n)) {
-      n <- trunc(sqrt(nrow(data))) * 8L
-    }
-    kk <-  MASS::kde2d(
-      data[["x"]], data[["y"]], h = h, n = n,
-      lims = c(scales$x$dimension(), scales$y$dimension()))
-    dimnames(kk[["z"]]) <- list(kk[["x"]], kk[["y"]])
+    # data with fewer than 2 rows needs to be treated as a special case as
+    # density cannot be estimated
+    if (nrow(data) >= 2L) {
+      if (is.null(h)) {
+        h <- c(MASS::bandwidth.nrd(data$x), MASS::bandwidth.nrd(data$y))
+      }
+      if (is.null(n)) {
+        n <- trunc(sqrt(nrow(data))) * 8L
+      }
+      kk <-  MASS::kde2d(
+        data[["x"]], data[["y"]], h = h, n = n,
+        lims = c(scales$x$dimension(), scales$y$dimension()))
+      dimnames(kk[["z"]]) <- list(kk[["x"]], kk[["y"]])
 
-    # compute 2D density at each onservations coordinates
-    kx <- cut(data$x, kk$x, labels = FALSE, include.lowest = TRUE)
-    ky <- cut(data$y, kk$y, labels = FALSE, include.lowest = TRUE)
-    kz <- sapply(seq_along(kx), function(i) kk$z[kx[i], ky[i]])
-
+      # compute 2D density at each observation's coordinates
+      kx <- cut(data$x, kk$x, labels = FALSE, include.lowest = TRUE)
+      ky <- cut(data$y, kk$y, labels = FALSE, include.lowest = TRUE)
+      kz <- sapply(seq_along(kx), function(i) kk$z[kx[i], ky[i]])
+    } else {
+      kz <- 0
+    }
     # we construct one logical vector by adding observations/label to be kept
     # we may have a list of 1, 2, or 4 logical vectors
     keep <- keep.these
     for (i in seq_along(selectors)) {
-      if (keep.fraction[i] == 1) {
+      if (keep.fraction[i] == 1  ||
+          (length(selectors[[i]]) < 2L && keep.fraction[i] >= 0.5)) {
         keep[ selectors[[i]] ] <- TRUE
-      } else if (keep.fraction[i] != 0) {
+      } else if (keep.fraction[i] != 0  && length(selectors[[i]]) >= 2L) {
         if (keep.sparse) {
           keep[ selectors[[i]] ] <-
             kz[ selectors[[i]] ] < stats::quantile(kz[ selectors[[i]] ],
@@ -575,29 +581,35 @@ StatDens2dFilterG <-
           keep.number[too.large.frac] / num.rows[too.large.frac]
 
         # estimate 2D density
-        if (is.null(h)) {
-          h <- c(MASS::bandwidth.nrd(data$x), MASS::bandwidth.nrd(data$y))
-        }
-        if (is.null(n)) {
-          n <- trunc(sqrt(nrow(data))) * 8L
-        }
-        kk <-  MASS::kde2d(
-          data[["x"]], data[["y"]], h = h, n = n,
-          lims = c(scales$x$dimension(), scales$y$dimension()))
-        dimnames(kk[["z"]]) <- list(kk[["x"]], kk[["y"]])
+        # data with fewer than 2 rows is as a special case as density() fails
+        if (nrow(data) >= 2L) {
+          if (is.null(h)) {
+            h <- c(MASS::bandwidth.nrd(data$x), MASS::bandwidth.nrd(data$y))
+          }
+          if (is.null(n)) {
+            n <- trunc(sqrt(nrow(data))) * 8L
+          }
+          kk <-  MASS::kde2d(
+            data[["x"]], data[["y"]], h = h, n = n,
+            lims = c(scales$x$dimension(), scales$y$dimension()))
+          dimnames(kk[["z"]]) <- list(kk[["x"]], kk[["y"]])
 
-        # compute 2D density at each onservations coordinates
-        kx <- cut(data$x, kk$x, labels = FALSE, include.lowest = TRUE)
-        ky <- cut(data$y, kk$y, labels = FALSE, include.lowest = TRUE)
-        kz <- sapply(seq_along(kx), function(i) kk$z[kx[i], ky[i]])
+          # compute 2D density at each observation's coordinates
+          kx <- cut(data$x, kk$x, labels = FALSE, include.lowest = TRUE)
+          ky <- cut(data$y, kk$y, labels = FALSE, include.lowest = TRUE)
+          kz <- sapply(seq_along(kx), function(i) kk$z[kx[i], ky[i]])
+        } else {
+          kz <- 0
+        }
 
         # we construct one logical vector by adding observations/label to be kept
         # we may have a list of 1, 2, or 4 logical vectors
         keep <- keep.these
         for (i in seq_along(selectors)) {
-          if (keep.fraction[i] == 1) {
+          if (keep.fraction[i] == 1 ||
+              (length(selectors[[i]]) < 2L && keep.fraction[i] >= 0.5)) {
             keep[ selectors[[i]] ] <- TRUE
-          } else if (keep.fraction[i] != 0) {
+          } else if (keep.fraction[i] != 0 && length(selectors[[i]]) >= 2L) {
             if (keep.sparse) {
               keep[ selectors[[i]] ] <-
                 kz[ selectors[[i]] ] < stats::quantile(kz[ selectors[[i]] ],

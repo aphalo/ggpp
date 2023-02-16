@@ -372,6 +372,7 @@ StatDens1dFilter <-
       keep.number[too.large.frac] / num.rows[too.large.frac]
 
     # density on a grid
+    # data with fewer than 2 rows is as a special case as density() fails
     if (nrow(data) >= 2L) {
       dens <-
         stats::density(data[[orientation]],
@@ -393,7 +394,7 @@ StatDens1dFilter <-
       if (keep.fraction[i] == 1 ||
           (length(selectors[[i]]) < 2L && keep.fraction[i] >= 0.5)) {
         keep[ selectors[[i]] ] <- TRUE
-      } else if (keep.fraction[i] != 0 && length(selectors[[i]] >= 2L)) {
+      } else if (keep.fraction[i] != 0 && length(selectors[[i]]) >= 2L) {
         if (keep.sparse) {
           keep[ selectors[[i]] ] <-
             keep[ selectors[[i]] ] |
@@ -483,6 +484,7 @@ StatDens1dFilterG <-
           keep.number[too.large.frac] / num.rows[too.large.frac]
 
         # density on a grid
+        # data with fewer than 2 rows is as a special case as density() fails
         if (nrow(data) >= 2L) {
           dens <-
             stats::density(data[[orientation]],
@@ -499,14 +501,12 @@ StatDens1dFilterG <-
 
         # we construct one logical vector by adding observations/label to be kept
         # we may have a list of 1 or 2 logical vectors
-        # data with fewer than 2 rows needs to be treated as a special case as
-        # density cannot be estimated
         keep <- keep.these
         for (i in seq_along(selectors)) {
           if (keep.fraction[i] == 1 ||
               (length(selectors[[i]]) < 2L && keep.fraction[i] >= 0.5)) {
             keep[ selectors[[i]] ] <- TRUE
-          } else if (keep.fraction[i] != 0 && length(selectors[[i]] >= 2L)) {
+          } else if (keep.fraction[i] != 0 && length(selectors[[i]]) >= 2L) {
             if (keep.sparse) {
               keep[ selectors[[i]] ] <-
                 keep[ selectors[[i]] ] |

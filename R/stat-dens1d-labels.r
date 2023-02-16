@@ -352,23 +352,28 @@ StatDens1dLabels <-
           keep.number[too.large.frac] / num.rows[too.large.frac]
 
         # density on a grid
-        dens <-
-          stats::density(data[[orientation]],
-                         bw = bw, kernel = kernel, adjust = adjust, n = n,
-                         from = scales[[orientation]]$dimension()[1],
-                         to = scales[[orientation]]$dimension()[2])
+        # data with fewer than 2 rows is as a special case as density() fails
+        if (nrow(data) >= 2L) {
+          dens <-
+            stats::density(data[[orientation]],
+                           bw = bw, kernel = kernel, adjust = adjust, n = n,
+                           from = scales[[orientation]]$dimension()[1],
+                           to = scales[[orientation]]$dimension()[2])
 
-        # estimate density at each observations coordinates
-        fdens <- stats::splinefun(dens$x, dens$y) # y contains estimate of density
-        dens <- fdens(data[[orientation]])
-
+          # estimate density at each observations coordinates
+          fdens <- stats::splinefun(dens$x, dens$y) # y contains estimate of density
+          dens <- fdens(data[[orientation]])
+        }  else {
+          dens <- 0
+        }
         # we construct one logical vector by adding observations/label to be kept
         # we may have a list of 1 or 2 logical vectors
         keep <- keep.these
         for (i in seq_along(selectors)) {
-          if (keep.fraction[i] == 1) {
+          if (keep.fraction[i] == 1 ||
+              (length(selectors[[i]]) < 2L && keep.fraction[i] >= 0.5)) {
             keep[ selectors[[i]] ] <- TRUE
-          } else if (keep.fraction[i] != 0) {
+          } else if (keep.fraction[i] != 0 && length(selectors[[i]]) >= 2L) {
             if (keep.sparse) {
               keep[ selectors[[i]] ] <-
                 keep[ selectors[[i]] ] |
