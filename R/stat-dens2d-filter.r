@@ -417,7 +417,8 @@ StatDens2dFilter <-
     # estimate 2D density
     # data with fewer than 2 rows needs to be treated as a special case as
     # density cannot be estimated
-    if (nrow(data) >= 2L) {
+    if (length(unique(data$x)) >= 2L &&
+        length(unique(data$y)) >= 2L) {
       if (is.null(h)) {
         h <- c(MASS::bandwidth.nrd(data$x), MASS::bandwidth.nrd(data$y))
       }
@@ -434,14 +435,16 @@ StatDens2dFilter <-
       ky <- cut(data$y, kk$y, labels = FALSE, include.lowest = TRUE)
       kz <- sapply(seq_along(kx), function(i) kk$z[kx[i], ky[i]])
     } else {
-      kz <- 0
+      if (nrow(data) > 1L) {
+        message("Density not computed, too few distinct values in 'x' and/or 'y'")
+      }
+      kz <- rep_len(1, nrow(data))
     }
     # we construct one logical vector by adding observations/label to be kept
     # we may have a list of 1, 2, or 4 logical vectors
     keep <- keep.these
     for (i in seq_along(selectors)) {
-      if (keep.fraction[i] == 1  ||
-          (length(selectors[[i]]) < 2L && keep.fraction[i] >= 0.5)) {
+      if (keep.fraction[i] == 1) {
         keep[ selectors[[i]] ] <- TRUE
       } else if (keep.fraction[i] != 0  && length(selectors[[i]]) >= 2L) {
         if (keep.sparse) {
@@ -582,7 +585,8 @@ StatDens2dFilterG <-
 
         # estimate 2D density
         # data with fewer than 2 rows is as a special case as density() fails
-        if (nrow(data) >= 2L) {
+        if (length(unique(data$x)) >= 2L &&
+            length(unique(data$y)) >= 2L) {
           if (is.null(h)) {
             h <- c(MASS::bandwidth.nrd(data$x), MASS::bandwidth.nrd(data$y))
           }
@@ -599,15 +603,17 @@ StatDens2dFilterG <-
           ky <- cut(data$y, kk$y, labels = FALSE, include.lowest = TRUE)
           kz <- sapply(seq_along(kx), function(i) kk$z[kx[i], ky[i]])
         } else {
-          kz <- 0
+          if (nrow(data) > 1L) {
+            message("Density not computed, too few distinct values in 'x' and/or 'y'")
+          }
+          kz <- rep_len(1, nrow(data))
         }
 
         # we construct one logical vector by adding observations/label to be kept
         # we may have a list of 1, 2, or 4 logical vectors
         keep <- keep.these
         for (i in seq_along(selectors)) {
-          if (keep.fraction[i] == 1 ||
-              (length(selectors[[i]]) < 2L && keep.fraction[i] >= 0.5)) {
+          if (keep.fraction[i] == 1) {
             keep[ selectors[[i]] ] <- TRUE
           } else if (keep.fraction[i] != 0 && length(selectors[[i]]) >= 2L) {
             if (keep.sparse) {

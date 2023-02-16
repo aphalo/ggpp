@@ -248,6 +248,11 @@ test_that("nudge_to", {
     label = c("abc","cd","d","c","bcd","a")
   )
 
+  expect_error(ggplot(df, aes(x, y, label = label)) +
+                 geom_text_s(position =
+                               position_nudge_to(y = 3,
+                                                 kept.origin = "wrong value")))
+
   vdiffr::expect_doppelganger("nudge_to1",
                               ggplot(df, aes(x, y, label = label)) +
                                 geom_point() +

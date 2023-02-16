@@ -20,3 +20,45 @@ test_that("geom_point_s pos_or_nudge", {
     "You must specify either `position` or `nudge_x`/`nudge_y`."
   )
 })
+
+test_that("translate_shape_string maps correctly", {
+  expected <- c(0:14, 14:25)
+  shape.strings <- c("square open",
+  "circle open",
+  "triangle open",
+  "plus",
+  "cross",
+  "diamond open",
+  "triangle down open",
+  "square cross",
+  "asterisk",
+  "diamond plus",
+  "circle plus",
+  "star",
+  "square plus",
+  "circle cross",
+  "square triangle",
+  "triangle square",
+  "square",
+  "circle small",
+  "triangle",
+  "diamond",
+  "circle",
+  "bullet",
+  "circle filled",
+  "square filled",
+  "diamond filled",
+  "triangle filled",
+  "triangle down filled")
+  result <- translate_shape_string(shape.strings)
+  expect_equal(expected, result)
+
+  expect_error(translate_shape_string("wrong shape")) # no match
+  expect_error(translate_shape_string("circ")) # multiple matches
+
+  # chars are passed through
+  expect_equal(translate_shape_string("c"), "c")
+  expect_equal(translate_shape_string(""), "")
+  expect_equal(translate_shape_string("1"), "1")
+  expect_error(translate_shape_string("11"))
+})

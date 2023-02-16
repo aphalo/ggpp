@@ -402,11 +402,15 @@ StatDens1dFilter <-
           keep[ selectors[[i]] ] <-
             keep[ selectors[[i]] ] |
             dens[ selectors[[i]] ] < stats::quantile(dens[ selectors[[i]] ],
-                                                     keep.fraction[i], names = FALSE)
+                                                     keep.fraction[i],
+                                                     names = FALSE,
+                                                     type = 8)
         } else {
           keep[ selectors[[i]] ] <- keep[ selectors[[i]] ] |
             dens[ selectors[[i]] ] >= stats::quantile(dens[ selectors[[i]] ],
-                                                      1 - keep.fraction[i], names = FALSE)
+                                                      1 - keep.fraction[i],
+                                                      names = FALSE,
+                                                      type = 8)
         }
       }
     }
@@ -516,11 +520,15 @@ StatDens1dFilterG <-
               keep[ selectors[[i]] ] <-
                 keep[ selectors[[i]] ] |
                 dens[ selectors[[i]] ] < stats::quantile(dens[ selectors[[i]] ],
-                                                         keep.fraction[i], names = FALSE)
+                                                         keep.fraction[i],
+                                                         names = FALSE,
+                                                         type = 8)
             } else {
               keep[ selectors[[i]] ] <- keep[ selectors[[i]] ] |
                 dens[ selectors[[i]] ] >= stats::quantile(dens[ selectors[[i]] ],
-                                                          1 - keep.fraction[i], names = FALSE)
+                                                          1 - keep.fraction[i],
+                                                          names = FALSE,
+                                                          type = 8)
             }
           }
         }

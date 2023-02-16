@@ -131,111 +131,103 @@ stat_fmt_tb <- function(mapping = NULL,
   )
 }
 
-# Defined here to avoid a note in check --as-cran as the imports from 'dplyr'
-# are not seen when the function is defined in-line in the ggproto object.
-#' @rdname ggpp-ggproto
-#'
-#' @format NULL
-#' @usage NULL
-#'
-fmt_tb_compute_group_fun <- function(data,
-                                     scales,
-                                     tb.vars = NULL,
-                                     tb.rows = NULL,
-                                     digits = 3) {
-  stopifnot(is.list(data$label))
-
-  for (tb.idx in seq_along(data$label)) {
-    temp_tb <- data$label[tb.idx][[1]]
-
-    if (!is.data.frame(temp_tb)) {
-      message("Skipping object of class ", class(temp_tb))
-      next()
-    }
-
-    num.cols <- sapply(temp_tb, is.numeric)
-    temp_tb[num.cols] <-
-      signif(temp_tb[num.cols], digits = digits)
-
-    if (!is.null(tb.vars)) {
-      if (is.character(tb.vars)) {
-        idxs <- pmatch(tb.vars, colnames(temp_tb))
-        if (length(idxs) < length(tb.vars) || anyNA(idxs)) {
-          warning("Attempt to select nonexistent columns")
-          idxs <- stats::na.omit(idxs)
-          # no renaming possible, as we do not know which name was not matched
-          tb.vars <- unname(tb.vars)
-        }
-      } else {
-        idxs <- unname(tb.vars)
-        if (any(idxs > ncol(temp_tb))) {
-          warning("Attempt to select nonexistent columns")
-          idxs <- idxs[idxs <= ncol(temp_tb)]
-          tb.vars <- tb.vars[idxs]
-        }
-      }
-      # if (length(idxs) < ncol(temp_tb)) {
-      #   message("Dropping column(s) from table.")
-      # }
-      if (length(idxs) < 1L) {
-        message("No matching column(s).")
-        temp_tb <- NULL
-      } else {
-        temp_tb <- temp_tb[ , idxs]
-        if (!is.null(names(tb.vars))) {
-          # support renaming of only some selected columns
-          selector <- names(tb.vars) != ""
-          colnames(temp_tb)[selector] <- names(tb.vars)[selector]
-        }
-      }
-    }
-
-    if (!is.null(tb.rows) && !is.null(temp_tb)) {
-      if (is.character(tb.rows)) {
-        idxs <- pmatch(tb.rows, rownames(temp_tb))
-        if (length(idxs) < length(tb.rows) || anyNA(idxs)) {
-          warning("Attempt to select nonexistent rows")
-          idxs <- stats::na.omit(idxs)
-          # no renaming possible, as we do not know which name was not matched
-          tb.rows <- unname(tb.rows)
-        }
-      } else {
-        idxs <- unname(tb.rows)
-        if (any(idxs > nrow(temp_tb))) {
-          warning("Attempt to select nonexistent rows")
-          idxs <- idxs[idxs <= nrow(temp_tb)]
-          tb.rows <- tb.rows[idxs]
-        }
-      }
-      # if (length(idxs) < nrow(temp_tb)) {
-      #   message("Dropping row(s) from table.")
-      # }
-      if (length(idxs) < 1L) {
-        warning("No matching row(s).")
-        temp_tb <- NULL
-      } else {
-        temp_tb <- temp_tb[idxs, ]
-        if (!is.null(names(tb.rows))) {
-          # support renaming of only some selected rows
-          selector <- names(tb.rows) != ""
-          colnames(temp_tb)[selector] <- names(tb.rows)[selector]
-        }
-      }
-    }
-
-    data$label[tb.idx] <- list(temp_tb)
-
-  }
-
-  data
-}
-
 #' @rdname ggpp-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export
 StatFmtTb <-
   ggplot2::ggproto("StatFmtTb", ggplot2::Stat,
-                   compute_group = fmt_tb_compute_group_fun,
+                   compute_group =   function(data,
+                                              scales,
+                                              tb.vars = NULL,
+                                              tb.rows = NULL,
+                                              digits = 3) {
+                     stopifnot(is.list(data$label))
+
+                     for (tb.idx in seq_along(data$label)) {
+                       temp_tb <- data$label[tb.idx][[1]]
+
+                       if (!is.data.frame(temp_tb)) {
+                         message("Skipping object of class ", class(temp_tb))
+                         next()
+                       }
+
+                       num.cols <- sapply(temp_tb, is.numeric)
+                       temp_tb[num.cols] <-
+                         signif(temp_tb[num.cols], digits = digits)
+
+                       if (!is.null(tb.vars)) {
+                         if (is.character(tb.vars)) {
+                           idxs <- pmatch(tb.vars, colnames(temp_tb))
+                           if (length(idxs) < length(tb.vars) || anyNA(idxs)) {
+                             warning("Attempt to select nonexistent columns")
+                             idxs <- stats::na.omit(idxs)
+                             # no renaming possible, as we do not know which name was not matched
+                             tb.vars <- unname(tb.vars)
+                           }
+                         } else {
+                           idxs <- unname(tb.vars)
+                           if (any(idxs > ncol(temp_tb))) {
+                             warning("Attempt to select nonexistent columns")
+                             idxs <- idxs[idxs <= ncol(temp_tb)]
+                             tb.vars <- tb.vars[idxs]
+                           }
+                         }
+                         # if (length(idxs) < ncol(temp_tb)) {
+                         #   message("Dropping column(s) from table.")
+                         # }
+                         if (length(idxs) < 1L) {
+                           message("No matching column(s).")
+                           temp_tb <- NULL
+                         } else {
+                           temp_tb <- temp_tb[ , idxs]
+                           if (!is.null(names(tb.vars))) {
+                             # support renaming of only some selected columns
+                             selector <- names(tb.vars) != ""
+                             colnames(temp_tb)[selector] <- names(tb.vars)[selector]
+                           }
+                         }
+                       }
+
+                       if (!is.null(tb.rows) && !is.null(temp_tb)) {
+                         if (is.character(tb.rows)) {
+                           idxs <- pmatch(tb.rows, rownames(temp_tb))
+                           if (length(idxs) < length(tb.rows) || anyNA(idxs)) {
+                             warning("Attempt to select nonexistent rows")
+                             idxs <- stats::na.omit(idxs)
+                             # no renaming possible, as we do not know which name was not matched
+                             tb.rows <- unname(tb.rows)
+                           }
+                         } else {
+                           idxs <- unname(tb.rows)
+                           if (any(idxs > nrow(temp_tb))) {
+                             warning("Attempt to select nonexistent rows")
+                             idxs <- idxs[idxs <= nrow(temp_tb)]
+                             tb.rows <- tb.rows[idxs]
+                           }
+                         }
+                         # if (length(idxs) < nrow(temp_tb)) {
+                         #   message("Dropping row(s) from table.")
+                         # }
+                         if (length(idxs) < 1L) {
+                           warning("No matching row(s).")
+                           temp_tb <- NULL
+                         } else {
+                           temp_tb <- temp_tb[idxs, ]
+                           if (!is.null(names(tb.rows))) {
+                             # support renaming of only some selected rows
+                             selector <- names(tb.rows) != ""
+                             colnames(temp_tb)[selector] <- names(tb.rows)[selector]
+                           }
+                         }
+                       }
+
+                       data$label[tb.idx] <- list(temp_tb)
+
+                     }
+
+                     data
+                   },
+
                    required_aes = c("x", "y", "label")
 )

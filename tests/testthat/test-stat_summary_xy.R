@@ -61,3 +61,26 @@ test_that("stat_summary_xy", {
   expected <- mean(tst.df$y)
   expect_identical(result, expected)
 })
+
+# could do with additional tests
+test_that("stat_apply_group", {
+  tst.df <- data.frame(
+    x = c(2.2, -0.2, -0.2, -2.5, -0.6, -0.1),
+    y = c(1.1, -0.6, -0.9, -1.6, 0.3, 1.6),
+    group = c("A", "A", "A", "B", "B", "B")
+  )
+  result <- ggplot(tst.df, aes(x, y, group = group)) +
+    stat_apply_group(.fun.x = mean)
+  result <- ggplot2::layer_data(result)
+  result <- result$x
+  expected <- c(mean(tst.df$x[1:3]), mean(tst.df$x[4:6]))
+  expect_identical(result, expected)
+
+  result <- ggplot(tst.df, aes(x, y, group = group)) +
+    stat_apply_group(.fun.x = min)
+  result <- ggplot2::layer_data(result)
+  result <- result$x
+  expected <- c(min(tst.df$x[1:3]), min(tst.df$x[4:6]))
+  expect_identical(result, expected)
+
+})

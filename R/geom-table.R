@@ -558,7 +558,7 @@ GeomTableNpc <-
             lineheight = 1.2
           ),
 
-          draw_panel = gtbnpc_draw_panel_fun <-
+          draw_panel =
             function(data,
                      panel_params,
                      coord,

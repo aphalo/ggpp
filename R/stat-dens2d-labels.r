@@ -372,8 +372,9 @@ StatDens2dLabels <-
           keep.number[too.large.frac] / num.rows[too.large.frac]
 
         # estimate 2D density
-        # data with fewer than 2 rows is as a special case as density() fails
-        if (nrow(data) >= 2L) {
+        # data with fewer than 2 distinct values preventgs density() estimation
+        if (length(unique(data$x)) >= 2L &&
+            length(unique(data$y)) >= 2L) {
           if (is.null(h)) {
             h <- c(MASS::bandwidth.nrd(data$x), MASS::bandwidth.nrd(data$y))
           }
@@ -390,25 +391,28 @@ StatDens2dLabels <-
           ky <- cut(data$y, kk$y, labels = FALSE, include.lowest = TRUE)
           kz <- sapply(seq_along(kx), function(i) kk$z[kx[i], ky[i]])
         } else {
-          kz <- 0
+          kz <- rep_len(1, nrow(data))
         }
 
         # we construct one logical vector by adding observations/label to be kept
         # we may have a list of 1, 2, or 4 logical vectors
         keep <- keep.these
         for (i in seq_along(selectors)) {
-          if (keep.fraction[i] == 1  ||
-              (length(selectors[[i]]) < 2L && keep.fraction[i] >= 0.5)) {
+          if (keep.fraction[i] == 1) {
             keep[ selectors[[i]] ] <- TRUE
           } else if (keep.fraction[i] != 0 && length(selectors[[i]]) >= 2L) {
             if (keep.sparse) {
               keep[ selectors[[i]] ] <-
                 kz[ selectors[[i]] ] < stats::quantile(kz[ selectors[[i]] ],
-                                                       keep.fraction[i], names = FALSE)
+                                                       keep.fraction[i],
+                                                       names = FALSE,
+                                                       type = 8)
             } else {
               keep[ selectors[[i]] ] <-
                 kz[ selectors[[i]] ] >= stats::quantile(kz[ selectors[[i]] ],
-                                                        1 - keep.fraction[i], names = FALSE)
+                                                        1 - keep.fraction[i],
+                                                        names = FALSE,
+                                                        type = 8)
             }
           }
         }
@@ -460,6 +464,10 @@ StatDens2dLabels <-
 #' @keywords internal
 #'
 keep_these2logical <- function(keep.these, data) {
+  if (!is.numeric(keep.these) && !is.logical(keep.these) &&
+    !exists("label", where = data, mode = "character", inherits = FALSE)) {
+    data$label <- rownames(data)
+  }
   if (length(keep.these)) {
     if (is.function(keep.these)) {
       keep.these <- keep.these(data$label) # character or logical vector

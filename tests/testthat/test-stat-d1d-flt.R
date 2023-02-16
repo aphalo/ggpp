@@ -1,6 +1,5 @@
 context("stat_dens1d_filter")
 
-library(ggplot2)
 library(tibble)
 
 make_data_tbl <- function(nrow = 100, rfun = rnorm, ...) {
@@ -10,135 +9,191 @@ make_data_tbl <- function(nrow = 100, rfun = rnorm, ...) {
 
   set.seed(1001)
 
+  random_string <-
+    function(len = 6) {
+      paste(sample(letters, len, replace = TRUE), collapse = "")
+    }
+
   tibble::tibble(
     x = rfun(nrow, ...),
     y = rfun(nrow, ...),
-    group = rep(c("A", "B"), c(nrow / 2, nrow / 2))
+    group = rep(c("A", "B"), c(nrow / 2, nrow / 2)),
+                lab = replicate(nrow, { random_string() })
   )
 }
 
 test_that("filter_x_params", {
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter(keep.fraction = NA)
   )
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter(keep.fraction = 5)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter(keep.fraction = 1)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter(keep.fraction = 0)
   )
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter(keep.fraction = -1)
   )
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter(keep.number = NA)
   )
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter(keep.number = -1)
   )
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter_g(keep.fraction = NA)
   )
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter_g(keep.fraction = 5)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter_g(keep.fraction = 1)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter_g(keep.fraction = 0)
   )
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter_g(keep.fraction = -1)
   )
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter_g(keep.number = NA)
   )
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter_g(keep.number = -1)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter_g(keep.these = 1:3)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter_g(keep.these = TRUE)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter_g(keep.these = FALSE)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter_g(keep.these = rep(c(TRUE, FALSE), 10L))
   )
 
   testthat::expect_no_error(
     ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
-      stat_dens1d_filter_g(keep.these = function(x) {grepl("^a", x)})
+      stat_dens1d_filter_g(keep.these = function(x) {grepl("^1", x)})
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
+      stat_dens1d_filter_g(keep.these = function(x) {grepl("^1", x)})
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter_g(keep.these = integer())
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens1d_filter_g(keep.these = double())
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = make_data_tbl(2), aes(x, y)) +
+      stat_dens1d_filter_g(keep.fraction = 0)
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = make_data_tbl(1), aes(x, y)) +
+      stat_dens1d_filter_g(keep.fraction = 0)
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = make_data_tbl(2), aes(x, y)) +
+      stat_dens1d_filter_g(keep.fraction = 1)
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = make_data_tbl(1), aes(x, y)) +
+      stat_dens1d_filter_g(keep.fraction = 1)
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = data.frame(x = 1:2, y = 1), aes(x, y)) +
+      stat_dens1d_filter_g(keep.fraction = 0)
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = data.frame(x = 1:2, y = 1), aes(x, y)) +
+      stat_dens1d_filter_g(keep.fraction = 1)
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = data.frame(x = 1:2, y = 1), aes(x, y)) +
+      stat_dens1d_filter_g(keep.fraction = 0, orientation = "y")
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = data.frame(x = 1:2, y = 1), aes(x, y)) +
+      stat_dens1d_filter_g(keep.fraction = 1, orientation = "y")
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = data.frame(x = 1:2, y = 1), aes(x, y)) +
+      stat_dens1d_filter_g(keep.fraction = 0.5, orientation = "y")
   )
 
 })
 
 test_that("numbers_x_tb", {
   vdiffr::expect_doppelganger("stat_d1d_fltg_01",
-                              ggplot(data = make_data_tbl(6), aes(x, y)) +
+                              ggplot(data = make_data_tbl(10), aes(x, y)) +
                                 geom_point() +
                                 stat_dens1d_filter_g(colour = "red")
   )
   vdiffr::expect_doppelganger("stat_d1d_flt_01",
-                              ggplot(data = make_data_tbl(6), aes(x, y)) +
+                              ggplot(data = make_data_tbl(10), aes(x, y)) +
                                 geom_point() +
                                 stat_dens1d_filter(colour = "red")
   )
   vdiffr::expect_doppelganger("stat_d1d_flt_02",
-                              ggplot(data = make_data_tbl(6), aes(x, y)) +
+                              ggplot(data = make_data_tbl(10), aes(x, y)) +
                                 geom_point() +
                                 stat_dens1d_filter(colour = "red",
                                                    keep.fraction = 1/2)
@@ -262,13 +317,13 @@ test_that("numbers_x_tb", {
 
 test_that("numbers_y_tb", {
   vdiffr::expect_doppelganger("stat_d1d_flt_y01",
-                              ggplot(data = make_data_tbl(6), aes(x, y)) +
+                              ggplot(data = make_data_tbl(10), aes(x, y)) +
                                 geom_point() +
                                 stat_dens1d_filter(colour = "red",
                                                    orientation = "y")
   )
   vdiffr::expect_doppelganger("stat_d1d_flt_y02",
-                              ggplot(data = make_data_tbl(6), aes(x, y)) +
+                              ggplot(data = make_data_tbl(10), aes(x, y)) +
                                 geom_point() +
                                 stat_dens1d_filter(colour = "red",
                                                    keep.fraction = 1/2,
@@ -459,8 +514,53 @@ test_that("labels_x_params", {
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_labs_tbl(20), aes(x, y)) +
+    ggplot(data = make_labs_tbl(20), aes(x, y, label = lab)) +
       stat_dens1d_labels()
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = make_labs_tbl(2), aes(x, y, label = lab)) +
+      stat_dens1d_labels(keep.fraction = 0)
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = make_labs_tbl(1), aes(x, y, label = lab)) +
+      stat_dens1d_labels(keep.fraction = 0)
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = make_labs_tbl(2), aes(x, y, label = lab)) +
+      stat_dens1d_labels(keep.fraction = 1)
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = make_labs_tbl(1), aes(x, y, label = lab)) +
+      stat_dens1d_labels(keep.fraction = 1)
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = data.frame(x = 1:2, y = 1), aes(x, y, label = lab)) +
+      stat_dens1d_labels(keep.fraction = 0)
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = data.frame(x = 1:2, y = 1), aes(x, y, label = lab)) +
+      stat_dens1d_labels(keep.fraction = 1)
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = data.frame(x = 1:2, y = 1), aes(x, y, label = lab)) +
+      stat_dens1d_labels(keep.fraction = 0, orientation = "y")
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = data.frame(x = 1:2, y = 1), aes(x, y, label = lab)) +
+      stat_dens1d_filter_g(keep.fraction = 1, orientation = "y")
+  )
+
+  testthat::expect_no_error(
+    ggplot(data = data.frame(x = 1:2, y = 1), aes(x, y, label = lab)) +
+      stat_dens1d_labels(keep.fraction = 0.5, orientation = "y")
   )
 
   vdiffr::expect_doppelganger("stat_d1d_lbl_fill_x01",
@@ -716,26 +816,26 @@ test_that("labels_y_params", {
 test_that("labels_x_tb", {
   # test non-mapped label filled with row names
   vdiffr::expect_doppelganger("stat_d1d_nolbl_x01",
-                              ggplot(data = make_data_tbl(6), aes(x, y)) +
+                              ggplot(data = make_data_tbl(10), aes(x, y)) +
                                 geom_point() +
                                 stat_dens1d_labels(colour = "red",
                                                    orientation = "x")
   )
   vdiffr::expect_doppelganger("stat_d1d_nolbl_x02",
-                              ggplot(data = make_labs_tbl(6), aes(x, y)) +
+                              ggplot(data = make_labs_tbl(10), aes(x, y)) +
                                 geom_point() +
                                 stat_dens1d_labels(colour = "red",
                                                    orientation = "x")
   )
   # test with variable mapped to label aesthetic
   vdiffr::expect_doppelganger("stat_d1d_lbl_x01",
-                              ggplot(data = make_labs_tbl(6), aes(x, y, label = lab)) +
+                              ggplot(data = make_labs_tbl(10), aes(x, y, label = lab)) +
                                 geom_point() +
                                 stat_dens1d_labels(colour = "red",
                                                    orientation = "x")
   )
   vdiffr::expect_doppelganger("stat_d1d_lbl_x02",
-                              ggplot(data = make_labs_tbl(6), aes(x, y, label = lab)) +
+                              ggplot(data = make_labs_tbl(10), aes(x, y, label = lab)) +
                                 geom_point() +
                                 stat_dens1d_labels(colour = "red",
                                                    keep.fraction = 1/2,
@@ -845,26 +945,26 @@ test_that("labels_x_tb", {
 test_that("labels_y_tb", {
   # test non-mapped label filled with row names
   vdiffr::expect_doppelganger("stat_d1d_nolbl_y01",
-                              ggplot(data = make_data_tbl(6), aes(x, y)) +
+                              ggplot(data = make_data_tbl(10), aes(x, y)) +
                                 geom_point() +
                                 stat_dens1d_labels(colour = "red",
                                                    orientation = "y")
   )
   vdiffr::expect_doppelganger("stat_d1d_nolbl_y02",
-                              ggplot(data = make_labs_tbl(6), aes(x, y)) +
+                              ggplot(data = make_labs_tbl(10), aes(x, y)) +
                                 geom_point() +
                                 stat_dens1d_labels(colour = "red",
                                                    orientation = "y")
   )
   # test with variable mapped to label aesthetic
   vdiffr::expect_doppelganger("stat_d1d_lbl_y01",
-                              ggplot(data = make_labs_tbl(6), aes(x, y, label = lab)) +
+                              ggplot(data = make_labs_tbl(10), aes(x, y, label = lab)) +
                                 geom_point() +
                                 stat_dens1d_labels(colour = "red",
                                                    orientation = "y")
   )
   vdiffr::expect_doppelganger("stat_d1d_lbl_y02",
-                              ggplot(data = make_labs_tbl(6), aes(x, y, label = lab)) +
+                              ggplot(data = make_labs_tbl(10), aes(x, y, label = lab)) +
                                 geom_point() +
                                 stat_dens1d_labels(colour = "red",
                                                    keep.fraction = 1/2,
@@ -970,4 +1070,3 @@ test_that("labels_y_tb", {
                                 scale_y_log10()
   )
 })
-

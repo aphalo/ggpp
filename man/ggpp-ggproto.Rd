@@ -6,7 +6,7 @@
 %   R/geom-text-npc.r, R/position-nudge-center.R, R/position-nudge-line.R,
 %   R/position-nudge-stack.R, R/position-nudge-to.R, R/stat-apply.R,
 %   R/stat-dens1d-filter.r, R/stat-dens1d-labels.r, R/stat-dens2d-filter.r,
-%   R/stat-dens2d-labels.r, R/stat-fmt-tb.R, R/stat-panel-counts.R,
+%   R/stat-dens2d-labels.r, R/stat-format-table.R, R/stat-panel-counts.R,
 %   R/stat-quadrant-counts.R
 \docType{data}
 \name{GeomGrob}
@@ -41,7 +41,6 @@
 \alias{StatDens2dFilter}
 \alias{StatDens2dFilterG}
 \alias{StatDens2dLabels}
-\alias{fmt_tb_compute_group_fun}
 \alias{StatFmtTb}
 \alias{StatPanelCounts}
 \alias{StatGroupCounts}
