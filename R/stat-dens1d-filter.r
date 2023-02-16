@@ -373,7 +373,7 @@ StatDens1dFilter <-
 
     # density on a grid
     # data with fewer than 2 rows is as a special case as density() fails
-    if (nrow(data) >= 2L) {
+    if (length(unique(data[[orientation]])) >= 2L) {
       dens <-
         stats::density(data[[orientation]],
                        bw = bw, kernel = kernel, adjust = adjust, n = n,
@@ -384,7 +384,10 @@ StatDens1dFilter <-
       fdens <- stats::splinefun(dens$x, dens$y) # y contains estimate of density
       dens <- fdens(data[[orientation]])
     } else {
-      dens <- 0
+      if (nrow(data) > 1L) {
+        message("Density not computed, too few distinct values in '", orientation, "'")
+      }
+      dens <- rep_len(1, nrow(data))
     }
 
     # we construct one logical vector by adding observations/label to be kept
@@ -485,7 +488,7 @@ StatDens1dFilterG <-
 
         # density on a grid
         # data with fewer than 2 rows is as a special case as density() fails
-        if (nrow(data) >= 2L) {
+        if (length(unique(data[[orientation]])) >= 2L) {
           dens <-
             stats::density(data[[orientation]],
                            bw = bw, kernel = kernel, adjust = adjust, n = n,
@@ -496,15 +499,17 @@ StatDens1dFilterG <-
           fdens <- stats::splinefun(dens$x, dens$y) # y contains estimate of density
           dens <- fdens(data[[orientation]])
         } else {
-          dens <- 0
+          if (nrow(data) > 1L) {
+            message("Density not computed, too few distinct values in '", orientation, "'")
+          }
+          dens <- rep_len(1, nrow(data))
         }
 
         # we construct one logical vector by adding observations/label to be kept
         # we may have a list of 1 or 2 logical vectors
         keep <- keep.these
         for (i in seq_along(selectors)) {
-          if (keep.fraction[i] == 1 ||
-              (length(selectors[[i]]) < 2L && keep.fraction[i] >= 0.5)) {
+          if (keep.fraction[i] == 1) {
             keep[ selectors[[i]] ] <- TRUE
           } else if (keep.fraction[i] != 0 && length(selectors[[i]]) >= 2L) {
             if (keep.sparse) {
