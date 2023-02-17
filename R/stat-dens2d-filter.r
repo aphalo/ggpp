@@ -481,7 +481,7 @@ StatDens2dFilter <-
     }
     # we construct one logical vector by adding observations/label to be kept
     # we may have a list of 1, 2, or 4 logical vectors
-    keep <- keep.these
+    keep <- logical(nrow(data))
     for (i in seq_along(selectors)) {
       if (keep.fraction[i] == 1) {
         keep[ selectors[[i]] ] <- TRUE
@@ -497,7 +497,7 @@ StatDens2dFilter <-
         }
       }
     }
-    keep <- keep & !exclude.these
+    keep <- keep | keep.these & !exclude.these
 
     if (invert.selection) {
       keep <- !keep
@@ -659,7 +659,7 @@ StatDens2dFilterG <-
 
         # we construct one logical vector by adding observations/label to be kept
         # we may have a list of 1, 2, or 4 logical vectors
-        keep <- keep.these
+        keep <- logical(nrow(data))
         for (i in seq_along(selectors)) {
           if (keep.fraction[i] == 1) {
             keep[ selectors[[i]] ] <- TRUE
@@ -675,7 +675,7 @@ StatDens2dFilterG <-
             }
           }
         }
-        keep <- keep & !exclude.these
+        keep <- keep | keep.these & !exclude.these
 
         if (invert.selection){
           keep <- !keep
