@@ -490,12 +490,22 @@ StatDens2dLabels <-
 keep_these2logical <- function(keep.these,
                                data,
                                keep.these.target = "label") {
-  if (!is.numeric(keep.these) && !is.logical(keep.these) &&
-      is.character(keep.these.target) && keep.these.target == "label" &&
-      !exists("label", where = data, mode = "character", inherits = FALSE)) {
-    data$label <- rownames(data)
-  }
   if (length(keep.these)) {
+    if (is.character(keep.these) || is.function(keep.these)) {
+      if (is.character(keep.these.target) && any(keep.these.target == "label") &&
+          !exists("label", where = data, mode = "character", inherits = FALSE)) {
+        data$label <- rownames(data)
+      }
+      if (is.character(keep.these.target)) {
+        orig.num.targets <- length(unique(keep.these.target))
+        keep.these.target <- intersect(keep.these.target, colnames(data))
+        if (length(keep.these.target) == 0L) {
+          stop("Variables in 'keep.these.target' not in 'data'")
+        } else if (orig.num.targets > length(keep.these.target)) {
+          warning("Some variables in 'keep.these.target' not in 'data'")
+        }
+      }
+    }
     if (is.function(keep.these)) {
       keep.these <- keep.these(data[ , keep.these.target, drop = TRUE]) # any vector
     }

@@ -14,7 +14,7 @@ stat_dens2d_labels(
   keep.number = Inf,
   keep.sparse = TRUE,
   keep.these = FALSE,
-  keep.these.fun.arg = "label",
+  keep.these.target = "label",
   pool.along = "xy",
   xintercept = 0,
   yintercept = 0,
@@ -62,9 +62,10 @@ first argument and returns a character vector or a logical vector. Negative
 integers behave as in R's extraction methods. The rows from \code{data}
 indicated by \code{keep.these} are kept irrespective of the local density.}
 
-\item{keep.these.fun.arg}{character or \code{NULL}. Name of the column of
-data to pass as first argument to the function passed as argument to
-\code{keep.these}. If \code{NULL} the whole \code{data} object is passed.}
+\item{keep.these.target}{character or \code{NULL}. Name of the column of
+\code{data}, corresponding to a mapped aesthetic or group, to pass as first
+argument to the function passed as argument to \code{keep.these}. If
+\code{NULL} the whole \code{data} object is passed.}
 
 \item{pool.along}{character, one of \code{"none"} or \code{"x"},
 indicating if selection should be done pooling the observations along the

@@ -55,6 +55,10 @@
 #'   first argument and returns a character vector or a logical vector. Negative
 #'   integers behave as in R's extraction methods. The rows from \code{data}
 #'   indicated by \code{keep.these} are kept irrespective of the local density.
+#' @param keep.these.target character or \code{NULL}. Name of the column of
+#'   \code{data}, corresponding to a mapped aesthetic or group, to pass as first
+#'   argument to the function passed as argument to \code{keep.these}. If
+#'   \code{NULL} the whole \code{data} object is passed.
 #' @param pool.along character, one of \code{"none"} or \code{"x"},
 #'   indicating if selection should be done pooling the observations along the
 #'   \emph{x} aesthetic, or separately on either side of \code{xintercept}.
@@ -196,6 +200,7 @@ stat_dens2d_filter <-
            keep.number = Inf,
            keep.sparse = TRUE,
            keep.these = FALSE,
+           keep.these.target = "label",
            pool.along = "xy",
            xintercept = 0,
            yintercept = 0,
@@ -236,6 +241,7 @@ stat_dens2d_filter <-
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
                     keep.these = keep.these,
+                    keep.these.target = keep.these.target,
                     pool.along = pool.along,
                     xintercept = xintercept,
                     yintercept = yintercept,
@@ -260,6 +266,7 @@ stat_dens2d_filter_g <-
            keep.number = Inf,
            keep.sparse = TRUE,
            keep.these = FALSE,
+           keep.these.target = "label",
            pool.along = "xy",
            xintercept = 0,
            yintercept = 0,
@@ -300,6 +307,7 @@ stat_dens2d_filter_g <-
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
                     keep.these = keep.these,
+                    keep.these.target = keep.these.target,
                     pool.along = pool.along,
                     xintercept = xintercept,
                     yintercept = yintercept,
@@ -329,6 +337,7 @@ StatDens2dFilter <-
            keep.number,
            keep.sparse,
            keep.these,
+           keep.these.target,
            pool.along,
            xintercept,
            yintercept,
@@ -339,7 +348,9 @@ StatDens2dFilter <-
 
     force(data)
 
-    keep.these <- keep_these2logical(keep.these = keep.these, data = data)
+    keep.these <- keep_these2logical(keep.these = keep.these,
+                                     data = data,
+                                     keep.these.target = keep.these.target)
 
     # discard redundant splits
     if (pool.along != "xy") {
@@ -498,6 +509,7 @@ StatDens2dFilterG <-
                keep.number,
                keep.sparse,
                keep.these,
+               keep.these.target,
                pool.along,
                xintercept,
                yintercept,
@@ -508,7 +520,9 @@ StatDens2dFilterG <-
 
         force(data)
 
-        keep.these <- keep_these2logical(keep.these = keep.these, data = data)
+        keep.these <- keep_these2logical(keep.these = keep.these,
+                                         data = data,
+                                         keep.these.target = keep.these.target)
 
         # discard redundant splits
         if (pool.along != "xy") {

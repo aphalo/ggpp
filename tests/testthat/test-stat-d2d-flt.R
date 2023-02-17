@@ -747,6 +747,18 @@ test_that("keep_these2logical arguments with label", {
   expect_equal(keep_these2logical(function(x) {x %in% c("c", "d")}, df), c(F, F, T, T, F, F, F, F, F, F))
   expect_equal(keep_these2logical(c("3", "4"), df), rep_len(FALSE, nrow(df)))
   expect_equal(keep_these2logical(function(x) {x %in% c("3", "4")}, df), rep_len(FALSE, nrow(df)))
+  expect_equal(keep_these2logical(function(x) {x %in% c(3, 4)}, df,
+                                  keep.these.target = "x"), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(keep_these2logical(function(d) {d$x %in% c(3, 4)}, df,
+                                  keep.these.target = c("x", "y")), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(keep_these2logical(function(d) {d$label %in% c("c", "d")}, df,
+                                  keep.these.target = c("x", "y", "label")), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(keep_these2logical(function(d) {d$x %in% c(3, 4)}, df,
+                                  keep.these.target = TRUE), c(F, F, T, T, F, F, F, F, F, F))
+  expect_error(keep_these2logical(function(d) {d$x %in% c(3, 4)}, df,
+                                  keep.these.target = "zz"))
+  expect_warning(keep_these2logical(function(x) {x %in% c(3, 4)}, df,
+                                  keep.these.target = c("zz", "x")))
 })
 
 test_that("keep_these2logical arguments without label", {
@@ -763,4 +775,12 @@ test_that("keep_these2logical arguments without label", {
   expect_equal(keep_these2logical(function(x) {x %in% c("c", "d")}, df), rep_len(FALSE, nrow(df)))
   expect_equal(keep_these2logical(c("3", "4"), df), c(F, F, T, T, F, F, F, F, F, F))
   expect_equal(keep_these2logical(function(x) {x %in% c("3", "4")}, df), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(keep_these2logical(function(x) {x %in% c(3, 4)}, df,
+                                  keep.these.target = "x"), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(keep_these2logical(function(d) {d$x %in% c(3, 4)}, df,
+                                  keep.these.target = c("x", "y")), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(keep_these2logical(function(d) {d$label %in% c("3", "4")}, df,
+                                  keep.these.target = c("x", "y", "label")), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(keep_these2logical(function(d) {d$x %in% c(3, 4)}, df,
+                                  keep.these.target = TRUE), c(F, F, T, T, F, F, F, F, F, F))
 })
