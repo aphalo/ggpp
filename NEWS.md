@@ -15,7 +15,7 @@ estimated.
 -   In `stat_dens2d_labels()`, `stat_dens2d_filter()`,
 `stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and
 `stat_dens1d_filter_g()` use `type = 8` when computing quantiles, instead of the
-default `type = 7`. It is expected to work better with data that are not
+default `type = 7`. Type 8 is recommended as better with data that are not
 normally distributed.
 -   Add unit tests and make existing tests visible to package 'covr'.
 

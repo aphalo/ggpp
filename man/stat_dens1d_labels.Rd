@@ -59,8 +59,9 @@ regions.}
 
 \item{keep.these}{character vector, integer vector, logical vector or
 function that takes the variable mapped to the \code{label} aesthetic as
-first argument and returns a character vector or a logical vector. These
-rows from \code{data} are selected irrespective of the local density.}
+first argument and returns a character vector or a logical vector. Negative
+integers behave as in R's extraction methods. The rows from \code{data}
+indicated by \code{keep.these} are kept irrespective of the local density.}
 
 \item{pool.along}{character, one of \code{"none"} or \code{"x"},
 indicating if selection should be done pooling the observations along the
@@ -163,6 +164,12 @@ A plot layer instance. Using as output \code{data} the input
   their length is two, the first value is use for the left tail and the
   second value for the right tail (or if using \code{orientation = "y"} the
   lower and upper tails, respectively).
+
+  Computation of density and of the default bandwidth require at least
+  two observations with different values. If data do not fulfill this
+  condition, they are kept only if `keep.fraction = 1`. This is correct
+  behavior for a single observation, but can be surprising in the case of
+  multiple observations.
 }
 \note{
 Which points are kept and which not depends on how dense and flexible

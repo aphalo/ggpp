@@ -4,7 +4,7 @@
 \alias{keep_these2logical}
 \title{Convert keep.these argument into logical vector}
 \usage{
-keep_these2logical(keep.these, data)
+keep_these2logical(keep.these, data, keep.these.fun.arg = "label")
 }
 \arguments{
 \item{keep.these}{character vector, integer vector, logical vector or

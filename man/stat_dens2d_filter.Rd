@@ -79,8 +79,9 @@ regions.}
 
 \item{keep.these}{character vector, integer vector, logical vector or
 function that takes the variable mapped to the \code{label} aesthetic as
-first argument and returns a character vector or a logical vector. These
-rows from \code{data} are selected irrespective of the local density.}
+first argument and returns a character vector or a logical vector. Negative
+integers behave as in R's extraction methods. The rows from \code{data}
+indicated by \code{keep.these} are kept irrespective of the local density.}
 
 \item{pool.along}{character, one of \code{"none"} or \code{"x"},
 indicating if selection should be done pooling the observations along the
@@ -149,6 +150,12 @@ The local density of observations in 2D (\emph{x} and \emph{y}) is
   \code{keep.fraction}. \code{keep.number} sets the maximum number of
   observations selected, whenever \code{keep.fraction} results in fewer
   observations selected, it is obeyed.
+
+  Computation of density and of the default bandwidth require at least
+  two observations with different values. If data do not fulfill this
+  condition, they are kept only if `keep.fraction = 1`. This is correct
+  behavior for a single observation, but can be surprising in the case of
+  multiple observations.
 }
 \examples{
 

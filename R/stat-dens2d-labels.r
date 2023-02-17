@@ -39,6 +39,20 @@
 #'   observations selected, whenever \code{keep.fraction} results in fewer
 #'   observations selected, it is obeyed.
 #'
+#'   Computation of density and of the default bandwidth require at least
+#'   two observations with different values. If data do not fulfill this
+#'   condition, they are kept only if `keep.fraction = 1`. This is correct
+#'   behavior for a single observation, but can be surprising in the case of
+#'   multiple observations.
+#'
+#' @note Which points are kept and which not depends on how dense a grid is used
+#'   and how flexible the density surface estimate is. This depends on the
+#'   values passed as arguments to parameters \code{n}, \code{bw} and
+#'   \code{kernel}. It is also important to be aware that both
+#'   \code{geom_text()} and \code{geom_text_repel()} can avoid overplotting by
+#'   discarding labels at the plot rendering stage, i.e., what is plotted may
+#'   differ from what is returned by this statistic.
+#'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs
 #'   to be set at the layer level if you are overriding the plot defaults.
@@ -55,8 +69,13 @@
 #'   regions.
 #' @param keep.these character vector, integer vector, logical vector or
 #'   function that takes the variable mapped to the \code{label} aesthetic as
-#'   first argument and returns a character vector or a logical vector. These
-#'   rows from \code{data} are selected irrespective of the local density.
+#'   first argument and returns a character vector or a logical vector. Negative
+#'   integers behave as in R's extraction methods. The rows from \code{data}
+#'   indicated by \code{keep.these} are kept irrespective of the local density.
+#' @param keep.these.target character or \code{NULL}. Name of the column of
+#'   \code{data}, corresponding to a mapped aesthetic or group, to pass as first
+#'   argument to the function passed as argument to \code{keep.these}. If
+#'   \code{NULL} the whole \code{data} object is passed.
 #' @param pool.along character, one of \code{"none"} or \code{"x"},
 #'   indicating if selection should be done pooling the observations along the
 #'   \emph{x} aesthetic, or separately on either side of \code{xintercept}.
@@ -199,6 +218,7 @@ stat_dens2d_labels <-
            keep.number = Inf,
            keep.sparse = TRUE,
            keep.these = FALSE,
+           keep.these.target = "label",
            pool.along = "xy",
            xintercept = 0,
            yintercept = 0,
@@ -247,6 +267,7 @@ stat_dens2d_labels <-
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
                     keep.these = keep.these,
+                    keep.these.target = keep.these.target,
                     pool.along = pool.along,
                     xintercept = xintercept,
                     yintercept = yintercept,
@@ -275,6 +296,7 @@ StatDens2dLabels <-
                keep.number,
                keep.sparse,
                keep.these,
+               keep.these.target,
                pool.along,
                xintercept,
                yintercept,
@@ -289,7 +311,9 @@ StatDens2dLabels <-
           data[["label"]] <- rownames(data)
         }
 
-        keep.these <- keep_these2logical(keep.these = keep.these, data = data)
+        keep.these <- keep_these2logical(keep.these = keep.these,
+                                         data = data,
+                                         keep.these.target = keep.these.target)
 
         # discard redundant splits
         if (pool.along != "xy") {
@@ -463,26 +487,30 @@ StatDens2dLabels <-
 #'
 #' @keywords internal
 #'
-keep_these2logical <- function(keep.these, data) {
+keep_these2logical <- function(keep.these,
+                               data,
+                               keep.these.target = "label") {
   if (!is.numeric(keep.these) && !is.logical(keep.these) &&
-    !exists("label", where = data, mode = "character", inherits = FALSE)) {
+      is.character(keep.these.target) && keep.these.target == "label" &&
+      !exists("label", where = data, mode = "character", inherits = FALSE)) {
     data$label <- rownames(data)
   }
   if (length(keep.these)) {
     if (is.function(keep.these)) {
-      keep.these <- keep.these(data$label) # character or logical vector
+      keep.these <- keep.these(data[ , keep.these.target, drop = TRUE]) # any vector
     }
     if (is.character(keep.these)) {
-      keep.these <- data$label %in% keep.these # logical vector
+      stopifnot(is.character(data[[keep.these.target[1]]]))
+      keep.these <- data[[keep.these.target[1]]] %in% keep.these # logical vector
     }
     if (is.numeric(keep.these)) { # positional indices
-      temp <- rep(FALSE, times = nrow(data))
+      temp <- rep_len(FALSE, length.out = nrow(data))
       temp[keep.these] <- TRUE
       keep.these <- temp
     }
     if (is.logical(keep.these)) { # logical indices, if short recycle
       if (length(keep.these) >= 1L && length(keep.these) < nrow(data)) {
-        keep.these <- rep(keep.these, length.out = nrow(data))
+        keep.these <- rep_len(keep.these, length.out = nrow(data))
       } else if (length(keep.these) > nrow(data)) {
         stop("Logical vector 'keep.these' longer than data")
       }

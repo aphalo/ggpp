@@ -14,6 +14,7 @@ stat_dens2d_labels(
   keep.number = Inf,
   keep.sparse = TRUE,
   keep.these = FALSE,
+  keep.these.fun.arg = "label",
   pool.along = "xy",
   xintercept = 0,
   yintercept = 0,
@@ -57,8 +58,13 @@ regions.}
 
 \item{keep.these}{character vector, integer vector, logical vector or
 function that takes the variable mapped to the \code{label} aesthetic as
-first argument and returns a character vector or a logical vector. These
-rows from \code{data} are selected irrespective of the local density.}
+first argument and returns a character vector or a logical vector. Negative
+integers behave as in R's extraction methods. The rows from \code{data}
+indicated by \code{keep.these} are kept irrespective of the local density.}
+
+\item{keep.these.fun.arg}{character or \code{NULL}. Name of the column of
+data to pass as first argument to the function passed as argument to
+\code{keep.these}. If \code{NULL} the whole \code{data} object is passed.}
 
 \item{pool.along}{character, one of \code{"none"} or \code{"x"},
 indicating if selection should be done pooling the observations along the
@@ -137,6 +143,21 @@ A plot layer instance. Using as output \code{data} the input
   and \code{keep.fraction}. \code{keep.number} sets the maximum number of
   observations selected, whenever \code{keep.fraction} results in fewer
   observations selected, it is obeyed.
+
+  Computation of density and of the default bandwidth require at least
+  two observations with different values. If data do not fulfill this
+  condition, they are kept only if `keep.fraction = 1`. This is correct
+  behavior for a single observation, but can be surprising in the case of
+  multiple observations.
+}
+\note{
+Which points are kept and which not depends on how dense a grid is used
+  and how flexible the density surface estimate is. This depends on the
+  values passed as arguments to parameters \code{n}, \code{bw} and
+  \code{kernel}. It is also important to be aware that both
+  \code{geom_text()} and \code{geom_text_repel()} can avoid overplotting by
+  discarding labels at the plot rendering stage, i.e., what is plotted may
+  differ from what is returned by this statistic.
 }
 \examples{
 
