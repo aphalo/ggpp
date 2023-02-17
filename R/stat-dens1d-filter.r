@@ -39,9 +39,13 @@
 #'
 #'   Computation of density and of the default bandwidth require at least
 #'   two observations with different values. If data do not fulfill this
-#'   condition, they are kept only if `keep.fraction = 1`. This is correct
+#'   condition, they are kept only if \code{keep.fraction = 1}. This is correct
 #'   behavior for a single observation, but can be surprising in the case of
 #'   multiple observations.
+#'
+#'   Parameters \code{keep.these} and \code{exclude.these} make it possible to
+#'   force inclusion or exclusion of observations after the density is computed.
+#'   In case of conflict, \code{exclude.these} overrides \code{keep.these}.
 #'
 #' @note Which points are kept and which not depends on how dense and flexible
 #'   is the density curve estimate. This depends on the values passed as
@@ -65,15 +69,15 @@
 #' @param keep.sparse logical If \code{TRUE}, the default, observations from the
 #'   more sparse regions are retained, if \code{FALSE} those from the densest
 #'   regions.
-#' @param keep.these character vector, integer vector, logical vector or
-#'   function that takes the variable mapped to the \code{label} aesthetic as
-#'   first argument and returns a character vector or a logical vector. Negative
-#'   integers behave as in R's extraction methods. The rows from \code{data}
-#'   indicated by \code{keep.these} are kept irrespective of the local density.
-#' @param keep.these.target character or \code{NULL}. Name of the column of
-#'   \code{data}, corresponding to a mapped aesthetic or group, to pass as first
-#'   argument to the function passed as argument to \code{keep.these}. If
-#'   \code{NULL} the whole \code{data} object is passed.
+#' @param keep.these,exclude.these character vector, integer vector, logical
+#'   vector or function that takes one or more variables in data selected by
+#'   \code{these.target}. Negative integers behave as in R's extraction methods.
+#'   The rows from \code{data} indicated by \code{keep.these} and
+#'   \code{exclude.these} are kept or excluded irrespective of the local
+#'   density.
+#' @param these.target character, numeric or logical selecting one or more
+#'   column(s) of \code{data}. If \code{TRUE} the whole \code{data} object is
+#'   passed.
 #' @param pool.along character, one of \code{"none"} or \code{"x"},
 #'   indicating if selection should be done pooling the observations along the
 #'   \emph{x} aesthetic, or separately on either side of \code{xintercept}.
@@ -229,7 +233,8 @@ stat_dens1d_filter <-
            keep.number = Inf,
            keep.sparse = TRUE,
            keep.these = FALSE,
-           keep.these.target = "label",
+           exclude.these = FALSE,
+           these.target = "label",
            pool.along = "x",
            xintercept = 0,
            invert.selection = FALSE,
@@ -258,6 +263,8 @@ stat_dens1d_filter <-
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
                     keep.these = keep.these,
+                    exclude.these = exclude.these,
+                    these.target = these.target,
                     pool.along = pool.along,
                     xintercept = xintercept,
                     invert.selection = invert.selection,
@@ -282,7 +289,8 @@ stat_dens1d_filter_g <-
            keep.number = Inf,
            keep.sparse = TRUE,
            keep.these = FALSE,
-           keep.these.target = "label",
+           exclude.these = FALSE,
+           these.target = "label",
            pool.along = "x",
            xintercept = 0,
            invert.selection = FALSE,
@@ -311,6 +319,8 @@ stat_dens1d_filter_g <-
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
                     keep.these = keep.these,
+                    exclude.these = exclude.these,
+                    these.target = these.target,
                     pool.along = pool.along,
                     xintercept = xintercept,
                     invert.selection = invert.selection,
@@ -341,7 +351,8 @@ StatDens1dFilter <-
            keep.number,
            keep.sparse,
            keep.these,
-           keep.these.target,
+           exclude.these,
+           these.target,
            pool.along,
            xintercept,
            invert.selection,
@@ -354,9 +365,13 @@ StatDens1dFilter <-
 
     force(data)
 
-    keep.these <- keep_these2logical(keep.these = keep.these,
-                                     data = data,
-                                     keep.these.target = keep.these.target)
+    keep.these <- these2logical(these = keep.these,
+                                data = data,
+                                these.target = these.target)
+
+    exclude.these <- these2logical(these = exclude.these,
+                                   data = data,
+                                   these.target = these.target)
 
     # discard redundant splits and make list of logical vectors
     if (pool.along != "x" &&
@@ -430,6 +445,7 @@ StatDens1dFilter <-
         }
       }
     }
+    keep <- keep & !exclude.these
 
     if (invert.selection){
       keep <- !keep
@@ -463,7 +479,8 @@ StatDens1dFilterG <-
                keep.number,
                keep.sparse,
                keep.these,
-               keep.these.target,
+               exclude.these,
+               these.target,
                pool.along,
                xintercept,
                invert.selection,
@@ -476,9 +493,13 @@ StatDens1dFilterG <-
 
         force(data)
 
-        keep.these <- keep_these2logical(keep.these = keep.these,
-                                         data = data,
-                                         keep.these.target = keep.these.target)
+        keep.these <- these2logical(these = keep.these,
+                                    data = data,
+                                    these.target = these.target)
+
+        exclude.these <- these2logical(these = exclude.these,
+                                       data = data,
+                                       these.target = these.target)
 
         # discard redundant splits and make list of logical vectors
         if (pool.along != "x" &&
@@ -551,6 +572,7 @@ StatDens1dFilterG <-
             }
           }
         }
+        keep <- keep & !exclude.these
 
         if (invert.selection){
           keep <- !keep
