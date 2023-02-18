@@ -20,7 +20,7 @@ normally distributed.
 -   Add parameter `exclude.these` to `stat_dens2d_labels()`, `stat_dens2d_filter()`,
 `stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and
 `stat_dens1d_filter_g()` allowing forcing the exclusion of specific observations
-irrespective of the local density.
+irrespective of the local density (See issue #19, partly addressing a suggestion by mshubert).
 -   In `stat_dens2d_labels()`, `stat_dens2d_filter()`,
 `stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and
 `stat_dens1d_filter_g()` add parameter `these.target` making it possible
@@ -36,7 +36,7 @@ issue #10, and pull requests #12, #13, #17, #18, #21, #23, #24, #25, #26, #27,
 -   Add parameter `keep.these` to `stat_dens2d_labels()`, `stat_dens2d_filter()`,
 `stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and
 `stat_dens1d_filter_g()` allowing forcing the inclusion of specific observations
-irrespective of the local density.
+irrespective of the local density (See issue #19, partly addressing a suggestion by mshubert).
 -   Update `stat_dens2d_labels()`, `stat_dens2d_filter()`,
 `stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and
 `stat_dens1d_filter_g()` to allow separate control of kept observations or
