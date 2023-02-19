@@ -271,8 +271,8 @@ stat_dens1d_labels <-
            show.legend = FALSE,
            inherit.aes = TRUE) {
 
-    pool.along <- match.arg(pool.along)
-    orientation <- match.arg(orientation)
+    pool.along <- rlang::arg_match(pool.along)
+    orientation <- rlang::arg_match(orientation)
 
     if (length(label.fill) > 1L) {
       stop("Length for 'label.fill' is not 0 or 1: ", label.fill)

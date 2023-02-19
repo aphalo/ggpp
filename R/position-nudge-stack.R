@@ -108,8 +108,8 @@ position_stacknudge <-
            direction = c("none", "split", "split.x", "split.y"),
            kept.origin = c("stacked", "original", "none")) {
 
-    direction <- match.arg(direction)
-    kept.origin <- match.arg(kept.origin)
+    direction <- rlang::arg_match(direction)
+    kept.origin <- rlang::arg_match(kept.origin)
 
     ggplot2::ggproto(NULL, PositionStackAndNudge,
                      x = x,
@@ -144,8 +144,8 @@ position_fillnudge <-
            direction = c("none", "split", "split.x", "split.y"),
            kept.origin = c("stacked", "original", "none")) {
 
-  direction <- match.arg(direction)
-  kept.origin <- match.arg(kept.origin)
+  direction <- rlang::arg_match(direction)
+  kept.origin <- rlang::arg_match(kept.origin)
 
   ggplot2::ggproto(NULL, PositionFillAndNudge,
                    x = x,

@@ -102,9 +102,9 @@ position_dodgenudge <-
            direction = c("none", "split", "split.x", "split.y", "center"),
            kept.origin = c("dodged", "original", "none")) {
 
-    preserve <- match.arg(preserve)
-    direction <- match.arg(direction)
-    kept.origin <- match.arg(kept.origin)
+    preserve <- rlang::arg_match(preserve)
+    direction <- rlang::arg_match(direction)
+    kept.origin <- rlang::arg_match(kept.origin)
 
     ggplot2::ggproto(NULL, PositionDodgeAndNudge,
                      x = x,
@@ -125,7 +125,7 @@ position_dodgenudge <-
                                      function(x) {1}),
                      kept.origin = kept.origin,
                      width = width,
-                     preserve = match.arg(preserve)
+                     preserve = rlang::arg_match(preserve)
     )
   }
 

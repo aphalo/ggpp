@@ -310,8 +310,8 @@ geom_text_s <- function(mapping = NULL,
                         show.legend = NA,
                         inherit.aes = TRUE) {
 
-  colour.target <- match.arg(colour.target, several.ok = TRUE)
-  alpha.target <- match.arg(alpha.target, several.ok = TRUE)
+  colour.target <- rlang::arg_match(colour.target, multiple = TRUE)
+  alpha.target <- rlang::arg_match(alpha.target, multiple = TRUE)
 
   if (!missing(nudge_x) || !missing(nudge_y)) {
     if (!missing(position) && position != "identity") {

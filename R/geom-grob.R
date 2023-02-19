@@ -186,8 +186,8 @@ geom_grob <-
            show.legend = FALSE,
            inherit.aes = FALSE) {
 
-    colour.target <- match.arg(colour.target, several.ok = TRUE)
-    alpha.target <- match.arg(alpha.target, several.ok = TRUE)
+    colour.target <- rlang::arg_match(colour.target, multiple = TRUE)
+    alpha.target <- rlang::arg_match(alpha.target, multiple = TRUE)
 
     if (!missing(nudge_x) || !missing(nudge_y)) {
       if (!missing(position) && position != "identity") {

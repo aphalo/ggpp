@@ -224,7 +224,7 @@ stat_dens2d_filter <-
            n = NULL,
            return.density = FALSE) {
 
-    pool.along <- match.arg(pool.along)
+    pool.along <- rlang::arg_match(pool.along)
 
     if (any(is.na(keep.fraction) | keep.fraction < 0 | keep.fraction > 1)) {
       stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
@@ -294,7 +294,7 @@ stat_dens2d_filter_g <-
            n = NULL,
            return.density = FALSE) {
 
-    pool.along <- match.arg(pool.along)
+    pool.along <- rlang::arg_match(pool.along)
 
     if (is.na(keep.fraction) || keep.fraction < 0 || keep.fraction > 1) {
       stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)

@@ -162,8 +162,8 @@ position_nudge_line <-
            line_nudge = 1,
            kept.origin = c("original", "none")) {
 
-    direction <- match.arg(direction)
-    kept.origin <- match.arg(kept.origin)
+    direction <- rlang::arg_match(direction)
+    kept.origin <- rlang::arg_match(kept.origin)
 
     # set defaults
     if (!is.null(abline)) {

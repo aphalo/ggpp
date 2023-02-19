@@ -223,7 +223,7 @@ position_nudge_center <-
            obey_grouping = NULL,
            kept.origin = c("original", "none")) {
 
-    kept.origin <- match.arg(kept.origin)
+    kept.origin <- rlang::arg_match(kept.origin)
 
     if (is.null(direction)) {
       # Set default for 'direction' based on other arguments

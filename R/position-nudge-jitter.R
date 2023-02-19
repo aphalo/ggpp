@@ -145,9 +145,9 @@ position_jitternudge <-
                           "jittered", "jittered.y", "jittered.x"),
            kept.origin = c("jittered", "original", "none")) {
 
-    direction <- match.arg(direction)
-    nudge.from <- match.arg(nudge.from)
-    kept.origin <- match.arg(kept.origin)
+    direction <- rlang::arg_match(direction)
+    nudge.from <- rlang::arg_match(nudge.from)
+    kept.origin <- rlang::arg_match(kept.origin)
 
     fixed.direction <-
     function(x) {1}

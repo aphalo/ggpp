@@ -46,7 +46,7 @@ position_nudge_to <-
            y = NULL,
            kept.origin = c("original", "none")) {
 
-    kept.origin <- match.arg(kept.origin)
+    kept.origin <- rlang::arg_match(kept.origin)
 
     ggplot2::ggproto(NULL, PositionNudgeTo,
                      x = x,

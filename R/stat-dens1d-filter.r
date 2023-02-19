@@ -248,8 +248,8 @@ stat_dens1d_filter <-
            show.legend = FALSE,
            inherit.aes = TRUE) {
 
-    pool.along <- match.arg(pool.along)
-    orientation <- match.arg(orientation)
+    pool.along <- rlang::arg_match(pool.along)
+    orientation <- rlang::arg_match(orientation)
 
     if (any(is.na(keep.fraction) | keep.fraction < 0 | keep.fraction > 1)) {
       stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
@@ -307,8 +307,8 @@ stat_dens1d_filter_g <-
            orientation = c("x", "y"),
            ...) {
 
-    pool.along <- match.arg(pool.along)
-    orientation <- match.arg(orientation)
+    pool.along <- rlang::arg_match(pool.along)
+    orientation <- rlang::arg_match(orientation)
 
     if (any(is.na(keep.fraction) | keep.fraction < 0 | keep.fraction > 1)) {
       stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
