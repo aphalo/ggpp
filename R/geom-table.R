@@ -245,6 +245,7 @@ geom_table <- function(mapping = NULL, data = NULL,
                        show.legend = FALSE,
                        inherit.aes = FALSE) {
 
+
   if (!missing(nudge_x) || !missing(nudge_y)) {
     if (!missing(position) && position != "identity") {
       rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")
@@ -509,6 +510,7 @@ geom_table_npc <- function(mapping = NULL, data = NULL,
                            na.rm = FALSE,
                            show.legend = FALSE,
                            inherit.aes = FALSE) {
+
   if (is.character(table.hjust)) {
     table.hjust <- switch(table.hjust,
                           left = 0,

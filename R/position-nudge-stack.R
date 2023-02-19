@@ -243,7 +243,7 @@ position_stack_keep <-
                         reverse = reverse,
                         x = 0,
                         y = 0,
-                        direction = "as.is",
+                        direction = "none",
                         kept.origin = "original")
   }
 
@@ -267,6 +267,6 @@ position_fill_keep <-
                        reverse = reverse,
                        x = 0,
                        y = 0,
-                       direction = "as.is",
+                       direction = "none",
                        kept.origin = "original")
   }

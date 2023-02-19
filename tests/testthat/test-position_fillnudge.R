@@ -3,7 +3,7 @@ context("position_fillnudge")
 test_that("incorrect kept.origin used", {
   expect_error(
     position_fillnudge(kept.origin = "", vjust = 0.5, x = -0.3),
-    "Invalid 'kept.origin': expected: `\"original\", \"stacked\" or \"none\""
+    "'arg' should be one of \"stacked\", \"original\", \"none\""
   )
 })
 

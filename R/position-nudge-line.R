@@ -22,7 +22,7 @@
 #' @param method One of \code{"spline"}, \code{"lm"} or \code{"auto"}.
 #' @param formula A model formula for \code{\link{lm}} when \code{method =
 #'   "lm"}. Ignored otherwise.
-#' @param direction One of \code{"none"}, or \code{"split"}.
+#' @param direction One of \code{"automatic"}, \code{"none"}, or \code{"split"}.
 #' @param line_nudge A positive multiplier >= 1, increasing nudging away from
 #'   the curve or line compared to nudging from points.
 #' @param kept.origin One of \code{"original"} or \code{"none"}.
@@ -158,7 +158,7 @@ position_nudge_line <-
            abline = NULL,
            method = NULL,
            formula = y ~ x,
-           direction = c("none", "split"),
+           direction = c("automatic", "none", "split"),
            line_nudge = 1,
            kept.origin = c("original", "none")) {
 
@@ -180,7 +180,7 @@ position_nudge_line <-
       method <- "lm"
     }
 
-    if (is.null(direction)) {
+    if (direction == "automatic") {
       if (line_nudge > 1) {
         direction <- "split"
       } else {

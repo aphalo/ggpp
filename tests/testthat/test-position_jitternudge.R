@@ -2,8 +2,8 @@ context("position_jitternudge")
 
 test_that("incorrect kept.origin used", {
   expect_error(
-    position_jitternudge(kept.origin = "origin"),
-    "Invalid 'kept.origin': 'origin, expected: `\"original\", \"jittered\" or \"none\""
+    position_jitternudge(kept.origin = "wrong"),
+    "'arg' should be one of \"jittered\", \"original\", \"none\""
   )
 })
 
@@ -15,7 +15,7 @@ test_that("correct kept.origin used", {
 test_that("incorrect nudge.from used", {
   expect_error(
     position_jitternudge(nudge.from = "original.z"),
-    "Invalid 'nudge.from': 'original.z', expected: '\"original\", \"original.x\", \"original.y\" or \"jittered\""
+    "'arg' should be one of \"original\", \"original.x\", \"original.y\", \"jittered\", \"jittered.y\", \"jittered.x\""
   )
 })
 

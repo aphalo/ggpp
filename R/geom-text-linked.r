@@ -296,9 +296,9 @@ geom_text_s <- function(mapping = NULL,
                         nudge_x = 0,
                         nudge_y = 0,
                         default.colour = "black",
-                        colour.target = "all",
+                        colour.target = c("all", "text", "segment", "none"),
                         default.alpha = 1,
-                        alpha.target = "all",
+                        alpha.target = c("all", "text", "segment", "none"),
                         add.segments = TRUE,
                         box.padding = 0.25,
                         point.padding = 1e-06,
@@ -308,8 +308,11 @@ geom_text_s <- function(mapping = NULL,
                         check_overlap = FALSE,
                         na.rm = FALSE,
                         show.legend = NA,
-                        inherit.aes = TRUE)
-{
+                        inherit.aes = TRUE) {
+
+  colour.target <- match.arg(colour.target, several.ok = TRUE)
+  alpha.target <- match.arg(alpha.target, several.ok = TRUE)
+
   if (!missing(nudge_x) || !missing(nudge_y)) {
     if (!missing(position) && position != "identity") {
       rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")

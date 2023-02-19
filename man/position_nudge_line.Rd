@@ -11,7 +11,7 @@ position_nudge_line(
   abline = NULL,
   method = NULL,
   formula = y ~ x,
-  direction = c("none", "split"),
+  direction = c("automatic", "none", "split"),
   line_nudge = 1,
   kept.origin = c("original", "none")
 )
@@ -30,7 +30,7 @@ vector of length 1, or of the same length as rows there are in \code{data}.}
 \item{formula}{A model formula for \code{\link{lm}} when \code{method =
 "lm"}. Ignored otherwise.}
 
-\item{direction}{One of \code{"none"}, or \code{"split"}.}
+\item{direction}{One of \code{"automatic"}, \code{"none"}, or \code{"split"}.}
 
 \item{line_nudge}{A positive multiplier >= 1, increasing nudging away from
 the curve or line compared to nudging from points.}

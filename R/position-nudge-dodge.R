@@ -198,7 +198,7 @@ position_dodge_keep <- function(width = 1,
                       preserve = preserve,
                       x = 0,
                       y = 0,
-                      direction = "as.is",
+                      direction = "none",
                       kept.origin = "original")
 }
 
@@ -212,6 +212,6 @@ position_dodge2_keep <- function(width = 1,
                        preserve = preserve,
                        x = 0,
                        y = 0,
-                       direction = "as.is",
+                       direction = "none",
                        kept.origin = "original")
 }

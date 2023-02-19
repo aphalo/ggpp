@@ -143,7 +143,7 @@ position_jitternudge <-
            direction = c("as.is", "alternate", "split"),
            nudge.from = c("original", "original.x", "original.y",
                           "jittered", "jittered.y", "jittered.x"),
-           kept.origin = c("original", "jittered", "none")) {
+           kept.origin = c("jittered", "original", "none")) {
 
     direction <- match.arg(direction)
     nudge.from <- match.arg(nudge.from)

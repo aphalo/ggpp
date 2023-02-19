@@ -14,9 +14,9 @@ geom_grob(
   nudge_x = 0,
   nudge_y = 0,
   default.colour = "black",
-  colour.target = "segment",
+  colour.target = c("all", "grob", "box", "segment", "none"),
   default.alpha = 1,
-  alpha.target = "segment",
+  alpha.target = c("all", "grob", "box", "segment", "box.line", "box.fill", "none"),
   add.segments = TRUE,
   box.padding = 0.25,
   point.padding = 1e-06,
@@ -221,7 +221,20 @@ ggplot(data = mtcars,
   geom_grob(data = df,
             aes(x, y, label = grob),
             nudge_x = 0.5,
-            colour = "red")
+            colour = "red",
+            hjust = 0.5,
+            vjust = 0.5)
+
+ggplot(data = mtcars,
+       aes(wt, mpg)) +
+  geom_point(aes(colour = factor(cyl))) +
+  geom_grob(data = df,
+            aes(x, y, label = grob),
+            nudge_x = 0.5,
+            colour = "red",
+            colour.target = "none",
+            hjust = 0.5,
+            vjust = 0.5)
 
 # with nudging plotting of segments can be disabled
 ggplot(data = mtcars,
@@ -230,7 +243,9 @@ ggplot(data = mtcars,
   geom_grob(data = df,
             aes(x, y, label = grob),
             add.segments = FALSE,
-            nudge_x = 0.5)
+            nudge_x = 0.5,
+            hjust = 0.5,
+            vjust = 0.5)
 
 }
 \references{
