@@ -44,13 +44,9 @@
 position_nudge_to <-
   function(x = NULL,
            y = NULL,
-           kept.origin = "original") {
+           kept.origin = c("original", "none")) {
 
-    # Ensure error message is triggered early
-    if (!kept.origin %in% c("original", "none")) {
-      stop("Invalid 'kept.origin': ", kept.origin,
-           "expected: `\"original\" or \"none\"")
-    }
+    kept.origin <- match.arg(kept.origin)
 
     ggplot2::ggproto(NULL, PositionNudgeTo,
                      x = x,

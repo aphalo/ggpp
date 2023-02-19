@@ -13,7 +13,7 @@ position_nudge_center(
   center_y = NULL,
   direction = NULL,
   obey_grouping = NULL,
-  kept.origin = "original"
+  kept.origin = c("original", "none")
 )
 
 position_nudge_centre(
@@ -23,7 +23,7 @@ position_nudge_centre(
   center_y = NULL,
   direction = NULL,
   obey_grouping = NULL,
-  kept.origin = "original"
+  kept.origin = c("original", "none")
 )
 
 position_nudge_keep(x = 0, y = 0)

@@ -17,7 +17,7 @@ stat_dens1d_filter(
   keep.these = FALSE,
   exclude.these = FALSE,
   these.target = "label",
-  pool.along = "x",
+  pool.along = c("x", "none"),
   xintercept = 0,
   invert.selection = FALSE,
   bw = "SJ",
@@ -25,7 +25,7 @@ stat_dens1d_filter(
   adjust = 1,
   n = 512,
   return.density = FALSE,
-  orientation = "x",
+  orientation = c("x", "y"),
   na.rm = TRUE,
   show.legend = FALSE,
   inherit.aes = TRUE
@@ -42,7 +42,7 @@ stat_dens1d_filter_g(
   keep.these = FALSE,
   exclude.these = FALSE,
   these.target = "label",
-  pool.along = "x",
+  pool.along = c("x", "none"),
   xintercept = 0,
   invert.selection = FALSE,
   na.rm = TRUE,
@@ -53,7 +53,7 @@ stat_dens1d_filter_g(
   kernel = "gaussian",
   n = 512,
   return.density = FALSE,
-  orientation = "x",
+  orientation = c("x", "y"),
   ...
 )
 }

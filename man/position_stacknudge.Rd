@@ -15,8 +15,8 @@ position_stacknudge(
   reverse = FALSE,
   x = 0,
   y = 0,
-  direction = "none",
-  kept.origin = "stacked"
+  direction = c("none", "split", "split.x", "split.y"),
+  kept.origin = c("stacked", "original", "none")
 )
 
 position_fillnudge(
@@ -24,8 +24,8 @@ position_fillnudge(
   reverse = FALSE,
   x = 0,
   y = 0,
-  direction = "none",
-  kept.origin = "stacked"
+  direction = c("none", "split", "split.x", "split.y"),
+  kept.origin = c("stacked", "original", "none")
 )
 
 position_stack_keep(vjust = 1, reverse = FALSE)

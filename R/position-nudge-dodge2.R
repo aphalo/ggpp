@@ -2,44 +2,44 @@
 #'
 #' @export
 #'
-position_dodge2nudge <- function(width = 1,
-                                 preserve = c("total", "single"),
-                                 padding = 0.1,
-                                 reverse = FALSE,
-                                 x = 0,
-                                 y = 0,
-                                 direction = "none",
-                                 kept.origin = "dodged") {
-  # Ensure error message is triggered early
-  if (!kept.origin %in% c("original", "dodged", "none")) {
-    stop("Invalid 'kept.origin': ", kept.origin,
-         "expected: `\"original\", \"dodged\" or \"none\"")
-  }
+position_dodge2nudge <-
+  function(width = 1,
+           preserve = c("total", "single"),
+           padding = 0.1,
+           reverse = FALSE,
+           x = 0,
+           y = 0,
+           direction = c("none", "split", "split.x", "split.y", "center"),
+           kept.origin = c("dodged", "original", "none")) {
 
-  ggplot2::ggproto(NULL, PositionDodgeAndNudge,
-                   x = x,
-                   y = y,
-                   .fun_x = switch(direction,
-                                   none = function(x) {1},
-                                   split = sign,
-                                   split.y = function(x) {1},
-                                   split.x = sign,
-                                   center = sign,
-                                   function(x) {1}),
-                   .fun_y = switch(direction,
-                                   none = function(x) {1},
-                                   split = sign,
-                                   split.x = function(x) {1},
-                                   split.y = sign,
-                                   center = sign,
-                                   function(x) {1}),
-                   kept.origin = kept.origin,
-                   width = width,
-                   preserve = match.arg(preserve),
-                   padding = padding,
-                   reverse = reverse
-  )
-}
+    preserve <- match.arg(preserve)
+    direction <- match.arg(direction)
+    kept.origin <- match.arg(kept.origin)
+
+    ggplot2::ggproto(NULL, PositionDodgeAndNudge,
+                     x = x,
+                     y = y,
+                     .fun_x = switch(direction,
+                                     none = function(x) {1},
+                                     split = sign,
+                                     split.y = function(x) {1},
+                                     split.x = sign,
+                                     center = sign,
+                                     function(x) {1}),
+                     .fun_y = switch(direction,
+                                     none = function(x) {1},
+                                     split = sign,
+                                     split.x = function(x) {1},
+                                     split.y = sign,
+                                     center = sign,
+                                     function(x) {1}),
+                     kept.origin = kept.origin,
+                     width = width,
+                     preserve = match.arg(preserve),
+                     padding = padding,
+                     reverse = reverse
+    )
+  }
 
 #' @rdname ggpp-ggproto
 #' @format NULL

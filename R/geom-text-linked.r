@@ -636,7 +636,10 @@ shrink_segments <- function(data,
                             box.padding = 0,
                             point.padding = 0,
                             min.segment.length = 0.5) {
-  stopifnot(box.padding >= 0 & point.padding >= 0 & (box.padding + point.padding) < 1)
+  stopifnot("'box.padding' must be >= 0" = box.padding >= 0,
+            "'point.padding' must be >= 0" =  point.padding >= 0,
+            "'box.padding + point.padding' must be < 1" =
+              (box.padding + point.padding) < 1)
   segments.data <- data[ , c("x_orig", "y_orig", "x", "y")]
   starting.length <- apply(segments.data, 1,
                            function(x) stats::dist(rbind(x[1:2], x[3:4])))

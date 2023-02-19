@@ -1043,7 +1043,8 @@ ttheme_gtstripes <- function (base_size = 10,
 #' ttheme_set(old_ttheme)
 #'
 ttheme_set <- function(table.theme = NULL) {
-  stopifnot(is.null(table.theme) ||
+  stopifnot("Bad argument passed to 'table.theme'" =
+              is.null(table.theme) ||
               is.function(table.theme) ||
               is.list(table.theme))
   invisible(options(ggpmisc.ttheme.default = table.theme)[[1]])

@@ -100,54 +100,52 @@
 #'     vjust = "bottom") +
 #'   theme(legend.position = "none")
 #'
-position_stacknudge <- function(vjust = 1,
-                                reverse = FALSE,
-                                x = 0,
-                                y = 0,
-                                direction = "none",
-                                kept.origin = "stacked") {
-  # Ensure error message is triggered early
-  if (!kept.origin %in% c("original", "stacked", "none")) {
-    stop("Invalid 'kept.origin': ", kept.origin,
-         "expected: `\"original\", \"stacked\" or \"none\"")
-  }
+position_stacknudge <-
+  function(vjust = 1,
+           reverse = FALSE,
+           x = 0,
+           y = 0,
+           direction = c("none", "split", "split.x", "split.y"),
+           kept.origin = c("stacked", "original", "none")) {
 
-  ggplot2::ggproto(NULL, PositionStackAndNudge,
-                   x = x,
-                   y = y,
-                   .fun_x = switch(direction,
-                                   none = function(x) {1},
-                                   split = sign,
-                                   split.y = function(x) {1},
-                                   split.x = sign,
-                                   center = sign,
-                                   function(x) {1}),
-                   .fun_y = switch(direction,
-                                   none = function(x) {1},
-                                   split = sign,
-                                   split.x = function(x) {1},
-                                   split.y = sign,
-                                   center = sign,
-                                   function(x) {1}),
-                   kept.origin = kept.origin,
-                   vjust = vjust,
-                   reverse = reverse
-  )
-}
+    direction <- match.arg(direction)
+    kept.origin <- match.arg(kept.origin)
+
+    ggplot2::ggproto(NULL, PositionStackAndNudge,
+                     x = x,
+                     y = y,
+                     .fun_x = switch(direction,
+                                     none = function(x) {1},
+                                     split = sign,
+                                     split.y = function(x) {1},
+                                     split.x = sign,
+                                     center = sign,
+                                     function(x) {1}),
+                     .fun_y = switch(direction,
+                                     none = function(x) {1},
+                                     split = sign,
+                                     split.x = function(x) {1},
+                                     split.y = sign,
+                                     center = sign,
+                                     function(x) {1}),
+                     kept.origin = kept.origin,
+                     vjust = vjust,
+                     reverse = reverse
+    )
+  }
 
 #' @export
 #' @rdname position_stacknudge
-position_fillnudge <- function(vjust = 1,
-                               reverse = FALSE,
-                               x = 0,
-                               y = 0,
-                               direction = "none",
-                               kept.origin = "stacked") {
-  # Ensure error message is triggered early
-  if (!kept.origin %in% c("original", "stacked", "none")) {
-    stop("Invalid 'kept.origin': ", kept.origin,
-         "expected: `\"original\", \"stacked\" or \"none\"")
-  }
+position_fillnudge <-
+  function(vjust = 1,
+           reverse = FALSE,
+           x = 0,
+           y = 0,
+           direction = c("none", "split", "split.x", "split.y"),
+           kept.origin = c("stacked", "original", "none")) {
+
+  direction <- match.arg(direction)
+  kept.origin <- match.arg(kept.origin)
 
   ggplot2::ggproto(NULL, PositionFillAndNudge,
                    x = x,
@@ -255,8 +253,8 @@ position_stack_keep <-
 #' @export
 PositionFillAndNudge <-
   ggplot2::ggproto("PositionFillAndNudge", PositionStackAndNudge,
-          fill = TRUE
-)
+                   fill = TRUE
+  )
 
 #' @rdname position_stacknudge
 #'

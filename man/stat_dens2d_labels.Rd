@@ -16,7 +16,7 @@ stat_dens2d_labels(
   keep.these = FALSE,
   exclude.these = FALSE,
   these.target = "label",
-  pool.along = "xy",
+  pool.along = c("xy", "x", "y", "none"),
   xintercept = 0,
   yintercept = 0,
   invert.selection = FALSE,

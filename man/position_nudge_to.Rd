@@ -4,7 +4,7 @@
 \alias{position_nudge_to}
 \title{Nudge labels to new positions}
 \usage{
-position_nudge_to(x = NULL, y = NULL, kept.origin = "original")
+position_nudge_to(x = NULL, y = NULL, kept.origin = c("original", "none"))
 }
 \arguments{
 \item{x, y}{Coordinates of the destination position. A numeric vector of

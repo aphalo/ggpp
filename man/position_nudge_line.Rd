@@ -11,9 +11,9 @@ position_nudge_line(
   abline = NULL,
   method = NULL,
   formula = y ~ x,
-  direction = NULL,
+  direction = c("none", "split"),
   line_nudge = 1,
-  kept.origin = "original"
+  kept.origin = c("original", "none")
 )
 }
 \arguments{

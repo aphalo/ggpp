@@ -214,7 +214,7 @@ stat_dens2d_filter <-
            keep.these = FALSE,
            exclude.these = FALSE,
            these.target = "label",
-           pool.along = "xy",
+           pool.along = c("xy", "x", "y", "none"),
            xintercept = 0,
            yintercept = 0,
            invert.selection = FALSE,
@@ -223,6 +223,8 @@ stat_dens2d_filter <-
            h = NULL,
            n = NULL,
            return.density = FALSE) {
+
+    pool.along <- match.arg(pool.along)
 
     if (any(is.na(keep.fraction) | keep.fraction < 0 | keep.fraction > 1)) {
       stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
@@ -282,7 +284,7 @@ stat_dens2d_filter_g <-
            keep.these = FALSE,
            exclude.these = FALSE,
            these.target = "label",
-           pool.along = "xy",
+           pool.along = c("xy", "x", "y", "none"),
            xintercept = 0,
            yintercept = 0,
            invert.selection = FALSE,

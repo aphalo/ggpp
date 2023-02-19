@@ -16,8 +16,8 @@ position_dodgenudge(
   preserve = c("total", "single"),
   x = 0,
   y = 0,
-  direction = "none",
-  kept.origin = "dodged"
+  direction = c("none", "split", "split.x", "split.y", "center"),
+  kept.origin = c("dodged", "original", "none")
 )
 
 position_dodge_keep(width = 1, preserve = c("total", "single"))
@@ -31,8 +31,8 @@ position_dodge2nudge(
   reverse = FALSE,
   x = 0,
   y = 0,
-  direction = "none",
-  kept.origin = "dodged"
+  direction = c("none", "split", "split.x", "split.y", "center"),
+  kept.origin = c("dodged", "original", "none")
 )
 }
 \arguments{
