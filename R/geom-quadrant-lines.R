@@ -107,6 +107,8 @@ geom_quadrant_lines <- function(mapping = NULL,
                                 inherit.aes = FALSE,
                                 ...) {
 
+  pool.along <- rlang::arg_match(pool.along)
+
   stopifnot("'xintercept' must have length == 1L" = length(xintercept) <= 1,
             "'yintercept' must have length == 1L" = length(yintercept) <= 1)
 
