@@ -93,12 +93,12 @@
 #' @param default.colour A colour definition to use for elements not targeted by
 #'   the colour aesthetic.
 #' @param colour.target A vector of character strings; \code{"all"},
-#'   \code{"text"}, \code{"box"} and \code{"segment"}.
+#'   \code{"text"}, \code{"box"} and \code{"segment"} or \code{"none"}.
 #' @param default.alpha numeric in [0..1] A transparency value to use for
 #'   elements not targeted by the alpha aesthetic.
 #' @param alpha.target A vector of character strings; \code{"all"},
 #'   \code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
-#'   \code{"box.fill"}.
+#'   \code{"box.fill"} or \code{"none"}.
 #' @param add.segments logical Display connecting segments or arrows between
 #'   original positions and displaced ones if both are available.
 #' @param box.padding,point.padding numeric By how much each end of the segments
@@ -172,9 +172,9 @@ geom_grob <-
            nudge_x = 0,
            nudge_y = 0,
            default.colour = "black",
-           colour.target = c("all", "grob", "box", "segment", "none"),
+           colour.target = c("segment", "all", "grob", "box", "none"),
            default.alpha = 1,
-           alpha.target = c("all", "grob", "box", "segment",
+           alpha.target = c("segment", "all", "grob", "box",
                             "box.line", "box.fill", "none"),
            add.segments = TRUE,
            box.padding = 0.25,

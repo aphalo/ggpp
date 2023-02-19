@@ -146,9 +146,10 @@ geom_plot <- function(mapping = NULL,
                       nudge_x = 0,
                       nudge_y = 0,
                       default.colour = "black",
-                      colour.target = "segment",
+                      colour.target = c("segment", "all", "box", "none"),
                       default.alpha = 1,
-                      alpha.target = "segment",
+                      alpha.target = c("segment", "all", "box",
+                                       "box.line", "box.fill", "none"),
                       add.segments = TRUE,
                       box.padding = 0.25,
                       point.padding = 1e-06,
@@ -158,6 +159,9 @@ geom_plot <- function(mapping = NULL,
                       na.rm = FALSE,
                       show.legend = FALSE,
                       inherit.aes = FALSE) {
+
+  colour.target <- rlang::arg_match(colour.target, multiple = TRUE)
+  alpha.target <- rlang::arg_match(alpha.target, multiple = TRUE)
 
   if (!missing(nudge_x) || !missing(nudge_y)) {
     if (!missing(position) && !identical(position, "identity")) {

@@ -14,9 +14,9 @@ geom_point_s(
   nudge_y = 0,
   arrow = grid::arrow(length = unit(1/3, "lines")),
   default.colour = "black",
-  colour.target = "point",
+  colour.target = c("point", "all", "segment", "none"),
   default.alpha = 1,
-  alpha.target = "all",
+  alpha.target = c("all", "segment", "point", "none"),
   add.segments = TRUE,
   box.padding = 0.25,
   point.padding = 1e-06,
@@ -62,14 +62,14 @@ starting position of each text label. The units for \code{nudge_x} and
 the colour aesthetic.}
 
 \item{colour.target}{A vector of character strings; \code{"all"},
-\code{"text"}, \code{"box"} and \code{"segment"}.}
+\code{"box"} and \code{"segment"} or \code{"none"}.}
 
 \item{default.alpha}{numeric in [0..1] A transparency value to use for
 elements not targeted by the alpha aesthetic.}
 
 \item{alpha.target}{A vector of character strings; \code{"all"},
-\code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
-\code{"box.fill"}.}
+\code{"segment"}, \code{"box"}, \code{"box.line"}, and \code{"box.fill"} or
+\code{"none"}.}
 
 \item{add.segments}{logical Display connecting segments or arrows between
 original positions and displaced ones if both are available.}

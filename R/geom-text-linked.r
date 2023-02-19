@@ -110,12 +110,13 @@
 #' @param default.colour A colour definition to use for elements not targeted by
 #'   the colour aesthetic.
 #' @param colour.target A vector of character strings; \code{"all"},
-#'   \code{"text"}, \code{"box"} and \code{"segment"}.
+#'   \code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
+#'   \code{"box.fill"} or \code{"none"}.
 #' @param default.alpha numeric in [0..1] A transparency value to use for
 #'   elements not targeted by the alpha aesthetic.
 #' @param alpha.target A vector of character strings; \code{"all"},
 #'   \code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
-#'   \code{"box.fill"}.
+#'   \code{"box.fill"} or \code{"none"}.
 #' @param add.segments logical Display connecting segments or arrows between
 #'   original positions and displaced ones if both are available.
 #' @param box.padding,point.padding numeric By how much each end of the segments

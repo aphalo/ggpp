@@ -71,10 +71,11 @@
 #' @param these.target character, numeric or logical selecting one or more
 #'   column(s) of \code{data}. If \code{TRUE} the whole \code{data} object is
 #'   passed.
-#' @param pool.along character, one of \code{"none"} or \code{"x"},
-#'   indicating if selection should be done pooling the observations along the
-#'   \emph{x} aesthetic, or separately on either side of \code{xintercept}.
-#' @param xintercept,yintercept numeric The split points for the data filtering.
+#' @param pool.along character, one of \code{"none"}, \code{"x"}, \code{"y"}, or
+#'   \code{"xy"} indicating if selection should be done pooling the observations
+#'   along the \emph{x}, \code{y}, both axes or none based on quadrants given by
+#'   \code{xintercept} and \code{yintercept}.
+#' @param xintercept,yintercept numeric The center point of the quadrants.
 #' @param invert.selection logical If \code{TRUE}, the complement of the
 #'   selected rows are returned.
 #' @param h vector of bandwidths for x and y directions. Defaults to normal
