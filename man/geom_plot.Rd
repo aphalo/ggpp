@@ -14,9 +14,9 @@ geom_plot(
   nudge_x = 0,
   nudge_y = 0,
   default.colour = "black",
-  colour.target = c("segment", "all", "box", "none"),
+  colour.target = "box",
   default.alpha = 1,
-  alpha.target = c("segment", "all", "box", "box.line", "box.fill", "none"),
+  alpha.target = "all",
   add.segments = TRUE,
   box.padding = 0.25,
   point.padding = 1e-06,
@@ -106,7 +106,7 @@ A plot layer instance.
 \description{
 \code{geom_plot} and \code{geom_plot_npc} add ggplot objects as insets to the
 base ggplot, using syntax similar to that of
-\code{\link[ggplot2]{geom_label}}  and \code{\link{geom_text_s}}.
+\code{\link[ggplot2]{geom_label}} and \code{\link{geom_text_s}}.
 In most respects they behave as any other ggplot geometry: they add a layer
 containing one or more grobs and grouping and faceting works as usual. The
 most common use of \code{geom_plot} is to add data labels that are themselves
@@ -144,9 +144,11 @@ You can modify the size of inset plots with the \code{vp.width} and
   coordinates in the data, and \code{angle} is used to rotate the plot as a
   whole.
 
-  In the case of \code{geom_plot_npc()}, \code{npcx} and \code{npcy}
-  aesthetics determine the position of the inset plot. Justification as
-  described above for .
+  Of these two geoms only \code{\link{geom_plot}} supports the plotting of
+  segments, as \code{\link{geom_plot_npc}} uses a coordinate system that is
+  unrelated to data units and data.In the case of \code{geom_plot_npc()},
+  \code{npcx} and \code{npcy} aesthetics determine the position of the inset
+  plot.
 }
 \note{
 The insets are stored nested within the main ggplot object and

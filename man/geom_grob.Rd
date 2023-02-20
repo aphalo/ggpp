@@ -14,9 +14,9 @@ geom_grob(
   nudge_x = 0,
   nudge_y = 0,
   default.colour = "black",
-  colour.target = c("segment", "all", "grob", "box", "none"),
+  colour.target = "segment",
   default.alpha = 1,
-  alpha.target = c("segment", "all", "grob", "box", "box.line", "box.fill", "none"),
+  alpha.target = "segment",
   add.segments = TRUE,
   box.padding = 0.25,
   point.padding = 1e-06,
@@ -113,7 +113,10 @@ most common use of \code{geom_grob} is to add data labels that are graphical
 objects rather than text. \code{\link{geom_grob_npc}} is used to add grobs
 as annotations to plots, but contrary to layer function \code{annotate()},
 \code{\link{geom_grob_npc}} is data driven and respects grouping and facets,
-thus plot insets can differ among panels.
+thus plot insets can differ among panels. Of these two geoms only
+\code{\link{geom_grob}} supports the plotting of segments, as
+\code{\link{geom_grob_npc}} uses a coordinate system that is unrelated
+to data units and data.
 }
 \details{
 You can modify the size of insets with the \code{vp.width} and

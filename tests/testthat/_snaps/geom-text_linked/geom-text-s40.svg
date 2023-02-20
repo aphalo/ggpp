@@ -27,21 +27,21 @@
 </defs>
 <g clip-path='url(#cpMzIuNzl8NjY4LjU3fDIyLjc4fDU0NS4xMQ==)'>
 <rect x='32.79' y='22.78' width='635.77' height='522.33' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<line x1='175.75' y1='152.05' x2='189.78' y2='152.05' style='stroke-width: 1.42; stroke: #16314C;' />
+<line x1='175.75' y1='152.05' x2='189.78' y2='152.05' style='stroke-width: 1.42;' />
 <text x='174.16' y='155.85' text-anchor='end' style='font-size: 11.04px; fill: #16314C; font-family: sans;' textLength='57.69px' lengthAdjust='spacingAndGlyphs'>Mazda RX4</text>
-<line x1='303.85' y1='286.88' x2='317.88' y2='286.88' style='stroke-width: 1.42; stroke: #28557B;' />
+<line x1='303.85' y1='286.88' x2='317.88' y2='286.88' style='stroke-width: 1.42;' />
 <text x='302.26' y='290.68' text-anchor='end' style='font-size: 11.04px; fill: #28557B; font-family: sans;' textLength='90.22px' lengthAdjust='spacingAndGlyphs'>Hornet Sportabout</text>
-<line x1='258.54' y1='46.53' x2='272.58' y2='46.53' style='stroke-width: 1.42; stroke: #22486A;' />
+<line x1='258.54' y1='46.53' x2='272.58' y2='46.53' style='stroke-width: 1.42;' />
 <text x='256.95' y='50.32' text-anchor='end' style='font-size: 11.04px; fill: #22486A; font-family: sans;' textLength='46.03px' lengthAdjust='spacingAndGlyphs'>Merc 230</text>
-<line x1='349.15' y1='368.95' x2='363.18' y2='368.95' style='stroke-width: 1.42; stroke: #2F628D;' />
+<line x1='349.15' y1='368.95' x2='363.18' y2='368.95' style='stroke-width: 1.42;' />
 <text x='347.56' y='372.75' text-anchor='end' style='font-size: 11.04px; fill: #2F628D; font-family: sans;' textLength='59.53px' lengthAdjust='spacingAndGlyphs'>Merc 450SL</text>
-<line x1='601.43' y1='521.37' x2='615.46' y2='521.37' style='stroke-width: 1.42; stroke: #56B1F7;' />
+<line x1='601.43' y1='521.37' x2='615.46' y2='521.37' style='stroke-width: 1.42;' />
 <text x='599.84' y='525.17' text-anchor='end' style='font-size: 11.04px; fill: #56B1F7; font-family: sans;' textLength='83.44px' lengthAdjust='spacingAndGlyphs'>Chrysler Imperial</text>
-<line x1='151.54' y1='122.74' x2='165.57' y2='122.74' style='stroke-width: 1.42; stroke: #132B43;' />
+<line x1='151.54' y1='122.74' x2='165.57' y2='122.74' style='stroke-width: 1.42;' />
 <text x='149.95' y='126.53' text-anchor='end' style='font-size: 11.04px; fill: #132B43; font-family: sans;' textLength='73.03px' lengthAdjust='spacingAndGlyphs'>Toyota Corona</text>
-<line x1='367.11' y1='257.57' x2='381.14' y2='257.57' style='stroke-width: 1.42; stroke: #316794;' />
+<line x1='367.11' y1='257.57' x2='381.14' y2='257.57' style='stroke-width: 1.42;' />
 <text x='365.52' y='261.37' text-anchor='end' style='font-size: 11.04px; fill: #316794; font-family: sans;' textLength='77.31px' lengthAdjust='spacingAndGlyphs'>Pontiac Firebird</text>
-<line x1='261.67' y1='456.89' x2='275.70' y2='456.89' style='stroke-width: 1.42; stroke: #22496B;' />
+<line x1='261.67' y1='456.89' x2='275.70' y2='456.89' style='stroke-width: 1.42;' />
 <text x='260.08' y='460.68' text-anchor='end' style='font-size: 11.04px; fill: #22496B; font-family: sans;' textLength='73.64px' lengthAdjust='spacingAndGlyphs'>Ford Pantera L</text>
 <circle cx='189.78' cy='152.05' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='317.88' cy='286.88' r='1.95' style='stroke-width: 0.71; fill: #000000;' />

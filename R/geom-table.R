@@ -11,17 +11,7 @@
 #' \code{\link{geom_table_npc}} is data driven and respects grouping and facets,
 #' thus plot insets can differ among panels.
 #'
-#' @details You can modify the size of inset tables with the \code{vp.width} and
-#'   \code{vp.height} aesthetics. These can take a number between 0 (smallest
-#'   possible inset) and 1 (whole plotting area width or height). The default
-#'   value for for both of these aesthetics is 1/5. Thus, in contrast to
-#'   \code{\link[ggplot2]{geom_text}} and \code{\link{geom_text_s}} the size of
-#'   the insets remains the same relative to the size of the plotting area
-#'   irrespective of how the plot is rendered. The aspect ratio of insets is
-#'   preserved and size is adjusted until the whole inset fits within the
-#'   viewport.
-#'
-#'   By default this geom uses \code{\link{position_nudge_center}} which is
+#' @details By default \code{geom_table()} uses \code{\link{position_nudge_center}} which is
 #'   backwards compatible with \code{\link[ggplot2]{position_nudge}} but
 #'   provides additional control on the direction of the nudging. In contrast to
 #'   \code{\link[ggplot2]{position_nudge}}, \code{\link{position_nudge_center}}
@@ -30,11 +20,11 @@
 #'   segments and arrows.
 #'
 #'   This geom works only with tibbles as \code{data}, as its expects a list of
-#'   data frames (or tibbles) to be mapped to the \code{label} aesthetic.
-#'   A table is built with function \code{gridExtra::gtable} for each
-#'   data frame in the list, and formatted according to a table theme or
-#'   \code{ttheme}. The character strings in the data frame can be parsed into
-#'   R expressions so the inset tables can include maths.
+#'   data frames (or tibbles) to be mapped to the \code{label} aesthetic. A
+#'   table is built with function \code{gridExtra::gtable} for each data frame
+#'   in the list, and formatted according to a table theme or \code{ttheme}. The
+#'   character strings in the data frame can be parsed into R expressions so the
+#'   inset tables can include maths.
 #'
 #'   If the argument passed to \code{table.theme} is a constructor function
 #'   (passing its name without parenthesis), the values mapped to \code{size},
@@ -46,9 +36,9 @@
 #'   aesthetics such as \code{colour} are ignored if present. By default the
 #'   constructor \code{ttheme_gtdefault} is used and \code{colour} and
 #'   \code{fill}, are mapped to \code{NA}. Mapping these aesthetics to \code{NA}
-#'   triggers the use of the default \code{base_colour} of the \code{ttheme}.
-#'   As the table is built with function \code{gridExtra::gtable()}, for
-#'   formatting details, please, consult \code{\link[gridExtra]{tableGrob}}.
+#'   triggers the use of the default \code{base_colour} of the \code{ttheme}. As
+#'   the table is built with function \code{gridExtra::gtable()}, for formatting
+#'   details, please, consult \code{\link[gridExtra]{tableGrob}}.
 #'
 #'   The \code{x} and \code{y} aesthetics determine the position of the whole
 #'   inset table, similarly to that of a text label, justification is
@@ -56,9 +46,11 @@
 #'   its \emph{horizontal} and \emph{vertical} axes (rows and columns in the
 #'   data frame), and \code{angle} is used to rotate the inset table as a whole.
 #'
-#'   In the case of \code{geom_table_npc}, \code{npcx} and \code{npcy}
-#'   aesthetics determine the position of the inset table. Justification as
-#'   described above for .
+#'   Of these two geoms only \code{\link{geom_grob}} supports the plotting of
+#'   segments, as \code{\link{geom_grob_npc}} uses a coordinate system that is
+#'   unrelated to data units and data.In the case of \code{geom_table_npc},
+#'   \code{npcx} and \code{npcy} aesthetics determine the position of the inset
+#'   table. Justification as described above for .
 #'
 #' @inheritSection geom_text_s Alignment
 #'
@@ -227,10 +219,9 @@ geom_table <- function(mapping = NULL, data = NULL,
                        nudge_x = 0,
                        nudge_y = 0,
                        default.colour = "black",
-                       colour.target = c("segment", "all", "box", "none"),
+                       colour.target = "box",
                        default.alpha = 1,
-                       alpha.target = c("segment", "all", "box",
-                                        "box.line", "box.fill", "none"),
+                       alpha.target = "all",
                        add.segments = TRUE,
                        box.padding = 0.25,
                        point.padding = 1e-06,
@@ -246,8 +237,15 @@ geom_table <- function(mapping = NULL, data = NULL,
                        show.legend = FALSE,
                        inherit.aes = FALSE) {
 
-  colour.target <- rlang::arg_match(colour.target, multiple = TRUE)
-  alpha.target <- rlang::arg_match(alpha.target, multiple = TRUE)
+  colour.target <-
+    rlang::arg_match(colour.target,
+                     values = c("segment", "all", "box", "none"),
+                     multiple = TRUE)
+  alpha.target <-
+    rlang::arg_match(alpha.target,
+                     values = c("segment", "all", "box",
+                                "box.line", "box.fill", "none"),
+                     multiple = TRUE)
 
   if (!missing(nudge_x) || !missing(nudge_y)) {
     if (!missing(position) && position != "identity") {

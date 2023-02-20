@@ -256,15 +256,6 @@
 #' p +
 #'   geom_label_s(aes(colour = factor(cyl)),
 #'               nudge_x = 0.3,
-#'               colour.target = "text",
-#'               arrow = arrow(angle = 20,
-#'                             length = grid::unit(1/3, "lines"))) +
-#'   scale_colour_discrete(l = 40) + # luminance, make colours darker
-#'   expand_limits(x = 7)
-#'
-#' p +
-#'   geom_label_s(aes(colour = factor(cyl)),
-#'               nudge_x = 0.3,
 #'               colour.target = c("box", "segment"),
 #'               linewidth = 0.6,
 #'               arrow = arrow(angle = 20,
@@ -297,9 +288,9 @@ geom_text_s <- function(mapping = NULL,
                         nudge_x = 0,
                         nudge_y = 0,
                         default.colour = "black",
-                        colour.target = c("all", "text", "segment", "none"),
+                        colour.target = "text",
                         default.alpha = 1,
-                        alpha.target = c("all", "text", "segment", "none"),
+                        alpha.target = "all",
                         add.segments = TRUE,
                         box.padding = 0.25,
                         point.padding = 1e-06,
@@ -311,8 +302,15 @@ geom_text_s <- function(mapping = NULL,
                         show.legend = NA,
                         inherit.aes = TRUE) {
 
-  colour.target <- rlang::arg_match(colour.target, multiple = TRUE)
-  alpha.target <- rlang::arg_match(alpha.target, multiple = TRUE)
+  colour.target <-
+    rlang::arg_match(colour.target,
+                     values = c("all", "text", "segment", "none"),
+                     multiple = TRUE)
+  alpha.target <-
+    rlang::arg_match(alpha.target,
+                     values = c("all", "text", "segment", "none"),
+                     multiple = TRUE)
+
 
   if (!missing(nudge_x) || !missing(nudge_y)) {
     if (!missing(position) && position != "identity") {

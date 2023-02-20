@@ -54,13 +54,12 @@
 #'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
 #' @param default.colour A colour definition to use for elements not targeted by
 #'   the colour aesthetic.
-#' @param colour.target A vector of character strings; \code{"all"},
-#'   \code{"box"} and \code{"segment"} or \code{"none"}.
+#' @param colour.target A character string, one of \code{"all"},
+#'   \code{"point"} and \code{"segment"} or \code{"none"}.
 #' @param default.alpha numeric in [0..1] A transparency value to use for
 #'   elements not targeted by the alpha aesthetic.
-#' @param alpha.target A vector of character strings; \code{"all"},
-#'   \code{"segment"}, \code{"box"}, \code{"box.line"}, and \code{"box.fill"} or
-#'   \code{"none"}.
+#' @param alpha.target A character string, one of \code{"all"},
+#'   \code{"segment"}, \code{"point"}, or \code{"none"}.
 #' @param add.segments logical Display connecting segments or arrows between
 #'   original positions and displaced ones if both are available.
 #' @param box.padding,point.padding numeric By how much each end of the segments
@@ -78,21 +77,36 @@
 #' # Same output as with geom_point()
 #' ggplot(mpg[1:20, ],
 #'        aes(cyl, hwy)) +
-#'   geom_point_s()
+#'   geom_point_s(colour = "blue")
+#'
+#' # with segment drawn after nudging
+#' ggplot(mpg[1:20, ],
+#'        aes(cyl, hwy, label = drv)) +
+#'   geom_point_s(position = position_nudge_keep(x = 0.2),
+#'                colour = "red") +
+#'   geom_point_s(colour = "blue")
+#'
+#' # with segment drawn after nudging
+#' ggplot(mpg[1:20, ],
+#'        aes(cyl, hwy, label = drv)) +
+#'   geom_point_s(position = position_nudge_keep(x = 0.2),
+#'                colour = "red",
+#'                colour.target = "all") +
+#'   geom_point_s(colour = "blue")
 #'
 #' ggplot(mpg[1:20, ],
 #'        aes(cyl, hwy, label = drv)) +
 #'   geom_point_s(position = position_nudge_keep(x = 0.2),
-#'                color = "red",
-#'                segment.colour = "brown") +
-#'   geom_point_s()
+#'                colour = "red",
+#'                colour.target = "segment") +
+#'   geom_point_s(colour = "blue")
 #'
 #' ggplot(mpg[1:20, ],
 #'        aes(cyl, hwy, label = drv)) +
 #'   geom_point_s(position = position_nudge_keep(x = 0.2),
-#'                color = "red",
-#'                segment.colour = "brown") +
-#'   geom_point_s()
+#'                colour = "red",
+#'                colour.target = "point") +
+#'   geom_point_s(colour = "blue")
 #'
 #' ggplot(mpg[1:50, ],
 #'        aes(cyl, hwy, label = drv)) +
@@ -100,9 +114,9 @@
 #'                                                seed = 456,
 #'                                                nudge.from = "jittered",
 #'                                                kept.origin = "original"),
-#'                color = "red",
+#'                colour = "red",
 #'                arrow = grid::arrow(length = grid::unit(0.4, "lines"))) +
-#'   geom_point_s()
+#'   geom_point_s(colour = "blue")
 #'
 geom_point_s <- function(mapping = NULL, data = NULL,
                          stat = "identity", position = "identity",
@@ -111,9 +125,9 @@ geom_point_s <- function(mapping = NULL, data = NULL,
                          nudge_y = 0,
                          arrow = grid::arrow(length = unit(1/3, "lines")),
                          default.colour = "black",
-                         colour.target = c("point", "all", "segment", "none"),
+                         colour.target = "point",
                          default.alpha = 1,
-                         alpha.target = c("all", "segment", "point", "none"),
+                         alpha.target = "all",
                          add.segments = TRUE,
                          box.padding = 0.25,
                          point.padding = 1e-06,
@@ -123,8 +137,14 @@ geom_point_s <- function(mapping = NULL, data = NULL,
                          show.legend = NA,
                          inherit.aes = TRUE) {
 
-  colour.target <- rlang::arg_match(colour.target, multiple = TRUE)
-  alpha.target <- rlang::arg_match(alpha.target, multiple = TRUE)
+  colour.target <-
+    rlang::arg_match(colour.target,
+                     values = c("point", "all", "segment", "none"),
+                     multiple = TRUE)
+  alpha.target <-
+    rlang::arg_match(alpha.target,
+                     values = c("point", "all", "segment", "none"),
+                     multiple = TRUE)
 
   if (!missing(nudge_x) || !missing(nudge_y)) {
     if (!missing(position) && position != "identity") {
@@ -186,7 +206,7 @@ GeomPointS <-
                                          default.colour = "black",
                                          colour.target = "point",
                                          default.alpha = 1,
-                                         alpha.target = "all",
+                                         alpha.target = "segment",
                                          na.rm = FALSE,
                                          arrow = NULL,
                                          box.padding = 0.25,
@@ -315,7 +335,9 @@ translate_shape_string <- function(shape_string) {
     "square filled"         = 22,
     "diamond filled"        = 23,
     "triangle filled"       = 24,
-    "triangle down filled"  = 25
+    "triangle down filled"  = 25,
+    "point"                 = 46,
+    "blank"                 = NA
   )
 
   shape_match <- charmatch(shape_string, names(pch_table))

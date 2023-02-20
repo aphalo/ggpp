@@ -15,11 +15,9 @@ geom_label_s <-
            nudge_x = 0,
            nudge_y = 0,
            default.colour = "black",
-           colour.target = c("all", "text", "box", "box.line", "box.fill",
-                             "segment", "none"),
+           colour.target = c("text", "box"),
            default.alpha = 1,
-           alpha.target = c( "box.fill", "all", "text", "box", "segment",
-                             "box.line", "none"),
+           alpha.target = "all",
            label.padding = grid::unit(0.25, "lines"),
            label.r = grid::unit(0.15, "lines"),
            segment.linewidth = 0.5,
@@ -32,8 +30,16 @@ geom_label_s <-
            show.legend = NA,
            inherit.aes = TRUE) {
 
-    colour.target <- rlang::arg_match(colour.target, multiple = TRUE)
-    alpha.target <- rlang::arg_match(alpha.target, multiple = TRUE)
+    colour.target <-
+      rlang::arg_match(colour.target,
+                       values = c("all", "text", "box", "box.line",
+                                  "segment", "none"),
+                       multiple = TRUE)
+    alpha.target <-
+      rlang::arg_match(alpha.target,
+                       values = c("all", "text", "box", "box.line", "box.fill",
+                                  "segment", "none"),
+                       multiple = TRUE)
 
     if (!missing(nudge_x) || !missing(nudge_y)) {
       if (!missing(position) && position != "identity") {
