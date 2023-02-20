@@ -22,7 +22,7 @@
 #' @param method One of \code{"spline"}, \code{"lm"} or \code{"auto"}.
 #' @param formula A model formula for \code{\link{lm}} when \code{method =
 #'   "lm"}. Ignored otherwise.
-#' @param direction One of \code{"none"}, or \code{"split"}.
+#' @param direction One of \code{"automatic"}, \code{"none"}, or \code{"split"}.
 #' @param line_nudge A positive multiplier >= 1, increasing nudging away from
 #'   the curve or line compared to nudging from points.
 #' @param kept.origin One of \code{"original"} or \code{"none"}.
@@ -151,65 +151,63 @@
 #'             position = position_nudge_line(method = "lm",
 #'                                            formula = y ~ poly(x, 2, raw = TRUE)))
 #'
-position_nudge_line <- function(x = NA_real_,
-                                y = NA_real_,
-                                xy_relative = c(0.03, 0.03),
-                                abline = NULL,
-                                method = NULL,
-                                formula = y ~ x,
-                                direction = NULL,
-                                line_nudge = 1,
-                                kept.origin = "original") {
+position_nudge_line <-
+  function(x = NA_real_,
+           y = NA_real_,
+           xy_relative = c(0.03, 0.03),
+           abline = NULL,
+           method = NULL,
+           formula = y ~ x,
+           direction = c("automatic", "none", "split"),
+           line_nudge = 1,
+           kept.origin = c("original", "none")) {
 
-  # Ensure error message is triggered early
-  if (!kept.origin %in% c("original", "none")) {
-    stop("Invalid 'kept.origin': ", kept.origin,
-         "expected: `\"original\" or \"none\"")
-  }
+    direction <- rlang::arg_match(direction)
+    kept.origin <- rlang::arg_match(kept.origin)
 
-  # set defaults
-  if (!is.null(abline)) {
-    method <- "abline"
-  } else {
-    abline <- rep(NA_real_, 2) # to ensure that a list member is created
-  }
-
-  if (is.null(method)) {
-    method <- "auto" # decided later based on nrow(data)
-  }
-
-  if (method == "linear") {
-    method <- "lm"
-  }
-
-  if (is.null(direction)) {
-    if (line_nudge > 1) {
-      direction <- "split"
+    # set defaults
+    if (!is.null(abline)) {
+      method <- "abline"
     } else {
-      direction <- "none"
+      abline <- rep(NA_real_, 2) # to ensure that a list member is created
     }
+
+    if (is.null(method)) {
+      method <- "auto" # decided later based on nrow(data)
+    }
+
+    if (method == "linear") {
+      method <- "lm"
+    }
+
+    if (direction == "automatic") {
+      if (line_nudge > 1) {
+        direction <- "split"
+      } else {
+        direction <- "none"
+      }
+    }
+
+    if (length(xy_relative) == 1) {
+      xy_relative <- rep(xy_relative, 2)
+    }
+
+    stopifnot(length(xy_relative) == 2)
+
+    ggplot2::ggproto(
+      NULL,
+      PositionNudgeLine,
+      x = x,
+      y = y,
+      xy_relative = xy_relative,
+      abline = abline,
+      method = method,
+      formula = formula,
+      direction = direction,
+      line_nudge = line_nudge,
+      kept.origin = kept.origin
+    )
   }
-
-  if (length(xy_relative) == 1) {
-    xy_relative <- rep(xy_relative, 2)
-  }
-
-  stopifnot(length(xy_relative) == 2)
-
-  ggplot2::ggproto(
-    NULL,
-    PositionNudgeLine,
-    x = x,
-    y = y,
-    xy_relative = xy_relative,
-    abline = abline,
-    method = method,
-    formula = formula,
-    direction = direction,
-    line_nudge = line_nudge,
-    kept.origin = kept.origin
-  )
-}
 
 #' @rdname ggpp-ggproto
 #' @format NULL

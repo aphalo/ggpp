@@ -221,13 +221,9 @@ position_nudge_center <-
            center_y = NULL,
            direction = NULL,
            obey_grouping = NULL,
-           kept.origin = "original") {
+           kept.origin = c("original", "none")) {
 
-    # Ensure error message is triggered early
-    if (!kept.origin %in% c("original", "none")) {
-      stop("Invalid 'kept.origin': ", kept.origin,
-           "expected: `\"original\" or \"none\"")
-    }
+    kept.origin <- rlang::arg_match(kept.origin)
 
     if (is.null(direction)) {
       # Set default for 'direction' based on other arguments

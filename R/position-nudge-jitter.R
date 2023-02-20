@@ -134,25 +134,22 @@
 #'                color = "red",
 #'                arrow = grid::arrow(length = unit(0.4, "lines")))
 #'
-position_jitternudge <- function(width = NULL,
-                                 height = NULL,
-                                 seed = NA,
-                                 x = 0,
-                                 y = 0,
-                                 direction = "as.is",
-                                 nudge.from = "original",
-                                 kept.origin = "jittered") {
-  # Ensure error message is triggered early
-  if (!nudge.from %in% c("original", "original.x", "original.y", "jittered", "jittered.y", "jittered.x")) {
-    stop("Invalid 'nudge.from': '", nudge.from,
-         "', expected: '\"original\", \"original.x\", \"original.y\" or \"jittered\"")
-  }
-  if (!kept.origin %in% c("original", "jittered", "none")) {
-    stop("Invalid 'kept.origin': '", kept.origin,
-         ", expected: `\"original\", \"jittered\" or \"none\"")
-  }
+position_jitternudge <-
+  function(width = NULL,
+           height = NULL,
+           seed = NA,
+           x = 0,
+           y = 0,
+           direction = c("as.is", "alternate", "split"),
+           nudge.from = c("original", "original.x", "original.y",
+                          "jittered", "jittered.y", "jittered.x"),
+           kept.origin = c("jittered", "original", "none")) {
 
-  fixed.direction <-
+    direction <- rlang::arg_match(direction)
+    nudge.from <- rlang::arg_match(nudge.from)
+    kept.origin <- rlang::arg_match(kept.origin)
+
+    fixed.direction <-
     function(x) {1}
   conditional.direction <-
     function(x) {

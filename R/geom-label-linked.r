@@ -5,39 +5,51 @@
 #'
 #' @export
 #'
-geom_label_s <- function(mapping = NULL,
-                         data = NULL,
-                         stat = "identity",
-                         position = "identity",
-                         ...,
-                         parse = FALSE,
-                         nudge_x = 0,
-                         nudge_y = 0,
-                         default.colour = "black",
-                         colour.target = "all",
-                         default.alpha = 1,
-                         alpha.target = "box.fill",
-                         label.padding = grid::unit(0.25, "lines"),
-                         label.r = grid::unit(0.15, "lines"),
-                         segment.linewidth = 0.5,
-                         add.segments = TRUE,
-                         box.padding = 1e-06,
-                         point.padding = 1e-06,
-                         min.segment.length = 0,
-                         arrow = NULL,
-                         na.rm = FALSE,
-                         show.legend = NA,
-                         inherit.aes = TRUE)
-{
-  if (!missing(nudge_x) || !missing(nudge_y)) {
-    if (!missing(position) && position != "identity") {
-      rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")
-    }
-    # by default we keep the original positions
-    position <- position_nudge_keep(nudge_x, nudge_y)
-  }
+geom_label_s <-
+  function(mapping = NULL,
+           data = NULL,
+           stat = "identity",
+           position = "identity",
+           ...,
+           parse = FALSE,
+           nudge_x = 0,
+           nudge_y = 0,
+           default.colour = "black",
+           colour.target = c("text", "box"),
+           default.alpha = 1,
+           alpha.target = "all",
+           label.padding = grid::unit(0.25, "lines"),
+           label.r = grid::unit(0.15, "lines"),
+           segment.linewidth = 0.5,
+           add.segments = TRUE,
+           box.padding = 1e-06,
+           point.padding = 1e-06,
+           min.segment.length = 0,
+           arrow = NULL,
+           na.rm = FALSE,
+           show.legend = NA,
+           inherit.aes = TRUE) {
 
-  ggplot2::layer(
+    colour.target <-
+      rlang::arg_match(colour.target,
+                       values = c("all", "text", "box", "box.line",
+                                  "segment", "none"),
+                       multiple = TRUE)
+    alpha.target <-
+      rlang::arg_match(alpha.target,
+                       values = c("all", "text", "box", "box.line", "box.fill",
+                                  "segment", "none"),
+                       multiple = TRUE)
+
+    if (!missing(nudge_x) || !missing(nudge_y)) {
+      if (!missing(position) && position != "identity") {
+        rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")
+      }
+      # by default we keep the original positions
+      position <- position_nudge_keep(nudge_x, nudge_y)
+    }
+
+    ggplot2::layer(
     data = data,
     mapping = mapping,
     stat = stat,

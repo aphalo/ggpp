@@ -99,7 +99,7 @@ geom_quadrant_lines <- function(mapping = NULL,
                                 data = NULL,
                                 stat = "identity",
                                 position = "identity",
-                                pool.along = "none",
+                                pool.along = c("none", "x", "y", "xy"),
                                 xintercept = 0,
                                 yintercept = 0,
                                 na.rm = FALSE,
@@ -107,8 +107,10 @@ geom_quadrant_lines <- function(mapping = NULL,
                                 inherit.aes = FALSE,
                                 ...) {
 
-  stopifnot(pool.along %in% c("none", "x", "y", "xy"))
-  stopifnot(length(xintercept) <= 1 && length(yintercept) <= 1)
+  pool.along <- rlang::arg_match(pool.along)
+
+  stopifnot("'xintercept' must have length == 1L" = length(xintercept) <= 1,
+            "'yintercept' must have length == 1L" = length(yintercept) <= 1)
 
   # Act like an annotation
   if (!is.null(xintercept) && !is.null(yintercept)) {

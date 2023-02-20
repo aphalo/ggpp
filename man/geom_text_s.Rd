@@ -15,9 +15,9 @@ geom_label_s(
   nudge_x = 0,
   nudge_y = 0,
   default.colour = "black",
-  colour.target = "all",
+  colour.target = c("text", "box"),
   default.alpha = 1,
-  alpha.target = "box.fill",
+  alpha.target = "all",
   label.padding = grid::unit(0.25, "lines"),
   label.r = grid::unit(0.15, "lines"),
   segment.linewidth = 0.5,
@@ -41,7 +41,7 @@ geom_text_s(
   nudge_x = 0,
   nudge_y = 0,
   default.colour = "black",
-  colour.target = "all",
+  colour.target = "text",
   default.alpha = 1,
   alpha.target = "all",
   add.segments = TRUE,
@@ -91,14 +91,15 @@ starting position of each text label. The units for \code{nudge_x} and
 the colour aesthetic.}
 
 \item{colour.target}{A vector of character strings; \code{"all"},
-\code{"text"}, \code{"box"} and \code{"segment"}.}
+\code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
+\code{"box.fill"} or \code{"none"}.}
 
 \item{default.alpha}{numeric in [0..1] A transparency value to use for
 elements not targeted by the alpha aesthetic.}
 
 \item{alpha.target}{A vector of character strings; \code{"all"},
 \code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
-\code{"box.fill"}.}
+\code{"box.fill"} or \code{"none"}.}
 
 \item{label.padding}{Amount of padding around label. Defaults to 0.25 lines.}
 

@@ -112,7 +112,7 @@
 #'   geom_point()
 #'
 #' ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-#'   stat_centroid(geom = "rug", size = 1.5, .fun = median) +
+#'   stat_centroid(geom = "rug", linewidth = 1.5, .fun = median) +
 #'   geom_point()
 #'
 #' ggplot(my.df, aes(x = X, y = Y, colour = category)) +
@@ -361,9 +361,9 @@ StatApplyGroup <-
                        if (!.fun.x.null) {
                          args <- c(unname(data["x"]), .fun.x.args)
                          new.x <- do.call(.fun.x, args = args)
-                         if (is.null(new.x)) {
-                           stop("'new.x' is NULL.")
-                         }
+
+                         stopifnot("'new.x' is NULL." = !is.null(new.x))
+
                          if (is.vector(new.x) && (length(new.x) == 1L)) {
                            if(!is.null(names(new.x))) {
                              new.data[["x.names"]] <- names(new.x)
@@ -389,9 +389,9 @@ StatApplyGroup <-
                        if (!.fun.y.null) {
                          args <- c(unname(data["y"]), .fun.y.args)
                          new.y <- do.call(.fun.y, args = args)
-                         if (is.null(new.y)) {
-                           stop("'new.y' is NULL.")
-                         }
+
+                         stopifnot("'new.y' is NULL." = !is.null(new.y))
+
                          if (is.vector(new.y) && (length(new.y) == 1L)) {
                            if(!is.null(names(new.y))) {
                              new.data[["y.names"]] <- names(new.y)
@@ -422,14 +422,16 @@ StatApplyGroup <-
                        if (!.fun.x.null) {
                          args <- c(unname(data["x"]), .fun.x.args)
                          new.x <- do.call(.fun.x, args = args)
-                         stopifnot(is.numeric(new.x))
+                         stopifnot("'new.x' must be 'numeric'" =
+                                     is.numeric(new.x))
                          x.names <- names(new.x)
                        }
 
                        if (!.fun.y.null) {
                          args <- c(unname(data["y"]), .fun.y.args)
                          new.y <- do.call(.fun.y, args = args)
-                         stopifnot(is.numeric(new.y))
+                         stopifnot("'new.y' must be 'numeric'" =
+                                     is.numeric(new.y))
                          y.names <- names(new.y)
                        }
 

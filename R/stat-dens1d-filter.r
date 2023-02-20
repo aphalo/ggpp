@@ -235,7 +235,7 @@ stat_dens1d_filter <-
            keep.these = FALSE,
            exclude.these = FALSE,
            these.target = "label",
-           pool.along = "x",
+           pool.along = c("x", "none"),
            xintercept = 0,
            invert.selection = FALSE,
            bw = "SJ",
@@ -243,10 +243,13 @@ stat_dens1d_filter <-
            adjust = 1,
            n = 512,
            return.density = FALSE,
-           orientation = "x",
+           orientation = c("x", "y"),
            na.rm = TRUE,
            show.legend = FALSE,
            inherit.aes = TRUE) {
+
+    pool.along <- rlang::arg_match(pool.along)
+    orientation <- rlang::arg_match(orientation)
 
     if (any(is.na(keep.fraction) | keep.fraction < 0 | keep.fraction > 1)) {
       stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)
@@ -291,7 +294,7 @@ stat_dens1d_filter_g <-
            keep.these = FALSE,
            exclude.these = FALSE,
            these.target = "label",
-           pool.along = "x",
+           pool.along = c("x", "none"),
            xintercept = 0,
            invert.selection = FALSE,
            na.rm = TRUE, show.legend = FALSE,
@@ -301,8 +304,11 @@ stat_dens1d_filter_g <-
            kernel = "gaussian",
            n = 512,
            return.density = FALSE,
-           orientation = "x",
+           orientation = c("x", "y"),
            ...) {
+
+    pool.along <- rlang::arg_match(pool.along)
+    orientation <- rlang::arg_match(orientation)
 
     if (any(is.na(keep.fraction) | keep.fraction < 0 | keep.fraction > 1)) {
       stop("Out of range or missing value for 'keep.fraction': ", keep.fraction)

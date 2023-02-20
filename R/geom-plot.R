@@ -2,7 +2,7 @@
 #'
 #' \code{geom_plot} and \code{geom_plot_npc} add ggplot objects as insets to the
 #' base ggplot, using syntax similar to that of
-#' \code{\link[ggplot2]{geom_label}}  and \code{\link{geom_text_s}}.
+#' \code{\link[ggplot2]{geom_label}} and \code{\link{geom_text_s}}.
 #' In most respects they behave as any other ggplot geometry: they add a layer
 #' containing one or more grobs and grouping and faceting works as usual. The
 #' most common use of \code{geom_plot} is to add data labels that are themselves
@@ -39,9 +39,11 @@
 #'   coordinates in the data, and \code{angle} is used to rotate the plot as a
 #'   whole.
 #'
-#'   In the case of \code{geom_plot_npc()}, \code{npcx} and \code{npcy}
-#'   aesthetics determine the position of the inset plot. Justification as
-#'   described above for .
+#'   Of these two geoms only \code{\link{geom_plot}} supports the plotting of
+#'   segments, as \code{\link{geom_plot_npc}} uses a coordinate system that is
+#'   unrelated to data units and data.In the case of \code{geom_plot_npc()},
+#'   \code{npcx} and \code{npcy} aesthetics determine the position of the inset
+#'   plot.
 #'
 #' @inheritSection geom_text_s Alignment
 #'
@@ -146,9 +148,9 @@ geom_plot <- function(mapping = NULL,
                       nudge_x = 0,
                       nudge_y = 0,
                       default.colour = "black",
-                      colour.target = "segment",
+                      colour.target = "box",
                       default.alpha = 1,
-                      alpha.target = "segment",
+                      alpha.target = "all",
                       add.segments = TRUE,
                       box.padding = 0.25,
                       point.padding = 1e-06,
@@ -158,6 +160,16 @@ geom_plot <- function(mapping = NULL,
                       na.rm = FALSE,
                       show.legend = FALSE,
                       inherit.aes = FALSE) {
+
+  colour.target <-
+    rlang::arg_match(colour.target,
+                     values = c("segment", "all", "box", "none"),
+                     multiple = TRUE)
+  alpha.target <-
+    rlang::arg_match(alpha.target,
+                     values = c("segment", "all", "box",
+                                "box.line", "box.fill", "none"),
+                     multiple = TRUE)
 
   if (!missing(nudge_x) || !missing(nudge_y)) {
     if (!missing(position) && !identical(position, "identity")) {

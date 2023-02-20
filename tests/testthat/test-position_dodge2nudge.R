@@ -2,8 +2,8 @@ context("position_dodge2nudge")
 
 test_that("incorrect kept.origin used", {
   expect_error(
-    position_dodge2nudge(kept.origin = ""),
-    "Invalid 'kept.origin': expected: `\"original\", \"dodged\" or \"none\""
+    position_dodge2nudge(kept.origin = "")
+    #, "`kept.origin` must be one of \"dodged\", \"original\", or \"none\", not \"\"."
   )
 })
 

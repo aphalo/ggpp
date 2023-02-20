@@ -224,7 +224,7 @@ stat_dens2d_labels <-
            keep.these = FALSE,
            exclude.these = FALSE,
            these.target = "label",
-           pool.along = "xy",
+           pool.along = c("xy", "x", "y", "none"),
            xintercept = 0,
            yintercept = 0,
            invert.selection = FALSE,
@@ -235,6 +235,8 @@ stat_dens2d_labels <-
            na.rm = TRUE,
            show.legend = FALSE,
            inherit.aes = TRUE) {
+
+    pool.along <- rlang::arg_match(pool.along)
 
     if (length(label.fill) > 1L) {
       stop("Length for 'label.fill' is not 1: ", label.fill)

@@ -257,19 +257,22 @@ stat_dens1d_labels <-
            keep.these = FALSE,
            exclude.these = FALSE,
            these.target = "label",
-           pool.along = "x",
+           pool.along = c("x", "none"),
            xintercept = 0,
            invert.selection = FALSE,
            bw = "SJ",
            kernel = "gaussian",
            adjust = 1,
            n = 512,
-           orientation = "x",
+           orientation = c("x", "y"),
            label.fill = "",
            return.density = FALSE,
            na.rm = TRUE,
            show.legend = FALSE,
            inherit.aes = TRUE) {
+
+    pool.along <- rlang::arg_match(pool.along)
+    orientation <- rlang::arg_match(orientation)
 
     if (length(label.fill) > 1L) {
       stop("Length for 'label.fill' is not 0 or 1: ", label.fill)
