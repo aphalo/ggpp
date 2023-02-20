@@ -194,8 +194,9 @@ GeomPointS <-
                                          segment.linewidth = 0.5,
                                          min.segment.length = 0,
                                          add.segments = FALSE) {
+
                      if (is.character(data$shape)) {
-                       data$shape <- ggplot2::translate_shape_string(data$shape)
+                       data$shape <- translate_shape_string(data$shape)
                      }
 
                      if (nrow(data) == 0L) {
