@@ -29,6 +29,9 @@ to apply a function or vector of values passed through `exclude.these` or `keep.
 -   Add unit tests and make existing tests visible to package 'covr'. (See
 issue #10, and pull requests #12, #13, #17, #18, #21, #23, #24, #25, #26, #27,
    #30 and #31 from Daniel Sabanes Bove and his team).
+-   Add checks for string arguments, replace some obscure error messages.
+-   Changed default values for `colour.target` to improve consistency, now
+segments are never the target of colour by default.
 -   Track deprecation of `aes_string()` in 'ggplot2' (>= 3.0.0).
 
 # ggpp 0.5.1
