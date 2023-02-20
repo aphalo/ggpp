@@ -10,7 +10,7 @@ stat_quadrant_counts(
   geom = "text_npc",
   position = "identity",
   quadrants = NULL,
-  pool.along = "none",
+  pool.along = c("none", "x", "y", "xy"),
   xintercept = 0,
   yintercept = 0,
   label.x = NULL,

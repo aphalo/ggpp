@@ -129,7 +129,7 @@ stat_quadrant_counts <- function(mapping = NULL,
                                  geom = "text_npc",
                                  position = "identity",
                                  quadrants = NULL,
-                                 pool.along = "none",
+                                 pool.along = c("none", "x", "y", "xy"),
                                  xintercept = 0,
                                  yintercept = 0,
                                  label.x = NULL,
@@ -138,9 +138,13 @@ stat_quadrant_counts <- function(mapping = NULL,
                                  show.legend = FALSE,
                                  inherit.aes = TRUE, ...) {
 
-  stopifnot(pool.along %in% c("none", "x", "y"))
-  stopifnot(length(xintercept) == 1 && length(yintercept) == 1)
-  stopifnot(length(quadrants) <= 4)
+  pool.along <- rlang::arg_match(pool.along)
+  if (!is.null(pool.along) && pool.along == "xy") {
+    quadrants <- 0L # consistent UI with other stats from 'ggpp'
+  }
+  stopifnot("'xintercept' should have length == 1L" = length(xintercept) <= 1,
+            "'yintercept' should have length == 1L" = length(yintercept) <= 1)
+  stopifnot("Length of 'quadrants' shoul be between 0 and 4" = length(quadrants) <= 4)
   stopifnot(is.null(label.x) || is.numeric(label.x) || is.character(label.x))
   stopifnot(is.null(label.y) || is.numeric(label.y) || is.character(label.y))
 
