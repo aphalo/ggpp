@@ -344,15 +344,6 @@ p +
 p +
   geom_label_s(aes(colour = factor(cyl)),
               nudge_x = 0.3,
-              colour.target = "text",
-              arrow = arrow(angle = 20,
-                            length = grid::unit(1/3, "lines"))) +
-  scale_colour_discrete(l = 40) + # luminance, make colours darker
-  expand_limits(x = 7)
-
-p +
-  geom_label_s(aes(colour = factor(cyl)),
-              nudge_x = 0.3,
               colour.target = c("box", "segment"),
               linewidth = 0.6,
               arrow = arrow(angle = 20,
