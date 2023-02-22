@@ -31,7 +31,7 @@ test_that("stat_apply_group", {
   rownames(expected) <- NULL
   expect_identical(result, expected)
 
-  result <- ggplot(my.df, aes(x = X, y = Y)) +
+  expect_silent(result <- ggplot(my.df, aes(x = X, y = Y)) +
     geom_point() +
     stat_apply_group(geom = "rug", sides = "lr", color = "darkred",
                      .fun.y = quantile) +
@@ -39,7 +39,7 @@ test_that("stat_apply_group", {
                      .fun.y = quantile,
                      .fun.x = function(x) {rep(22, 5)}, # set x to 22
                      mapping = aes(label = after_stat(y.names))) +
-                     expand_limits(x = 21)
+                     expand_limits(x = 21))
   expect_s3_class(result, "ggplot")
 
   my.probs <- c(0.25, 0.5, 0.75)
@@ -65,23 +65,11 @@ test_that("stat_apply_group", {
   result <- result[result$group == 1,]$y
   expected <- cummax(my.df.unsorted[my.df.unsorted$category == "A",]$Y)
   expect_identical(result, expected)
-#
-#   ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-#     stat_apply_group(.fun.x = cumsum, .fun.y = cumsum)
-#
-#   # diff returns a shorter vector by 1 for each group
-#   ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-#     stat_apply_group(.fun.x = function(x) {x[-1L]},
-#                      .fun.y = diff, na.rm = TRUE)
-#
-#   # Running summaries
-#   ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-#     geom_point() +
-#     stat_apply_group(.fun.x = function(x) {x},
-#                      .fun.y = runmed, .fun.y.args = list(k = 5))
-#
-#   # Rescaling per group
-#   ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-#     stat_apply_group(.fun.x = function(x) {x},
-#                      .fun.y = function(x) {(x - min(x)) / (max(x) - min(x))})
+
+  result <- ggplot(my.df, aes(x = X, y = Y, colour = category)) +
+    stat_apply_group(.fun.x = cumsum, .fun.y = cumsum)
+  result <- ggplot2::layer_data(result)
+  result <- result[result$group == 1,]$x %>% as.numeric()
+  expected <- cumsum(my.df[my.df$category == "A",]$X) %>% as.numeric()
+  expect_identical(result, expected)
 })
