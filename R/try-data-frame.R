@@ -85,7 +85,7 @@ try_data_frame <- function(x,
     if (lubridate::is.POSIXct(times.raw) || lubridate::is.Date(times.raw)) {
       times <- times.raw
     } else if (inherits(times.raw, "yearmon")) {
-      times <- as.POSIXct(format(times.raw, "%Y-%m-01"))
+      times <- as.POSIXct(format(times.raw, "%Y-%m-01"),  tz = "UTC", format = "%Y-%m-%d")
     } else if (inherits(times.raw, "yearqtr")) {
       times <- zoo::as.Date(times.raw)
     } else if (is.numeric(times.raw)) {
