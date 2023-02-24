@@ -100,7 +100,8 @@ This statistic can be used to automatically count observations in
   \item{quadrant}{integer, one of 0:4} \item{x}{x value of label position in
   data units} \item{y}{y value of label position in data units} \item{npcx}{x
   value of label position in npc units} \item{npcy}{y value of label position
-  in npc units} \item{count}{number of  observations} }.
+  in npc units} \item{count}{number of  observations}
+  \item{count.label}{number of observations as character} }.
 
   As shown in one example below \code{\link[gginnards]{geom_debug}} can be
   used to print the computed values returned by any statistic. The output

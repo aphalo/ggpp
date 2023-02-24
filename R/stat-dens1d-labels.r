@@ -421,7 +421,7 @@ StatDens1dLabels <-
             }
           }
         }
-        keep <- keep | keep.these & !exclude.these
+        keep <- (keep | keep.these) & !exclude.these
 
         if (invert.selection){
           keep <- !keep

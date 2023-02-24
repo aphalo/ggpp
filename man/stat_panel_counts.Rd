@@ -100,7 +100,8 @@ These statistics can be used to automatically count observations in
   group of observations for which counts are counted in \code{data}. \describe{
   \item{x,npcx}{x value of label position in data- or npc units, respectively}
   \item{y,npcy}{y value of label position in data- or npc units, respectively}
-  \item{count}{number of  observations as an integer}}
+  \item{count}{number of  observations as an integer}
+  \item{count.label}{number of observations as character}}
 
   As shown in one example below \code{\link[gginnards]{geom_debug}} can be
   used to print the computed values returned by any statistic. The output

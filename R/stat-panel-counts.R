@@ -48,7 +48,8 @@
 #'   group of observations for which counts are counted in \code{data}. \describe{
 #'   \item{x,npcx}{x value of label position in data- or npc units, respectively}
 #'   \item{y,npcy}{y value of label position in data- or npc units, respectively}
-#'   \item{count}{number of  observations as an integer}}
+#'   \item{count}{number of  observations as an integer}
+#'   \item{count.label}{number of observations as character}}
 #'
 #'   As shown in one example below \code{\link[gginnards]{geom_debug}} can be
 #'   used to print the computed values returned by any statistic. The output
@@ -217,13 +218,14 @@ StatPanelCounts <-
                        z$y <- label.y
                        z$npcy <- NA_real_
                      }
+                     z$count.label <- sprintf("n=%i", z$count)
                      z
                    },
 
                    default_aes =
                      ggplot2::aes(npcx = ggplot2::after_stat(npcx),
                                   npcy = ggplot2::after_stat(npcy),
-                                  label = sprintf("n=%i", ggplot2::after_stat(count)),
+                                  label = ggplot2::after_stat(count.label),
                                   hjust = "inward",
                                   vjust = "inward"),
                    required_aes = c("x|y")
@@ -377,13 +379,14 @@ StatGroupCounts <-
                        z$y <- label.y
                        z$npcy <- NA_real_
                      }
+                     z$count.label <- sprintf("n=%i", z$count)
                      z
                    },
 
                    default_aes =
                      ggplot2::aes(npcx = ggplot2::after_stat(npcx),
                                   npcy = ggplot2::after_stat(npcy),
-                                  label = sprintf("n=%i", ggplot2::after_stat(count)),
+                                  label = ggplot2::after_stat(count.label),
                                   hjust = "inward",
                                   vjust = "inward"),
                    required_aes = c("x|y")

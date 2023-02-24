@@ -502,7 +502,7 @@ StatDens2dFilter <-
         }
       }
     }
-    keep <- keep | keep.these & !exclude.these
+    keep <- (keep | keep.these) & !exclude.these
 
     if (invert.selection) {
       keep <- !keep
@@ -680,7 +680,7 @@ StatDens2dFilterG <-
             }
           }
         }
-        keep <- keep | keep.these & !exclude.these
+        keep <- (keep | keep.these) & !exclude.these
 
         if (invert.selection){
           keep <- !keep
