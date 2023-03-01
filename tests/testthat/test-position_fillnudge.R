@@ -2,8 +2,9 @@ context("position_fillnudge")
 
 test_that("incorrect kept.origin used", {
   expect_error(
-    position_fillnudge(kept.origin = "", vjust = 0.5, x = -0.3),
-    "Invalid 'kept.origin': expected: `\"original\", \"stacked\" or \"none\""
+    position_fillnudge(kept.origin = "", vjust = 0.5, x = -0.3) #,
+#    "`kept.origin` must be one of \"stacked\", \"original\", or \"none\", not \"\"."
+# rlang arg_match() adds to the error message characters that break expect_error()
   )
 })
 

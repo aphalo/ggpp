@@ -51,6 +51,16 @@
 #'   second value for the right tail (or if using \code{orientation = "y"} the
 #'   lower and upper tails, respectively).
 #'
+#'   Computation of density and of the default bandwidth require at least
+#'   two observations with different values. If data do not fulfill this
+#'   condition, they are kept only if \code{keep.fraction = 1}. This is correct
+#'   behavior for a single observation, but can be surprising in the case of
+#'   multiple observations.
+#'
+#'   Parameters \code{keep.these} and \code{exclude.these} make it possible to
+#'   force inclusion or exclusion of labels after the density is computed.
+#'   In case of conflict, \code{exclude.these} overrides \code{keep.these}.
+#'
 #' @note Which points are kept and which not depends on how dense and flexible
 #'   is the density curve estimate. This depends on the values passed as
 #'   arguments to parameters \code{n}, \code{bw} and \code{kernel}. It is
@@ -73,10 +83,15 @@
 #' @param keep.sparse logical If \code{TRUE}, the default, observations from the
 #'   more sparse regions are retained, if \code{FALSE} those from the densest
 #'   regions.
-#' @param keep.these character vector, integer vector, logical vector or
-#'   function that takes the variable mapped to the \code{label} aesthetic as
-#'   first argument and returns a character vector or a logical vector. These
-#'   rows from \code{data} are selected irrespective of the local density.
+#' @param keep.these,exclude.these character vector, integer vector, logical
+#'   vector or function that takes one or more variables in data selected by
+#'   \code{these.target}. Negative integers behave as in R's extraction methods.
+#'   The rows from \code{data} indicated by \code{keep.these} and
+#'   \code{exclude.these} are kept or excluded irrespective of the local
+#'   density.
+#' @param these.target character, numeric or logical selecting one or more
+#'   column(s) of \code{data}. If \code{TRUE} the whole \code{data} object is
+#'   passed.
 #' @param pool.along character, one of \code{"none"} or \code{"x"},
 #'   indicating if selection should be done pooling the observations along the
 #'   \emph{x} aesthetic, or separately on either side of \code{xintercept}.
@@ -240,19 +255,24 @@ stat_dens1d_labels <-
            keep.number = Inf,
            keep.sparse = TRUE,
            keep.these = FALSE,
-           pool.along = "x",
+           exclude.these = FALSE,
+           these.target = "label",
+           pool.along = c("x", "none"),
            xintercept = 0,
            invert.selection = FALSE,
            bw = "SJ",
            kernel = "gaussian",
            adjust = 1,
            n = 512,
-           orientation = "x",
+           orientation = c("x", "y"),
            label.fill = "",
            return.density = FALSE,
            na.rm = TRUE,
            show.legend = FALSE,
            inherit.aes = TRUE) {
+
+    pool.along <- rlang::arg_match(pool.along)
+    orientation <- rlang::arg_match(orientation)
 
     if (length(label.fill) > 1L) {
       stop("Length for 'label.fill' is not 0 or 1: ", label.fill)
@@ -275,6 +295,8 @@ stat_dens1d_labels <-
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
                     keep.these = keep.these,
+                    exclude.these = exclude.these,
+                    these.target = these.target,
                     pool.along = pool.along,
                     xintercept = xintercept,
                     invert.selection = invert.selection,
@@ -304,6 +326,8 @@ StatDens1dLabels <-
                keep.number,
                keep.sparse,
                keep.these,
+               exclude.these,
+               these.target = "label",
                pool.along,
                xintercept,
                invert.selection,
@@ -320,7 +344,13 @@ StatDens1dLabels <-
           data[["label"]] <- rownames(data)
         }
 
-        keep.these <- keep_these2logical(keep.these = keep.these, data = data)
+        keep.these <- these2logical(these = keep.these,
+                                    data = data,
+                                    these.target = these.target)
+
+        exclude.these <- these2logical(these = exclude.these,
+                                       data = data,
+                                       these.target = these.target)
 
         # discard redundant splits and make list of logical vectors
         if (pool.along != "x" &&
@@ -371,20 +401,19 @@ StatDens1dLabels <-
         }
         # we construct one logical vector by adding observations/label to be kept
         # we may have a list of 1 or 2 logical vectors
-        keep <- keep.these
+        keep <- logical(nrow(data))
         for (i in seq_along(selectors)) {
           if (keep.fraction[i] == 1) {
             keep[ selectors[[i]] ] <- TRUE
           } else if (keep.fraction[i] != 0 && length(selectors[[i]]) >= 2L) {
             if (keep.sparse) {
               keep[ selectors[[i]] ] <-
-                keep[ selectors[[i]] ] |
                 dens[ selectors[[i]] ] < stats::quantile(dens[ selectors[[i]] ],
                                                          keep.fraction[i],
                                                          names = FALSE,
                                                          type = 8)
             } else {
-              keep[ selectors[[i]] ] <- keep[ selectors[[i]] ] |
+              keep[ selectors[[i]] ] <-
                 dens[ selectors[[i]] ] >= stats::quantile(dens[ selectors[[i]] ],
                                                           1 - keep.fraction[i],
                                                           names = FALSE,
@@ -392,6 +421,7 @@ StatDens1dLabels <-
             }
           }
         }
+        keep <- (keep | keep.these) & !exclude.these
 
         if (invert.selection){
           keep <- !keep

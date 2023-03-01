@@ -22,245 +22,245 @@ test_that("filter_params", {
   # Many of the "no error" tests complement the vdiffr tests further down
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter(keep.fraction = NA)
   )
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter(keep.fraction = 5)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter(keep.fraction = 1)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter(keep.fraction = 0)
   )
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter(keep.fraction = -1)
   )
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter(keep.number = NA)
   )
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter(keep.number = -1)
   )
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(keep.fraction = NA)
   )
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(keep.fraction = 5)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(keep.fraction = 1)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(keep.fraction = 0)
   )
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(keep.fraction = -1)
   )
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(keep.number = NA)
   )
 
   testthat::expect_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(keep.number = -1)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(keep.these = 1:3)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(keep.these = TRUE)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(keep.these = FALSE)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(keep.these = rep(c(TRUE, FALSE), 10L))
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(keep.these = function(x) {grepl("^a", x)})
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(keep.these = integer())
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(keep.these = double())
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(keep.these = character())
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "none")
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "none",
                            xintercept = Inf,
                            yintercept = Inf)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "none",
                            xintercept = -Inf,
                            yintercept = -Inf)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "none",
                            xintercept = -Inf,
                            yintercept = Inf)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "none",
                            xintercept = Inf,
                            yintercept = -Inf)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "none",
                            xintercept = Inf)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "none",
                            xintercept = -Inf)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "none",
                            yintercept = Inf)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "none",
                            yintercept = -Inf)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "none",
                            xintercept = -Inf,
                            yintercept = Inf)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "none",
                            xintercept = Inf,
                            yintercept = -Inf)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "none",
                            xintercept = Inf)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "none",
                            xintercept = -Inf)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "none",
                            yintercept = Inf)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "none",
                            yintercept = -Inf)
   )
 
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "none",
                            xintercept = -Inf,
                            yintercept = Inf)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "none",
                            xintercept = Inf,
                            yintercept = -Inf)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "y",
                            xintercept = Inf)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "y",
                            xintercept = -Inf)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "x",
                            yintercept = Inf)
   )
 
   testthat::expect_no_error(
-    ggplot(data = make_data_tbl(20), aes(x, y, label = lab)) +
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(pool.along = "x",
                            yintercept = -Inf)
   )
@@ -733,34 +733,54 @@ test_that("labels_tb", {
   )
 })
 
-test_that("keep_these2logical arguments with label", {
+test_that("these2logicalarguments with label", {
   df <- data.frame(x = 1:10, y = 1:10, label = letters[1:10])
-  expect_equal(keep_these2logical(FALSE, df), rep_len(FALSE, nrow(df)))
-  expect_warning(keep_these2logical(NA, df))
-  expect_equal(keep_these2logical(NULL, df), rep_len(FALSE, nrow(df)))
-  expect_equal(keep_these2logical(numeric(), df), rep_len(FALSE, nrow(df)))
-  expect_error(keep_these2logical(nrow(df) + 1, df))
-  expect_equal(keep_these2logical(logical(), df), rep_len(FALSE, nrow(df)))
-  expect_equal(keep_these2logical(3:4, df), c(F, F, T, T, F, F, F, F, F, F))
-  expect_equal(keep_these2logical(-c(1:2, 5:10), df), c(F, F, T, T, F, F, F, F, F, F))
-  expect_equal(keep_these2logical(c("c", "d"), df), c(F, F, T, T, F, F, F, F, F, F))
-  expect_equal(keep_these2logical(function(x) {x %in% c("c", "d")}, df), c(F, F, T, T, F, F, F, F, F, F))
-  expect_equal(keep_these2logical(c("3", "4"), df), rep_len(FALSE, nrow(df)))
-  expect_equal(keep_these2logical(function(x) {x %in% c("3", "4")}, df), rep_len(FALSE, nrow(df)))
+  expect_equal(these2logical(FALSE, df), rep_len(FALSE, nrow(df)))
+  expect_warning(these2logical(NA, df))
+  expect_equal(these2logical(NULL, df), rep_len(FALSE, nrow(df)))
+  expect_equal(these2logical(numeric(), df), rep_len(FALSE, nrow(df)))
+  expect_error(these2logical(nrow(df) + 1, df))
+  expect_equal(these2logical(logical(), df), rep_len(FALSE, nrow(df)))
+  expect_equal(these2logical(3:4, df), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(these2logical(-c(1:2, 5:10), df), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(these2logical(c("c", "d"), df), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(these2logical(function(x) {x %in% c("c", "d")}, df), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(these2logical(c("3", "4"), df), rep_len(FALSE, nrow(df)))
+  expect_equal(these2logical(function(x) {x %in% c("3", "4")}, df), rep_len(FALSE, nrow(df)))
+  expect_equal(these2logical(function(x) {x %in% c(3, 4)}, df,
+                                  these.target = "x"), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(these2logical(function(d) {d$x %in% c(3, 4)}, df,
+                                  these.target = c("x", "y")), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(these2logical(function(d) {d$label %in% c("c", "d")}, df,
+                                  these.target = c("x", "y", "label")), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(these2logical(function(d) {d$x %in% c(3, 4)}, df,
+                                  these.target = TRUE), c(F, F, T, T, F, F, F, F, F, F))
+  expect_error(these2logical(function(d) {d$x %in% c(3, 4)}, df,
+                                  these.target = "zz"))
+  expect_warning(these2logical(function(x) {x %in% c(3, 4)}, df,
+                                  these.target = c("zz", "x")))
 })
 
-test_that("keep_these2logical arguments without label", {
+test_that("these2logicalarguments without label", {
   df <- data.frame(x = 1:10, y = 1:10)
-  expect_equal(keep_these2logical(FALSE, df), rep_len(FALSE, nrow(df)))
-  expect_warning(keep_these2logical(NA, df))
-  expect_equal(keep_these2logical(NULL, df), rep_len(FALSE, nrow(df)))
-  expect_equal(keep_these2logical(numeric(), df), rep_len(FALSE, nrow(df)))
-  expect_error(keep_these2logical(nrow(df) + 1, df))
-  expect_equal(keep_these2logical(logical(), df), rep_len(FALSE, nrow(df)))
-  expect_equal(keep_these2logical(3:4, df), c(F, F, T, T, F, F, F, F, F, F))
-  expect_equal(keep_these2logical(-c(1:2, 5:10), df), c(F, F, T, T, F, F, F, F, F, F))
-  expect_equal(keep_these2logical(c("c", "d"), df), rep_len(FALSE, nrow(df)))
-  expect_equal(keep_these2logical(function(x) {x %in% c("c", "d")}, df), rep_len(FALSE, nrow(df)))
-  expect_equal(keep_these2logical(c("3", "4"), df), c(F, F, T, T, F, F, F, F, F, F))
-  expect_equal(keep_these2logical(function(x) {x %in% c("3", "4")}, df), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(these2logical(FALSE, df), rep_len(FALSE, nrow(df)))
+  expect_warning(these2logical(NA, df))
+  expect_equal(these2logical(NULL, df), rep_len(FALSE, nrow(df)))
+  expect_equal(these2logical(numeric(), df), rep_len(FALSE, nrow(df)))
+  expect_error(these2logical(nrow(df) + 1, df))
+  expect_equal(these2logical(logical(), df), rep_len(FALSE, nrow(df)))
+  expect_equal(these2logical(3:4, df), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(these2logical(-c(1:2, 5:10), df), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(these2logical(c("c", "d"), df), rep_len(FALSE, nrow(df)))
+  expect_equal(these2logical(function(x) {x %in% c("c", "d")}, df), rep_len(FALSE, nrow(df)))
+  expect_equal(these2logical(c("3", "4"), df), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(these2logical(function(x) {x %in% c("3", "4")}, df), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(these2logical(function(x) {x %in% c(3, 4)}, df,
+                                  these.target = "x"), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(these2logical(function(d) {d$x %in% c(3, 4)}, df,
+                                  these.target = c("x", "y")), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(these2logical(function(d) {d$label %in% c("3", "4")}, df,
+                                  these.target = c("x", "y", "label")), c(F, F, T, T, F, F, F, F, F, F))
+  expect_equal(these2logical(function(d) {d$x %in% c(3, 4)}, df,
+                                  these.target = TRUE), c(F, F, T, T, F, F, F, F, F, F))
 })

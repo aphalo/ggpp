@@ -15,7 +15,9 @@ stat_dens1d_filter(
   keep.number = Inf,
   keep.sparse = TRUE,
   keep.these = FALSE,
-  pool.along = "x",
+  exclude.these = FALSE,
+  these.target = "label",
+  pool.along = c("x", "none"),
   xintercept = 0,
   invert.selection = FALSE,
   bw = "SJ",
@@ -23,7 +25,7 @@ stat_dens1d_filter(
   adjust = 1,
   n = 512,
   return.density = FALSE,
-  orientation = "x",
+  orientation = c("x", "y"),
   na.rm = TRUE,
   show.legend = FALSE,
   inherit.aes = TRUE
@@ -38,7 +40,9 @@ stat_dens1d_filter_g(
   keep.number = Inf,
   keep.sparse = TRUE,
   keep.these = FALSE,
-  pool.along = "x",
+  exclude.these = FALSE,
+  these.target = "label",
+  pool.along = c("x", "none"),
   xintercept = 0,
   invert.selection = FALSE,
   na.rm = TRUE,
@@ -49,7 +53,7 @@ stat_dens1d_filter_g(
   kernel = "gaussian",
   n = 512,
   return.density = FALSE,
-  orientation = "x",
+  orientation = c("x", "y"),
   ...
 )
 }
@@ -81,10 +85,16 @@ would result in a larger number.}
 more sparse regions are retained, if \code{FALSE} those from the densest
 regions.}
 
-\item{keep.these}{character vector, integer vector, logical vector or
-function that takes the variable mapped to the \code{label} aesthetic as
-first argument and returns a character vector or a logical vector. These
-rows from \code{data} are selected irrespective of the local density.}
+\item{keep.these, exclude.these}{character vector, integer vector, logical
+vector or function that takes one or more variables in data selected by
+\code{these.target}. Negative integers behave as in R's extraction methods.
+The rows from \code{data} indicated by \code{keep.these} and
+\code{exclude.these} are kept or excluded irrespective of the local
+density.}
+
+\item{these.target}{character, numeric or logical selecting one or more
+column(s) of \code{data}. If \code{TRUE} the whole \code{data} object is
+passed.}
 
 \item{pool.along}{character, one of \code{"none"} or \code{"x"},
 indicating if selection should be done pooling the observations along the
@@ -172,13 +182,23 @@ The 1D density of observations of \emph{x} or \emph{y} is computed
   length of \code{keep.number} and \code{keep.fraction} is one, this value
   is used for both tails, if their length is two, the first value is use
   for the left tail and the second value for the right tail.
+
+  Computation of density and of the default bandwidth require at least
+  two observations with different values. If data do not fulfill this
+  condition, they are kept only if \code{keep.fraction = 1}. This is correct
+  behavior for a single observation, but can be surprising in the case of
+  multiple observations.
+
+  Parameters \code{keep.these} and \code{exclude.these} make it possible to
+  force inclusion or exclusion of observations after the density is computed.
+  In case of conflict, \code{exclude.these} overrides \code{keep.these}.
 }
 \note{
 Which points are kept and which not depends on how dense and flexible
   is the density curve estimate. This depends on the values passed as
   arguments to parameters \code{n}, \code{bw} and \code{kernel}. It is
   also important to be aware that both \code{geom_text()} and
-  \code{geom_text_repel()} can avoid overplotting by discarding labels at
+  \code{geom_text_repel()} can avoid over plotting by discarding labels at
   the plot rendering stage, i.e., what is plotted may differ from what is
   returned by this statistic.
 }

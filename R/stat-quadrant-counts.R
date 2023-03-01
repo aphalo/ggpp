@@ -60,7 +60,8 @@
 #'   \item{quadrant}{integer, one of 0:4} \item{x}{x value of label position in
 #'   data units} \item{y}{y value of label position in data units} \item{npcx}{x
 #'   value of label position in npc units} \item{npcy}{y value of label position
-#'   in npc units} \item{count}{number of  observations} }.
+#'   in npc units} \item{count}{number of  observations}
+#'   \item{count.label}{number of observations as character} }.
 #'
 #'   As shown in one example below \code{\link[gginnards]{geom_debug}} can be
 #'   used to print the computed values returned by any statistic. The output
@@ -129,7 +130,7 @@ stat_quadrant_counts <- function(mapping = NULL,
                                  geom = "text_npc",
                                  position = "identity",
                                  quadrants = NULL,
-                                 pool.along = "none",
+                                 pool.along = c("none", "x", "y", "xy"),
                                  xintercept = 0,
                                  yintercept = 0,
                                  label.x = NULL,
@@ -138,9 +139,13 @@ stat_quadrant_counts <- function(mapping = NULL,
                                  show.legend = FALSE,
                                  inherit.aes = TRUE, ...) {
 
-  stopifnot(pool.along %in% c("none", "x", "y"))
-  stopifnot(length(xintercept) == 1 && length(yintercept) == 1)
-  stopifnot(length(quadrants) <= 4)
+  pool.along <- rlang::arg_match(pool.along)
+  if (!is.null(pool.along) && pool.along == "xy") {
+    quadrants <- 0L # consistent UI with other stats from 'ggpp'
+  }
+  stopifnot("'xintercept' should have length == 1L" = length(xintercept) <= 1,
+            "'yintercept' should have length == 1L" = length(yintercept) <= 1)
+  stopifnot("Length of 'quadrants' shoul be between 0 and 4" = length(quadrants) <= 4)
   stopifnot(is.null(label.x) || is.numeric(label.x) || is.character(label.x))
   stopifnot(is.null(label.y) || is.numeric(label.y) || is.character(label.y))
 
@@ -244,12 +249,13 @@ StatQuadrantCounts <-
 
                      if (all(is.na(quadrants)) || 0L %in% quadrants) {
                        # total count
-                       tibble::tibble(quadrant = 0,
-                                      count = nrow(data),
-                                      npcx = label.x[2],
-                                      npcy = label.y[2],
-                                      x = range.x[2],
-                                      y = range.y[2])
+                       z <-
+                         tibble::tibble(quadrant = 0,
+                                        count = nrow(data),
+                                        npcx = label.x[2],
+                                        npcy = label.y[2],
+                                        x = range.x[2],
+                                        y = range.y[2])
                      } else {
                        # counts for the selected quadrants
                        data %>%
@@ -266,7 +272,10 @@ StatQuadrantCounts <-
                            rbind(data, tibble::tibble(quadrant = zero.count.quadrants, count = 0L))
                        }
 
-                       data %>%
+                       data$count.label <- sprintf("n=%i", data$count)
+
+                       z <-
+                         data %>%
                          dplyr::mutate(npcx = ifelse(.data$quadrant %in% c(1L, 2L),
                                                      label.x[2],
                                                      label.x[1]),
@@ -280,12 +289,14 @@ StatQuadrantCounts <-
                                                   range.y[2],
                                                   range.y[1]))
                      }
+                     z$count.label <- sprintf("n=%i", z$count)
+                     z
                    },
 
                    default_aes =
                      ggplot2::aes(npcx = ggplot2::after_stat(npcx),
                                   npcy = ggplot2::after_stat(npcy),
-                                  label = sprintf("n=%i", ggplot2::after_stat(count)),
+                                  label = ggplot2::after_stat(count.label),
                                   hjust = "inward",
                                   vjust = "inward"),
                    required_aes = c("x", "y")

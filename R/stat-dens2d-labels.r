@@ -39,6 +39,24 @@
 #'   observations selected, whenever \code{keep.fraction} results in fewer
 #'   observations selected, it is obeyed.
 #'
+#'   Computation of density and of the default bandwidth require at least
+#'   two observations with different values. If data do not fulfill this
+#'   condition, they are kept only if \code{keep.fraction = 1}. This is correct
+#'   behavior for a single observation, but can be surprising in the case of
+#'   multiple observations.
+#'
+#'   Parameters \code{keep.these} and \code{exclude.these} make it possible to
+#'   force inclusion or exclusion of observations after the density is computed.
+#'   In case of conflict, \code{exclude.these} overrides \code{keep.these}.
+#'
+#' @note Which points are kept and which not depends on how dense a grid is used
+#'   and how flexible the density surface estimate is. This depends on the
+#'   values passed as arguments to parameters \code{n}, \code{bw} and
+#'   \code{kernel}. It is also important to be aware that both
+#'   \code{geom_text()} and \code{geom_text_repel()} can avoid overplotting by
+#'   discarding labels at the plot rendering stage, i.e., what is plotted may
+#'   differ from what is returned by this statistic.
+#'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs
 #'   to be set at the layer level if you are overriding the plot defaults.
@@ -53,10 +71,15 @@
 #' @param keep.sparse logical If \code{TRUE}, the default, observations from the
 #'   more sparse regions are retained, if \code{FALSE} those from the densest
 #'   regions.
-#' @param keep.these character vector, integer vector, logical vector or
-#'   function that takes the variable mapped to the \code{label} aesthetic as
-#'   first argument and returns a character vector or a logical vector. These
-#'   rows from \code{data} are selected irrespective of the local density.
+#' @param keep.these,exclude.these character vector, integer vector, logical
+#'   vector or function that takes one or more variables in data selected by
+#'   \code{these.target}. Negative integers behave as in R's extraction methods.
+#'   The rows from \code{data} indicated by \code{keep.these} and
+#'   \code{exclude.these} are kept or excluded irrespective of the local
+#'   density.
+#' @param these.target character, numeric or logical selecting one or more
+#'   column(s) of \code{data}. If \code{TRUE} the whole \code{data} object is
+#'   passed.
 #' @param pool.along character, one of \code{"none"} or \code{"x"},
 #'   indicating if selection should be done pooling the observations along the
 #'   \emph{x} aesthetic, or separately on either side of \code{xintercept}.
@@ -199,7 +222,9 @@ stat_dens2d_labels <-
            keep.number = Inf,
            keep.sparse = TRUE,
            keep.these = FALSE,
-           pool.along = "xy",
+           exclude.these = FALSE,
+           these.target = "label",
+           pool.along = c("xy", "x", "y", "none"),
            xintercept = 0,
            yintercept = 0,
            invert.selection = FALSE,
@@ -210,6 +235,8 @@ stat_dens2d_labels <-
            na.rm = TRUE,
            show.legend = FALSE,
            inherit.aes = TRUE) {
+
+    pool.along <- rlang::arg_match(pool.along)
 
     if (length(label.fill) > 1L) {
       stop("Length for 'label.fill' is not 1: ", label.fill)
@@ -247,6 +274,8 @@ stat_dens2d_labels <-
                     keep.number = keep.number,
                     keep.sparse = keep.sparse,
                     keep.these = keep.these,
+                    exclude.these = exclude.these,
+                    these.target = these.target,
                     pool.along = pool.along,
                     xintercept = xintercept,
                     yintercept = yintercept,
@@ -275,6 +304,8 @@ StatDens2dLabels <-
                keep.number,
                keep.sparse,
                keep.these,
+               exclude.these,
+               these.target,
                pool.along,
                xintercept,
                yintercept,
@@ -289,7 +320,13 @@ StatDens2dLabels <-
           data[["label"]] <- rownames(data)
         }
 
-        keep.these <- keep_these2logical(keep.these = keep.these, data = data)
+        keep.these <- these2logical(these = keep.these,
+                                    data = data,
+                                    these.target = these.target)
+
+        exclude.these <- these2logical(these = exclude.these,
+                                       data = data,
+                                       these.target = these.target)
 
         # discard redundant splits
         if (pool.along != "xy") {
@@ -396,7 +433,7 @@ StatDens2dLabels <-
 
         # we construct one logical vector by adding observations/label to be kept
         # we may have a list of 1, 2, or 4 logical vectors
-        keep <- keep.these
+        keep <- logical(nrow(data))
         for (i in seq_along(selectors)) {
           if (keep.fraction[i] == 1) {
             keep[ selectors[[i]] ] <- TRUE
@@ -416,6 +453,7 @@ StatDens2dLabels <-
             }
           }
         }
+        keep <- (keep | keep.these) & !exclude.these
 
         if (invert.selection){
           keep <- !keep
@@ -463,36 +501,50 @@ StatDens2dLabels <-
 #'
 #' @keywords internal
 #'
-keep_these2logical <- function(keep.these, data) {
-  if (!is.numeric(keep.these) && !is.logical(keep.these) &&
-    !exists("label", where = data, mode = "character", inherits = FALSE)) {
-    data$label <- rownames(data)
-  }
-  if (length(keep.these)) {
-    if (is.function(keep.these)) {
-      keep.these <- keep.these(data$label) # character or logical vector
-    }
-    if (is.character(keep.these)) {
-      keep.these <- data$label %in% keep.these # logical vector
-    }
-    if (is.numeric(keep.these)) { # positional indices
-      temp <- rep(FALSE, times = nrow(data))
-      temp[keep.these] <- TRUE
-      keep.these <- temp
-    }
-    if (is.logical(keep.these)) { # logical indices, if short recycle
-      if (length(keep.these) >= 1L && length(keep.these) < nrow(data)) {
-        keep.these <- rep(keep.these, length.out = nrow(data))
-      } else if (length(keep.these) > nrow(data)) {
-        stop("Logical vector 'keep.these' longer than data")
+these2logical<- function(these,
+                         data,
+                         these.target = "label") {
+  if (length(these)) {
+    if (is.character(these) || is.function(these)) {
+      if (is.character(these.target) && any(these.target == "label") &&
+          !exists("label", where = data, mode = "character", inherits = FALSE)) {
+        data$label <- rownames(data)
+      }
+      if (is.character(these.target)) {
+        orig.num.targets <- length(unique(these.target))
+        these.target <- intersect(these.target, colnames(data))
+        if (length(these.target) == 0L) {
+          stop("Variables in 'these.target' not in 'data'")
+        } else if (orig.num.targets > length(these.target)) {
+          warning("Some variables in 'these.target' not in 'data'")
+        }
       }
     }
-    if (anyNA(keep.these)) {
-      warning("Discarding 'NA's in keep.these")
-      keep.these[is.na(keep.these)] <- FALSE
+    if (is.function(these)) {
+      these <- these(data[ , these.target, drop = TRUE]) # any vector
+    }
+    if (is.character(these)) {
+      stopifnot(is.character(data[[these.target[1]]]))
+      these <- data[[these.target[1]]] %in% these # logical vector
+    }
+    if (is.numeric(these)) { # positional indices
+      temp <- rep_len(FALSE, length.out = nrow(data))
+      temp[these] <- TRUE
+      these <- temp
+    }
+    if (is.logical(these)) { # logical indices, if short recycle
+      if (length(these) >= 1L && length(these) < nrow(data)) {
+        these <- rep_len(these, length.out = nrow(data))
+      } else if (length(these) > nrow(data)) {
+        stop("Logical vector 'keep.these' or 'exclude.these' longer than data")
+      }
+    }
+    if (anyNA(these)) {
+      warning("Discarding 'NA's in 'keep.these' or 'exclude-these'")
+      these[is.na(these)] <- FALSE
     }
   } else { # replace NULL and vectors with length zero with FALSE
-    keep.these <- rep(FALSE, nrow(data))
+    these <- rep_len(FALSE, length.out = nrow(data))
   }
-  keep.these
+  these
 }

@@ -170,7 +170,7 @@ ggplot(my.df, aes(x = X, y = Y, colour = category)) +
   geom_point()
 
 ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-  stat_centroid(geom = "rug", size = 1.5, .fun = median) +
+  stat_centroid(geom = "rug", linewidth = 1.5, .fun = median) +
   geom_point()
 
 ggplot(my.df, aes(x = X, y = Y, colour = category)) +

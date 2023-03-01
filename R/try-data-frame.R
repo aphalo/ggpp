@@ -85,7 +85,7 @@ try_data_frame <- function(x,
     if (lubridate::is.POSIXct(times.raw) || lubridate::is.Date(times.raw)) {
       times <- times.raw
     } else if (inherits(times.raw, "yearmon")) {
-      times <- as.POSIXct(format(times.raw, "%Y-%m-01"))
+      times <- as.POSIXct(format(times.raw, "%Y-%m-01"),  tz = "UTC", format = "%Y-%m-%d")
     } else if (inherits(times.raw, "yearqtr")) {
       times <- zoo::as.Date(times.raw)
     } else if (is.numeric(times.raw)) {
@@ -185,7 +185,6 @@ try_tibble <- function(x,
 #'
 #' @export
 #' @examples
-#' library(ggplot2)
 #' ggplot(lynx) + geom_line()
 #'
 #' @note Current implementation does not merge default mapping with user
@@ -200,13 +199,19 @@ ggplot.ts <-
            time.resolution = "day",
            as.numeric = TRUE,
            environment = parent.frame()) {
+    data.name <- substitute(data)
+    if (!is.name(data.name)) {
+      # likely an expression
+      data.name <- as.name("y")
+    }
+    time.name <- as.name("time")
     data.df <- try_tibble(data,
                           time.resolution = time.resolution,
                           as.numeric = as.numeric,
-                          col.names = c("time", substitute(data))
+                          col.names = c(time.name, data.name)
                           )
     if (is.null(mapping)) {
-      mapping <- aes_string("time", substitute(data))
+      mapping <- ggplot2::aes(x = {{time.name}}, y = {{data.name}})
     }
     ggplot2::ggplot(data = data.df,
                     mapping =  mapping,

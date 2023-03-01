@@ -65,14 +65,14 @@ starting position of each text label. The units for \code{nudge_x} and
 the colour aesthetic.}
 
 \item{colour.target}{A vector of character strings; \code{"all"},
-\code{"text"}, \code{"box"} and \code{"segment"}.}
+\code{"text"}, \code{"box"} and \code{"segment"} or \code{"none"}.}
 
 \item{default.alpha}{numeric in [0..1] A transparency value to use for
 elements not targeted by the alpha aesthetic.}
 
 \item{alpha.target}{A vector of character strings; \code{"all"},
 \code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
-\code{"box.fill"}.}
+\code{"box.fill"} or \code{"none"}.}
 
 \item{add.segments}{logical Display connecting segments or arrows between
 original positions and displaced ones if both are available.}
@@ -113,7 +113,10 @@ most common use of \code{geom_grob} is to add data labels that are graphical
 objects rather than text. \code{\link{geom_grob_npc}} is used to add grobs
 as annotations to plots, but contrary to layer function \code{annotate()},
 \code{\link{geom_grob_npc}} is data driven and respects grouping and facets,
-thus plot insets can differ among panels.
+thus plot insets can differ among panels. Of these two geoms only
+\code{\link{geom_grob}} supports the plotting of segments, as
+\code{\link{geom_grob_npc}} uses a coordinate system that is unrelated
+to data units and data.
 }
 \details{
 You can modify the size of insets with the \code{vp.width} and
@@ -221,7 +224,20 @@ ggplot(data = mtcars,
   geom_grob(data = df,
             aes(x, y, label = grob),
             nudge_x = 0.5,
-            colour = "red")
+            colour = "red",
+            hjust = 0.5,
+            vjust = 0.5)
+
+ggplot(data = mtcars,
+       aes(wt, mpg)) +
+  geom_point(aes(colour = factor(cyl))) +
+  geom_grob(data = df,
+            aes(x, y, label = grob),
+            nudge_x = 0.5,
+            colour = "red",
+            colour.target = "none",
+            hjust = 0.5,
+            vjust = 0.5)
 
 # with nudging plotting of segments can be disabled
 ggplot(data = mtcars,
@@ -230,7 +246,9 @@ ggplot(data = mtcars,
   geom_grob(data = df,
             aes(x, y, label = grob),
             add.segments = FALSE,
-            nudge_x = 0.5)
+            nudge_x = 0.5,
+            hjust = 0.5,
+            vjust = 0.5)
 
 }
 \references{

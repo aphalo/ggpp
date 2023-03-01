@@ -10,7 +10,7 @@ geom_quadrant_lines(
   data = NULL,
   stat = "identity",
   position = "identity",
-  pool.along = "none",
+  pool.along = c("none", "x", "y", "xy"),
   xintercept = 0,
   yintercept = 0,
   na.rm = FALSE,

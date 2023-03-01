@@ -61,15 +61,14 @@ starting position of each text label. The units for \code{nudge_x} and
 \item{default.colour}{A colour definition to use for elements not targeted by
 the colour aesthetic.}
 
-\item{colour.target}{A vector of character strings; \code{"all"},
-\code{"text"}, \code{"box"} and \code{"segment"}.}
+\item{colour.target}{A character string, one of \code{"all"},
+\code{"point"} and \code{"segment"} or \code{"none"}.}
 
 \item{default.alpha}{numeric in [0..1] A transparency value to use for
 elements not targeted by the alpha aesthetic.}
 
-\item{alpha.target}{A vector of character strings; \code{"all"},
-\code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
-\code{"box.fill"}.}
+\item{alpha.target}{A character string, one of \code{"all"},
+\code{"segment"}, \code{"point"}, or \code{"none"}.}
 
 \item{add.segments}{logical Display connecting segments or arrows between
 original positions and displaced ones if both are available.}
@@ -143,21 +142,36 @@ The insets are stored nested within the main ggplot object and
 # Same output as with geom_point()
 ggplot(mpg[1:20, ],
        aes(cyl, hwy)) +
-  geom_point_s()
+  geom_point_s(colour = "blue")
+
+# with segment drawn after nudging
+ggplot(mpg[1:20, ],
+       aes(cyl, hwy, label = drv)) +
+  geom_point_s(position = position_nudge_keep(x = 0.2),
+               colour = "red") +
+  geom_point_s(colour = "blue")
+
+# with segment drawn after nudging
+ggplot(mpg[1:20, ],
+       aes(cyl, hwy, label = drv)) +
+  geom_point_s(position = position_nudge_keep(x = 0.2),
+               colour = "red",
+               colour.target = "all") +
+  geom_point_s(colour = "blue")
 
 ggplot(mpg[1:20, ],
        aes(cyl, hwy, label = drv)) +
   geom_point_s(position = position_nudge_keep(x = 0.2),
-               color = "red",
-               segment.colour = "brown") +
-  geom_point_s()
+               colour = "red",
+               colour.target = "segment") +
+  geom_point_s(colour = "blue")
 
 ggplot(mpg[1:20, ],
        aes(cyl, hwy, label = drv)) +
   geom_point_s(position = position_nudge_keep(x = 0.2),
-               color = "red",
-               segment.colour = "brown") +
-  geom_point_s()
+               colour = "red",
+               colour.target = "point") +
+  geom_point_s(colour = "blue")
 
 ggplot(mpg[1:50, ],
        aes(cyl, hwy, label = drv)) +
@@ -165,9 +179,9 @@ ggplot(mpg[1:50, ],
                                                seed = 456,
                                                nudge.from = "jittered",
                                                kept.origin = "original"),
-               color = "red",
+               colour = "red",
                arrow = grid::arrow(length = grid::unit(0.4, "lines"))) +
-  geom_point_s()
+  geom_point_s(colour = "blue")
 
 }
 \seealso{

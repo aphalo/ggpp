@@ -89,7 +89,6 @@ To add to the default mapping, aes() can be used by itself to compose
 the ggplot.
 }
 \examples{
-library(ggplot2)
 ggplot(lynx) + geom_line()
 
 }

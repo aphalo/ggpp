@@ -11,20 +11,35 @@ editor_options:
 -   Fix bug in `stat_dens2d_labels()`, `stat_dens2d_filter()`,
 `stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and
 `stat_dens1d_filter_g()`: handle elegantly data for which density cannot be
-estimated.
+estimated (Issue #32 raised by mshubert to report bug).
 -   In `stat_dens2d_labels()`, `stat_dens2d_filter()`,
 `stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and
 `stat_dens1d_filter_g()` use `type = 8` when computing quantiles, instead of the
-default `type = 7`. It is expected to work better with data that are not
+default `type = 7`. Type 8 is recommended as better with data that are not
 normally distributed.
--   Add unit tests and make existing tests visible to package 'covr'.
+-   Add parameter `exclude.these` to `stat_dens2d_labels()`, `stat_dens2d_filter()`,
+`stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and
+`stat_dens1d_filter_g()` allowing forcing the exclusion of specific observations
+irrespective of the local density (See issue #19, partly addressing a suggestion by mshubert).
+-   In `stat_dens2d_labels()`, `stat_dens2d_filter()`,
+`stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and
+`stat_dens1d_filter_g()` add parameter `these.target` making it possible
+to apply a function or vector of values passed through `exclude.these` or `keep.these` to any variable in the layer `data` 
+(See issue #19, partly addressing a suggestion by mshubert).
+-   Add unit tests and make existing tests visible to package 'covr'. (See
+issue #10, and pull requests #12, #13, #17, #18, #21, #23, #24, #25, #26, #27,
+   #30 and #31 from Daniel Sabanes Bove and his team).
+-   Add checks for string arguments, replace some obscure error messages.
+-   Changed default values for `colour.target` to improve consistency, now
+segments are never the target of colour by default.
+-   Track deprecation of `aes_string()` in 'ggplot2' (>= 3.0.0).
 
 # ggpp 0.5.1
 
 -   Add parameter `keep.these` to `stat_dens2d_labels()`, `stat_dens2d_filter()`,
 `stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and
 `stat_dens1d_filter_g()` allowing forcing the inclusion of specific observations
-irrespective of the local density.
+irrespective of the local density (See issue #19, partly addressing a suggestion by mshubert).
 -   Update `stat_dens2d_labels()`, `stat_dens2d_filter()`,
 `stat_dens2d_filter_g()`, `stat_dens1d_labels()`, `stat_dens1d_filter()` and
 `stat_dens1d_filter_g()` to allow separate control of kept observations or

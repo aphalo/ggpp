@@ -14,7 +14,9 @@ stat_dens2d_labels(
   keep.number = Inf,
   keep.sparse = TRUE,
   keep.these = FALSE,
-  pool.along = "xy",
+  exclude.these = FALSE,
+  these.target = "label",
+  pool.along = c("xy", "x", "y", "none"),
   xintercept = 0,
   yintercept = 0,
   invert.selection = FALSE,
@@ -55,10 +57,16 @@ number.}
 more sparse regions are retained, if \code{FALSE} those from the densest
 regions.}
 
-\item{keep.these}{character vector, integer vector, logical vector or
-function that takes the variable mapped to the \code{label} aesthetic as
-first argument and returns a character vector or a logical vector. These
-rows from \code{data} are selected irrespective of the local density.}
+\item{keep.these, exclude.these}{character vector, integer vector, logical
+vector or function that takes one or more variables in data selected by
+\code{these.target}. Negative integers behave as in R's extraction methods.
+The rows from \code{data} indicated by \code{keep.these} and
+\code{exclude.these} are kept or excluded irrespective of the local
+density.}
+
+\item{these.target}{character, numeric or logical selecting one or more
+column(s) of \code{data}. If \code{TRUE} the whole \code{data} object is
+passed.}
 
 \item{pool.along}{character, one of \code{"none"} or \code{"x"},
 indicating if selection should be done pooling the observations along the
@@ -137,6 +145,25 @@ A plot layer instance. Using as output \code{data} the input
   and \code{keep.fraction}. \code{keep.number} sets the maximum number of
   observations selected, whenever \code{keep.fraction} results in fewer
   observations selected, it is obeyed.
+
+  Computation of density and of the default bandwidth require at least
+  two observations with different values. If data do not fulfill this
+  condition, they are kept only if \code{keep.fraction = 1}. This is correct
+  behavior for a single observation, but can be surprising in the case of
+  multiple observations.
+
+  Parameters \code{keep.these} and \code{exclude.these} make it possible to
+  force inclusion or exclusion of observations after the density is computed.
+  In case of conflict, \code{exclude.these} overrides \code{keep.these}.
+}
+\note{
+Which points are kept and which not depends on how dense a grid is used
+  and how flexible the density surface estimate is. This depends on the
+  values passed as arguments to parameters \code{n}, \code{bw} and
+  \code{kernel}. It is also important to be aware that both
+  \code{geom_text()} and \code{geom_text_repel()} can avoid overplotting by
+  discarding labels at the plot rendering stage, i.e., what is plotted may
+  differ from what is returned by this statistic.
 }
 \examples{
 

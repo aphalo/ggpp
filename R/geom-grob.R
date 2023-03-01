@@ -9,7 +9,10 @@
 #' objects rather than text. \code{\link{geom_grob_npc}} is used to add grobs
 #' as annotations to plots, but contrary to layer function \code{annotate()},
 #' \code{\link{geom_grob_npc}} is data driven and respects grouping and facets,
-#' thus plot insets can differ among panels.
+#' thus plot insets can differ among panels. Of these two geoms only
+#' \code{\link{geom_grob}} supports the plotting of segments, as
+#' \code{\link{geom_grob_npc}} uses a coordinate system that is unrelated
+#' to data units and data.
 #'
 #' @details You can modify the size of insets with the \code{vp.width} and
 #'   \code{vp.height} aesthetics. These can take a number between 0 (smallest
@@ -93,12 +96,12 @@
 #' @param default.colour A colour definition to use for elements not targeted by
 #'   the colour aesthetic.
 #' @param colour.target A vector of character strings; \code{"all"},
-#'   \code{"text"}, \code{"box"} and \code{"segment"}.
+#'   \code{"text"}, \code{"box"} and \code{"segment"} or \code{"none"}.
 #' @param default.alpha numeric in [0..1] A transparency value to use for
 #'   elements not targeted by the alpha aesthetic.
 #' @param alpha.target A vector of character strings; \code{"all"},
 #'   \code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
-#'   \code{"box.fill"}.
+#'   \code{"box.fill"} or \code{"none"}.
 #' @param add.segments logical Display connecting segments or arrows between
 #'   original positions and displaced ones if both are available.
 #' @param box.padding,point.padding numeric By how much each end of the segments
@@ -137,7 +140,20 @@
 #'   geom_grob(data = df,
 #'             aes(x, y, label = grob),
 #'             nudge_x = 0.5,
-#'             colour = "red")
+#'             colour = "red",
+#'             hjust = 0.5,
+#'             vjust = 0.5)
+#'
+#' ggplot(data = mtcars,
+#'        aes(wt, mpg)) +
+#'   geom_point(aes(colour = factor(cyl))) +
+#'   geom_grob(data = df,
+#'             aes(x, y, label = grob),
+#'             nudge_x = 0.5,
+#'             colour = "red",
+#'             colour.target = "none",
+#'             hjust = 0.5,
+#'             vjust = 0.5)
 #'
 #' # with nudging plotting of segments can be disabled
 #' ggplot(data = mtcars,
@@ -146,62 +162,75 @@
 #'   geom_grob(data = df,
 #'             aes(x, y, label = grob),
 #'             add.segments = FALSE,
-#'             nudge_x = 0.5)
+#'             nudge_x = 0.5,
+#'             hjust = 0.5,
+#'             vjust = 0.5)
 #'
-geom_grob <- function(mapping = NULL,
-                      data = NULL,
-                      stat = "identity",
-                      position = "identity",
-                      ...,
-                      nudge_x = 0,
-                      nudge_y = 0,
-                      default.colour = "black",
-                      colour.target = "segment",
-                      default.alpha = 1,
-                      alpha.target = "segment",
-                      add.segments = TRUE,
-                      box.padding = 0.25,
-                      point.padding = 1e-06,
-                      segment.linewidth = 0.5,
-                      min.segment.length = 0,
-                      arrow = NULL,
-                      na.rm = FALSE,
-                      show.legend = FALSE,
-                      inherit.aes = FALSE) {
+geom_grob <-
+  function(mapping = NULL,
+           data = NULL,
+           stat = "identity",
+           position = "identity",
+           ...,
+           nudge_x = 0,
+           nudge_y = 0,
+           default.colour = "black",
+           colour.target = "segment",
+           default.alpha = 1,
+           alpha.target = "segment",
+           add.segments = TRUE,
+           box.padding = 0.25,
+           point.padding = 1e-06,
+           segment.linewidth = 0.5,
+           min.segment.length = 0,
+           arrow = NULL,
+           na.rm = FALSE,
+           show.legend = FALSE,
+           inherit.aes = FALSE) {
 
-  if (!missing(nudge_x) || !missing(nudge_y)) {
-    if (!missing(position) && position != "identity") {
-      rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")
+    colour.target <-
+      rlang::arg_match(colour.target,
+                       values = c("segment", "all", "grob", "box", "none"),
+                       multiple = TRUE)
+    alpha.target <-
+      rlang::arg_match(alpha.target,
+                       values = c("segment", "all", "grob", "box",
+                                  "box.line", "box.fill", "none"),
+                       multiple = TRUE)
+
+    if (!missing(nudge_x) || !missing(nudge_y)) {
+      if (!missing(position) && position != "identity") {
+        rlang::abort("You must specify either `position` or `nudge_x`/`nudge_y`.")
+      }
+      # original position needed for "position" justification
+      position <-
+        position_nudge_center(nudge_x, nudge_y, kept.origin = "original")
     }
-    # original position needed for "position" justification
-    position <-
-      position_nudge_center(nudge_x, nudge_y, kept.origin = "original")
-  }
 
-  ggplot2::layer(
-    data = data,
-    mapping = mapping,
-    stat = stat,
-    geom = GeomGrob,
-    position = position,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-    params = list(
-      default.colour = default.colour,
-      colour.target = colour.target,
-      default.alpha = default.alpha,
-      alpha.target = alpha.target,
-      add.segments = add.segments,
-      box.padding = box.padding,
-      point.padding = point.padding,
-      segment.linewidth = segment.linewidth,
-      min.segment.length = min.segment.length,
-      arrow = arrow,
-      na.rm = na.rm,
-      ...
+    ggplot2::layer(
+      data = data,
+      mapping = mapping,
+      stat = stat,
+      geom = GeomGrob,
+      position = position,
+      show.legend = show.legend,
+      inherit.aes = inherit.aes,
+      params = list(
+        default.colour = default.colour,
+        colour.target = colour.target,
+        default.alpha = default.alpha,
+        alpha.target = alpha.target,
+        add.segments = add.segments,
+        box.padding = box.padding,
+        point.padding = point.padding,
+        segment.linewidth = segment.linewidth,
+        min.segment.length = min.segment.length,
+        arrow = arrow,
+        na.rm = na.rm,
+        ...
+      )
     )
-  )
-}
+  }
 
 #' @rdname ggpp-ggproto
 #' @format NULL
@@ -214,8 +243,8 @@ GeomGrob <-
                    default_aes = ggplot2::aes(
                      colour = "black",
                      angle = 0,
-                     hjust = "position",
-                     vjust = "position",
+                     hjust = 0.5,
+                     vjust = 0.5,
                      alpha = NA,
                      family = "",
                      fontface = 1,

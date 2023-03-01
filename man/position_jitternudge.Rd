@@ -14,9 +14,10 @@ position_jitternudge(
   seed = NA,
   x = 0,
   y = 0,
-  direction = "as.is",
-  nudge.from = "original",
-  kept.origin = "jittered"
+  direction = c("as.is", "alternate", "split"),
+  nudge.from = c("original", "original.x", "original.y", "jittered", "jittered.y",
+    "jittered.x"),
+  kept.origin = c("jittered", "original", "none")
 )
 
 position_jitter_keep(width = NULL, height = NULL, seed = NA)

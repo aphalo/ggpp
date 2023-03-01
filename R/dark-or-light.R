@@ -41,7 +41,8 @@ dark_or_light <- function(colors,
 {
   if (!length(colors))
     return(character())
-  stopifnot(length(threshold) == 1L && threshold >= 0 && threshold <= 1)
+  stopifnot("'threshold' should have length = 1" = length(threshold) == 1L,
+            "'threshold' should be within 0..1" = threshold >= 0 && threshold <= 1)
   threshold <- trunc(threshold * 255)
   # approximate luminance in 0..255
   lum <- sapply(colors, function(x) {
