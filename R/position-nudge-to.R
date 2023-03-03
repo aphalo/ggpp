@@ -41,12 +41,18 @@
 #'   geom_point() +
 #'   geom_text_s(position = position_nudge_to(y = 3))
 #'
+#' ggplot(df[order(df$x) , ], aes(x, y, label = label)) +
+#'   geom_point() +
+#'   geom_text_s(position = position_nudge_to(y = 3, x = seq(min(df$x), max(df$x), length = nrow(df))))
+#'
 position_nudge_to <-
   function(x = NULL,
            y = NULL,
            kept.origin = c("original", "none")) {
-
+    stopifnot("")
     kept.origin <- rlang::arg_match(kept.origin)
+
+    stopifnot()
 
     ggplot2::ggproto(NULL, PositionNudgeTo,
                      x = x,
@@ -75,6 +81,12 @@ PositionNudgeTo <-
     },
 
     compute_layer = function(self, data, params, layout) {
+      if (x == "spread") {
+        data <- data[order(data$x), ]
+      } else if (y == "spread") {
+        data <- data[order(data$y), ]
+      }
+
       x_orig <- data$x
       y_orig <- data$y
       # compute nudges from user-supplied final positions
