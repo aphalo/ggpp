@@ -1,7 +1,7 @@
 context("geom_text_s")
 # Here we not only test geom_text_s() but also function compute_just2d()
 # which translates character strings into numeric values of justification
-# taking into account angle of rotation direction splits.
+# taking into account angle of rotation and direction splits.
 
 test_that("text_linked_just", {
   df <- data.frame(
@@ -324,3 +324,51 @@ test_that("text_linked_color", {
 }
 )
 
+test_that("shrink_segments returns correct values", {
+  dfs <- data.frame(x_orig = 1, y_orig = 1, x = 2, y = 2)
+
+  value <- shrink_segments(dfs)
+  expect_equal(value[ , -5], dfs)
+  expect_false(value$too.short[1])
+
+  value <- ggpp:::shrink_segments(dfs, point.padding = 0.5)
+  expect_equal(as.vector(t(value[1:4])),
+               c(1.003536, 1.003536, 2.000000, 2.000000),
+               tolerance = 1e-5)
+  expect_false(value$too.short[1])
+
+  value <- ggpp:::shrink_segments(dfs, box.padding = 0.5)
+  expect_equal(as.vector(t(value[1:4])),
+               c(1.000000, 1.00000, 1.996464, 1.996464),
+               tolerance = 1e-5)
+  expect_false(value$too.short[1])
+
+  value <- ggpp:::shrink_segments(dfs,
+                                  box.padding = 0.5 - 1e-15,
+                                  point.padding = 0.5 - 1e-15)
+  expect_equal(as.vector(t(value[1:4])),
+               c(1.003536, 1.003536, 1.996464, 1.996464),
+               tolerance = 1e-5)
+  expect_false(value$too.short[1])
+
+  value <- shrink_segments(data.frame(x_orig = 1, y_orig = 1, x = 1, y = 1))
+  expect_equal(as.vector(t(value[1:4])),
+               c(1, 1, 1, 1),
+               tolerance = 1e-5)
+  expect_true(value$too.short[1])
+
+  value <- shrink_segments(data.frame(x_orig = 1, y_orig = 1, x = 1, y = 1),
+                           point.padding = 0.5)
+  expect_equal(as.vector(t(value[1:4])),
+               c(1, 1, 1, 1),
+               tolerance = 1e-5)
+  expect_true(value$too.short[1])
+
+  value <- shrink_segments(data.frame(x_orig = 1, y_orig = 1, x = 1, y = 1),
+                           box.padding = 0.5)
+  expect_equal(as.vector(t(value[1:4])),
+               c(1, 1, 1, 1),
+               tolerance = 1e-5)
+  expect_true(value$too.short[1])
+
+  })

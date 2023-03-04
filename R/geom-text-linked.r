@@ -645,23 +645,25 @@ shrink_segments <- function(data,
   segments.data <- data[ , c("x_orig", "y_orig", "x", "y")]
   starting.length <- apply(segments.data, 1,
                            function(x) stats::dist(rbind(x[1:2], x[3:4])))
+
+  zero.len <- starting.length < max(1e-5, (point.padding + box.padding) / 100)
+
   # padding origin
   if (point.padding != 0) {
-    p <- point.padding / starting.length / 100
+    p <- point.padding / starting.length[!zero.len] / 100
     p <- 1 - p
-    segments.data[ , "x_orig"] <- data[ , "x"] + p * (data[ ,"x_orig"] - data[ , "x"])
-    segments.data[ , "y_orig"] <- data[ , "y"] + p * (data[ ,"y_orig"] - data[ , "y"])
+    segments.data[!zero.len, "x_orig"] <- data[!zero.len, "x"] + p * (data[!zero.len, "x_orig"] - data[!zero.len, "x"])
+    segments.data[!zero.len, "y_orig"] <- data[!zero.len, "y"] + p * (data[!zero.len, "y_orig"] - data[!zero.len, "y"])
   }
   # padding position
   if (box.padding != 0) {
-    p <- box.padding / starting.length / 100
+    p <- box.padding / starting.length[!zero.len] / 100
     p <- 1 - p
-    segments.data[ , "x"] <- data[ , "x_orig"] + p * (data[ ,"x"] - data[ , "x_orig"])
-    segments.data[ , "y"] <- data[ , "y_orig"] + p * (data[ ,"y"] - data[ , "y_orig"])
+    segments.data[!zero.len, "x"] <- data[!zero.len, "x_orig"] + p * (data[!zero.len, "x"] - data[!zero.len, "x_orig"])
+    segments.data[!zero.len, "y"] <- data[!zero.len, "y_orig"] + p * (data[!zero.len, "y"] - data[!zero.len, "y_orig"])
   }
   final.length <- apply(segments.data, 1,
                         function(x) stats::dist(rbind(x[1:2], x[3:4])))
   segments.data$too.short <- final.length < min.segment.length
   segments.data
 }
-
