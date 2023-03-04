@@ -1,13 +1,14 @@
-context("stat_apply_group")
-
 library(ggplot2)
+library(ggpp)
+
+context("stat_apply_group")
 
 test_that("stat_apply_group", {
   my.df.unsorted <- data.frame(X = rep(1:20,2),
                       Y = runif(40)*10,
                       category = rep(c("A","B"), each = 20))
 
-  my.df <- my.df[order(my.df[["X"]]), ]
+  my.df <- my.df.unsorted[order(my.df.unsorted[["X"]]), ]
 
   result <- ggplot(my.df, aes(x = X, y = Y, colour = category)) +
     geom_point() +
