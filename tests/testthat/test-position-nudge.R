@@ -248,10 +248,72 @@ test_that("nudge_to", {
     label = c("abc","cd","d","c","bcd","a")
   )
 
-  expect_error(ggplot(df, aes(x, y, label = label)) +
-                 geom_text_s(position =
-                               position_nudge_to(y = 3,
-                                                 kept.origin = "wrong value")))
+  expect_error(
+    ggplot(df, aes(x, y, label = label)) +
+      geom_text_s(position =
+                    position_nudge_to(y = 3,
+                                      kept.origin = "wrong value"))
+  )
+  expect_error(
+    ggplot(df, aes(x, y, label = label)) +
+      geom_text_s(position =
+                    position_nudge_to(y = 3,
+                                      x.action = "wrong value"))
+  )
+  expect_error(
+    ggplot(df, aes(x, y, label = label)) +
+      geom_text_s(position =
+                    position_nudge_to(y = 3,
+                                      y.action = "wrong value"))
+  )
+
+  expect_no_error(
+    ggplot(df, aes(x, y, label = label)) +
+      geom_text_s(position =
+                    position_nudge_to(y = 3,
+                                      kept.origin = "none"))
+  )
+  expect_no_error(
+    ggplot(df, aes(x, y, label = label)) +
+      geom_text_s(position =
+                    position_nudge_to(y = 3,
+                                      x.action = "none"))
+  )
+  expect_no_error(
+    ggplot(df, aes(x, y, label = label)) +
+      geom_text_s(position =
+                    position_nudge_to(y = 3,
+                                      y.action = "none"))
+  )
+
+
+  expect_no_error(
+    ggplot(df, aes(x, y, label = label)) +
+                    geom_text_s(position =
+                                  position_nudge_to(y = 3,
+                                                    kept.origin = "original"))
+    )
+  expect_no_error(
+    ggplot(df, aes(x, y, label = label)) +
+                    geom_point() +
+                    geom_text_s(position =
+                                  position_nudge_to(y = 3,
+                                                    x.action = "spread"))
+    )
+  expect_no_error(
+    ggplot(df, aes(x, y, label = label)) +
+      geom_point() +
+      geom_text(position =
+                    position_nudge_to(x = 4,
+                                      y.action = "spread"))
+  )
+  expect_no_error(
+    ggplot(df, aes(x, y, label = label)) +
+      geom_point() +
+      geom_text_s(position =
+                  position_nudge_to(x = 0,
+                                    y.action = "spread"))
+  )
 
   vdiffr::expect_doppelganger("nudge_to1",
                               ggplot(df, aes(x, y, label = label)) +
@@ -264,5 +326,31 @@ test_that("nudge_to", {
                                 geom_point() +
                                 geom_text_s(position = position_nudge_to(x = 6),
                                                  hjust = 0)
+  )
+  vdiffr::expect_doppelganger("nudge_to_spread_x1",
+                              ggplot(df, aes(x, y, label = label)) +
+                                geom_point() +
+                                geom_text_s(position = position_nudge_to(x.action = "spread", y = 3),
+                                            hjust = 0)
+  )
+  vdiffr::expect_doppelganger("nudge_to_spread_x2",
+                              ggplot(df, aes(x, y, label = label)) +
+                                geom_point() +
+                                geom_text_s(position = position_nudge_to(x.action = "spread",
+                                                                         x = c(2, 4), y = 3),
+                                            hjust = 0)
+  )
+  vdiffr::expect_doppelganger("nudge_to_spread_y1",
+                              ggplot(df, aes(x, y, label = label)) +
+                                geom_point() +
+                                geom_text_s(position = position_nudge_to(x = 6, y.action = "spread"),
+                                            hjust = 0)
+  )
+  vdiffr::expect_doppelganger("nudge_to_spread_y2",
+                              ggplot(df, aes(x, y, label = label)) +
+                                geom_point() +
+                                geom_text_s(position = position_nudge_to(x = 6, y = c(1, 3),
+                                                                         y.action = "spread"),
+                                            hjust = 0)
   )
 })

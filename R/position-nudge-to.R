@@ -4,20 +4,31 @@
 #' labels or text, both on a discrete or continuous scale.
 #' \code{position_nudge_to()} differs from \code{\link[ggplot2]{position_nudge}}
 #' in that the coordinates of the new position are given directly, rather than
-#' as a displacement from the original location. As other position functions in
-#' this package, it preserves the original position to allow the text to be
-#' linked back to its original position with a segment or arrow.
+#' as a displacement from the original location. It optionally sets an even
+#' distance among positions. As other position functions in this package, it
+#' preserves the original position to allow the text to be linked back to its
+#' original position with a segment or arrow.
 #'
 #' @family position adjustments
 #'
-#' @param x,y Coordinates of the destination position. A numeric vector of
-#'   length 1, or of the same length as rows there are in \code{data}. The
-#'   default, \code{NULL}, leaves the original coordinates unchanged.
+#' @param x,y Coordinates of the destination position. A vector of mode
+#'   \code{numeric}, that is extended if needed, to the same length as rows
+#'   there are in \code{data}. The values are applied in the order of the
+#'   observations in data. The default, \code{NULL}, leaves the original
+#'   coordinates unchanged.
+#' @param x.action,y.action character string, one of \code{"none"}, or
+#'   \code{"spread"}. With \code{"spread"} evenly distributing the positions
+#'   within the range of argument \code{x} or \code{y}, if non-null, or the
+#'   range the variable mapped to \emph{x} or \code{y}, otherwise.
 #' @param kept.origin One of \code{"original"} or \code{"none"}.
 #'
 #' @details The nudged \code{x} or \code{y} replace the original ones in
 #'   \code{data}, while the original coordinates are returned in \code{x_orig}
-#'   and \code{y_orig}.
+#'   and \code{y_orig}. Values supported are those of \emph{mode} numeric,
+#'   thus including dates and times.
+#'
+#' @note Irrespective of the action, the ordering of rows in \code{data} is
+#'   preserved.
 #'
 #' @return A \code{"Position"} object.
 #'
@@ -41,16 +52,34 @@
 #'   geom_point() +
 #'   geom_text_s(position = position_nudge_to(y = 3))
 #'
+#' ggplot(df, aes(x, y, label = label)) +
+#'   geom_point() +
+#'   geom_text_s(position =
+#'     position_nudge_to(y = 3, x.action = "spread"))
+#'
+#' ggplot(df, aes(x, y, label = label)) +
+#'   geom_point() +
+#'   geom_text_s(position =
+#'     position_nudge_to(y = 3, x = c(2,4), x.action = "spread"),
+#'     hjust = "center")
+#'
 position_nudge_to <-
   function(x = NULL,
            y = NULL,
+           x.action = c("none", "spread"),
+           y.action = c("none", "spread"),
            kept.origin = c("original", "none")) {
-
     kept.origin <- rlang::arg_match(kept.origin)
+    x.action <- rlang::arg_match(x.action)
+    y.action <- rlang::arg_match(y.action)
+    stopifnot("'x' must be NULL or of mode numeric" = is.null(x) || mode(x) == "numeric")
+    stopifnot("'y' must be NULL or of mode numeric" = is.null(y) || mode(y) == "numeric")
 
     ggplot2::ggproto(NULL, PositionNudgeTo,
                      x = x,
                      y = y,
+                     x.action = x.action,
+                     y.action = y.action,
                      kept.origin = kept.origin
     )
   }
@@ -67,9 +96,10 @@ PositionNudgeTo <-
     y = NULL,
 
     setup_params = function(self, data) {
-
       list(x = self$x,
            y = self$y,
+           x.action = self$x.action,
+           y.action = self$y.action,
            kept.origin = self$kept.origin
       )
     },
@@ -77,26 +107,51 @@ PositionNudgeTo <-
     compute_layer = function(self, data, params, layout) {
       x_orig <- data$x
       y_orig <- data$y
-      # compute nudges from user-supplied final positions
-      # so that we respect expectations and apply same nudge
-      # to xmin, xmax, xend, ymin, ymax, and yend.
+
+      # compute/convert x nudges
       if (is.null(params$x)) {
-        params$x <- 0
-      } else {
-        if (length(params$x == 1L)) {
-          params$x <- rep(params$x, nrow(data))
+        if (params$x.action == "none") {
+          params$x <- rep_len(0, nrow(data))
+        } else if (params$x.action == "spread") {
+           params$x <- range(x_orig)
         }
-        params$x <- params$x - data$x
+      } else if (is.numeric(params$x)) {
+        if (params$x.action == "none") {
+          params$x <- rep_len(params$x, nrow(data)) - x_orig
+        } else if (params$x.action == "spread") {
+          params$x <- range(params$x)
+        }
       }
+      if (params$x.action == "spread") {
+        # evenly spaced sequence ordered as in data
+        params$x <- seq(from = params$x[1],
+                        to = params$x[2],
+                        length.out = nrow(data))[order(order(data$x))] - x_orig
+      }
+
+      # compute/convert y nudges
       if (is.null(params$y)) {
-        params$y <- 0
-      } else {
-        if (length(params$y == 1L)) {
-          params$y <- rep(params$y, nrow(data))
+        if (params$y.action == "none") {
+          params$y <- rep_len(0, nrow(data))
+        } else if (params$y.action == "spread") {
+          params$y <- range(y_orig)
         }
-        params$y <- params$y - data$y
+      } else if (is.numeric(params$y)) {
+        if (params$y.action == "none") {
+          params$y <- rep_len(params$y, nrow(data)) - y_orig
+        } else if (params$y.action == "spread") {
+          params$y <- range(params$y)
+        }
       }
-      # transform only the dimensions for which new coordinates exist
+      if (params$y.action == "spread") {
+        # evenly spaced sequence ordered as in data
+        params$y <- seq(from = params$y[1],
+                        to = params$y[2],
+                        length.out = nrow(data))[order(order(data$y))] - y_orig
+      }
+
+      # As in 'ggplot2' we apply the nudge to xmin, xmax, xend, ymin, ymax, and yend.
+      # Transform the dimensions for which not all nudges are zero
       if (any(params$x != 0)) {
         if (any(params$y != 0)) {
           data <- transform_position(data, function(x) x + params$x, function(y) y + params$y)
