@@ -44,9 +44,10 @@ The nudged \code{x} or \code{y} replace the original ones in
   \code{data}, while the original coordinates are returned in \code{x_orig}
   and \code{y_orig}. Values supported are those of \emph{mode} numeric,
   thus including dates and times.
-
-  When \code{spread} is active, the ordering of the observations along
-  the corresponding axis is preserved.
+}
+\note{
+Irrespective of the action, the ordering of rows in \code{data} is
+  preserved.
 }
 \examples{
 df <- data.frame(
@@ -63,12 +64,12 @@ ggplot(df, aes(x, y, label = label)) +
   geom_point() +
   geom_text_s(position = position_nudge_to(y = 3))
 
-ggplot(df[order(df$x) , ], aes(x, y, label = label)) +
+ggplot(df, aes(x, y, label = label)) +
   geom_point() +
   geom_text_s(position =
     position_nudge_to(y = 3, x.action = "spread"))
 
-ggplot(df[order(df$x) , ], aes(x, y, label = label)) +
+ggplot(df, aes(x, y, label = label)) +
   geom_point() +
   geom_text_s(position =
     position_nudge_to(y = 3, x = c(2,4), x.action = "spread"),

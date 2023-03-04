@@ -27,8 +27,8 @@
 #'   and \code{y_orig}. Values supported are those of \emph{mode} numeric,
 #'   thus including dates and times.
 #'
-#'   When \code{spread} is active, the ordering of the observations along
-#'   the corresponding axis is preserved.
+#' @note Irrespective of the action, the ordering of rows in \code{data} is
+#'   preserved.
 #'
 #' @return A \code{"Position"} object.
 #'
@@ -52,12 +52,12 @@
 #'   geom_point() +
 #'   geom_text_s(position = position_nudge_to(y = 3))
 #'
-#' ggplot(df[order(df$x) , ], aes(x, y, label = label)) +
+#' ggplot(df, aes(x, y, label = label)) +
 #'   geom_point() +
 #'   geom_text_s(position =
 #'     position_nudge_to(y = 3, x.action = "spread"))
 #'
-#' ggplot(df[order(df$x) , ], aes(x, y, label = label)) +
+#' ggplot(df, aes(x, y, label = label)) +
 #'   geom_point() +
 #'   geom_text_s(position =
 #'     position_nudge_to(y = 3, x = c(2,4), x.action = "spread"),
@@ -96,31 +96,24 @@ PositionNudgeTo <-
     y = NULL,
 
     setup_params = function(self, data) {
-
       list(x = self$x,
            y = self$y,
            x.action = self$x.action,
            y.action = self$y.action,
-           x.order = order(data$x),
-           y.order = order(data$y),
            kept.origin = self$kept.origin
       )
     },
 
     compute_layer = function(self, data, params, layout) {
-
       x_orig <- data$x
       y_orig <- data$y
-      # compute nudges from user-supplied final positions
-      # so that we respect expectations and apply same nudge
-      # to xmin, xmax, xend, ymin, ymax, and yend.
 
       # compute/convert x nudges
       if (is.null(params$x)) {
         if (params$x.action == "none") {
           params$x <- rep_len(0, nrow(data))
         } else if (params$x.action == "spread") {
-          params$x <- range(x_orig)
+           params$x <- range(x_orig)
         }
       } else if (is.numeric(params$x)) {
         if (params$x.action == "none") {
@@ -130,9 +123,10 @@ PositionNudgeTo <-
         }
       }
       if (params$x.action == "spread") {
+        # evenly spaced sequence ordered as in data
         params$x <- seq(from = params$x[1],
                         to = params$x[2],
-                        length.out = nrow(data))[params$x.order] - x_orig
+                        length.out = nrow(data))[order(order(data$x))] - x_orig
       }
 
       # compute/convert y nudges
@@ -150,12 +144,14 @@ PositionNudgeTo <-
         }
       }
       if (params$y.action == "spread") {
+        # evenly spaced sequence ordered as in data
         params$y <- seq(from = params$y[1],
                         to = params$y[2],
-                        length.out = nrow(data))[params$y.order] - y_orig
+                        length.out = nrow(data))[order(order(data$y))] - y_orig
       }
 
-      # transform only the dimensions for which new coordinates exist
+      # As in 'ggplot2' we apply the nudge to xmin, xmax, xend, ymin, ymax, and yend.
+      # Transform the dimensions for which not all nudges are zero
       if (any(params$x != 0)) {
         if (any(params$y != 0)) {
           data <- transform_position(data, function(x) x + params$x, function(y) y + params$y)
