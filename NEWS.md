@@ -26,12 +26,12 @@ irrespective of the local density (See issue #19, partly addressing a suggestion
 `stat_dens1d_filter_g()` add parameter `these.target` making it possible
 to apply a function or vector of values passed through `exclude.these` or `keep.these` to any variable in the layer `data` 
 (See issue #19, partly addressing a suggestion by mshubert).
--   Add unit tests and make existing tests visible to package 'covr'. (See
-issue #10, and pull requests #12, #13, #17, #18, #21, #23, #24, #25, #26, #27,
-   #30 and #31 from Daniel Sabanes Bove and his team).
--   Add checks for string arguments, replace some obscure error messages.
+-   Implement `"spread"` action in `position_nudge_to()`.
+-   Fix bug in segment shrinking (very rare division by zero).
 -   Changed default values for `colour.target` to improve consistency, now
 segments are never the target of colour by default.
+-   Add unit tests. (See issue #10, and pull requests #12, #13, #17, #18, #21, #23, #24, #25, #26, #27, #30 and #31 from Daniel Sabanes Bove and his team).
+-   Add checks for string arguments, replace some obscure error messages.
 -   Track deprecation of `aes_string()` in 'ggplot2' (>= 3.0.0).
 
 # ggpp 0.5.1
