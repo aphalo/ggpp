@@ -52,9 +52,9 @@
 #' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
 #'   starting position of each text label. The units for \code{nudge_x} and
 #'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
-#' @param default.colour A colour definition to use for elements not targeted by
+#' @param default.colour,default.color A colour definition to use for elements not targeted by
 #'   the colour aesthetic.
-#' @param colour.target A character string, one of \code{"all"},
+#' @param colour.target,color.target A character string, one of \code{"all"},
 #'   \code{"point"} and \code{"segment"} or \code{"none"}.
 #' @param default.alpha numeric in [0..1] A transparency value to use for
 #'   elements not targeted by the alpha aesthetic.
@@ -125,7 +125,9 @@ geom_point_s <- function(mapping = NULL, data = NULL,
                          nudge_y = 0,
                          arrow = grid::arrow(length = unit(1/3, "lines")),
                          default.colour = "black",
+                         default.color = default.colour,
                          colour.target = "point",
+                         color.target = colour.target,
                          default.alpha = 1,
                          alpha.target = "all",
                          add.segments = TRUE,
@@ -138,7 +140,7 @@ geom_point_s <- function(mapping = NULL, data = NULL,
                          inherit.aes = TRUE) {
 
   colour.target <-
-    rlang::arg_match(colour.target,
+    rlang::arg_match(color.target,
                      values = c("point", "all", "segment", "none"),
                      multiple = TRUE)
   alpha.target <-
@@ -167,7 +169,7 @@ geom_point_s <- function(mapping = NULL, data = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
-      default.colour = default.colour,
+      default.colour = default.color,
       colour.target = colour.target,
       default.alpha = default.alpha,
       alpha.target = alpha.target,

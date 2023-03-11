@@ -107,9 +107,9 @@
 #' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
 #'   starting position of each text label. The units for \code{nudge_x} and
 #'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
-#' @param default.colour A colour definition to use for elements not targeted by
+#' @param default.colour,default.color A colour definition to use for elements not targeted by
 #'   the colour aesthetic.
-#' @param colour.target A vector of character strings; \code{"all"},
+#' @param colour.target,color.target A vector of character strings; \code{"all"},
 #'   \code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
 #'   \code{"box.fill"} or \code{"none"}.
 #' @param default.alpha numeric in [0..1] A transparency value to use for
@@ -288,7 +288,9 @@ geom_text_s <- function(mapping = NULL,
                         nudge_x = 0,
                         nudge_y = 0,
                         default.colour = "black",
+                        default.color = default.colour,
                         colour.target = "text",
+                        color.target = colour.target,
                         default.alpha = 1,
                         alpha.target = "all",
                         add.segments = TRUE,
@@ -303,7 +305,7 @@ geom_text_s <- function(mapping = NULL,
                         inherit.aes = TRUE) {
 
   colour.target <-
-    rlang::arg_match(colour.target,
+    rlang::arg_match(color.target,
                      values = c("all", "text", "segment", "none"),
                      multiple = TRUE)
   alpha.target <-
@@ -331,7 +333,7 @@ geom_text_s <- function(mapping = NULL,
     inherit.aes = inherit.aes,
     params = list(
       parse = parse,
-      default.colour = default.colour,
+      default.colour = default.color,
       colour.target = colour.target,
       default.alpha = default.alpha,
       alpha.target = alpha.target,

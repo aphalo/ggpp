@@ -14,7 +14,9 @@ geom_grob(
   nudge_x = 0,
   nudge_y = 0,
   default.colour = "black",
+  default.color = default.colour,
   colour.target = "segment",
+  color.target = colour.target,
   default.alpha = 1,
   alpha.target = "segment",
   add.segments = TRUE,
@@ -61,10 +63,10 @@ can include aesthetics whose values you want to set, not map. See
 starting position of each text label. The units for \code{nudge_x} and
 \code{nudge_y} are the same as for the data units on the x-axis and y-axis.}
 
-\item{default.colour}{A colour definition to use for elements not targeted by
+\item{default.colour, default.color}{A colour definition to use for elements not targeted by
 the colour aesthetic.}
 
-\item{colour.target}{A vector of character strings; \code{"all"},
+\item{colour.target, color.target}{A vector of character strings; \code{"all"},
 \code{"text"}, \code{"box"} and \code{"segment"} or \code{"none"}.}
 
 \item{default.alpha}{numeric in [0..1] A transparency value to use for
