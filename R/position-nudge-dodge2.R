@@ -16,23 +16,23 @@ position_dodge2nudge <-
     direction <- rlang::arg_match(direction)
     kept.origin <- rlang::arg_match(kept.origin)
 
+    fun_one <- function(x) {1}
+
     ggplot2::ggproto(NULL, PositionDodgeAndNudge,
                      x = x,
                      y = y,
                      .fun_x = switch(direction,
-                                     none = function(x) {1},
+                                     none = fun_one,
                                      split = sign,
-                                     split.y = function(x) {1},
+                                     split.y = fun_one,
                                      split.x = sign,
-                                     center = sign,
-                                     function(x) {1}),
+                                     center = sign),
                      .fun_y = switch(direction,
-                                     none = function(x) {1},
+                                     none = fun_one,
                                      split = sign,
-                                     split.x = function(x) {1},
+                                     split.x = fun_one,
                                      split.y = sign,
-                                     center = sign,
-                                     function(x) {1}),
+                                     center = sign),
                      kept.origin = kept.origin,
                      width = width,
                      preserve = rlang::arg_match(preserve),

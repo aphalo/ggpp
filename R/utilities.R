@@ -23,3 +23,39 @@ parse_safe <- function(text) {
   }
   out
 }
+
+
+# function from ggplot2, needed in annotate() but not exported
+compact <- function (x)
+{
+  null <- vapply(x, is.null, logical(1))
+  x[!null]
+}
+
+# function from ggplot2 (not current), needed in annotate() but not exported
+new_data_frame <- function (x = list(), n = NULL) {
+  if (length(x) != 0 && is.null(names(x))) {
+    rlang::abort("Elements must be named")
+  }
+  lengths <- vapply(x, length, integer(1))
+  if (is.null(n)) {
+    n <- if (length(x) == 0 || min(lengths) == 0)
+      0
+    else max(lengths)
+  }
+  for (i in seq_along(x)) {
+    if (lengths[i] == n)
+      next
+    if (lengths[i] != 1) {
+      rlang::abort("Elements must equal the number of rows or 1")
+    }
+    x[[i]] <- rep(x[[i]], n)
+  }
+  tibble::as_tibble(x)
+}
+
+# Used in annotations to ensure printed even when no
+# global data
+# copied from ggplot2's utilities.r
+dummy_data <- function() new_data_frame(list(x = NA), n = 1)
+

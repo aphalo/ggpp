@@ -41,3 +41,14 @@ test_that("parse_safe works with multi expressions", {
     expression(NA, 1, 2, a)
   )
 })
+
+test_that("new_data_frame", {
+  expect_is(new_data_frame(), "data.frame")
+  df <- new_data_frame(list(A = 1:2, B = letters[1:2]))
+  expect_is(df, "data.frame")
+  expect_named(df, c("A", "B"))
+  expect_equal(nrow(df), 2L)
+  expect_error(new_data_frame(list(1:2, letters[1:2])))
+  expect_error(new_data_frame(list(A = 1:2, B = letters[1:2]), n = 0))
+  expect_error(new_data_frame(list(A = 1:2, B = letters[1:2]), n = 10))
+})

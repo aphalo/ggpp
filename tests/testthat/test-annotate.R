@@ -1,36 +1,6 @@
 context("annotate")
 # tests copied from 'ggplot2' to ensure that pass through is working as expected
 
-# Used in annotations to ensure printed even when no
-# global data
-# copied from ggplot2's utilities.r
-dummy_data <- function() new_data_frame(list(x = NA), n = 1)
-
-# Fast data.frame constructor and indexing
-# No checking, recycling etc. unless asked for
-# copied from ggplot2's performance.r
-new_data_frame <- function(x = list(), n = NULL) {
-  if (length(x) != 0 && is.null(names(x))) {
-    abort("Elements must be named")
-  }
-  lengths <- vapply(x, length, integer(1))
-  if (is.null(n)) {
-    n <- if (length(x) == 0 || min(lengths) == 0) 0 else max(lengths)
-  }
-  for (i in seq_along(x)) {
-    if (lengths[i] == n) next
-    if (lengths[i] != 1) {
-      abort("Elements must equal the number of rows or 1")
-    }
-    x[[i]] <- rep(x[[i]], n)
-  }
-
-  class(x) <- "data.frame"
-
-  attr(x, "row.names") <- .set_row_names(n)
-  x
-}
-
 test_that("dates in segment annotation work", {
   dt <- structure(list(month = structure(c(1364774400, 1377993600),
                                          class = c("POSIXct", "POSIXt"), tzone = "UTC"), total = c(-10.3,
