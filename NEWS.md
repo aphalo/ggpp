@@ -28,10 +28,11 @@ to apply a function or vector of values passed through `exclude.these` or `keep.
 (See issue #19, partly addressing a suggestion by mshubert).
 -   Implement `"spread"` action in `position_nudge_to()`.
 -   Fix bug in segment shrinking (very rare division by zero).
--   Changed default values for `colour.target` to improve consistency, now
+-   Changed default values for `colour.target` to improve consistency; now
 segments are never the target of colour by default.
--   Add unit tests. (See issue #10, and pull requests #12, #13, #17, #18, #21, #23, #24, #25, #26, #27, #30 and #31 from Daniel Sabanes Bove and his team).
--   Add checks for string arguments, replace some obscure error messages.
+-   Add formal parameters `color.target` and `default.colors` as synonyms of `colour.target` and `default.colours`.
+-   Add unit tests. (See issue #10, and pull requests #12, #13, #17, #18, #21, #23, #24, #25, #26, #27, #30, #31, #34 and #38 from Daniel Sabanes Bove and his team).
+-   Add checks for string arguments; improve some obscure error messages.
 -   Track deprecation of `aes_string()` in 'ggplot2' (>= 3.0.0).
 
 # ggpp 0.5.1
