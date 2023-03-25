@@ -304,6 +304,11 @@ GeomPointS <-
                    draw_key = ggplot2::draw_key_point
   )
 
+# adopts from 'ggplot2' rejected pull-request #5143 by Teun van den Brand
+# addresing issue #5088.
+# 'blank' and 'dot' deviate from the grammar of graphics but
+# are consistent with underlying R and 'grid' pch codes
+#
 translate_shape_string <- function(shape_string) {
   # strings of length 0 or 1 are interpreted as symbols by grid
   if (nchar(shape_string[1]) <= 1) {
@@ -338,13 +343,14 @@ translate_shape_string <- function(shape_string) {
     "diamond filled"        = 23,
     "triangle filled"       = 24,
     "triangle down filled"  = 25,
-    "point"                 = 46,
+    "dot"                   = 46,
     "blank"                 = NA
   )
 
-  shape_match <- charmatch(shape_string, names(pch_table))
+  shape_match <- charmatch(shape_string, names(pch_table), nomatch = 99)
 
-  invalid_strings <- is.na(shape_match)
+  invisible_shape <- anyNA(shape_match)
+  invalid_strings <- shape_match == 99
   nonunique_strings <- shape_match == 0
 
   if (any(invalid_strings)) {
@@ -386,5 +392,8 @@ translate_shape_string <- function(shape_string) {
     stop(paste("Shape names must be unambiguous:", collapsed_names, more_problems))
   }
 
+  if (invisible_shape) {
+    message("Invisible shape in use: not all data points plotted!!")
+  }
   unname(pch_table[shape_match])
 }
