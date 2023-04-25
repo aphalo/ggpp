@@ -95,6 +95,13 @@ These statistics can be used to automatically count observations in
   the same length as the number of panels in the figure can be used if
   needed.
 }
+\note{
+If a factor is mapped to \code{x} or to \code{y} aesthetics each level
+  of the factor constitutes a group, in this case the default positioning and
+  geom using NPC pseudo aesthetics will have to be overriden by passing
+  \code{geom = "text"} and data coordinates used. The default for factors
+  may change in the future.
+}
 \section{Computed variables}{
  Data frame with one or more rows, one for each
   group of observations for which counts are counted in \code{data}. \describe{
@@ -111,7 +118,7 @@ These statistics can be used to automatically count observations in
 
 \examples{
 
-# generate artificial data
+# generate artificial data with numeric x and y
 set.seed(67821)
 x <- 1:100
 y <- rnorm(length(x), mean = 10)
@@ -133,6 +140,49 @@ ggplot(my.data, aes(x, y, colour = group)) +
 ggplot(my.data, aes(x, y, colour = group)) +
   geom_point() +
   stat_group_counts(label.x = "left", hstep = 0.06, vstep = 0)
+
+# one of x or y can be a factor
+
+ggplot(mpg,
+       aes(factor(cyl), hwy)) +
+  stat_boxplot() +
+  stat_group_counts(geom = "text",
+                    label.y = 10,
+                    label.x = 1:4) +
+  stat_panel_counts(aes(label = sprintf("sum(n[i])~`=`~\%i",
+                                        after_stat(count))),
+                    parse = TRUE)
+
+ggplot(mpg,
+       aes(hwy, factor(cyl))) +
+  stat_boxplot() +
+  stat_group_counts(geom = "text",
+                    label.x = 10,
+                    label.y = 1:4) +
+  stat_panel_counts(aes(label = sprintf("sum(n[i])~`=`~\%i",
+                                        after_stat(count))),
+                    parse = TRUE)
+
+# The numeric value can be used as a label as is
+
+ggplot(mpg,
+       aes(factor(cyl), hwy)) +
+  stat_boxplot() +
+  stat_group_counts(geom = "text",
+                    aes(label = after_stat(count)),
+                    label.x = 1:4,
+                    label.y = 10) +
+  annotate(geom = "text", x = 0.55, y = 10, label = "n:")
+
+# Based on the count as an interger we can create a different text label
+
+ggplot(mpg,
+       aes(factor(cyl), hwy)) +
+  stat_boxplot() +
+  stat_group_counts(geom = "text",
+                    aes(label = sprintf("(\%i)", after_stat(count))),
+                    label.y = 10,
+                    label.x = 1:4)
 
 # We use geom_debug() to see the computed values
 

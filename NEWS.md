@@ -6,6 +6,10 @@ editor_options:
     wrap: 72
 ---
 
+# ggpp 0.5.3
+
+-   Add examples to documentation.
+
 # ggpp 0.5.2
 
 -   Fix bug in `stat_dens2d_labels()`, `stat_dens2d_filter()`,
