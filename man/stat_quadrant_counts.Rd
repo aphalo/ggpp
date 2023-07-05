@@ -100,8 +100,11 @@ This statistic can be used to automatically count observations in
   \item{quadrant}{integer, one of 0:4} \item{x}{x value of label position in
   data units} \item{y}{y value of label position in data units} \item{npcx}{x
   value of label position in npc units} \item{npcy}{y value of label position
-  in npc units} \item{count}{number of  observations}
-  \item{count.label}{number of observations as character} }.
+  in npc units} \item{count}{number of  observations in the quadrant(s)}
+  \item{total}{number of onservations in data}
+  \item{count.label}{number of observations as character}
+  \item{pc.label}{percent of observations as character}
+  \item{fr.label}{fraction of observations as character} }.
 
   As shown in one example below \code{\link[gginnards]{geom_debug}} can be
   used to print the computed values returned by any statistic. The output
@@ -121,16 +124,13 @@ ggplot(my.data, aes(x, y)) +
   geom_point() +
   stat_quadrant_counts()
 
-# We use geom_debug() to see the computed values
+ggplot(my.data, aes(x, y)) +
+  geom_point() +
+  stat_quadrant_counts(aes(label = after_stat(pc.label)))
 
-gginnards.installed <- requireNamespace("gginnards", quietly = TRUE)
-if (gginnards.installed) {
-  library(gginnards)
-
-  ggplot(my.data, aes(x, y)) +
-    geom_point() +
-    stat_quadrant_counts(geom = "debug")
-}
+ggplot(my.data, aes(x, y)) +
+  geom_point() +
+  stat_quadrant_counts(aes(label = after_stat(fr.label)))
 
 ggplot(my.data, aes(x, y)) +
  geom_point() +
@@ -144,9 +144,32 @@ ggplot(my.data, aes(x, y)) +
   scale_y_continuous(expand = expansion(mult = 0.15, add = 0))
 
 ggplot(my.data, aes(x, y)) +
+  geom_quadrant_lines(colour = "blue", xintercept = 50, yintercept = 10) +
+  stat_quadrant_counts(aes(label = after_stat(pc.label)),
+                       colour = "blue", xintercept = 50, yintercept = 10) +
+  geom_point() +
+  scale_y_continuous(expand = expansion(mult = 0.15, add = 0))
+
+ggplot(my.data, aes(x, y)) +
+  geom_quadrant_lines(colour = "blue", xintercept = 50, yintercept = 10) +
+  stat_quadrant_counts(aes(label = after_stat(fr.label)),
+                       colour = "blue", xintercept = 50, yintercept = 10) +
+  geom_point() +
+  scale_y_continuous(expand = expansion(mult = 0.15, add = 0))
+
+ggplot(my.data, aes(x, y)) +
   geom_quadrant_lines(colour = "blue",
                        pool.along = "x", yintercept = 10) +
   stat_quadrant_counts(colour = "blue", label.x = "right",
+                       pool.along = "x", yintercept = 10) +
+  geom_point() +
+  expand_limits(y = c(7, 13))
+
+ggplot(my.data, aes(x, y)) +
+  geom_quadrant_lines(colour = "blue",
+                       pool.along = "x", yintercept = 10) +
+  stat_quadrant_counts(aes(label = after_stat(pc.label)),
+                       colour = "blue", label.x = "right",
                        pool.along = "x", yintercept = 10) +
   geom_point() +
   expand_limits(y = c(7, 13))
@@ -158,6 +181,21 @@ ggplot(my.data, aes(x, y)) +
 ggplot(my.data, aes(x, y)) +
   geom_point() +
   stat_quadrant_counts(geom = "text") # use geom_text()
+
+# We use geom_debug() to see the computed values
+
+gginnards.installed <- requireNamespace("gginnards", quietly = TRUE)
+if (gginnards.installed) {
+  library(gginnards)
+
+  ggplot(my.data, aes(x, y)) +
+    geom_point() +
+    stat_quadrant_counts(geom = "debug")
+
+  ggplot(my.data, aes(x, y)) +
+    geom_point() +
+    stat_quadrant_counts(geom = "debug", xintercept = 50)
+}
 
 }
 \seealso{

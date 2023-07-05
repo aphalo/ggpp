@@ -60,8 +60,11 @@
 #'   \item{quadrant}{integer, one of 0:4} \item{x}{x value of label position in
 #'   data units} \item{y}{y value of label position in data units} \item{npcx}{x
 #'   value of label position in npc units} \item{npcy}{y value of label position
-#'   in npc units} \item{count}{number of  observations}
-#'   \item{count.label}{number of observations as character} }.
+#'   in npc units} \item{count}{number of  observations in the quadrant(s)}
+#'   \item{total}{number of onservations in data}
+#'   \item{count.label}{number of observations as character}
+#'   \item{pc.label}{percent of observations as character}
+#'   \item{fr.label}{fraction of observations as character} }.
 #'
 #'   As shown in one example below \code{\link[gginnards]{geom_debug}} can be
 #'   used to print the computed values returned by any statistic. The output
@@ -87,16 +90,13 @@
 #'   geom_point() +
 #'   stat_quadrant_counts()
 #'
-#' # We use geom_debug() to see the computed values
+#' ggplot(my.data, aes(x, y)) +
+#'   geom_point() +
+#'   stat_quadrant_counts(aes(label = after_stat(pc.label)))
 #'
-#' gginnards.installed <- requireNamespace("gginnards", quietly = TRUE)
-#' if (gginnards.installed) {
-#'   library(gginnards)
-#'
-#'   ggplot(my.data, aes(x, y)) +
-#'     geom_point() +
-#'     stat_quadrant_counts(geom = "debug")
-#' }
+#' ggplot(my.data, aes(x, y)) +
+#'   geom_point() +
+#'   stat_quadrant_counts(aes(label = after_stat(fr.label)))
 #'
 #' ggplot(my.data, aes(x, y)) +
 #'  geom_point() +
@@ -110,9 +110,32 @@
 #'   scale_y_continuous(expand = expansion(mult = 0.15, add = 0))
 #'
 #' ggplot(my.data, aes(x, y)) +
+#'   geom_quadrant_lines(colour = "blue", xintercept = 50, yintercept = 10) +
+#'   stat_quadrant_counts(aes(label = after_stat(pc.label)),
+#'                        colour = "blue", xintercept = 50, yintercept = 10) +
+#'   geom_point() +
+#'   scale_y_continuous(expand = expansion(mult = 0.15, add = 0))
+#'
+#' ggplot(my.data, aes(x, y)) +
+#'   geom_quadrant_lines(colour = "blue", xintercept = 50, yintercept = 10) +
+#'   stat_quadrant_counts(aes(label = after_stat(fr.label)),
+#'                        colour = "blue", xintercept = 50, yintercept = 10) +
+#'   geom_point() +
+#'   scale_y_continuous(expand = expansion(mult = 0.15, add = 0))
+#'
+#' ggplot(my.data, aes(x, y)) +
 #'   geom_quadrant_lines(colour = "blue",
 #'                        pool.along = "x", yintercept = 10) +
 #'   stat_quadrant_counts(colour = "blue", label.x = "right",
+#'                        pool.along = "x", yintercept = 10) +
+#'   geom_point() +
+#'   expand_limits(y = c(7, 13))
+#'
+#' ggplot(my.data, aes(x, y)) +
+#'   geom_quadrant_lines(colour = "blue",
+#'                        pool.along = "x", yintercept = 10) +
+#'   stat_quadrant_counts(aes(label = after_stat(pc.label)),
+#'                        colour = "blue", label.x = "right",
 #'                        pool.along = "x", yintercept = 10) +
 #'   geom_point() +
 #'   expand_limits(y = c(7, 13))
@@ -124,6 +147,21 @@
 #' ggplot(my.data, aes(x, y)) +
 #'   geom_point() +
 #'   stat_quadrant_counts(geom = "text") # use geom_text()
+#'
+#' # We use geom_debug() to see the computed values
+#'
+#' gginnards.installed <- requireNamespace("gginnards", quietly = TRUE)
+#' if (gginnards.installed) {
+#'   library(gginnards)
+#'
+#'   ggplot(my.data, aes(x, y)) +
+#'     geom_point() +
+#'     stat_quadrant_counts(geom = "debug")
+#'
+#'   ggplot(my.data, aes(x, y)) +
+#'     geom_point() +
+#'     stat_quadrant_counts(geom = "debug", xintercept = 50)
+#' }
 #'
 stat_quadrant_counts <- function(mapping = NULL,
                                  data = NULL,
@@ -182,7 +220,8 @@ StatQuadrantCounts <-
                                             xintercept,
                                             yintercept,
                                             label.x,
-                                            label.y) {
+                                            label.y,
+                                            digits = 2) {
 
                      which_quadrant <- function(x, y) {
                        z <- ifelse(x >= xintercept & y >= yintercept,
@@ -247,11 +286,14 @@ StatQuadrantCounts <-
                        quadrants <- intersect(quadrants, c(1L, 4L))
                      }
 
+                     num.obs <- nrow(data)
+
                      if (all(is.na(quadrants)) || 0L %in% quadrants) {
                        # total count
                        z <-
                          tibble::tibble(quadrant = 0,
-                                        count = nrow(data),
+                                        count = num.obs,
+                                        total = num.obs,
                                         npcx = label.x[2],
                                         npcy = label.y[2],
                                         x = range.x[2],
@@ -265,14 +307,22 @@ StatQuadrantCounts <-
                          dplyr::summarise(count = length(.data$x)) %>% # dplyr::n() triggers error
                          dplyr::ungroup() -> data
 
+                       data$total <- num.obs
+
                        zero.count.quadrants <- setdiff(quadrants, data$quadrant)
 
                        if (length(zero.count.quadrants) > 0) {
                          data <-
-                           rbind(data, tibble::tibble(quadrant = zero.count.quadrants, count = 0L))
+                           rbind(data, tibble::tibble(quadrant = zero.count.quadrants, count = 0L, total = num.obs))
                        }
 
                        data$count.label <- sprintf("n=%i", data$count)
+                       data$pc.label <- sprintf("p=%.*f%%",
+                                                digits - 2,
+                                                data$count / sum(data$count) * 100)
+                       data$fr.label <- sprintf("f=%.*f",
+                                                digits,
+                                                data$count / sum(data$count))
 
                        z <-
                          data %>%
