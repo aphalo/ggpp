@@ -137,6 +137,14 @@
 #'                     label.y = 10,
 #'                     label.x = 1:4)
 #'
+#' ggplot(mpg,
+#'        aes(factor(cyl), hwy)) +
+#'   stat_boxplot() +
+#'   stat_group_counts(geom = "text",
+#'                     aes(label = sprintf("(%i / %i)", after_stat(count), after_stat(total))),
+#'                     label.y = 10,
+#'                     label.x = 1:4)
+#'
 #' # We use geom_debug() to see the computed values
 #'
 #' gginnards.installed <- requireNamespace("gginnards", quietly = TRUE)
@@ -285,6 +293,7 @@ StatPanelCounts <-
 #'
 #' @param hstep,vstep numeric in npc units, the horizontal and vertical step
 #'   used between labels for different groups.
+#' @param digits integer Number of digits for fraction and percent labels.
 #'
 #' @export
 #'
@@ -296,9 +305,11 @@ stat_group_counts <- function(mapping = NULL,
                               label.y = "top",
                               hstep = 0,
                               vstep = NULL,
+                              digits = 2,
                               na.rm = FALSE,
                               show.legend = FALSE,
-                              inherit.aes = TRUE, ...) {
+                              inherit.aes = TRUE,
+                              ...) {
 
   stopifnot(is.null(label.x) || is.numeric(label.x) || is.character(label.x))
   stopifnot(is.null(label.y) || is.numeric(label.y) || is.character(label.y))
@@ -314,6 +325,7 @@ stat_group_counts <- function(mapping = NULL,
     params = list(na.rm = na.rm,
                   label.x = label.x,
                   label.y = label.y,
+                  digits = digits,
                   hstep = hstep,
                   vstep = ifelse(is.null(vstep),
                                  ifelse(grepl("label", geom),
@@ -337,10 +349,10 @@ StatGroupCounts <-
                                             scales,
                                             label.x,
                                             label.y,
+                                            digits = 2,
                                             vstep,
                                             hstep,
-                                            npc.used,
-                                            digits = 2) {
+                                            npc.used) {
 
                      force(data)
 
@@ -359,12 +371,12 @@ StatGroupCounts <-
                      # Build group labels
                      group.idx <- abs(unique(data$group))
                      if (length(label.x) >= length(group.idx)) {
-                       label.x <- label.x[1:group.idx]
+                       label.x <- label.x[1:length(group.idx)]
                      } else if (length(label.x) > 0) {
                        label.x <- label.x[1]
                      }
                      if (length(label.y) >= length(group.idx)) {
-                       label.y <- label.y[1:group.idx]
+                       label.y <- label.y[1:length(group.idx)]
                      } else if (length(label.y) > 0) {
                        label.y <- label.y[1]
                      }
@@ -378,8 +390,6 @@ StatGroupCounts <-
                        dplyr::summarise(count = length(.data$x)) %>% # dplyr::n() triggers error
                        dplyr::ungroup() -> z
 
-
-                     z$PANEL <- data$PANEL[1]
                      z$total <- num.obs
 
                      y <- data.frame()

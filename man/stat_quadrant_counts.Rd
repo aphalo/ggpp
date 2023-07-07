@@ -15,6 +15,7 @@ stat_quadrant_counts(
   yintercept = 0,
   label.x = NULL,
   label.y = NULL,
+  digits = 2,
   na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE,
@@ -45,6 +46,8 @@ quadrants.}
 
 \item{label.x, label.y}{\code{numeric} Coordinates (in npc units) to be used
 for absolute positioning of the labels.}
+
+\item{digits}{integer Number of digits for fraction and percent labels.}
 
 \item{na.rm}{a logical indicating whether \code{NA} values should be stripped
 before the computation proceeds.}

@@ -35,6 +35,7 @@
 #'   quadrants.
 #' @param label.x,label.y \code{numeric} Coordinates (in npc units) to be used
 #'   for absolute positioning of the labels.
+#' @param digits integer Number of digits for fraction and percent labels.
 #'
 #' @details This statistic can be used to automatically count observations in
 #'   each of the four quadrants of a plot, and by default add these counts as
@@ -173,9 +174,11 @@ stat_quadrant_counts <- function(mapping = NULL,
                                  yintercept = 0,
                                  label.x = NULL,
                                  label.y = NULL,
+                                 digits = 2,
                                  na.rm = FALSE,
                                  show.legend = FALSE,
-                                 inherit.aes = TRUE, ...) {
+                                 inherit.aes = TRUE,
+                                 ...) {
 
   pool.along <- rlang::arg_match(pool.along)
   if (!is.null(pool.along) && pool.along == "xy") {
@@ -202,6 +205,7 @@ stat_quadrant_counts <- function(mapping = NULL,
                   yintercept = yintercept,
                   label.x = label.x,
                   label.y = label.y,
+                  digits = digits,
                   ...)
   )
 }
