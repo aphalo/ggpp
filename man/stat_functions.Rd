@@ -50,7 +50,7 @@ A plot layer instance.
 \description{
 \code{stat_functions()} computes values from functions and returns new data
 containing numeric vectors for \code{x} and \code{y}. As function definitions
-are passed through `data` this statistic follows the grammar of graphics in
+are passed through \code{data} this statistic follows the grammar of graphics in
 its behaviour.
 }
 \details{
@@ -79,6 +79,9 @@ This statistic can be used to plot values computed by functions. As
 }
 
 \examples{
+
+# one function
+
 df1 <- data.frame(min = 0, max = pi, fun = I(list(sin)))
 
 ggplot(df1, aes(xmin = min, xmax = max, y = fun)) +
@@ -86,6 +89,8 @@ ggplot(df1, aes(xmin = min, xmax = max, y = fun)) +
 
 ggplot(df1, aes(xmin = min, xmax = max, y = fun)) +
   stat_functions(geom = "point", n = 20)
+
+# two functions
 
 df2 <- data.frame(min = -pi, max = pi,
                   fun = I(list(sin, cos)), name = c("sin", "cos"))
@@ -101,6 +106,8 @@ ggplot(df2, aes(xmin = min, xmax = max, y = fun, colour = name)) +
 ggplot(df2, aes(xmin = min, xmax = max, y = fun)) +
   stat_functions() +
   facet_grid(~ name)
+
+# two curves with same function
 
 df3 <- data.frame(min = c(-pi, 0),
                   max = c(0,pi),
