@@ -34,17 +34,21 @@
 #'   the function to compute the \code{y} values, and returned as \code{x} in
 #'   data. \code{n} is the length of this \code{x} vector.
 #'
-#' @section Computed variables: Data frame with \code{n} rows or a multiple of this, one for each
+#' @section Computed variables: Data frame with \code{n} rows or a multiple of
+#'   this, one for each
 #'   row in \code{data}. \describe{
 #'   \item{x}{numeric vector}
 #'   \item{y}{numeric vactor}
-#'   \item{idx}{integer vector, with values corresponding to rows in the input \code{data}, i.e., for each function}
+#'   \item{idx}{integer vector, with values corresponding to rows in the input
+#'       \code{data}, i.e., for each function}
 #'   }
 #'   As shown in one example below \code{\link[gginnards]{geom_debug}} can be
 #'   used to print the computed values returned by any statistic. The output
 #'   shown includes also values mapped to aesthetics.
 #'
 #' @return A plot layer instance.
+#'
+#' @export
 #'
 #' @examples
 #' df1 <- data.frame(min = 0, max = pi, fun = I(list(sin)))
@@ -55,7 +59,8 @@
 #' ggplot(df1, aes(xmin = min, xmax = max, y = fun)) +
 #'   stat_functions(geom = "point", n = 20)
 #'
-#' df2 <- data.frame(min = -pi, max = pi, fun = I(list(sin, cos)), name = c("sin", "cos"))
+#' df2 <- data.frame(min = -pi, max = pi,
+#'                   fun = I(list(sin, cos)), name = c("sin", "cos"))
 #'
 #' # each function must be in a separate group for correct plotting of lines
 #'
@@ -69,7 +74,24 @@
 #'   stat_functions() +
 #'   facet_grid(~ name)
 #'
-#' @export
+#' df3 <- data.frame(min = c(-pi, 0),
+#'                   max = c(0,pi),
+#'                   fun = I(list(sin, sin)),
+#'                   name = c("negative", "positive"))
+#'
+#' ggplot(df3, aes(xmin = min, xmax = max, y = fun, colour = name)) +
+#'   stat_functions()
+#'
+#' # We use geom_debug() to see the computed values
+#'
+#' gginnards.installed <- requireNamespace("gginnards", quietly = TRUE)
+#' if (gginnards.installed) {
+#'   library(gginnards)
+#'
+#'   ggplot(df1, aes(xmin = min, xmax = max, y = fun)) +
+#'     stat_functions(geom = "debug")
+#'
+#' }
 #'
 stat_functions <- function(mapping = NULL,
                            data = NULL,
@@ -109,8 +131,8 @@ StatFunctions <-
 
                      for (i in seq_along(data$xmin)) {
                        temp <- data.frame(x = seq(from = data$xmin[i],
-                                               to = data$xmax[i],
-                                               length.out = n),
+                                              to = data$xmax[i],
+                                              length.out = n),
                                           idx = i)
 
                        if (is.list(data[["y"]]) && is.function(data[["y"]][[i]])) {

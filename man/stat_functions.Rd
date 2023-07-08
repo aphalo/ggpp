@@ -65,11 +65,13 @@ This statistic can be used to plot values computed by functions. As
   data. \code{n} is the length of this \code{x} vector.
 }
 \section{Computed variables}{
- Data frame with \code{n} rows or a multiple of this, one for each
+ Data frame with \code{n} rows or a multiple of
+  this, one for each
   row in \code{data}. \describe{
   \item{x}{numeric vector}
   \item{y}{numeric vactor}
-  \item{idx}{integer vector, with values corresponding to rows in the input \code{data}, i.e., for each function}
+  \item{idx}{integer vector, with values corresponding to rows in the input
+      \code{data}, i.e., for each function}
   }
   As shown in one example below \code{\link[gginnards]{geom_debug}} can be
   used to print the computed values returned by any statistic. The output
@@ -85,7 +87,8 @@ ggplot(df1, aes(xmin = min, xmax = max, y = fun)) +
 ggplot(df1, aes(xmin = min, xmax = max, y = fun)) +
   stat_functions(geom = "point", n = 20)
 
-df2 <- data.frame(min = -pi, max = pi, fun = I(list(sin, cos)), name = c("sin", "cos"))
+df2 <- data.frame(min = -pi, max = pi,
+                  fun = I(list(sin, cos)), name = c("sin", "cos"))
 
 # each function must be in a separate group for correct plotting of lines
 
@@ -98,5 +101,24 @@ ggplot(df2, aes(xmin = min, xmax = max, y = fun, colour = name)) +
 ggplot(df2, aes(xmin = min, xmax = max, y = fun)) +
   stat_functions() +
   facet_grid(~ name)
+
+df3 <- data.frame(min = c(-pi, 0),
+                  max = c(0,pi),
+                  fun = I(list(sin, sin)),
+                  name = c("negative", "positive"))
+
+ggplot(df3, aes(xmin = min, xmax = max, y = fun, colour = name)) +
+  stat_functions()
+
+# We use geom_debug() to see the computed values
+
+gginnards.installed <- requireNamespace("gginnards", quietly = TRUE)
+if (gginnards.installed) {
+  library(gginnards)
+
+  ggplot(df1, aes(xmin = min, xmax = max, y = fun)) +
+    stat_functions(geom = "debug")
+
+}
 
 }
