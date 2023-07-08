@@ -10,6 +10,8 @@ editor_options:
 
 -   Add support for percent and fraction of observations to `stat_quadrant_counts()` 
 and `stat_group_counts()`.
+-   Add `stat_functions()` that draws curves computed from functions follwoing the
+grammar of graphics.
 -   Add examples to documentation.
 
 # ggpp 0.5.2
