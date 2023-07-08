@@ -78,6 +78,8 @@
 #' group <- factor(rep(c("A", "B"), times = 50))
 #' my.data <- data.frame(x, y, group)
 #'
+#' # using automatically generated text labels
+#'
 #' ggplot(my.data, aes(x, y)) +
 #'   geom_point() +
 #'   stat_panel_counts()
@@ -93,6 +95,18 @@
 #' ggplot(my.data, aes(x, y, colour = group)) +
 #'   geom_point() +
 #'   stat_group_counts(label.x = "left", hstep = 0.06, vstep = 0)
+#'
+#' ggplot(my.data, aes(x, y, colour = group)) +
+#'   geom_point() +
+#'   stat_group_counts(aes(label = after_stat(pc.label)))
+#'
+#' ggplot(my.data, aes(x, y, colour = group)) +
+#'   geom_point() +
+#'   stat_group_counts(aes(label = after_stat(pc.label)), digits = 3)
+#'
+#' ggplot(my.data, aes(x, y, colour = group)) +
+#'   geom_point() +
+#'   stat_group_counts(aes(label = after_stat(fr.label)))
 #'
 #' # one of x or y can be a factor
 #'

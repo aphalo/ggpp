@@ -128,6 +128,8 @@ y <- rnorm(length(x), mean = 10)
 group <- factor(rep(c("A", "B"), times = 50))
 my.data <- data.frame(x, y, group)
 
+# using automatically generated text labels
+
 ggplot(my.data, aes(x, y)) +
   geom_point() +
   stat_panel_counts()
@@ -143,6 +145,18 @@ ggplot(my.data, aes(x, y, colour = group)) +
 ggplot(my.data, aes(x, y, colour = group)) +
   geom_point() +
   stat_group_counts(label.x = "left", hstep = 0.06, vstep = 0)
+
+ggplot(my.data, aes(x, y, colour = group)) +
+  geom_point() +
+  stat_group_counts(aes(label = after_stat(pc.label)))
+
+ggplot(my.data, aes(x, y, colour = group)) +
+  geom_point() +
+  stat_group_counts(aes(label = after_stat(pc.label)), digits = 3)
+
+ggplot(my.data, aes(x, y, colour = group)) +
+  geom_point() +
+  stat_group_counts(aes(label = after_stat(fr.label)))
 
 # one of x or y can be a factor
 
@@ -184,6 +198,14 @@ ggplot(mpg,
   stat_boxplot() +
   stat_group_counts(geom = "text",
                     aes(label = sprintf("(\%i)", after_stat(count))),
+                    label.y = 10,
+                    label.x = 1:4)
+
+ggplot(mpg,
+       aes(factor(cyl), hwy)) +
+  stat_boxplot() +
+  stat_group_counts(geom = "text",
+                    aes(label = sprintf("(\%i / \%i)", after_stat(count), after_stat(total))),
                     label.y = 10,
                     label.x = 1:4)
 
