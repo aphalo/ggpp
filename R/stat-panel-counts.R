@@ -137,6 +137,14 @@
 #'                     label.y = 10,
 #'                     label.x = 1:4)
 #'
+#' ggplot(mpg,
+#'        aes(factor(cyl), hwy)) +
+#'   stat_boxplot() +
+#'   stat_group_counts(geom = "text",
+#'                     aes(label = sprintf("(%i / %i)", after_stat(count), after_stat(total))),
+#'                     label.y = 10,
+#'                     label.x = 1:4)
+#'
 #' # We use geom_debug() to see the computed values
 #'
 #' gginnards.installed <- requireNamespace("gginnards", quietly = TRUE)
@@ -285,6 +293,7 @@ StatPanelCounts <-
 #'
 #' @param hstep,vstep numeric in npc units, the horizontal and vertical step
 #'   used between labels for different groups.
+#' @param digits integer Number of digits for fraction and percent labels.
 #'
 #' @export
 #'
@@ -296,9 +305,11 @@ stat_group_counts <- function(mapping = NULL,
                               label.y = "top",
                               hstep = 0,
                               vstep = NULL,
+                              digits = 2,
                               na.rm = FALSE,
                               show.legend = FALSE,
-                              inherit.aes = TRUE, ...) {
+                              inherit.aes = TRUE,
+                              ...) {
 
   stopifnot(is.null(label.x) || is.numeric(label.x) || is.character(label.x))
   stopifnot(is.null(label.y) || is.numeric(label.y) || is.character(label.y))
@@ -314,6 +325,7 @@ stat_group_counts <- function(mapping = NULL,
     params = list(na.rm = na.rm,
                   label.x = label.x,
                   label.y = label.y,
+                  digits = digits,
                   hstep = hstep,
                   vstep = ifelse(is.null(vstep),
                                  ifelse(grepl("label", geom),
@@ -332,11 +344,12 @@ stat_group_counts <- function(mapping = NULL,
 StatGroupCounts <-
   ggplot2::ggproto("StatGroupCounts", ggplot2::Stat,
 
-                   compute_group = function(data,
+                   compute_panel = function(data,
                                             params,
                                             scales,
                                             label.x,
                                             label.y,
+                                            digits = 2,
                                             vstep,
                                             hstep,
                                             npc.used) {
@@ -346,31 +359,54 @@ StatGroupCounts <-
                      if (exists("grp.label", data)) {
                        if (length(unique(data[["grp.label"]])) > 1L) {
                          warning("Non-unique value in 'data$grp.label' using group index ", data[["group"]][1], " as label.")
-                         grp.label <- as.character(data[["group"]][1])
+                         grp.label <- as.character(unique(data[["group"]]))
                        } else {
-                         grp.label <- data[["grp.label"]][1]
+                         grp.label <- unique(data[["grp.label"]])
                        }
                      } else {
                        # if nothing mapped to grp.label we use group index as label
-                       grp.label <- as.character(data[["group"]][1])
+                       grp.label <- as.character(unique(data[["group"]]))
                      }
 
                      # Build group labels
-                     group.idx <- abs(data$group[1])
-                     if (length(label.x) >= group.idx) {
-                       label.x <- label.x[group.idx]
+                     group.idx <- abs(unique(data$group))
+                     if (length(label.x) >= length(group.idx)) {
+                       label.x <- label.x[1:length(group.idx)]
                      } else if (length(label.x) > 0) {
                        label.x <- label.x[1]
                      }
-                     if (length(label.y) >= group.idx) {
-                       label.y <- label.y[group.idx]
+                     if (length(label.y) >= length(group.idx)) {
+                       label.y <- label.y[1:length(group.idx)]
                      } else if (length(label.y) > 0) {
                        label.y <- label.y[1]
                      }
 
                      # Compute number of observations
                      # (works because NAs have been already removed)
-                     z <- tibble::tibble(count = nrow(data))
+                     num.obs <- nrow(data)
+
+                     data %>%
+                       dplyr::group_by(.data$group) %>%
+                       dplyr::summarise(count = length(.data$x)) %>% # dplyr::n() triggers error
+                       dplyr::ungroup() -> z
+
+                     z$total <- num.obs
+
+                     y <- data.frame()
+                     cols2copy <- setdiff(colnames(data), colnames(z))
+                     for (g in unique(data$group)) {
+                       y <- rbind(y, data[data$group == g, cols2copy][ 1, ])
+                     }
+
+                     z <- cbind(z, y)
+
+                     z$count.label <- sprintf("n=%i", z$count)
+                     z$pc.label <- sprintf("p=%.*f%%",
+                                              digits - 2,
+                                              z$count / sum(z$count) * 100)
+                     z$fr.label <- sprintf("f=%.*f",
+                                              digits,
+                                              z$count / sum(z$count))
 
                      # Compute label positions
                      if (is.character(label.x)) {

@@ -27,6 +27,7 @@ stat_group_counts(
   label.y = "top",
   hstep = 0,
   vstep = NULL,
+  digits = 2,
   na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE,
@@ -66,6 +67,8 @@ can include aesthetics whose values you want to set, not map. See
 
 \item{hstep, vstep}{numeric in npc units, the horizontal and vertical step
 used between labels for different groups.}
+
+\item{digits}{integer Number of digits for fraction and percent labels.}
 }
 \value{
 A plot layer instance. Using as output \code{data} the counts of

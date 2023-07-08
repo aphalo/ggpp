@@ -8,8 +8,9 @@ editor_options:
 
 # ggpp 0.5.3
 
+-   Add support for percent and fraction of observations to `stat_quadrant_counts()` 
+and `stat_group_counts()`.
 -   Add examples to documentation.
--   Add support for percent and fraction of observations to `stat_quadrant_counts()`.
 
 # ggpp 0.5.2
 
