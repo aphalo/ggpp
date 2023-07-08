@@ -158,12 +158,46 @@ ggplot(my.data, aes(x, y, colour = group)) +
   geom_point() +
   stat_group_counts(aes(label = after_stat(fr.label)))
 
+ggplot(my.data, aes(x, y, colour = group)) +
+  geom_point() +
+  stat_group_counts(aes(label = after_stat(dec.label)))
+
 # one of x or y can be a factor
 
 ggplot(mpg,
        aes(factor(cyl), hwy)) +
   stat_boxplot() +
   stat_group_counts(geom = "text",
+                    label.y = 10,
+                    label.x = 1:4) +
+  stat_panel_counts()
+
+# Numeric values can be used to build labels with alternative formats
+# Here with sprintf(), but paste() and format() also work.
+
+ggplot(mpg,
+       aes(factor(cyl), hwy)) +
+  stat_boxplot() +
+  stat_group_counts(geom = "text",
+                    aes(label = sprintf("(\%i)", after_stat(count))),
+                    label.y = 10,
+                    label.x = 1:4)
+
+ggplot(mpg,
+       aes(factor(cyl), hwy)) +
+  stat_boxplot() +
+  stat_group_counts(geom = "text",
+                    aes(label = sprintf("(\%i / \%i)", after_stat(count), after_stat(total))),
+                    label.y = 10,
+                    label.x = 1:4)
+
+ggplot(mpg,
+       aes(factor(cyl), hwy)) +
+  stat_boxplot() +
+  stat_group_counts(aes(label = sprintf("n[\%i]~`=`~\%i",
+                                        after_stat(x), after_stat(count))),
+                    parse = TRUE,
+                    geom = "text",
                     label.y = 10,
                     label.x = 1:4) +
   stat_panel_counts(aes(label = sprintf("sum(n[i])~`=`~\%i",
@@ -189,25 +223,7 @@ ggplot(mpg,
                     aes(label = after_stat(count)),
                     label.x = 1:4,
                     label.y = 10) +
-  annotate(geom = "text", x = 0.55, y = 10, label = "n:")
-
-# Based on the count as an interger we can create a different text label
-
-ggplot(mpg,
-       aes(factor(cyl), hwy)) +
-  stat_boxplot() +
-  stat_group_counts(geom = "text",
-                    aes(label = sprintf("(\%i)", after_stat(count))),
-                    label.y = 10,
-                    label.x = 1:4)
-
-ggplot(mpg,
-       aes(factor(cyl), hwy)) +
-  stat_boxplot() +
-  stat_group_counts(geom = "text",
-                    aes(label = sprintf("(\%i / \%i)", after_stat(count), after_stat(total))),
-                    label.y = 10,
-                    label.x = 1:4)
+  annotate(geom = "text", x = 0.55, y = 10, label = "n[i]~`=`", parse = TRUE)
 
 # We use geom_debug() to see the computed values
 

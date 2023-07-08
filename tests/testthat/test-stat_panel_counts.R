@@ -90,7 +90,7 @@ test_that("stat_group_counts", {
     stat_group_counts() +
     geom_point()
   result <- layer_data(p)[, c("npcx", "npcy", "label", "count", "total",
-                              "count.label", "pc.label", "fr.label", "hjust", "vjust")]
+                              "count.label", "pc.label", "dec.label", "fr.label", "hjust", "vjust")]
   expected <- data.frame(
     npcx = 0.95,
     npcy = 0.95,
@@ -99,7 +99,8 @@ test_that("stat_group_counts", {
     total = 6L,
     count.label = "n=6",
     pc.label = "p=100%",
-    fr.label = "f=1.00",
+    dec.label = "f=1.00",
+    fr.label = "6 / 6",
     hjust = "inward",
     vjust = "inward")
   expect_identical(result, expected)
@@ -107,20 +108,20 @@ test_that("stat_group_counts", {
   p <- ggplot(tst.df, aes(x)) +
     stat_group_counts()
   result <- layer_data(p)[, c("npcx", "npcy", "label", "count", "total",
-                              "count.label", "pc.label", "fr.label", "hjust", "vjust")]
+                              "count.label", "pc.label", "dec.label", "fr.label", "hjust", "vjust")]
   expect_identical(result, expected)
 
   p <- ggplot(tst.df, aes(y)) +
     stat_group_counts()
   result <- layer_data(p)[, c("npcx", "npcy", "label", "count", "total",
-                              "count.label", "pc.label", "fr.label", "hjust", "vjust")]
+                              "count.label", "pc.label", "dec.label", "fr.label", "hjust", "vjust")]
   expect_identical(result, expected)
 
   p <- ggplot(tst.df, aes(x, y)) +
     stat_group_counts(digits = 3) +
     geom_point()
   result <- layer_data(p)[, c("npcx", "npcy", "label", "count", "total",
-                              "count.label", "pc.label", "fr.label", "hjust", "vjust")]
+                              "count.label", "pc.label", "dec.label", "fr.label", "hjust", "vjust")]
   expected <- data.frame(
     npcx = 0.95,
     npcy = 0.95,
@@ -129,7 +130,8 @@ test_that("stat_group_counts", {
     total = 6L,
     count.label = "n=6",
     pc.label = "p=100.0%",
-    fr.label = "f=1.000",
+    dec.label = "f=1.000",
+    fr.label = "6 / 6",
     hjust = "inward",
     vjust = "inward")
   expect_identical(result, expected)

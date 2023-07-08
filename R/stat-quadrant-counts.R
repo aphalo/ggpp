@@ -83,71 +83,109 @@
 #'
 #' # generate artificial data
 #' set.seed(4321)
-#' x <- 1:100
-#' y <- rnorm(length(x), mean = 10)
+#' x <- -50:50
+#' y <- rnorm(length(x), mean = 0)
 #' my.data <- data.frame(x, y)
+#'
+#' # using automatically generated text labels
 #'
 #' ggplot(my.data, aes(x, y)) +
 #'   geom_point() +
+#'   geom_quadrant_lines() +
 #'   stat_quadrant_counts()
 #'
 #' ggplot(my.data, aes(x, y)) +
 #'   geom_point() +
+#'   geom_quadrant_lines() +
 #'   stat_quadrant_counts(aes(label = after_stat(pc.label)))
 #'
 #' ggplot(my.data, aes(x, y)) +
 #'   geom_point() +
+#'   geom_quadrant_lines() +
 #'   stat_quadrant_counts(aes(label = after_stat(fr.label)))
 #'
 #' ggplot(my.data, aes(x, y)) +
+#'   geom_point() +
+#'   geom_quadrant_lines() +
+#'   stat_quadrant_counts(aes(label = after_stat(dec.label)))
+#'
+#' ggplot(my.data, aes(x, y)) +
 #'  geom_point() +
-#'  stat_quadrant_counts(aes(label = sprintf("%i observations", after_stat(count)))) +
-#'  expand_limits(y = 12.7)
+#'   geom_quadrant_lines() +
+#'   stat_quadrant_counts(aes(label = sprintf("%i observations", after_stat(count)))) +
+#'   scale_y_continuous(expand = expansion(c(0.05, 0.15))) # reserve space
 #'
 #' ggplot(my.data, aes(x, y)) +
-#'   geom_quadrant_lines(colour = "blue", xintercept = 50, yintercept = 10) +
-#'   stat_quadrant_counts(colour = "blue", xintercept = 50, yintercept = 10) +
+#'   geom_quadrant_lines(colour = "blue", xintercept = 10, yintercept = -1) +
+#'   stat_quadrant_counts(colour = "blue", xintercept = 10, yintercept = -1) +
 #'   geom_point() +
-#'   scale_y_continuous(expand = expansion(mult = 0.15, add = 0))
+#'   scale_y_continuous(expand = expansion(mult = 0.15))
 #'
 #' ggplot(my.data, aes(x, y)) +
-#'   geom_quadrant_lines(colour = "blue", xintercept = 50, yintercept = 10) +
+#'   geom_quadrant_lines(colour = "blue", xintercept = 10, yintercept = -1) +
 #'   stat_quadrant_counts(aes(label = after_stat(pc.label)),
-#'                        colour = "blue", xintercept = 50, yintercept = 10) +
+#'                        colour = "blue", xintercept = 10, yintercept = -1) +
 #'   geom_point() +
-#'   scale_y_continuous(expand = expansion(mult = 0.15, add = 0))
+#'   scale_y_continuous(expand = expansion(mult = 0.15))
 #'
 #' ggplot(my.data, aes(x, y)) +
-#'   geom_quadrant_lines(colour = "blue", xintercept = 50, yintercept = 10) +
+#'   geom_quadrant_lines(colour = "blue", xintercept = 10, yintercept = -1) +
+#'   stat_quadrant_counts(aes(label = after_stat(pc.label)), digits = 3,
+#'                        colour = "blue", xintercept = 10, yintercept = -1) +
+#'   geom_point() +
+#'   scale_y_continuous(expand = expansion(mult = 0.15))
+#'
+#' ggplot(my.data, aes(x, y)) +
+#'   geom_quadrant_lines(colour = "blue", xintercept = 10, yintercept = -1) +
 #'   stat_quadrant_counts(aes(label = after_stat(fr.label)),
-#'                        colour = "blue", xintercept = 50, yintercept = 10) +
+#'                        colour = "blue", xintercept = 10, yintercept = -1) +
 #'   geom_point() +
-#'   scale_y_continuous(expand = expansion(mult = 0.15, add = 0))
+#'   scale_y_continuous(expand = expansion(mult = 0.15))
 #'
 #' ggplot(my.data, aes(x, y)) +
 #'   geom_quadrant_lines(colour = "blue",
-#'                        pool.along = "x", yintercept = 10) +
+#'                       pool.along = "x") +
 #'   stat_quadrant_counts(colour = "blue", label.x = "right",
-#'                        pool.along = "x", yintercept = 10) +
+#'                        pool.along = "x") +
 #'   geom_point() +
-#'   expand_limits(y = c(7, 13))
+#'   scale_y_continuous(expand = expansion(mult = 0.15))
 #'
 #' ggplot(my.data, aes(x, y)) +
 #'   geom_quadrant_lines(colour = "blue",
-#'                        pool.along = "x", yintercept = 10) +
+#'                       pool.along = "x") +
 #'   stat_quadrant_counts(aes(label = after_stat(pc.label)),
 #'                        colour = "blue", label.x = "right",
-#'                        pool.along = "x", yintercept = 10) +
+#'                        pool.along = "x") +
 #'   geom_point() +
-#'   expand_limits(y = c(7, 13))
+#'   scale_y_continuous(expand = expansion(mult = 0.15))
 #'
 #' ggplot(my.data, aes(x, y)) +
 #'   geom_point() +
-#'   stat_quadrant_counts(quadrants = 0, label.x = "left", label.y = "bottom")
+#'   stat_quadrant_counts(quadrants = 0, label.x = "left", label.y = "bottom") +
+#'   scale_y_continuous(expand = expansion(mult = c(0.15, 0.05)))
 #'
 #' ggplot(my.data, aes(x, y)) +
 #'   geom_point() +
 #'   stat_quadrant_counts(geom = "text") # use geom_text()
+#'
+#' # Numeric values can be used to build labels with alternative formats
+#' # Here with sprintf(), but paste() and format() also work.
+#'
+#' ggplot(my.data, aes(x, y)) +
+#'   geom_quadrant_lines(colour = "blue") +
+#'   stat_quadrant_counts(aes(label = sprintf("%i / %i",
+#'                        after_stat(count), after_stat(total))),
+#'                        colour = "blue") +
+#'   geom_point() +
+#'   scale_y_continuous(expand = expansion(mult = 0.15))
+#'
+#' ggplot(my.data, aes(x, y)) +
+#'   geom_quadrant_lines(colour = "blue") +
+#'   stat_quadrant_counts(aes(label = sprintf("%i of %i genes",
+#'                        after_stat(count), after_stat(total))),
+#'                        colour = "blue") +
+#'   geom_point() +
+#'   scale_y_continuous(expand = expansion(mult = 0.15))
 #'
 #' # We use geom_debug() to see the computed values
 #'
@@ -323,10 +361,12 @@ StatQuadrantCounts <-
                        data$count.label <- sprintf("n=%i", data$count)
                        data$pc.label <- sprintf("p=%.*f%%",
                                                 digits - 2,
-                                                data$count / sum(data$count) * 100)
-                       data$fr.label <- sprintf("f=%.*f",
-                                                digits,
-                                                data$count / sum(data$count))
+                                                data$count / data$total * 100)
+                       data$dec.label <- sprintf("f=%.*f",
+                                                 digits,
+                                                 data$count / data$total)
+                       data$fr.label <- sprintf("%i / %i",
+                                                data$count, data$total)
 
                        z <-
                          data %>%

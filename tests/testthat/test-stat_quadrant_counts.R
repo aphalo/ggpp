@@ -15,7 +15,7 @@ test_that("stat_quadrant_counts", {
   p <- ggplot(tst.df, aes(x, y)) +
     stat_quadrant_counts()
   result <- layer_data(p)[, c("npcx", "npcy", "label", "quadrant", "count",
-                              "total", "count.label", "pc.label", "fr.label", "hjust", "vjust")]
+                              "total", "count.label", "pc.label", "dec.label", "fr.label", "hjust", "vjust")]
   expected <- data.frame(
     npcx = c(0.95, 0.05, 0.05, 0.95),
     npcy = c(0.95, 0.05, 0.95, 0.05),
@@ -25,7 +25,8 @@ test_that("stat_quadrant_counts", {
     total = 6L,
     count.label = c("n=1", "n=3", "n=2", "n=0"),
     pc.label = c("p=17%", "p=50%", "p=33%", "p=0%"),
-    fr.label = c("f=0.17", "f=0.50", "f=0.33", "f=0.00"),
+    dec.label = c("f=0.17", "f=0.50", "f=0.33", "f=0.00"),
+    fr.label = c("1 / 6", "3 / 6", "2 / 6", "0 / 6"),
     hjust = "inward",
     vjust = "inward"
   )
@@ -34,7 +35,7 @@ test_that("stat_quadrant_counts", {
   p <- ggplot(tst.df, aes(x, y)) +
     stat_quadrant_counts(digits = 3)
   result <- layer_data(p)[, c("npcx", "npcy", "label", "quadrant", "count",
-                              "total", "count.label", "pc.label", "fr.label", "hjust", "vjust")]
+                              "total", "count.label", "pc.label", "dec.label", "fr.label", "hjust", "vjust")]
   expected <- data.frame(
     npcx = c(0.95, 0.05, 0.05, 0.95),
     npcy = c(0.95, 0.05, 0.95, 0.05),
@@ -44,7 +45,8 @@ test_that("stat_quadrant_counts", {
     total = 6L,
     count.label = c("n=1", "n=3", "n=2", "n=0"),
     pc.label = c("p=16.7%", "p=50.0%", "p=33.3%", "p=0.0%"),
-    fr.label = c("f=0.167", "f=0.500", "f=0.333", "f=0.000"),
+    dec.label = c("f=0.167", "f=0.500", "f=0.333", "f=0.000"),
+    fr.label = c("1 / 6", "3 / 6", "2 / 6", "0 / 6"),
     hjust = "inward",
     vjust = "inward"
   )
