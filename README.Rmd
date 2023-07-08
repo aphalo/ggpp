@@ -182,7 +182,7 @@ it easy to annotate plots with the number of observations.
 | `stat_apply_group()`      | cummulative summaries      | `geom_point()`, `geom_line()`, etc. | scatter and line plots | group |
 | `stat_centroid()`         | joint x and y summaries    | `geom_point()`, `geom_rug()`, `geom_margin_arrow()`, etc. | data summary | group |
 | `stat_summary_xy()`       | joint x and y summaries    | `geom_point()`, `geom_rug()`, `geom_margin_arrow()`, etc. | data summary | group |
-
+| `stat_functions()`       | compute y from x range   | `geom_line()`, `geom_point()`, etc. | draw function curves | group |
 : Statistics defined in package 'ggpp'
 
 ## Justification
