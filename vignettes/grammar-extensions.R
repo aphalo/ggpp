@@ -328,6 +328,13 @@ ggplot(my.data, aes(x, y)) +
 
 ## -----------------------------------------------------------------------------
 ggplot(my.data, aes(x, y)) +
+  geom_quadrant_lines(colour = "red") +
+  stat_quadrant_counts(colour = "red") +
+  geom_point() +
+  expand_limits(y = c(-250, 250))
+
+## -----------------------------------------------------------------------------
+ggplot(my.data, aes(x, y)) +
   geom_quadrant_lines(colour = "red", pool.along = "x") +
   stat_quadrant_counts(colour = "red", pool.along = "x") +
   geom_point()

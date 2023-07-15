@@ -1019,11 +1019,10 @@ and `y`.
 
 ### stat_quadrant_counts() and geom_quadrant_lines()
 
-This statistic automates the annotation of plots with number of
-observations, either by quadrant, by pairs of quadrants or the four
-quadrants taken together (whole plotting area). Its companion geometry,
-`geom_quadrant_lines()` is used in the examples to highlight the
-quadrants.
+This statistic automates the annotation of plots with number of observations
+(counts, fractions, or percents), either by quadrant, by pairs of quadrants or
+the four quadrants taken together (whole plotting area). Its companion geometry,
+`geom_quadrant_lines()` is used in the examples to highlight the quadrants.
 
 We generate some artificial data.
 
@@ -1038,6 +1037,16 @@ my.data <- data.frame(x,
 ```
 
 Using defaults except for color.
+
+```{r}
+ggplot(my.data, aes(x, y)) +
+  geom_quadrant_lines(colour = "red") +
+  stat_quadrant_counts(colour = "red") +
+  geom_point() +
+  expand_limits(y = c(-250, 250))
+```
+
+Ratios
 
 ```{r}
 ggplot(my.data, aes(x, y)) +
