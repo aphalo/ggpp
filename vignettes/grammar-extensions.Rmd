@@ -1017,6 +1017,36 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
 The very similar `stat_summary_xy()` accepts different functions for `x`
 and `y`.
 
+### stat_group_counts()
+
+```{r}
+ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
+  geom_point(alpha = 0.25) +
+  stat_panel_counts()
+```
+
+```{r}
+ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
+  geom_point(alpha = 0.2) +
+  stat_group_counts(hstep = 0.09, vstep = 0, label.x = "left", label.y = "bottom")
+```
+
+Labels with counts of observations can be also added when aesthetics `x` or `y`
+are factors, as in ggplots factors create a grouping. If the labels are to be
+aligned with the factor levels, we need to use a "normal" geometry such as
+`geom_text()` instead of the default `geom_text_npc()` and set the corresponding
+label positions to `"factor"`.
+
+```{r}
+ggplot(mpg,
+       aes(factor(cyl), hwy)) +
+  stat_boxplot() +
+  stat_group_counts(geom = "text",
+                    label.y = 10,
+                    label.x = "factor") +
+  stat_panel_counts()
+```
+
 ### stat_quadrant_counts() and geom_quadrant_lines()
 
 This statistic automates the annotation of plots with number of observations
@@ -1046,16 +1076,47 @@ ggplot(my.data, aes(x, y)) +
   expand_limits(y = c(-250, 250))
 ```
 
-Ratios
+Number in quadrant over total observations.
 
 ```{r}
 ggplot(my.data, aes(x, y)) +
   geom_quadrant_lines(colour = "red") +
-  stat_quadrant_counts(colour = "red") +
+  stat_quadrant_counts(aes(label = after_stat(fr.label)), colour = "red") +
   geom_point() +
   expand_limits(y = c(-250, 250))
 ```
 
+Decimal fractions.
+
+
+```{r}
+ggplot(my.data, aes(x, y)) +
+  geom_quadrant_lines(colour = "red") +
+  stat_quadrant_counts(aes(label = after_stat(dec.label)), colour = "red") +
+  geom_point() +
+  expand_limits(y = c(-250, 250))
+```
+
+Percent of observations.
+
+```{r}
+ggplot(my.data, aes(x, y)) +
+  geom_quadrant_lines(colour = "red") +
+  stat_quadrant_counts(aes(label = after_stat(pc.label)), colour = "red") +
+  geom_point() +
+  expand_limits(y = c(-250, 250))
+```
+
+User-constructed labels.
+
+
+```{r}
+ggplot(my.data, aes(x, y)) +
+  geom_quadrant_lines(colour = "red") +
+  stat_quadrant_counts(aes(label = sprintf("%i genes", after_stat(count))), colour = "red") +
+  geom_point() +
+  expand_limits(y = c(-250, 250))
+```
 Pooling quadrants along the *x*-axis. (`pool.along = "y"` pools along
 *y*.)
 
@@ -1077,6 +1138,13 @@ ggplot(my.data, aes(x, y)) +
 ```
 
 Annotation of only specific quadrants.
+
+```{r}
+ggplot(my.data, aes(x, y)) +
+  geom_quadrant_lines(colour = "red") +
+  stat_quadrant_counts(colour = "red", quadrants = c(1:4)) +
+  geom_point()
+```
 
 ```{r}
 ggplot(my.data, aes(x, y)) +

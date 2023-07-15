@@ -163,13 +163,15 @@ ggplot(my.data, aes(x, y, colour = group)) +
   stat_group_counts(aes(label = after_stat(dec.label)))
 
 # one of x or y can be a factor
+# label.x or label.y along the factor can be set to "factor" together
+# with the use of geom_text()
 
 ggplot(mpg,
        aes(factor(cyl), hwy)) +
   stat_boxplot() +
   stat_group_counts(geom = "text",
                     label.y = 10,
-                    label.x = 1:4) +
+                    label.x = "factor") +
   stat_panel_counts()
 
 # Numeric values can be used to build labels with alternative formats
@@ -187,7 +189,7 @@ ggplot(mpg,
   stat_group_counts(geom = "text",
                     aes(label = sprintf("(\%i)", after_stat(count))),
                     label.y = 10,
-                    label.x = 1:4)
+                    label.x = "factor")
 
 ggplot(mpg,
        aes(factor(cyl), hwy)) +
@@ -197,7 +199,7 @@ ggplot(mpg,
                     parse = TRUE,
                     geom = "text",
                     label.y = 10,
-                    label.x = 1:4) +
+                    label.x = "factor") +
   stat_panel_counts(aes(label = sprintf("sum(n[i])~`=`~\%i",
                                         after_stat(count))),
                     parse = TRUE)
@@ -219,7 +221,7 @@ ggplot(mpg,
   stat_boxplot() +
   stat_group_counts(geom = "text",
                     aes(label = after_stat(count)),
-                    label.x = 1:4,
+                    label.x = "factor",
                     label.y = 10) +
   annotate(geom = "text", x = 0.55, y = 10, label = "n[i]~`=`", parse = TRUE)
 

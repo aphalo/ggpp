@@ -262,13 +262,15 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
 
 ![](man/figures/README-unnamed-chunk-1-1.png)<!-- -->
 
-Medians computed on-the-fly shown as marginal arrows.
+Medians computed on-the-fly shown as marginal arrows. Labels with number
+of observations per group.
 
 ``` r
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point() +
   stat_centroid(geom = "y_margin_arrow", .fun = median,
-                aes(yintercept = after_stat(y)), arrow.length = 0.05)
+                aes(yintercept = after_stat(y)), arrow.length = 0.05) +
+  stat_group_counts(vstep = 0, hstep = 0.09)
 ```
 
 ![](man/figures/README-unnamed-chunk-2-1.png)<!-- -->

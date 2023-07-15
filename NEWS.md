@@ -10,6 +10,7 @@ editor_options:
 
 -   Add support for percent and fraction of observations to `stat_quadrant_counts()` 
 and `stat_group_counts()`.
+-   Fix bug in `stat_group_counts()`: mismatch between counts and groups.
 -   Add `stat_functions()`, a replacement for `ggplot2::stat_function()` that fully 
 complies with the grammar of graphics, supporting multiple functions per layer,
 grouping and facets.

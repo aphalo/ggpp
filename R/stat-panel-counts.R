@@ -113,13 +113,15 @@
 #'   stat_group_counts(aes(label = after_stat(dec.label)))
 #'
 #' # one of x or y can be a factor
+#' # label.x or label.y along the factor can be set to "factor" together
+#' # with the use of geom_text()
 #'
 #' ggplot(mpg,
 #'        aes(factor(cyl), hwy)) +
 #'   stat_boxplot() +
 #'   stat_group_counts(geom = "text",
 #'                     label.y = 10,
-#'                     label.x = 1:4) +
+#'                     label.x = "factor") +
 #'   stat_panel_counts()
 #'
 #' # Numeric values can be used to build labels with alternative formats
@@ -137,7 +139,7 @@
 #'   stat_group_counts(geom = "text",
 #'                     aes(label = sprintf("(%i)", after_stat(count))),
 #'                     label.y = 10,
-#'                     label.x = 1:4)
+#'                     label.x = "factor")
 #'
 #' ggplot(mpg,
 #'        aes(factor(cyl), hwy)) +
@@ -147,7 +149,7 @@
 #'                     parse = TRUE,
 #'                     geom = "text",
 #'                     label.y = 10,
-#'                     label.x = 1:4) +
+#'                     label.x = "factor") +
 #'   stat_panel_counts(aes(label = sprintf("sum(n[i])~`=`~%i",
 #'                                         after_stat(count))),
 #'                     parse = TRUE)
@@ -169,7 +171,7 @@
 #'   stat_boxplot() +
 #'   stat_group_counts(geom = "text",
 #'                     aes(label = after_stat(count)),
-#'                     label.x = 1:4,
+#'                     label.x = "factor",
 #'                     label.y = 10) +
 #'   annotate(geom = "text", x = 0.55, y = 10, label = "n[i]~`=`", parse = TRUE)
 #'
@@ -372,6 +374,7 @@ StatGroupCounts <-
 
                      force(data)
 
+                     # Build group labels
                      if (exists("grp.label", data)) {
                        if (length(unique(data[["grp.label"]])) > 1L) {
                          warning("Non-unique value in 'data$grp.label' using group index ", data[["group"]][1], " as label.")
@@ -384,7 +387,7 @@ StatGroupCounts <-
                        grp.label <- as.character(unique(data[["group"]]))
                      }
 
-                     # Build group labels
+                     # validate label positions
                      group.idx <- abs(unique(data$group))
                      if (length(label.x) >= length(group.idx)) {
                        label.x <- label.x[1:length(group.idx)]
@@ -399,75 +402,76 @@ StatGroupCounts <-
 
                      # Compute number of observations
                      # (works because NAs have been already removed)
-                     num.obs <- nrow(data)
+                     z <- data.frame()
 
-                     data %>%
-                       dplyr::group_by(.data$group) %>%
-                       dplyr::summarise(count = length(.data$x)) %>% # dplyr::n() triggers error
-                       dplyr::ungroup() -> z
-
-                     z$total <- num.obs
-
-                     y <- data.frame()
-                     cols2copy <- setdiff(colnames(data), colnames(z))
                      for (g in unique(data$group)) {
-                       y <- rbind(y, data[data$group == g, cols2copy][ 1, ])
+                       temp <- cbind(data[data$group == g, ][ 1, ], count = sum(data$group == g))
+                       z <- rbind(z, temp)
                      }
 
-                     z <- cbind(z, y)
+                     z$total <- nrow(data)
 
                      z$count.label <- sprintf("n=%i", z$count)
                      z$pc.label <- sprintf("p=%.*f%%",
-                                              digits - 2,
-                                              z$count / sum(z$count) * 100)
+                                           digits - 2,
+                                           z$count / z$total * 100)
                      z$dec.label <- sprintf("f=%.*f",
-                                              digits,
-                                              z$count / sum(z$count))
+                                            digits,
+                                            z$count / z$total)
                      z$fr.label <- sprintf("%i / %i",
                                            z$count, z$total)
 
                      # Compute label positions
                      if (is.character(label.x)) {
-                       if (npc.used) {
-                         margin.npc <- 0.05
+                       if (label.x[1] == "factor") {
+                         label.x <- z$group
                        } else {
-                         # margin set by scale
-                         margin.npc <- 0
-                       }
-                       label.x <- compute_npcx(x = label.x, group = group.idx, h.step = hstep,
-                                               margin.npc = margin.npc)
-                       if (!npc.used) {
-                         if ("x" %in% colnames(data)) {
-                           x.expanse <- abs(diff(range(data$x)))
-                           x.min <- min(data$x)
-                           label.x <- label.x * x.expanse + x.min
+                         if (npc.used) {
+                           margin.npc <- 0.05
                          } else {
-                           if (data$PANEL[1] == 1L && group.idx == 1L) { # show only once
-                             message("No 'x' mapping; 'label.x' requires a numeric argument in data units")
+                           # margin set by scale
+                           margin.npc <- 0
+                         }
+                         label.x <- compute_npcx(x = label.x, group = group.idx, h.step = hstep,
+                                                 margin.npc = margin.npc)
+                         if (!npc.used) {
+                           if ("x" %in% colnames(data)) {
+                             x.expanse <- abs(diff(range(data$x)))
+                             x.min <- min(data$x)
+                             label.x <- label.x * x.expanse + x.min
+                           } else {
+                             if (data$PANEL[1] == 1L && group.idx == 1L) { # show only once
+                               message("No 'x' mapping; 'label.x' requires a numeric argument in data units")
+                             }
+                             label.x <- NA_real_
                            }
-                           label.x <- NA_real_
                          }
                        }
                      }
+
                      if (is.character(label.y)) {
-                       if (npc.used) {
-                         margin.npc <- 0.05
+                       if (label.y[1] == "factor") {
+                         label.x <- z$group
                        } else {
-                         # margin set by scale
-                         margin.npc <- 0
-                       }
-                       label.y <- compute_npcy(y = label.y, group = group.idx, v.step = vstep,
-                                               margin.npc = margin.npc)
-                       if (!npc.used) {
-                         if ("y" %in% colnames(data)) {
-                           y.expanse <- abs(diff(range(data$y)))
-                           y.min <- min(data$y)
-                           label.y <- label.y * y.expanse + y.min
+                         if (npc.used) {
+                           margin.npc <- 0.05
                          } else {
-                           if (data$PANEL[1] == 1L && group.idx == 1L) { # show only once
-                             message("No 'y' mapping; 'label.y' requires a numeric argument in data units")
+                           # margin set by scale
+                           margin.npc <- 0
+                         }
+                         label.y <- compute_npcy(y = label.y, group = group.idx, v.step = vstep,
+                                                 margin.npc = margin.npc)
+                         if (!npc.used) {
+                           if ("y" %in% colnames(data)) {
+                             y.expanse <- abs(diff(range(data$y)))
+                             y.min <- min(data$y)
+                             label.y <- label.y * y.expanse + y.min
+                           } else {
+                             if (data$PANEL[1] == 1L && group.idx == 1L) { # show only once
+                               message("No 'y' mapping; 'label.y' requires a numeric argument in data units")
+                             }
+                             label.y <- NA_real_
                            }
-                           label.y <- NA_real_
                          }
                        }
                      }

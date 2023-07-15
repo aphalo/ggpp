@@ -60,7 +60,7 @@ test_that("stat_group_counts", {
   tst.df <- data.frame(
     x = c(2.2, -0.2, -0.2, -2.5, -0.6, -0.1),
     y = c(1.1, -0.6, -0.9, -1.6, 0.3, 1.6),
-    group = c("A", "A", "A", "B", "B", "B")
+    group = c("A", "A", "A", "B", "B", "A")
   )
   vdiffr::expect_doppelganger("stat_group_counts_xy",
                               ggplot(tst.df, aes(x, y)) +
@@ -135,6 +135,26 @@ test_that("stat_group_counts", {
     hjust = "inward",
     vjust = "inward")
   expect_identical(result, expected)
+
+  p <- ggplot(tst.df, aes(x, y, group = group)) +
+    stat_group_counts(digits = 3) +
+    geom_point()
+  result <- layer_data(p)[, c("npcx", "npcy", "label", "group", "count", "total",
+                              "count.label", "pc.label", "dec.label", "fr.label", "hjust", "vjust")]
+  expected <- data.frame(
+    npcx = 0.95,
+    npcy = c(0.95, 0.90),
+    label = c("n=4", "n=2"),
+    group = 1L:2L,
+    count = c(4L, 2L),
+    total = 6L,
+    count.label =  c("n=4", "n=2"),
+    pc.label = c("p=66.7%", "p=33.3%"),
+    dec.label = c("f=0.667", "f=0.333"),
+    fr.label = c("4 / 6", "2 / 6"),
+    hjust = "inward",
+    vjust = "inward")
+  expect_equal(result, expected)
 
   expect_error(ggplot(tst.df, aes(x, y)) +
                  stat_group_counts(label.x = NA))

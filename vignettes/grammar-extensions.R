@@ -311,6 +311,25 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
 #    stat_centroid(shape = "cross", size = 4, .fun = median)
 
 ## -----------------------------------------------------------------------------
+ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
+  geom_point(alpha = 0.25) +
+  stat_panel_counts()
+
+## -----------------------------------------------------------------------------
+ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
+  geom_point(alpha = 0.2) +
+  stat_group_counts(hstep = 0.09, vstep = 0, label.x = "left", label.y = "bottom")
+
+## -----------------------------------------------------------------------------
+ggplot(mpg,
+       aes(factor(cyl), hwy)) +
+  stat_boxplot() +
+  stat_group_counts(geom = "text",
+                    label.y = 10,
+                    label.x = "factor") +
+  stat_panel_counts()
+
+## -----------------------------------------------------------------------------
 set.seed(4321)
 # generate artificial data
 x <- -99:100
@@ -329,7 +348,28 @@ ggplot(my.data, aes(x, y)) +
 ## -----------------------------------------------------------------------------
 ggplot(my.data, aes(x, y)) +
   geom_quadrant_lines(colour = "red") +
-  stat_quadrant_counts(colour = "red") +
+  stat_quadrant_counts(aes(label = after_stat(fr.label)), colour = "red") +
+  geom_point() +
+  expand_limits(y = c(-250, 250))
+
+## -----------------------------------------------------------------------------
+ggplot(my.data, aes(x, y)) +
+  geom_quadrant_lines(colour = "red") +
+  stat_quadrant_counts(aes(label = after_stat(dec.label)), colour = "red") +
+  geom_point() +
+  expand_limits(y = c(-250, 250))
+
+## -----------------------------------------------------------------------------
+ggplot(my.data, aes(x, y)) +
+  geom_quadrant_lines(colour = "red") +
+  stat_quadrant_counts(aes(label = after_stat(pc.label)), colour = "red") +
+  geom_point() +
+  expand_limits(y = c(-250, 250))
+
+## -----------------------------------------------------------------------------
+ggplot(my.data, aes(x, y)) +
+  geom_quadrant_lines(colour = "red") +
+  stat_quadrant_counts(aes(label = sprintf("%i genes", after_stat(count))), colour = "red") +
   geom_point() +
   expand_limits(y = c(-250, 250))
 
@@ -344,6 +384,12 @@ ggplot(my.data, aes(x, y)) +
   geom_point() +
   stat_quadrant_counts(quadrants = 0L, label.x = "left", 
                        aes(label = sprintf("%i observations", after_stat(count))))
+
+## -----------------------------------------------------------------------------
+ggplot(my.data, aes(x, y)) +
+  geom_quadrant_lines(colour = "red") +
+  stat_quadrant_counts(colour = "red", quadrants = c(1:4)) +
+  geom_point()
 
 ## -----------------------------------------------------------------------------
 ggplot(my.data, aes(x, y)) +
