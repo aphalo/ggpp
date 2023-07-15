@@ -175,19 +175,17 @@ ggplot(mpg,
 # Numeric values can be used to build labels with alternative formats
 # Here with sprintf(), but paste() and format() also work.
 
-ggplot(mpg,
-       aes(factor(cyl), hwy)) +
-  stat_boxplot() +
-  stat_group_counts(geom = "text",
-                    aes(label = sprintf("(\%i)", after_stat(count))),
-                    label.y = 10,
-                    label.x = 1:4)
+ggplot(my.data, aes(x, y)) +
+ geom_point() +
+ stat_panel_counts(aes(label = sprintf("\%i observations",
+                                       after_stat(count)))) +
+ scale_y_continuous(expand = expansion(mult = c(0.05, 0.12)))
 
 ggplot(mpg,
        aes(factor(cyl), hwy)) +
   stat_boxplot() +
   stat_group_counts(geom = "text",
-                    aes(label = sprintf("(\%i / \%i)", after_stat(count), after_stat(total))),
+                    aes(label = sprintf("(\%i)", after_stat(count))),
                     label.y = 10,
                     label.x = 1:4)
 
@@ -204,15 +202,15 @@ ggplot(mpg,
                                         after_stat(count))),
                     parse = TRUE)
 
-ggplot(mpg,
-       aes(hwy, factor(cyl))) +
-  stat_boxplot() +
-  stat_group_counts(geom = "text",
-                    label.x = 10,
-                    label.y = 1:4) +
-  stat_panel_counts(aes(label = sprintf("sum(n[i])~`=`~\%i",
-                                        after_stat(count))),
-                    parse = TRUE)
+# label position
+
+ggplot(my.data, aes(y)) +
+  stat_panel_counts(label.x = "left") +
+  stat_density(alpha = 0.5)
+
+ggplot(my.data, aes(y, colour = group)) +
+  stat_group_counts(label.y = "top") +
+  stat_density(aes(fill = group), alpha = 0.3)
 
 # The numeric value can be used as a label as is
 
@@ -234,25 +232,13 @@ if (gginnards.installed) {
   ggplot(my.data, aes(x, y)) +
     geom_point() +
     stat_panel_counts(geom = "debug")
+}
 
+if (gginnards.installed) {
   ggplot(my.data, aes(x, y, colour = group)) +
     geom_point() +
     stat_group_counts(geom = "debug")
-
 }
-
-ggplot(my.data, aes(x, y)) +
- geom_point() +
- stat_panel_counts(aes(label = sprintf("\%i observations", after_stat(count)))) +
- expand_limits(y = 12.7)
-
-ggplot(my.data, aes(y)) +
-  stat_panel_counts(label.x = "left") +
-  stat_density()
-
-ggplot(my.data, aes(y, colour = group)) +
-  stat_group_counts(label.y = "top") +
-  stat_density(aes(fill = group))
 
 }
 \seealso{

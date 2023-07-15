@@ -40,6 +40,7 @@ reference:
     - stat_panel_counts
     - stat_fmt_tb
     - stat_apply_group
+    - stat_functions
   - title: Positions
     desc: Advanced nudge functions
     contents:

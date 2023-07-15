@@ -123,7 +123,7 @@ x <- -50:50
 y <- rnorm(length(x), mean = 0)
 my.data <- data.frame(x, y)
 
-# using automatically generated text labels
+# using automatically generated text labels, default origin at (0, 0)
 
 ggplot(my.data, aes(x, y)) +
   geom_point() +
@@ -151,6 +151,8 @@ ggplot(my.data, aes(x, y)) +
   stat_quadrant_counts(aes(label = sprintf("\%i observations", after_stat(count)))) +
   scale_y_continuous(expand = expansion(c(0.05, 0.15))) # reserve space
 
+# user specified origin
+
 ggplot(my.data, aes(x, y)) +
   geom_quadrant_lines(colour = "blue", xintercept = 10, yintercept = -1) +
   stat_quadrant_counts(colour = "blue", xintercept = 10, yintercept = -1) +
@@ -163,6 +165,8 @@ ggplot(my.data, aes(x, y)) +
                        colour = "blue", xintercept = 10, yintercept = -1) +
   geom_point() +
   scale_y_continuous(expand = expansion(mult = 0.15))
+
+# more digits in labels
 
 ggplot(my.data, aes(x, y)) +
   geom_quadrant_lines(colour = "blue", xintercept = 10, yintercept = -1) +
@@ -178,6 +182,8 @@ ggplot(my.data, aes(x, y)) +
   geom_point() +
   scale_y_continuous(expand = expansion(mult = 0.15))
 
+# grouped quadrants
+
 ggplot(my.data, aes(x, y)) +
   geom_quadrant_lines(colour = "blue",
                       pool.along = "x") +
@@ -186,19 +192,14 @@ ggplot(my.data, aes(x, y)) +
   geom_point() +
   scale_y_continuous(expand = expansion(mult = 0.15))
 
-ggplot(my.data, aes(x, y)) +
-  geom_quadrant_lines(colour = "blue",
-                      pool.along = "x") +
-  stat_quadrant_counts(aes(label = after_stat(pc.label)),
-                       colour = "blue", label.x = "right",
-                       pool.along = "x") +
-  geom_point() +
-  scale_y_continuous(expand = expansion(mult = 0.15))
+# whole panel
 
 ggplot(my.data, aes(x, y)) +
   geom_point() +
   stat_quadrant_counts(quadrants = 0, label.x = "left", label.y = "bottom") +
   scale_y_continuous(expand = expansion(mult = c(0.15, 0.05)))
+
+# use a different geometry
 
 ggplot(my.data, aes(x, y)) +
   geom_point() +
@@ -206,14 +207,6 @@ ggplot(my.data, aes(x, y)) +
 
 # Numeric values can be used to build labels with alternative formats
 # Here with sprintf(), but paste() and format() also work.
-
-ggplot(my.data, aes(x, y)) +
-  geom_quadrant_lines(colour = "blue") +
-  stat_quadrant_counts(aes(label = sprintf("\%i / \%i",
-                       after_stat(count), after_stat(total))),
-                       colour = "blue") +
-  geom_point() +
-  scale_y_continuous(expand = expansion(mult = 0.15))
 
 ggplot(my.data, aes(x, y)) +
   geom_quadrant_lines(colour = "blue") +
