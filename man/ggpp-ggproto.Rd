@@ -3,11 +3,11 @@
 %   R/geom-label-npc.r, R/geom-margin-arrow.r, R/geom-margin-grob.r,
 %   R/geom-margin-point.r, R/geom-plot.R, R/geom-point-linked.r,
 %   R/geom-quadrant-lines.R, R/geom-table.R, R/geom-text-linked.r,
-%   R/geom-text-npc.r, R/position-nudge-center.R, R/position-nudge-line.R,
-%   R/position-nudge-stack.R, R/position-nudge-to.R, R/stat-apply.R,
-%   R/stat-dens1d-filter.r, R/stat-dens1d-labels.r, R/stat-dens2d-filter.r,
-%   R/stat-dens2d-labels.r, R/stat-format-table.R, R/stat-functions.R,
-%   R/stat-panel-counts.R, R/stat-quadrant-counts.R
+%   R/geom-text-npc.r, R/geom-text-pairwise.R, R/position-nudge-center.R,
+%   R/position-nudge-line.R, R/position-nudge-stack.R, R/position-nudge-to.R,
+%   R/stat-apply.R, R/stat-dens1d-filter.r, R/stat-dens1d-labels.r,
+%   R/stat-dens2d-filter.r, R/stat-dens2d-labels.r, R/stat-format-table.R,
+%   R/stat-functions.R, R/stat-panel-counts.R, R/stat-quadrant-counts.R
 \docType{data}
 \name{GeomGrob}
 \alias{GeomGrob}
@@ -29,6 +29,7 @@
 \alias{GeomTableNpc}
 \alias{GeomTextS}
 \alias{GeomTextNpc}
+\alias{GeomTextPairwise}
 \alias{PositionNudgeCenter}
 \alias{PositionNudgeLine}
 \alias{PositionFillAndNudge}

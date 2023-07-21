@@ -6,6 +6,11 @@ editor_options:
     wrap: 72
 ---
 
+# ggpp 0.5.4
+
+-   Add `geom_text_pairwise()` suitable for annotating/highlighting pairwise comparisons between levels of a factor mapped to the _x_ aesthetic. The user
+interface is consistent with that of `geom_text_s()`.
+
 # ggpp 0.5.3
 
 -   Add support for percent and fraction of observations to `stat_quadrant_counts()` 
