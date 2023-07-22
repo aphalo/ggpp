@@ -8,8 +8,9 @@ editor_options:
 
 # ggpp 0.5.4
 
--   Add `geom_text_pairwise()` suitable for annotating/highlighting pairwise comparisons between levels of a factor mapped to the _x_ aesthetic. The user
-interface is consistent with that of `geom_text_s()`.
+-   Add `geom_text_pairwise()` and `geom_label_pairwise()`suitable for annotating/highlighting pairwise comparisons between levels of a factor mapped to the _x_ aesthetic. They can also be used to highlight ranges of values
+when the variable mapped to _x_ is a continuous numerical vector. The user
+interfaces are consistent with those of `geom_text_s()` and `geom_label_s()`.
 
 # ggpp 0.5.3
 

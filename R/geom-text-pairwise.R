@@ -1,34 +1,42 @@
 #' Label pairwise comparisons
 #'
-#' @description Add a plot layer with a text label and a segment connecting two levels of a
-#' factor mapped to the \code{x} or \code{y} aesthetic. Useful for reporting tests or
-#' highlighting pairwise comparisons.
+#' @description Add a plot layer with a text label and a segment connecting two
+#'   values along the \code{x} aesthetic. These are usually two levels of a
+#'   factor mapped to the \code{x} aesthetic when used to report significance or
+#'   highlighting pairwise comparisons.
 #'
-#' @section Under development!: Theis geometry is still under development
+#' @section Under development!: This geometry is still under development
 #'   and its user interface subject to change.
 #'
 #' @details Geometries \code{geom_text_pairwise()} and
-#'   \code{geom_label_pairwise()} have an
-#'   interface similar to that of \code{\link[ggplot2]{geom_text}} and
-#'   \code{\link[ggplot2]{geom_label}}, but add a segment connecting pairs of
-#'   levels from a grouping factor mapped to the \emph{x} or \emph{y} aesthetic.
+#'   \code{geom_label_pairwise()} have an interface similar to that of
+#'   \code{\link[ggplot2]{geom_text}} and \code{\link[ggplot2]{geom_label}}, but
+#'   add a segment connecting two values along \code{x}. In the most
+#'   frequent use case they add a segment connecting pairs of levels from a
+#'   grouping factor mapped to the \emph{x} or \emph{y} aesthetic. They can
+#'   also be used to label ranges of values.
+#'
+#'   The segment extends from \code{xmin} to \code{xmax}, and the text label is
+#'   located at \code{x} with a default that positions the label at the centre
+#'   of the bar. The ends of the bar can be terminated with arrow heads given
+#'   by parameter \code{arrow}, with a default of a plain segment without
+#'   arrow tips. The text label is located slightly above the segment by the
+#'   default value of \code{vjust} in \code{geom_text_pairwise()} and on top
+#'   of the segment in \code{geom_label_pairwise()}.
 #'
 #'   Layer functions \code{geom_text_pairwise()} and
 #'   \code{geom_label_pairwise()} use by
-#'   default \code{\link{position_nudge_keep}} which is backwards compatible
-#'   with \code{\link[ggplot2]{position_nudge}}. In contrast to
-#'   \code{\link[ggplot2]{position_nudge}}, \code{\link{position_nudge_keep}}
-#'   and all other position functions defined in packages 'ggpp' and 'ggrepel'
-#'   keep the original coordinates, thus allowing the plotting of connecting
-#'   segments and arrows to the original location of the text label.
+#'   default \code{\link[ggplot2]{position_nudge}}. Nudging affects both text
+#'   label and bar, and its default of no displacement will very rarely need
+#'   to be changed.
 #'
 #'   Differently to \code{geom_text_repel()} and \code{geom_label_repel()},
-#'   \code{geom_text_s()} and \code{geom_label_s()} do not make use of
-#'   additional aesthetics for the segments or boxes, but instead allow the
-#'   choice of which elements are targeted by the aesthetics and which are
-#'   rendered in a default colour. In the grammar of graphics using the same
-#'   aesthetic with multiple meanings is not allowed, thus, the approach used in
-#'   our geoms attempts to enforce this.
+#'   \code{geom_text_pairwise()} and \code{geom_label_pairwise()} do not make
+#'   use of additional aesthetics for the segments or boxes, but instead allow
+#'   the choice of which elements are targeted by the usual 'ggplot2' aesthetics
+#'   and which are rendered using a default constant value. In the grammar of
+#'   graphics using the same aesthetic with multiple meanings is not allowed,
+#'   thus, the approach used in package 'ggpp' attempts to enforce this.
 #'
 #' @section Plot boundaries and clipping: Note that when you change the scale
 #'   limits for \emph{x} and/or \emph{y} of a plot, text labels stay the same
@@ -37,13 +45,16 @@
 #'   of the plot to a graphics device. Limits are expanded only to include the
 #'   anchor point of the labels because the "width" and "height" of a text
 #'   element are 0 (as seen by ggplot2). Text labels do have height and width,
-#'   but in grid units, not data units.
+#'   but in grid units, not data units. Either function
+#'   \code{\link[ggplot2]{expand_limits}} or the scale expansion can be used to
+#'   ensure text labels remain within the plotting area.
 #'
 #' @section Alignment: You can modify text alignment with the \code{vjust} and
 #'   \code{hjust} aesthetics. These can either be a number between 0
 #'   (right/bottom) and 1 (top/left) or a character (\code{"left"},
 #'   \code{"middle"}, \code{"right"}, \code{"bottom"}, \code{"center"},
-#'   \code{"top"}). In addition, you can use special alignments for
+#'   \code{"top"}). Values outside the range 0..1 displace the text label
+#'   so that the anchor point is outside the text label. In addition, you can use special alignments for
 #'   justification including \code{"position"}, \code{"inward"} and
 #'   \code{"outward"}. Inward always aligns text towards the center of the
 #'   plotting area, and outward aligns it away from the center of the plotting
@@ -54,18 +65,13 @@
 #'   point will be this value in data units. Position justification is computed
 #'   based on the direction of the displacement of the position of the label so
 #'   that each individual text or label is justified outwards from its original
-#'   position. The default justification is \code{"position"}.
-#'
-#'   If no position displacement is applied, or a position function defined in
-#'   'ggplot2' is used, these geometries behave similarly to the corresponding
-#'   ones from package 'ggplot2' with a default justification of \code{0.5} and
-#'   no segment drawn.
+#'   position. The default justification is \code{"identity"}.
 #'
 #' @param mapping Set of aesthetic mappings created by
-#'   \code{\link[ggplot2]{aes}}. If specified and with \code{inherit.aes = TRUE}
-#'   (the default), it is combined with the default mapping at the top level of
-#'   the plot. You only need to supply \code{mapping} if there isn't a mapping
-#'   defined for the plot.
+#'   \code{\link[ggplot2]{aes}}. With \code{inherit.aes = FALSE}
+#'   (the default) it is not combined with the default mapping at the top level of
+#'   the plot. You always need to supply a \code{mapping} unless you set
+#'   \code{inherit.aes = TRUE}.
 #' @param data A data frame. If specified, overrides the default data frame
 #'   defined at the top level of the plot.
 #' @param stat The statistical transformation to use on the data for this layer,
@@ -80,9 +86,7 @@
 #'   \code{NA} includes a legend if any aesthetics are mapped.
 #'   \code{FALSE}, the default, never includes it, and \code{TRUE} always includes it.
 #' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather
-#'   than combining them. This is most useful for helper functions that define
-#'   both data and aesthetics and shouldn't inherit behaviour from the default
-#'   plot specification, e.g., \code{\link[ggplot2]{borders}}.
+#'   than combining them.
 #' @param check_overlap If \code{TRUE}, text that overlaps previous text in the
 #'   same layer will not be plotted. \code{check_overlap} takes place at draw
 #'   time and in the order of the data, thus its action depends of the size at
@@ -109,8 +113,6 @@
 #'   \code{"box.fill"} or \code{"none"}.
 #' @param add.segments logical Display connecting segments or arrows between
 #'   two factor levels.
-#' @param box.padding numeric By how much each end of the segments
-#'   should shortened in mm.
 #' @param segment.linewidth numeric Width of the segments or arrows in mm.
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
@@ -128,8 +130,9 @@
 #'   \code{\link[ggplot2]{aes_position}}, and
 #'   \code{\link[ggplot2]{aes_group_order}}.
 #'
-#' @seealso \code{\link[ggplot2]{geom_text}}, \code{\link[ggplot2]{geom_label}}
-#'   and other documentation of package 'ggplot2'.
+#' @seealso \code{\link{geom_text_s}}, \code{\link{geom_label_s}},
+#'   \code{\link[ggplot2]{geom_text}}, \code{\link[ggplot2]{geom_label}} and
+#'   other documentation of package 'ggplot2'.
 #'
 #' @return A plot layer instance.
 #'
@@ -137,23 +140,26 @@
 #'
 #' @examples
 #'
-#' my.cars <- mtcars[c(TRUE, FALSE, FALSE, FALSE), ]
+#' my.cars <- mtcars
 #' my.cars$name <- rownames(my.cars)
-#' p <- ggplot(my.cars, aes(factor(cyl), mpg)) +
-#'        geom_boxplot()
+#' p1 <- ggplot(my.cars, aes(factor(cyl), mpg)) +
+#'        geom_boxplot(width = 0.33)
+#'
+#' # With a factor mapped to x, highlight pairs
 #'
 #' my.pairs <-
-#'   data.frame(A = 1, B = 2, bar.height = 12, p.value = 0.01)
-#' p +
+#'   data.frame(A = 1:2, B = 2:3, bar.height = c(12, 30),
+#'              p.value = c(0.01, 0.05678))
+#' p1 +
 #'   geom_text_pairwise(data = my.pairs,
-#'                      aes(xmin = A, xmax = B, x = (A + B) / 2,
+#'                      aes(xmin = A, xmax = B,
 #'                          y = bar.height,
 #'                          label = p.value),
 #'                      parse = TRUE)
 #'
-#' p +
+#' p1 +
 #'   geom_text_pairwise(data = my.pairs,
-#'                      aes(xmin = A, xmax = B, x = (A + B) / 2,
+#'                      aes(xmin = A, xmax = B,
 #'                          y = bar.height,
 #'                          label = sprintf("italic(P)~`=`~%.2f", p.value)),
 #'                      arrow = grid::arrow(angle = 90,
@@ -161,9 +167,31 @@
 #'                                          ends = "both"),
 #'                      parse = TRUE)
 #'
-#' p +
+#' p1 +
 #'   geom_text_pairwise(data = my.pairs,
-#'                      aes(xmin = A, xmax = B, x = (A + B) / 2,
+#'                      aes(xmin = A, xmax = B,
+#'                          y = bar.height,
+#'                          label = sprintf("italic(P)~`=`~%.2f", p.value)),
+#'                      colour = "red",
+#'                      arrow = grid::arrow(angle = 90,
+#'                                          length = unit(1, "mm"),
+#'                                          ends = "both"),
+#'                      parse = TRUE)
+#'
+#' p1 +
+#'   geom_label_pairwise(data = my.pairs,
+#'                       aes(xmin = A, xmax = B,
+#'                           y = bar.height,
+#'                           label = sprintf("italic(P)~`=`~%.2f", p.value)),
+#'                       colour = "red", size = 2.75,
+#'                       arrow = grid::arrow(angle = 30,
+#'                                           length = unit(1.5, "mm"),
+#'                                           ends = "both"),
+#'                       parse = TRUE)
+#'
+#' p1 +
+#'   geom_text_pairwise(data = my.pairs,
+#'                      aes(xmin = A, xmax = B,
 #'                          y = bar.height,
 #'                          label = sprintf("italic(P)~`=`~%.2f", p.value)),
 #'                      colour = "red", colour.target = "segment",
@@ -172,16 +200,44 @@
 #'                                          ends = "both"),
 #'                      parse = TRUE)
 #'
-#' p +
+#' p1 +
 #'   geom_text_pairwise(data = my.pairs,
-#'                      aes(xmin = A, xmax = B, x = (A + B) / 2,
+#'                      aes(xmin = A, xmax = B,
 #'                          y = bar.height,
 #'                          label = sprintf("italic(P)~`=`~%.2f", p.value)),
-#'                      colour = "red", colour.target = "text",
+#'                      colour = "red", colour.target = "all",
 #'                      arrow = grid::arrow(angle = 90,
 #'                                          length = unit(1, "mm"),
 #'                                          ends = "both"),
 #'                      parse = TRUE)
+#'
+#' # with a numeric vector mapped to x, indicate range
+#'
+#' p2 <-
+#'   ggplot(my.cars, aes(disp, mpg)) +
+#'     geom_point()
+#'
+#' my.ranges <-
+#'   data.frame(A = c(50, 400),
+#'              B = c(200, 500),
+#'              bar.height = 5,
+#'              text = c("small", "large"))
+#'
+#' p2 +
+#'   geom_text_pairwise(data = my.ranges,
+#'                      aes(xmin = A, xmax = B,
+#'                      y = bar.height, label = text))
+#'
+#' p2 +
+#'   geom_label_pairwise(data = my.ranges,
+#'                       aes(xmin = A, xmax = B,
+#'                       y = bar.height, label = text))
+#'
+#' p2 +
+#'   geom_text_pairwise(data = my.ranges,
+#'                      aes(xmin = A, xmax = B,
+#'                          y = bar.height, label = text),
+#'                      arrow = grid::arrow(ends = "both", length = unit(2, "mm")))
 #'
 geom_text_pairwise <- function(mapping = NULL,
                                data = NULL,
@@ -199,11 +255,11 @@ geom_text_pairwise <- function(mapping = NULL,
                                alpha.target = "all",
                                add.segments = TRUE,
                                segment.linewidth = 0.5,
-                               arrow = grid::arrow(angle = 90),
+                               arrow = NULL,
                                check_overlap = FALSE,
                                na.rm = FALSE,
                                show.legend = NA,
-                               inherit.aes = TRUE) {
+                               inherit.aes = FALSE) {
 
   colour.target <-
     rlang::arg_match(color.target,
@@ -221,7 +277,7 @@ geom_text_pairwise <- function(mapping = NULL,
     }
     # original position needed for "position" justification
     position <-
-      position_nudge_center(nudge_x, nudge_y, kept.origin = "original")
+      ggplot2::position_nudge(nudge_x, nudge_y)
   }
 
   ggplot2::layer(
@@ -257,12 +313,12 @@ GeomTextPairwise <-
                    required_aes = c("xmin", "xmax", "y", "label"),
 
                    default_aes = ggplot2::aes(
-                     x = (xmin + xmax) / 2,
+                     x = NA_real_,
                      colour = "black",
                      size = 3.88,
                      angle = 0,
                      hjust = 0.5,
-                     vjust = -0.3,
+                     vjust = -0.4,
                      alpha = 1,
                      family = "",
                      fontface = 1,
@@ -320,6 +376,9 @@ GeomTextPairwise <-
 
                      for (row.idx in 1:nrow(data)) {
                        row <- data[row.idx, , drop = FALSE]
+                       if (is.na(row$x)) {
+                         row$x <- (row$xmin + row$xmax) / 2
+                       }
                        text.alpha <-
                          ifelse(any(alpha.target %in% c("all", "text")),
                                 row$alpha, default.alpha)
