@@ -15,7 +15,9 @@ geom_label_s <-
            nudge_x = 0,
            nudge_y = 0,
            default.colour = "black",
+           default.color = default.colour,
            colour.target = c("text", "box"),
+           color.target = colour.target,
            default.alpha = 1,
            alpha.target = "all",
            label.padding = grid::unit(0.25, "lines"),
@@ -31,7 +33,7 @@ geom_label_s <-
            inherit.aes = TRUE) {
 
     colour.target <-
-      rlang::arg_match(colour.target,
+      rlang::arg_match(color.target,
                        values = c("all", "text", "box", "box.line",
                                   "segment", "none"),
                        multiple = TRUE)
@@ -59,7 +61,7 @@ geom_label_s <-
     inherit.aes = inherit.aes,
     params = list(
       parse = parse,
-      default.colour = default.colour,
+      default.colour = default.color,
       colour.target = colour.target,
       default.alpha = default.alpha,
       alpha.target = alpha.target,
