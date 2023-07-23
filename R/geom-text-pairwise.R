@@ -111,8 +111,6 @@
 #' @param alpha.target A vector of character strings; \code{"all"},
 #'   \code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
 #'   \code{"box.fill"} or \code{"none"}.
-#' @param add.segments logical Display connecting segments or arrows between
-#'   two factor levels.
 #' @param segment.linewidth numeric Width of the segments or arrows in mm.
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
@@ -253,7 +251,6 @@ geom_text_pairwise <- function(mapping = NULL,
                                color.target = colour.target,
                                default.alpha = 1,
                                alpha.target = "all",
-                               add.segments = TRUE,
                                segment.linewidth = 0.5,
                                arrow = NULL,
                                check_overlap = FALSE,
@@ -294,7 +291,6 @@ geom_text_pairwise <- function(mapping = NULL,
       colour.target = colour.target,
       default.alpha = default.alpha,
       alpha.target = alpha.target,
-      add.segments = add.segments,
       segment.linewidth = segment.linewidth,
       arrow = arrow,
       check_overlap = check_overlap,
@@ -335,11 +331,8 @@ GeomTextPairwise <-
                                          alpha.target = "all",
                                          na.rm = FALSE,
                                          check_overlap = FALSE,
-                                         add.segments = TRUE,
                                          segment.linewidth = 0.5,
                                          arrow = NULL) {
-
-                     add.segments <- add.segments && all(c("xmin", "xmax") %in% colnames(data))
 
                      data$label <- as.character(data$label)
                      data <- subset(data, !is.na(label) & label != "")
@@ -405,25 +398,22 @@ GeomTextPairwise <-
                        # give unique name to each grob
                        user.grob$name <- paste("text.pairwise.grob", row$group, row.idx, sep = ".")
 
-                       if (add.segments) {
-                         segment.grob <-
-                           grid::segmentsGrob(x0 = row$xmin,
-                                              y0 = row$y,
-                                              x1 = row$xmax,
-                                              y1 = row$y,
-                                              arrow = arrow,
-                                              gp = grid::gpar(
-                                                col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
-                                                  ifelse(any(colour.target %in% c("all", "segment")),
-                                                         ggplot2::alpha(row$colour, segment.alpha),
-                                                         ggplot2::alpha(default.colour, segment.alpha)),
-                                                lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
-                                              name = paste("text.s.segment", row$group, row.idx, sep = ".")
-                           )
-                         all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
-                       } else {
-                         all.grobs <- grid::gList(all.grobs, user.grob)
-                       }
+                       segment.grob <-
+                         grid::segmentsGrob(x0 = row$xmin,
+                                            y0 = row$y,
+                                            x1 = row$xmax,
+                                            y1 = row$y,
+                                            arrow = arrow,
+                                            gp = grid::gpar(
+                                              col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
+                                                ifelse(any(colour.target %in% c("all", "segment")),
+                                                       ggplot2::alpha(row$colour, segment.alpha),
+                                                       ggplot2::alpha(default.colour, segment.alpha)),
+                                              lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
+                                            name = paste("text.s.segment", row$group, row.idx, sep = ".")
+                         )
+                       all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
+
                      }
 
                      # name needs to be unique within plot, so we would need to know other layers

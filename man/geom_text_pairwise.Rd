@@ -21,7 +21,6 @@ geom_label_pairwise(
   label.padding = grid::unit(0.25, "lines"),
   label.r = grid::unit(0.15, "lines"),
   segment.linewidth = 0.5,
-  add.segments = TRUE,
   arrow = NULL,
   na.rm = FALSE,
   show.legend = FALSE,
@@ -43,7 +42,6 @@ geom_text_pairwise(
   color.target = colour.target,
   default.alpha = 1,
   alpha.target = "all",
-  add.segments = TRUE,
   segment.linewidth = 0.5,
   arrow = NULL,
   check_overlap = FALSE,
@@ -102,9 +100,6 @@ elements not targeted by the alpha aesthetic.}
 \item{label.r}{Radius of rounded corners. Defaults to 0.15 lines.}
 
 \item{segment.linewidth}{numeric Width of the segments or arrows in mm.}
-
-\item{add.segments}{logical Display connecting segments or arrows between
-two factor levels.}
 
 \item{arrow}{specification for arrow heads, as created by
 \code{\link[grid]{arrow}}}

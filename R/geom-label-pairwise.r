@@ -21,7 +21,6 @@ geom_label_pairwise <-
            label.padding = grid::unit(0.25, "lines"),
            label.r = grid::unit(0.15, "lines"),
            segment.linewidth = 0.5,
-           add.segments = TRUE,
            arrow = NULL,
            na.rm = FALSE,
            show.legend = FALSE,
@@ -63,7 +62,6 @@ geom_label_pairwise <-
       label.padding = label.padding,
       label.r = label.r,
       segment.linewidth = segment.linewidth,
-      add.segments = add.segments,
       arrow = arrow,
       na.rm = na.rm,
       ...
@@ -98,7 +96,6 @@ GeomLabelPairwise <-
                    draw_panel = function(data, panel_params, coord, #panel_scales,
                                          parse = FALSE,
                                          na.rm = FALSE,
-                                         add.segments = TRUE,
                                          default.colour = "black",
                                          colour.target = "all",
                                          default.alpha = 1,
@@ -194,26 +191,31 @@ GeomLabelPairwise <-
                        # give unique name to each grob
                        user.grob$name <- paste("text.s.grob", row$group, row.idx, sep = ".")
 
-                       if (add.segments) {
-                         segment.grob <-
-                           grid::segmentsGrob(x0 = row$xmin,
-                                              y0 = row$y,
-                                              x1 = row$xmax,
-                                              y1 = row$y,
-                                              arrow = arrow,
-                                              gp = grid::gpar(
-                                                col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
-                                                  ifelse(any(colour.target %in% c("all", "segment")),
-                                                         ggplot2::alpha(row$colour, segment.alpha),
-                                                         ggplot2::alpha(default.colour, segment.alpha)),
-                                                lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
-                                              name = paste("text.s.segment", row$group, row.idx, sep = "."))
+                       if (!is.null(arrow) && !inherits(arrow, "arrow")) {
+                         shape <- arrow[[1]]
+                         arrow <- NULL
+                       } else {
+                         shape <- NULL
                        }
+
+                       segment.grob <-
+                         grid::segmentsGrob(x0 = row$xmin,
+                                            y0 = row$y,
+                                            x1 = row$xmax,
+                                            y1 = row$y,
+                                            arrow = arrow,
+                                            gp = grid::gpar(
+                                              col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
+                                                ifelse(any(colour.target %in% c("all", "segment")),
+                                                       ggplot2::alpha(row$colour, segment.alpha),
+                                                       ggplot2::alpha(default.colour, segment.alpha)),
+                                              lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
+                                            name = paste("text.s.segment", row$group, row.idx, sep = "."))
                        all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
                      }
 
 
-                     # name needs to be unique within plot, so we would to know layer
+                     # name needs to be unique within plot, so we would have to know layer name to use as basis
                      #                     grid::grobTree(children = all.grobs, name = "geom.text.s.panel")
                      grid::grobTree(children = all.grobs)
 
