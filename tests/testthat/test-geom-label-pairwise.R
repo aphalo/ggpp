@@ -1,0 +1,212 @@
+context("geom_label_pairwise")
+
+test_that("label_pairwise_default", {
+  df <- data.frame(
+    x.min = c(1, 3, 5),
+    x.max = c(2, 4, 7),
+    y = c(2, 4, 3),
+    text = c("1-2", "3-4", "5-7")
+  )
+
+  vdiffr::expect_doppelganger("geom_label_pairwise_default",
+                              ggplot(df,
+                                     aes(xmin = x.min,
+                                         xmax = x.max,
+                                         y = y,
+                                         label = text)) +
+                                geom_label_pairwise(inherit.aes = TRUE)
+  )
+
+  vdiffr::expect_doppelganger("geom_label_pairwise_hjust",
+                              ggplot(df,
+                                     aes(xmin = x.min,
+                                         xmax = x.max,
+                                         x = x.min,
+                                         y = y,
+                                         label = text)) +
+                                geom_label_pairwise(inherit.aes = TRUE,
+                                                   hjust = 0)
+  )
+
+  vdiffr::expect_doppelganger("geom_label_pairwise_below",
+                              ggplot(df,
+                                     aes(xmin = x.min,
+                                         xmax = x.max,
+                                         y = y,
+                                         label = text)) +
+                                geom_label_pairwise(inherit.aes = TRUE,
+                                                   vjust = 1.1)
+  )
+
+  vdiffr::expect_doppelganger("geom_label_pairwise_arrow",
+                              ggplot(df,
+                                     aes(xmin = x.min,
+                                         xmax = x.max,
+                                         y = y,
+                                         label = text)) +
+                                geom_label_pairwise(inherit.aes = TRUE,
+                                                   arrow = grid::arrow(ends = "both"))
+  )
+
+    vdiffr::expect_doppelganger("geom_label_pairwise_angle",
+                              ggplot(df,
+                                     aes(xmin = x.min,
+                                         xmax = x.max,
+                                         y = y,
+                                         label = text)) +
+                                geom_label_pairwise(inherit.aes = TRUE,
+                                                   hjust = -0.2,
+                                                   vjust = 0.5,
+                                                   angle = 90)
+  )
+
+})
+
+test_that("label_pairwise_segment", {
+# segment.linewidth is a parameter, not an aesthetic
+  df <- data.frame(
+    x.min = c(1, 3, 5),
+    x.max = c(2, 4, 7),
+    y = c(2, 4, 3),
+    text = c("1-2", "3-4", "5-7")
+  )
+
+  vdiffr::expect_doppelganger("geom_label_pairwise_segment.linewidth",
+                              ggplot(df,
+                                     aes(xmin = x.min,
+                                         xmax = x.max,
+                                         y = y,
+                                         label = text)) +
+                                geom_label_pairwise(inherit.aes = TRUE,
+                                                   segment.linewidth = 1)
+  )
+
+  vdiffr::expect_doppelganger("geom_label_pairwise_colour",
+                              ggplot(df,
+                                     aes(xmin = x.min,
+                                         xmax = x.max,
+                                         y = y,
+                                         label = text)) +
+                                geom_label_pairwise(inherit.aes = TRUE,
+                                                   colour = "red")
+  )
+
+  vdiffr::expect_doppelganger("geom_label_pairwise_color",
+                              ggplot(df,
+                                     aes(xmin = x.min,
+                                         xmax = x.max,
+                                         y = y,
+                                         label = text)) +
+                                geom_label_pairwise(inherit.aes = TRUE,
+                                                   color = "red")
+  )
+
+  vdiffr::expect_doppelganger("geom_label_pairwise_colour.target1",
+                              ggplot(df,
+                                     aes(xmin = x.min,
+                                         xmax = x.max,
+                                         y = y,
+                                         label = text)) +
+                                geom_label_pairwise(inherit.aes = TRUE,
+                                                    colour = "red",
+                                                    colour.target = "text")
+  )
+
+  vdiffr::expect_doppelganger("geom_label_pairwise_colour.target2",
+                              ggplot(df,
+                                     aes(xmin = x.min,
+                                         xmax = x.max,
+                                         y = y,
+                                         label = text)) +
+                                geom_label_pairwise(inherit.aes = TRUE,
+                                                    colour = "red",
+                                                    colour.target = c("text", "segment"))
+  )
+
+  vdiffr::expect_doppelganger("geom_label_pairwise_colour.target3",
+                              ggplot(df,
+                                     aes(xmin = x.min,
+                                         xmax = x.max,
+                                         y = y,
+                                         label = text)) +
+                                geom_label_pairwise(inherit.aes = TRUE,
+                                                    linewidth = 0.5,
+                                                    colour = "red",
+                                                    default.colour = "blue",
+                                                    colour.target = c("box", "segment"))
+  )
+
+  vdiffr::expect_doppelganger("geom_label_pairwise_linewidth",
+                              ggplot(df,
+                                     aes(xmin = x.min,
+                                         xmax = x.max,
+                                         y = y,
+                                         label = text)) +
+                                geom_label_pairwise(inherit.aes = TRUE,
+                                                    linewidth = 0)
+  )
+
+  vdiffr::expect_doppelganger("geom_label_pairwise_fill",
+                              ggplot(df,
+                                     aes(xmin = x.min,
+                                         xmax = x.max,
+                                         y = y,
+                                         label = text)) +
+                                geom_label_pairwise(inherit.aes = TRUE,
+                                                   fill = "yellow")
+  )
+
+  vdiffr::expect_doppelganger("geom_label_pairwise_alpha",
+                              ggplot(df,
+                                     aes(xmin = x.min,
+                                         xmax = x.max,
+                                         y = y,
+                                         label = text)) +
+                                geom_label_pairwise(inherit.aes = TRUE,
+                                                    fill = "yellow",
+                                                    alpha = 0.5)
+  )
+
+}
+)
+
+test_that("label_pairwise_position", {
+  df <- data.frame(
+    x.min = c(1, 3, 5),
+    x.max = c(2, 4, 7),
+    y = c(2, 4, 3),
+    text = c("1-2", "3-4", "5-7")
+  )
+
+  vdiffr::expect_doppelganger("geom_label_pairwise_nudge_x",
+                              ggplot(df,
+                                     aes(xmin = x.min,
+                                         xmax = x.max,
+                                         y = y,
+                                         label = text)) +
+                                geom_label_pairwise(inherit.aes = TRUE,
+                                                   nudge_x = 0.5)
+  )
+
+  vdiffr::expect_doppelganger("geom_label_pairwise_nudge_y",
+                              ggplot(df,
+                                     aes(xmin = x.min,
+                                         xmax = x.max,
+                                         y = y,
+                                         label = text)) +
+                                geom_label_pairwise(inherit.aes = TRUE,
+                                                   nudge_y = 0.5)
+  )
+
+  expect_error(ggplot(df,
+                      aes(xmin = x.min,
+                          xmax = x.max,
+                          y = y,
+                          label = text)) +
+                 geom_label_pairwise(inherit.aes = TRUE,
+                                    nudge_x = 0.5,
+                                    position = position_nudge(x = 0.5, y = 0))
+  )
+
+})
+

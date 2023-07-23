@@ -17,12 +17,11 @@ geom_label_pairwise(
   default.colour = "black",
   colour.target = "all",
   default.alpha = 1,
-  alpha.target = "all",
+  alpha.target = "segment",
   label.padding = grid::unit(0.25, "lines"),
   label.r = grid::unit(0.15, "lines"),
   segment.linewidth = 0.5,
   add.segments = TRUE,
-  box.padding = 1e-06,
   arrow = NULL,
   na.rm = FALSE,
   show.legend = FALSE,
@@ -55,10 +54,10 @@ geom_text_pairwise(
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by
-\code{\link[ggplot2]{aes}}. If specified and with \code{inherit.aes = FALSE}
-(the default), it is combined with the default mapping at the top level of
-the plot. You only need to supply \code{mapping} if there isn't a mapping
-defined for the plot.}
+\code{\link[ggplot2]{aes}}. With \code{inherit.aes = FALSE}
+(the default) it is not combined with the default mapping at the top level of
+the plot. You always need to supply a \code{mapping} unless you set
+\code{inherit.aes = TRUE}.}
 
 \item{data}{A data frame. If specified, overrides the default data frame
 defined at the top level of the plot.}
@@ -118,9 +117,7 @@ warning.  If \code{TRUE} silently removes missing values.}
 \code{FALSE}, the default, never includes it, and \code{TRUE} always includes it.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics, rather
-than combining them. This is most useful for helper functions that define
-both data and aesthetics and shouldn't inherit behaviour from the default
-plot specification, e.g., \code{\link[ggplot2]{borders}}.}
+than combining them.}
 
 \item{check_overlap}{If \code{TRUE}, text that overlaps previous text in the
 same layer will not be plotted. \code{check_overlap} takes place at draw
@@ -146,11 +143,12 @@ Geometries \code{geom_text_pairwise()} and
   also be used to label ranges of values.
 
   The segment extends from \code{xmin} to \code{xmax}, and the text label is
-  located at \code{x} with a default that positions the label at the center
+  located at \code{x} with a default that positions the label at the centre
   of the bar. The ends of the bar can be terminated with arrow heads given
   by parameter \code{arrow}, with a default of a plain segment without
   arrow tips. The text label is located slightly above the segment by the
-  default value of \code{vjust}.
+  default value of \code{vjust} in \code{geom_text_pairwise()} and on top
+  of the segment in \code{geom_label_pairwise()}.
 
   Layer functions \code{geom_text_pairwise()} and
   \code{geom_label_pairwise()} use by
@@ -260,6 +258,17 @@ p1 +
                      parse = TRUE)
 
 p1 +
+  geom_label_pairwise(data = my.pairs,
+                      aes(xmin = A, xmax = B,
+                          y = bar.height,
+                          label = sprintf("italic(P)~`=`~\%.2f", p.value)),
+                      colour = "red", size = 2.75,
+                      arrow = grid::arrow(angle = 30,
+                                          length = unit(1.5, "mm"),
+                                          ends = "both"),
+                      parse = TRUE)
+
+p1 +
   geom_text_pairwise(data = my.pairs,
                      aes(xmin = A, xmax = B,
                          y = bar.height,
@@ -297,6 +306,11 @@ p2 +
   geom_text_pairwise(data = my.ranges,
                      aes(xmin = A, xmax = B,
                      y = bar.height, label = text))
+
+p2 +
+  geom_label_pairwise(data = my.ranges,
+                      aes(xmin = A, xmax = B,
+                      y = bar.height, label = text))
 
 p2 +
   geom_text_pairwise(data = my.ranges,
