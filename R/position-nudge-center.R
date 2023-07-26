@@ -251,6 +251,22 @@ position_nudge_center <-
       obey_grouping <- NA
     }
 
+    if (lubridate::is.duration(x)) {
+      x <- as.numeric(x)
+    }
+    if (lubridate::is.duration(y)) {
+      y <- as.numeric(y)
+    }
+    # this works as long as center coords and mapped variable are of the same class
+    # ggplot2's behaviour has been in the past and seems to be again to expect
+    # numeric seconds for POSIXct and numeric days for Date time shifts
+    if (lubridate::is.instant(center_x)) {
+      x <- as.numeric(center_x)
+    }
+    if (lubridate::is.instant(center_y)) {
+      y <- as.numeric(center_y)
+    }
+
     ggplot2::ggproto(NULL, PositionNudgeCenter,
                      x = x,
                      y = y,

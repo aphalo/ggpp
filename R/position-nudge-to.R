@@ -75,6 +75,16 @@ position_nudge_to <-
     stopifnot("'x' must be NULL or of mode numeric" = is.null(x) || mode(x) == "numeric")
     stopifnot("'y' must be NULL or of mode numeric" = is.null(y) || mode(y) == "numeric")
 
+    # this works as long as nudge and mapped variable are of the same class
+    # ggplot2's behaviour has been in the past and seems to be again to expect
+    # numeric seconds for POSIXct and numeric days for Date time shifts
+    if (lubridate::is.instant(x)) {
+      x <- as.numeric(x)
+    }
+    if (lubridate::is.instant(y)) {
+      y <- as.numeric(y)
+    }
+
     ggplot2::ggproto(NULL, PositionNudgeTo,
                      x = x,
                      y = y,

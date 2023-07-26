@@ -194,6 +194,13 @@ position_nudge_line <-
 
     stopifnot(length(xy_relative) == 2)
 
+    if (lubridate::is.duration(x)) {
+      x <- as.numeric(x)
+    }
+    if (lubridate::is.duration(y)) {
+      y <- as.numeric(y)
+    }
+
     ggplot2::ggproto(
       NULL,
       PositionNudgeLine,
