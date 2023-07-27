@@ -40,7 +40,8 @@ the current random seed and also avoid resetting (the behaviour of ggplot
 2.2.1 and earlier).}
 
 \item{x, y}{Amount of vertical and horizontal distance to move. A numeric
-vector of length 1, or of the same length as rows there are in \code{data},}
+vector of length 1, or of the same length as rows there are in \code{data},
+with nudge values in data rows order.}
 
 \item{direction}{One of \code{"as.is"}, code{"alternate"}, \code{"split"},
 \code{"split.x"} or \code{"split.y"}. A value of \code{"none"} replicates

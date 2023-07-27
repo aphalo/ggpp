@@ -41,7 +41,8 @@ bottom, 0.5 for the middle, and 1 (the default) for the top.}
 useful if you're rotating both the plot and legend.}
 
 \item{x, y}{Amount of vertical and horizontal distance to move. A numeric
-vector of length 1, or of the same length as rows there are in \code{data},}
+vector of length 1, or of the same length as rows there are in \code{data},
+with nudge values in data rows order.}
 
 \item{direction}{One of \code{"none"}, \code{"split"}, \code{"split.x"} or
 \code{"split.y"}. A value of \code{"none"} replicates the behavior of

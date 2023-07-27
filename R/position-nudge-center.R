@@ -19,6 +19,7 @@
 #'
 #' @param x,y Amount of vertical and horizontal distance to move. A numeric
 #'   vector of length 1, or of the same length as rows there are in \code{data},
+#'   with nudge values in data rows order.
 #' @param center_x,center_y The coordinates of the virtual origin out from which
 #'   nudging radiates or splits in opposite directions. A numeric vector of
 #'   length 1 or of the same length as rows there are in \code{data}, or a

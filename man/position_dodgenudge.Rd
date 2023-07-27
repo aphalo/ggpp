@@ -44,7 +44,8 @@ geoms. See the examples.}
 position, or the width of a single element?.}
 
 \item{x, y}{Amount of vertical and horizontal distance to move. A numeric
-vector of length 1, or of the same length as rows there are in `data`,}
+vector of length 1, or of the same length as rows there are in `data`,
+with nudge values in data rows order.}
 
 \item{direction}{One of \code{"none"}, \code{"split"}, \code{"split.x"} or
 \code{"split.y"}. A value of \code{"none"} replicates the behavior of
