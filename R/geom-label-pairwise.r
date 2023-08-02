@@ -85,7 +85,7 @@ GeomLabelPairwise <-
                      fill = "white",
                      size = 3.88,
                      angle = 0, # currently ignored
-                     linewidth = 0.25,
+                     linewidth = 0.5, # same as segment.linewidth default
                      linetype = "solid",
                      hjust = 0.5,
                      vjust = 0.5,

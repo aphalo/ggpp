@@ -19,6 +19,7 @@ reference:
     - annotate
     - geom_text_npc
     - geom_text_s
+    - geom_text_pairwise
     - geom_point_s
     - geom_x_margin_point
     - geom_x_margin_arrow

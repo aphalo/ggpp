@@ -25,10 +25,10 @@
 #'   of the segment in \code{geom_label_pairwise()}.
 #'
 #'   Layer functions \code{geom_text_pairwise()} and
-#'   \code{geom_label_pairwise()} use by
-#'   default \code{\link[ggplot2]{position_nudge}}. Nudging affects both text
-#'   label and bar, and its default of no displacement will very rarely need
-#'   to be changed.
+#'   \code{geom_label_pairwise()} use by default
+#'   \code{\link[ggplot2]{position_nudge}}. Nudging affects both text label and
+#'   bar, and its default of no displacement will very rarely need to be
+#'   changed.
 #'
 #'   Differently to \code{geom_text_repel()} and \code{geom_label_repel()},
 #'   \code{geom_text_pairwise()} and \code{geom_label_pairwise()} do not make
@@ -53,12 +53,12 @@
 #'   \code{hjust} aesthetics. These can either be a number between 0
 #'   (right/bottom) and 1 (top/left) or a character (\code{"left"},
 #'   \code{"middle"}, \code{"right"}, \code{"bottom"}, \code{"center"},
-#'   \code{"top"}). Values outside the range 0..1 displace the text label
-#'   so that the anchor point is outside the text label. In addition, you can use special alignments for
-#'   justification including \code{"position"}, \code{"inward"} and
-#'   \code{"outward"}. Inward always aligns text towards the center of the
-#'   plotting area, and outward aligns it away from the center of the plotting
-#'   area. If tagged with \code{_mean} or \code{_median} (e.g.,
+#'   \code{"top"}). Values outside the range 0..1 displace the text label so
+#'   that the anchor point is outside the text label. In addition, you can use
+#'   special alignments for justification including \code{"position"},
+#'   \code{"inward"} and \code{"outward"}. Inward always aligns text towards the
+#'   center of the plotting area, and outward aligns it away from the center of
+#'   the plotting area. If tagged with \code{_mean} or \code{_median} (e.g.,
 #'   \code{"outward_mean"}) the mean or median of the data in the panel along
 #'   the corresponding axis is used as center. If the characters following the
 #'   underscore represent a number (e.g., \code{"outward_10.5"}) the reference
@@ -127,6 +127,16 @@
 #'   \code{\link[ggplot2]{aes_linetype_size_shape}},
 #'   \code{\link[ggplot2]{aes_position}}, and
 #'   \code{\link[ggplot2]{aes_group_order}}.
+#'
+#'   In 'ggplot2' \code{linewidth} when applied to the border of the box drawn
+#'   by \code{geom_label()} is given in points rather than in mm because of a
+#'   historical error in the code. In other geometries such as
+#'   \code{geom_segment()} \code{linewidth} is given in mm. As in
+#'   \code{geom_label_pairwise()} it is important to remain consistent among
+#'   different \code{linewidth} specifications, mm are used both for the box
+#'   border and linkig segment. To imitate the behaviour of `geom_label()` a
+#'   correction factor of 0.75 (more exactly 1 pt = 0.7528 mm) can be used the
+#'   border of the box.
 #'
 #' @seealso \code{\link{geom_text_s}}, \code{\link{geom_label_s}},
 #'   \code{\link[ggplot2]{geom_text}}, \code{\link[ggplot2]{geom_label}} and
@@ -203,7 +213,7 @@
 #'                      aes(xmin = A, xmax = B,
 #'                          y = bar.height,
 #'                          label = sprintf("italic(P)~`=`~%.2f", p.value)),
-#'                      colour = "red", colour.target = "all",
+#'                      colour = "red", colour.target = "text",
 #'                      arrow = grid::arrow(angle = 90,
 #'                                          length = unit(1, "mm"),
 #'                                          ends = "both"),
@@ -247,7 +257,7 @@ geom_text_pairwise <- function(mapping = NULL,
                                nudge_y = 0,
                                default.colour = "black",
                                default.color = default.colour,
-                               colour.target = "text",
+                               colour.target = "all",
                                color.target = colour.target,
                                default.alpha = 1,
                                alpha.target = "all",

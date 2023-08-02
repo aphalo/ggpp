@@ -139,6 +139,16 @@
 #'   \code{\link[ggplot2]{aes_position}}, and
 #'   \code{\link[ggplot2]{aes_group_order}}.
 #'
+#'   In 'ggplot2' \code{linewidth} when applied to the border of the box drawn
+#'   by \code{geom_label()} is given in points rather than in mm because of a
+#'   historical error in the code. In other geometries such as
+#'   \code{geom_segment()} \code{linewidth} is given in mm. As in
+#'   \code{geom_label_s()} it is important to remain consistent among
+#'   different \code{linewidth} specifications, mm are used both for the box
+#'   border and linkig segment. To imitate the behaviour of `geom_label()` a
+#'   correction factor of 0.75 (more exactly 1 pt = 0.7528 mm) can be used the
+#'   border of the box.
+#'
 #' @section Position functions: Many layer functions from package 'ggpp' are
 #'   designed to work seamlessly with position functions that keep, rather than
 #'   discard, the original \code{x} and \code{y} positions in \code{data} when

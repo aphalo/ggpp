@@ -110,7 +110,7 @@ test_that("text_pairwise_segment", {
                                                    color = "red")
   )
 
-  vdiffr::expect_doppelganger("geom_text_pairwise_color.target",
+  vdiffr::expect_doppelganger("geom_text_pairwise_color.target.all",
                               ggplot(df,
                                      aes(xmin = x.min,
                                          xmax = x.max,
@@ -118,6 +118,28 @@ test_that("text_pairwise_segment", {
                                          label = text)) +
                                 geom_text_pairwise(inherit.aes = TRUE,
                                                    color.target = "all",
+                                                   color = "red")
+  )
+
+  vdiffr::expect_doppelganger("geom_text_pairwise_color.target.text",
+                              ggplot(df,
+                                     aes(xmin = x.min,
+                                         xmax = x.max,
+                                         y = y,
+                                         label = text)) +
+                                geom_text_pairwise(inherit.aes = TRUE,
+                                                   color.target = "text",
+                                                   color = "red")
+  )
+
+  vdiffr::expect_doppelganger("geom_text_pairwise_color.target.segment",
+                              ggplot(df,
+                                     aes(xmin = x.min,
+                                         xmax = x.max,
+                                         y = y,
+                                         label = text)) +
+                                geom_text_pairwise(inherit.aes = TRUE,
+                                                   color.target = "segment",
                                                    color = "red")
   )
 
