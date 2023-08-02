@@ -145,9 +145,9 @@
 #'   \code{geom_segment()} \code{linewidth} is given in mm. As in
 #'   \code{geom_label_s()} it is important to remain consistent among
 #'   different \code{linewidth} specifications, mm are used both for the box
-#'   border and linkig segment. To imitate the behaviour of `geom_label()` a
-#'   correction factor of 0.75 (more exactly 1 pt = 0.7528 mm) can be used the
-#'   border of the box.
+#'   border and linking segment. To imitate the behaviour of \code{geom_label()}
+#'   a correction factor of 0.75 (more exactly 1 pt = 0.7528 mm) can be used for
+#'   the line width of the border of the box.
 #'
 #' @section Position functions: Many layer functions from package 'ggpp' are
 #'   designed to work seamlessly with position functions that keep, rather than
