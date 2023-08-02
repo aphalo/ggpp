@@ -324,7 +324,7 @@ GeomTextPairwise <-
                      size = 3.88,
                      angle = 0,
                      hjust = 0.5,
-                     vjust = -0.4,
+                     vjust = -0.5,
                      alpha = 1,
                      family = "",
                      fontface = 1,

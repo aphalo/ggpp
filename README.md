@@ -154,28 +154,28 @@ and passing them to a geom.
 The statistics `stat_quadrant_counts()` and `stat_panel_counts()` make
 it easy to annotate plots with the number of observations.
 
-| Statistic                | Main use                   | Usual geometries                                                 | Most used with         | Computed by |
-|--------------------------|----------------------------|------------------------------------------------------------------|------------------------|-------------|
-| `stat_fmt_tb()`          | formatting and selection   | `geom_table()`                                                   | tables as data labels  | group       |
-| `stat_fmt_tb()`          | formatting and selection   | `geom_table_npc()`                                               | tables as annotations  | group       |
-| `stat_dens2d_filter()`   | local 2D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()` | text as data labels    | panel       |
-| `stat_dens2d_label()`    | local 2D density filtering | `geom_text_repel()`, `geom_label_repel()`                        | text as data labels    | panel       |
-| `stat_dens1d_filter()`   | local 1D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()` | text as data labels    | panel       |
-| `stat_dens1d_label()`    | local 1D density filtering | `geom_text_repel()`, `geom_label_repel()`                        | text as data labels    | panel       |
-| `stat_dens2d_filter_g()` | local 2D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()` | text as data labels    | group       |
-| `stat_dens2d_label_g()`  | local 2D density filtering | `geom_text_repel()`, `geom_label_repel()`                        | text as data labels    | group       |
-| `stat_dens1d_filter_g()` | local 1D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()` | text as data labels    | group       |
-| `stat_dens1d_label_g()`  | local 1D density filtering | `geom_text_repel()`, `geom_label_repel()`                        | data labels            | group       |
-| `stat_panel_counts()`    | number of observations     | `geom_text()`, `geom_label()`                                    | text as annotation     | panel       |
-| `stat_group_counts()`    | number of observations     | `geom_text()`, `geom_label()`                                    | text as annotation     | group       |
-| `stat_quadrant_counts()` | number of observations     | `geom_text()`, `geom_label()`                                    | text as annotation     | group       |
-| `stat_apply_panel()`     | cummulative summaries      | `geom_point()`, `geom_line()`, etc.                              | scatter and line plots | panel       |
-| `stat_apply_group()`     | cummulative summaries      | `geom_point()`, `geom_line()`, etc.                              | scatter and line plots | group       |
-| `stat_centroid()`        | joint x and y summaries    | `geom_point()`, `geom_rug()`, `geom_margin_arrow()`, etc.        | data summary           | group       |
-| `stat_summary_xy()`      | joint x and y summaries    | `geom_point()`, `geom_rug()`, `geom_margin_arrow()`, etc.        | data summary           | group       |
-| `stat_functions()`       | compute y from x range     | `geom_line()`, `geom_point()`, etc.                              | draw function curves   | group       |
+| Statistic                | Main use                   | Usual geometries                                                 | Most used with         | Compute function |
+|--------------------------|----------------------------|------------------------------------------------------------------|------------------------|------------------|
+| `stat_fmt_tb()`          | formatting and selection   | `geom_table()`                                                   | tables as data labels  | group            |
+| `stat_fmt_tb()`          | formatting and selection   | `geom_table_npc()`                                               | tables as annotations  | group            |
+| `stat_dens2d_filter()`   | local 2D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()` | text as data labels    | panel            |
+| `stat_dens2d_label()`    | local 2D density filtering | `geom_text_repel()`, `geom_label_repel()`                        | text as data labels    | panel            |
+| `stat_dens1d_filter()`   | local 1D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()` | text as data labels    | panel            |
+| `stat_dens1d_label()`    | local 1D density filtering | `geom_text_repel()`, `geom_label_repel()`                        | text as data labels    | panel            |
+| `stat_dens2d_filter_g()` | local 2D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()` | text as data labels    | group            |
+| `stat_dens2d_label_g()`  | local 2D density filtering | `geom_text_repel()`, `geom_label_repel()`                        | text as data labels    | group            |
+| `stat_dens1d_filter_g()` | local 1D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()` | text as data labels    | group            |
+| `stat_dens1d_label_g()`  | local 1D density filtering | `geom_text_repel()`, `geom_label_repel()`                        | data labels            | group            |
+| `stat_panel_counts()`    | number of observations     | `geom_text()`, `geom_label()`                                    | text as annotation     | panel            |
+| `stat_group_counts()`    | number of observations     | `geom_text()`, `geom_label()`                                    | text as annotation     | panel            |
+| `stat_quadrant_counts()` | number of observations     | `geom_text()`, `geom_label()`                                    | text as annotation     | panel            |
+| `stat_apply_panel()`     | cummulative summaries      | `geom_point()`, `geom_line()`, etc.                              | scatter and line plots | panel            |
+| `stat_apply_group()`     | cummulative summaries      | `geom_point()`, `geom_line()`, etc.                              | scatter and line plots | group            |
+| `stat_centroid()`        | joint x and y summaries    | `geom_point()`, `geom_rug()`, `geom_margin_arrow()`, etc.        | data summary           | group            |
+| `stat_summary_xy()`      | joint x and y summaries    | `geom_point()`, `geom_rug()`, `geom_margin_arrow()`, etc.        | data summary           | group            |
+| `stat_functions()`       | compute y from x range     | `geom_line()`, `geom_point()`, etc.                              | draw function curves   | group            |
 
-Statistics defined in package ‘ggpp’
+Statistics defined in package ‘ggpp’.
 
 ## Justification
 
