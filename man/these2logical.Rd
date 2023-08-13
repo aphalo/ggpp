@@ -7,12 +7,15 @@
 these2logical(these, data, these.target = "label")
 }
 \arguments{
-\item{data}{data.frame The plot layer's data set.}
-
-\item{keep.these}{character vector, integer vector, logical vector or
+\item{these}{character vector, integer vector, logical vector or
 function that takes the variable mapped to the \code{label} aesthetic as
 first argument and returns a character vector or a logical vector. These
 rows from \code{data} are selected irrespective of the local density.}
+
+\item{data}{data.frame The plot layer's data set.}
+
+\item{these.target}{character The name of the variable (or aesthetic) in
+which to select the target passed through \code{these}.}
 }
 \description{
 Convert keep.these argument into logical vector

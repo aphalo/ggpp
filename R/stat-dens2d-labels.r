@@ -493,17 +493,19 @@ StatDens2dLabels <-
 
 #' Convert keep.these argument into logical vector
 #'
-#' @param keep.these character vector, integer vector, logical vector or
+#' @param these character vector, integer vector, logical vector or
 #'   function that takes the variable mapped to the \code{label} aesthetic as
 #'   first argument and returns a character vector or a logical vector. These
 #'   rows from \code{data} are selected irrespective of the local density.
 #' @param data data.frame The plot layer's data set.
+#' @param these.target character The name of the variable (or aesthetic) in
+#'   which to select the target passed through \code{these}.
 #'
 #' @keywords internal
 #'
-these2logical<- function(these,
-                         data,
-                         these.target = "label") {
+these2logical <- function(these,
+                          data,
+                          these.target = "label") {
   if (length(these)) {
     if (is.character(these) || is.function(these)) {
       if (is.character(these.target) && any(these.target == "label") &&
