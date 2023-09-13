@@ -15,7 +15,8 @@
 #'
 scale_npcx_continuous <- function(...) {
   ggplot2::continuous_scale(aesthetics = "npcx",
-    scale_name = "position_npc", palette = identity, name = NULL, breaks = NULL,
+#    scale_name = "position_npc",
+    palette = identity, name = NULL, breaks = NULL,
     minor_breaks = NULL, labels = NULL, limits = c(NA_real_, NA_real_),
     expand = c(0, 0, 0, 0), oob = scales::censor, na.value = NA_real_, trans = "identity",
     guide = "none", position = "bottom", super = ggplot2::ScaleContinuousPosition,
@@ -28,7 +29,8 @@ scale_npcx_continuous <- function(...) {
 scale_npcy_continuous <- function(...) {
   ggplot2::continuous_scale(
     aesthetics = "npcy",
-    scale_name = "position_npc", palette = identity, name = NULL, breaks = NULL,
+#    scale_name = "position_npc",
+    palette = identity, name = NULL, breaks = NULL,
     minor_breaks = NULL, labels = NULL, limits = c(NA_real_, NA_real_),
     expand = c(0, 0, 0, 0), oob = scales::censor, na.value = NA_real_, trans = "identity",
     guide = "none", position = "bottom", super = ggplot2::ScaleContinuousPosition,

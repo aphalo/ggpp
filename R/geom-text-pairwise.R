@@ -420,7 +420,7 @@ GeomTextPairwise <-
                                                        ggplot2::alpha(row$colour, segment.alpha),
                                                        ggplot2::alpha(default.colour, segment.alpha)),
                                               lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
-                                            name = paste("text.s.segment", row$group, row.idx, sep = ".")
+                                            name = paste("text.pr.segment", row$group, row.idx, sep = ".")
                          )
                        all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
 
