@@ -50,6 +50,9 @@
 #'   Useful for offsetting text from points, particularly on discrete scales.
 #' @param check_overlap If `TRUE`, text that overlaps previous text in the same
 #'   layer will not be plotted.
+#' @param size.unit How the `size` aesthetic is interpreted: as millimetres
+#'   (`"mm"`, default), points (`"pt"`), centimetres (`"cm"`), inches (`"in"`),
+#'   or picas (`"pc"`).
 #'
 #' @seealso \code{\link[ggplot2]{geom_text}}
 #'

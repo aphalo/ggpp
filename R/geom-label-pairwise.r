@@ -142,6 +142,9 @@ GeomLabelPairwise <-
                                         just = data$hjust,
                                         a = "x", b = "y")
                      }
+                     if (!inherits(label.padding, "margin")) {
+                       label.padding <- rep(label.padding, length.out = 4)
+                     }
 
                      # loop needed as gpar is not vectorized
                      all.grobs <- grid::gList()

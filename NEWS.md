@@ -6,6 +6,12 @@ editor_options:
     wrap: 72
 ---
 
+# ggpp 0.5.5
+
+-   Update for compatibility with 'ggplot2' >= 3.5.0, adding as well support for
+`angle` aesthetic in `geom_label_npc()`, `geom_label_s()` and 
+`geom_label_pairwise()` matching the update to `ggplot2::geom_label()`.
+
 # ggpp 0.5.4
 
 -   Add `geom_text_pairwise()` and `geom_label_pairwise()`suitable for 

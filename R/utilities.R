@@ -4,6 +4,10 @@
 
 # function copied from ggplot2's utilities.R
 
+"%||%" <- function(a, b) {
+  if (!is.null(a)) a else b
+}
+
 #' Parse takes a vector of n lines and returns m expressions.
 #' See https://github.com/tidyverse/ggplot2/issues/2864 for discussion.
 #'

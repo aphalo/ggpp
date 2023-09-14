@@ -4,18 +4,21 @@
 #' @param label.r Radius of rounded corners. Defaults to 0.15 lines.
 #' @param label.size Size of label border, in mm.
 #'
-geom_label_npc <- function(mapping = NULL, data = NULL,
-                      stat = "identity", position = "identity",
-                      ...,
-                      parse = FALSE,
-                      nudge_x = 0,
-                      nudge_y = 0,
-                      label.padding = grid::unit(0.25, "lines"),
-                      label.r = grid::unit(0.15, "lines"),
-                      label.size = 0.25,
-                      na.rm = FALSE,
-                      show.legend = FALSE,
-                      inherit.aes = FALSE) {
+geom_label_npc <- function(mapping = NULL,
+                           data = NULL,
+                           stat = "identity",
+                           position = "identity",
+                           ...,
+                           parse = FALSE,
+                           nudge_x = 0,
+                           nudge_y = 0,
+                           label.padding = grid::unit(0.25, "lines"),
+                           label.r = grid::unit(0.15, "lines"),
+                           label.size = 0.25,
+                           size.unit = "mm",
+                           na.rm = FALSE,
+                           show.legend = FALSE,
+                           inherit.aes = FALSE) {
 
   if (!missing(nudge_x) || !missing(nudge_y)) {
     if (!missing(position) && position != "identity") {
@@ -38,6 +41,7 @@ geom_label_npc <- function(mapping = NULL, data = NULL,
       label.padding = label.padding,
       label.r = label.r,
       label.size = label.size,
+      size.unit = size.unit,
       na.rm = na.rm,
       ...
     )
@@ -60,7 +64,8 @@ GeomLabelNpc <- ggplot2::ggproto("GeomLabelNpc", ggplot2::Geom,
                         na.rm = FALSE,
                         label.padding = grid::unit(0.25, "lines"),
                         label.r = grid::unit(0.15, "lines"),
-                        label.size = 0.25) {
+                        label.size = 0.25,
+                        size.unit = "mm") {
 
     data$npcx <- compute_npcx(data$npcx)
     data$npcy <- compute_npcy(data$npcy)
@@ -78,6 +83,8 @@ GeomLabelNpc <- ggplot2::ggproto("GeomLabelNpc", ggplot2::Geom,
                                   label.padding = label.padding,
                                   label.r = label.r,
                                   label.size = label.size)
+    # for ggplot2 >= 3.5.0 add conditionally:
+    # add size.unit = size.unit
   },
 
   draw_key =  function(...) {
