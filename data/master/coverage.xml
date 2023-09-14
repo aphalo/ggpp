@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.910179640718563" branch-rate="0" lines-covered="1520" lines-valid="1670" branches-covered="0" branches-valid="0" complexity="0" version="3.6.2" timestamp="2023-08-13 18:04:11.084869">
+<coverage line-rate="0.910287081339713" branch-rate="0" lines-covered="1522" lines-valid="1672" branches-covered="0" branches-valid="0" complexity="0" version="3.6.2" timestamp="2023-09-14 12:04:35.830713">
   <sources>
     <source>/__w/ggpp/ggpp/ggpp</source>
   </sources>
   <packages>
-    <package name="ggpp" line-rate="0.910179640718563" branch-rate="0" complexity="0">
+    <package name="ggpp" line-rate="0.910287081339713" branch-rate="0" complexity="0">
       <classes>
         <class name="annotate.r" filename="R/annotate.r" line-rate="0.793103448275862" branch-rate="0" complexity="0">
           <methods>
@@ -2764,11 +2764,11 @@
                 <line number="21" hits="11" branch="false"/>
                 <line number="22" hits="11" branch="false"/>
                 <line number="23" hits="11" branch="false"/>
+                <line number="24" hits="11" branch="false"/>
               </lines>
             </method>
             <method name="scale_npcy_continuous" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
-                <line number="29" hits="11" branch="false"/>
                 <line number="30" hits="11" branch="false"/>
                 <line number="31" hits="11" branch="false"/>
                 <line number="32" hits="11" branch="false"/>
@@ -2776,6 +2776,8 @@
                 <line number="34" hits="11" branch="false"/>
                 <line number="35" hits="11" branch="false"/>
                 <line number="36" hits="11" branch="false"/>
+                <line number="37" hits="11" branch="false"/>
+                <line number="38" hits="11" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -2787,7 +2789,7 @@
             <line number="21" hits="11" branch="false"/>
             <line number="22" hits="11" branch="false"/>
             <line number="23" hits="11" branch="false"/>
-            <line number="29" hits="11" branch="false"/>
+            <line number="24" hits="11" branch="false"/>
             <line number="30" hits="11" branch="false"/>
             <line number="31" hits="11" branch="false"/>
             <line number="32" hits="11" branch="false"/>
@@ -2795,6 +2797,8 @@
             <line number="34" hits="11" branch="false"/>
             <line number="35" hits="11" branch="false"/>
             <line number="36" hits="11" branch="false"/>
+            <line number="37" hits="11" branch="false"/>
+            <line number="38" hits="11" branch="false"/>
           </lines>
         </class>
         <class name="stat-apply.R" filename="R/stat-apply.R" line-rate="0.936507936507937" branch-rate="0" complexity="0">
