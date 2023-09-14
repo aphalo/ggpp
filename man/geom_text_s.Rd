@@ -321,6 +321,10 @@ p +
 p +
   geom_label_s(hjust = "inward_3", nudge_y = 0.4)
 
+p +
+  geom_label_s(nudge_y = 1, angle = 90) +
+  expand_limits(y = 30)
+
 # Add aesthetic mappings and adjust arrows
 p +
   geom_text_s(aes(colour = factor(cyl)),

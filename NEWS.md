@@ -8,9 +8,11 @@ editor_options:
 
 # ggpp 0.5.5
 
--   Update for compatibility with 'ggplot2' >= 3.5.0, adding as well support for
-`angle` aesthetic in `geom_label_npc()`, `geom_label_s()` and 
+-   Update for compatibility with 'ggplot2' >= 3.5.0.
+-   Support the `angle` aesthetic in `geom_label_npc()`, `geom_label_s()` and 
 `geom_label_pairwise()` matching the update to `ggplot2::geom_label()`.
+-   Add support for `linetype` aesthetic to `geom_label_npc()`, for consistency
+with `geom_label_s()` and `geom_label_pairwise()`.
 
 # ggpp 0.5.4
 

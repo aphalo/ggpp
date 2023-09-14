@@ -172,6 +172,7 @@ GeomLabelPairwise <-
                                               just = c(row$hjust, row$vjust),
                                               padding = label.padding,
                                               r = label.r,
+                                              angle = row$angle,
                                               text.gp = gpar(
                                                 col = ifelse(any(colour.target %in% c("all", "text")),
                                                              ggplot2::alpha(row$colour, text.alpha),
