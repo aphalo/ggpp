@@ -558,9 +558,10 @@ compute_just2d <- function(data,
         just[position] <- "middle"
       } else {
         just[position] <-
-          c("left", "middle", "right")[2L + 1L * sign(data[[ab_orig[1L]]] - data[[ab[1L]]])]
+          c("left", "middle", "right")[2L + 1L * sign(data[[ab_orig[1L]]][position] - data[[ab[1L]]][position])]
       }
     }
+
     if (any(grepl("outward|inward", just))) {
       # we allow tags for setting center/middle position for just
       just_used <- unique(just)
