@@ -1,4 +1,4 @@
-destination: ../ggpp-docs
+destination: ../docs/ggpp
 url: https://docs.r4photobiology.info/ggpp/
 
 template:
