@@ -21,6 +21,7 @@ Description: Extensions to 'ggplot2' respecting the grammar of graphics
     from a line or curve; combined stacking and nudging; combined dodging and
     nudging.
 License: GPL (>= 2)
+LazyData: TRUE
 LazyLoad: TRUE
 ByteCompile: TRUE
 Depends:

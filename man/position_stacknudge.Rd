@@ -5,6 +5,7 @@
 \alias{position_fillnudge}
 \alias{position_stack_keep}
 \alias{position_fill_keep}
+\alias{position_stack_minmax}
 \title{Combined positions stack and nudge}
 \source{
 \url{https://github.com/slowkow/ggrepel/issues/161}.
@@ -31,6 +32,12 @@ position_fillnudge(
 position_stack_keep(vjust = 1, reverse = FALSE)
 
 position_fill_keep(vjust = 1, reverse = FALSE)
+
+position_stack_minmax(
+  vjust = 1,
+  reverse = FALSE,
+  kept.origin = c("original", "none")
+)
 }
 \arguments{
 \item{vjust}{Vertical adjustment for geoms that have a position (like points
@@ -63,15 +70,36 @@ bars, stacked columns, stacked lines, etc. In contrast to
 in \code{data} both the original coordinates and the nudged coordinates.
 }
 \details{
-This position function is backwards compatible with
+\code{position_fillnudge()} is useful when labelling plots such as filled
+bars, filled columns, filled lines, etc. In contrast to
+\code{\link[ggplot2]{position_nudge}}, \code{position_fillnudge()} returns
+in \code{data} both the original coordinates and the nudged coordinates.
+
+The wrapper \code{position_nudge_keep()} has the same signature and
+behaviour as \code{\link[ggplot2]{position_nudge}} nad provides an easier to
+remember name when the need is only to have access to both the original and
+nudged coordinates.
+
+These position functions are backwards compatible with
 \code{\link[ggplot2]{position_nudge}} but extends it by adding support for
 stacking and for geometries that make use of the original position to draw
 connecting segments or arrows.
 
-The wrapper \code{position_nudge_keep()} with exactly the same signature and
-behaviour as \code{\link[ggplot2]{position_nudge}} provides an easier to
-remember name when the desire is only to have access to both the original and
+The wrapper \code{position_stack_keep()} has the same signature and
+behaviour as \code{\link[ggplot2]{position_stack}} and provides an easier to
+remember name when the need is only to have access to both the original and
 nudged coordinates.
+
+The wrapper \code{position_fill_keep()} has the same signature and
+behaviour as \code{\link[ggplot2]{position_fill}} and provides an easier to
+remember name when the need is only to have access to both the original and
+nudged coordinates.
+
+The wrapper \code{position_stack_minmax()} has the same signature and
+behaviour as \code{\link[ggplot2]{position_stack}} but stacks y, ymin and
+ymax in parallel, making it possible to stack summaries with error bars,
+works correctly with \code{geom_pointrange()}, \code{geom_linerange()} and
+\code{geom_errorbar()}.
 }
 \examples{
 
@@ -128,6 +156,16 @@ ggplot(data = df, aes(x2, x1, group = grp)) +
     position = position_stacknudge(vjust = 0.5, y = 0.35),
     vjust = "bottom") +
   theme(legend.position = "none")
+
+ggplot(birch_dw.df,
+       aes(y = dry.weight * 1e-3, x = Density, fill = Part)) +
+   stat_summary(geom = "col", fun = mean, na.rm = TRUE,
+                position = "stack", alpha = 0.7, width = 0.67) +
+   stat_summary(geom = "linerange", fun.data = mean_cl_normal, na.rm = TRUE,
+                position = position_stack_minmax()) +
+  labs(y = "Seedling dry mass (g)") +
+  scale_fill_grey(start = 0.7, end = 0.3) +
+  facet_wrap(facets = vars(Container))
 
 }
 \seealso{

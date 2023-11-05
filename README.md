@@ -105,6 +105,7 @@ keep in the `data` object the original coordinates.
 | `position_nudge_keep()`   | nudge          | x, y (fixed distance)           | data labels                 |
 | `position_jitter_keep()`  | jitter         | x, y (random)                   | dot plots                   |
 | `position_stack_keep()`   | stack          | vertical (absolute)             | column and bar plots        |
+| `position_stack_minmax()` | stack          | vertical (absolute)             | error bars                  |
 | `position_fill_keep()`    | fill           | vertical (relative, fractional) | column plots                |
 | `position_dodge_keep()`   | dodge          | sideways (absolute)             | column and bar plots        |
 | `position_dosge2_keep()`  | dodge2         | sideways (absolute)             | box plots                   |

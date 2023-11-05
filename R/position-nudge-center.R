@@ -7,7 +7,7 @@
 #'
 #' This position function is backwards compatible with \code{\link[ggplot2]{position_nudge}}
 #' but extends it by adding support for nudging that varies across the plotting
-#' region, either in opposite directions or radially from a virtual emph{center
+#' region, either in opposite directions or radially from a virtual \emph{center
 #' point}.
 #'
 #' The wrapper \code{position_nudge_keep()} with exactly the same signature and

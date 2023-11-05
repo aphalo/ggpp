@@ -5,15 +5,36 @@
 #' \code{\link[ggplot2]{position_nudge}}, \code{position_stacknudge()} returns
 #' in \code{data} both the original coordinates and the nudged coordinates.
 #'
-#' This position function is backwards compatible with
+#' \code{position_fillnudge()} is useful when labelling plots such as filled
+#' bars, filled columns, filled lines, etc. In contrast to
+#' \code{\link[ggplot2]{position_nudge}}, \code{position_fillnudge()} returns
+#' in \code{data} both the original coordinates and the nudged coordinates.
+#'
+#' The wrapper \code{position_nudge_keep()} has the same signature and
+#' behaviour as \code{\link[ggplot2]{position_nudge}} nad provides an easier to
+#' remember name when the need is only to have access to both the original and
+#' nudged coordinates.
+#'
+#' These position functions are backwards compatible with
 #' \code{\link[ggplot2]{position_nudge}} but extends it by adding support for
 #' stacking and for geometries that make use of the original position to draw
 #' connecting segments or arrows.
 #'
-#' The wrapper \code{position_nudge_keep()} with exactly the same signature and
-#' behaviour as \code{\link[ggplot2]{position_nudge}} provides an easier to
-#' remember name when the desire is only to have access to both the original and
+#' The wrapper \code{position_stack_keep()} has the same signature and
+#' behaviour as \code{\link[ggplot2]{position_stack}} and provides an easier to
+#' remember name when the need is only to have access to both the original and
 #' nudged coordinates.
+#'
+#' The wrapper \code{position_fill_keep()} has the same signature and
+#' behaviour as \code{\link[ggplot2]{position_fill}} and provides an easier to
+#' remember name when the need is only to have access to both the original and
+#' nudged coordinates.
+#'
+#' The wrapper \code{position_stack_minmax()} has the same signature and
+#' behaviour as \code{\link[ggplot2]{position_stack}} but stacks y, ymin and
+#' ymax in parallel, making it possible to stack summaries with error bars,
+#' works correctly with \code{geom_pointrange()}, \code{geom_linerange()} and
+#' \code{geom_errorbar()}.
 #'
 #' @family position adjustments
 #'
@@ -101,6 +122,17 @@
 #'     vjust = "bottom") +
 #'   theme(legend.position = "none")
 #'
+#' ggplot(birch_dw.df,
+#'        aes(y = dry.weight * 1e-3, x = Density, fill = Part)) +
+#'    stat_summary(geom = "col", fun = mean, na.rm = TRUE,
+#'                 position = "stack", alpha = 0.7, width = 0.67) +
+#'    stat_summary(geom = "linerange", fun.data = mean_cl_normal, na.rm = TRUE,
+#'                 position = position_stack_minmax()) +
+#'   labs(y = "Seedling dry mass (g)") +
+#'   scale_fill_grey(start = 0.7, end = 0.3) +
+#'   facet_wrap(facets = vars(Container))
+#'
+
 position_stacknudge <-
   function(vjust = 1,
            reverse = FALSE,
@@ -190,9 +222,27 @@ PositionStackAndNudge <-
                      )
                    },
 
+                   setup_data = function(self, data, params) {
+                     data <- flip_data(data, params$flipped_aes)
+                     if (is.null(params$var)) {
+                       return(data)
+                     }
+
+                     data$ymax <- switch(params$var,
+                                         y = data$y,
+                                         ymax = as.numeric(ifelse(data$ymax == 0, data$ymin, data$ymax))
+                     )
+
+                     data <- remove_missing(
+                       data,
+                       vars = c("x", "xmin", "xmax", "y"),
+                       name = "position_stack"
+                     )
+                     flip_data(data, params$flipped_aes)
+                   },
+
                    compute_layer = function(self, data, params, layout) {
                      x_orig <- data$x
-                     y_orig <- data$y
 
                      # operate on the stacked positions (updated in August 2020)
                      data = ggplot2::ggproto_parent(ggplot2::PositionStack, self)$compute_layer(data, params, layout)
@@ -216,7 +266,6 @@ PositionStackAndNudge <-
                                                            function(y) y + params$nudge_y * params$.fun_y(y))
                      }
 
-                     # add original position
                      if (params$kept.origin == "stacked") {
                        data$x_orig <- x_stacked
                        data$y_orig <- y_stacked
@@ -271,3 +320,93 @@ position_fill_keep <-
                        direction = "none",
                        kept.origin = "original")
   }
+
+#' @rdname ggpp-ggproto
+#' @format NULL
+#' @usage NULL
+#' @noRd
+PositionStackMinMax <-
+  ggplot2::ggproto("PositionStackMinMax", ggplot2::PositionStack,
+                   var = "y",
+
+                   setup_params = function(self, data) {
+                     c(
+                       list(kept.origin = self$kept.origin, var = self$var, fill = FALSE),
+                       ggplot2::ggproto_parent(ggplot2::PositionStack, self)$setup_params(data)
+                     )
+                   },
+
+                   setup_data = function(self, data, params) {
+                     data <- flip_data(data, params$flipped_aes)
+                     if (!(exists("ymax", data) && exists("ymin", data) && exists("y", data))) {
+                       stop("position_stack_minmax() requires y, ymin and ymax mappings in data")
+                     }
+                     flip_data(data, params$flipped_aes)
+                   },
+
+                   compute_layer = function(self, data, params, layout) {
+                     x_orig <- data$x
+                     if (exists("xmin", data)) {
+                       xmin_delta <-  data$xmin - data$x
+                     } else {
+                       xmin_delta <-  0
+                     }
+                     if (exists("xmax", data)) {
+                       xmax_delta <-  data$xmax - data$x
+                     } else {
+                       xmax_delta <-  0
+                     }
+
+                     y_orig <- data$y
+                     if (exists("ymin", data)) {
+                       ymin_delta <-  data$ymin - data$y
+                     } else {
+                       ymin_delta <-  0
+                     }
+                     if (exists("ymax", data)) {
+                       ymax_delta <-  data$ymax - data$y
+                     } else {
+                       ymax_delta <-  0
+                     }
+
+                     # operate on the stacked positions (updated in August 2020)
+                     data = ggplot2::ggproto_parent(ggplot2::PositionStack, self)$compute_layer(data, params, layout)
+                     x_stacked <- data$x
+                     y_stacked <- data$y
+                     if (exists("xmin", data)) data$xmin <- data$x + xmin_delta
+                     if (exists("xmax", data)) data$xmax <- data$x + xmax_delta
+                     if (exists("ymin", data)) data$ymin <- data$y + ymin_delta
+                     if (exists("ymax", data)) data$ymax <- data$y + ymax_delta
+
+                     # add original position
+                     if (params$kept.origin == "original") {
+                       data$x_orig <- x_orig
+                       data$y_orig <- y_orig
+                     }
+
+                     data
+                   },
+
+                   compute_panel = function(self, data, params, scales) {
+                     ggplot2::ggproto_parent(PositionStack, self)$compute_panel(data, params, scales)
+                   }
+  )
+
+#' @rdname position_stacknudge
+#'
+#' @export
+#'
+position_stack_minmax <-
+  function(vjust = 1,
+           reverse = FALSE,
+           kept.origin = c("none", "original")) {
+
+    kept.origin <- rlang::arg_match(kept.origin)
+
+    ggplot2::ggproto(NULL, PositionStackMinMax,
+                     kept.origin = kept.origin,
+                     vjust = vjust,
+                     reverse = reverse
+    )
+  }
+

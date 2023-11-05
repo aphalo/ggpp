@@ -14,6 +14,12 @@ editor_options:
 -   Add support for `linetype` aesthetic to `geom_label_npc()`, for consistency
 with `geom_label_s()` and `geom_label_pairwise()`.
 
+# ggpp 0.5.5
+
+-   Add data sets `birch.df`and `birch_dw.df` with data for 350 birch seedlings.
+-   Move transcriptomics data sets `quadrant_example.df` and `volcano_example.df` from 'ggpmisc' to 'ggpp'.
+-   Add `position_stack_minmax()` to correctly position error bars in stacked plots.
+
 # ggpp 0.5.4
 
 -   Add `geom_text_pairwise()` and `geom_label_pairwise()`suitable for 

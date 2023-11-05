@@ -1,4 +1,4 @@
-destination: ../ggpp-docs
+destination: ../docs/ggpp
 url: https://docs.r4photobiology.info/ggpp/
 
 template:
@@ -55,6 +55,12 @@ reference:
     desc: Additional ggplot methods
     contents:
     - ggplot
+  - title: Example data
+    desc: Data sets as R objects. The data are used for examples in the documentation.
+    contents:
+    - birch.df
+    - quadrant_example.df
+    - volcano_example.df
   - title: Fortify or Try
     desc: Convert R objects containing observations in other formats into 'tibble' objects suitable for plotting.
     contents:

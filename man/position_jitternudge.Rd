@@ -43,7 +43,7 @@ the current random seed and also avoid resetting (the behaviour of ggplot
 vector of length 1, or of the same length as rows there are in \code{data},
 with nudge values in data rows order.}
 
-\item{direction}{One of \code{"as.is"}, code{"alternate"}, \code{"split"},
+\item{direction}{One of \code{"as.is"}, \code{"alternate"}, \code{"split"},
 \code{"split.x"} or \code{"split.y"}. A value of \code{"none"} replicates
 the behavior of \code{\link[ggplot2]{position_nudge}}. \code{"split"}
 changes the sign of the nudge depending on the direction of the random
