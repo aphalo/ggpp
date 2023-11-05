@@ -17,5 +17,19 @@ colnames(birch.df)
 nrow(birch.df)
 birch.df <- na.omit(birch.df)
 nrow(birch.df)
+comment(birch.df) <- "Data for silver birch seedlings."
 
-save(birch.df, file = "data/birch.rda")
+colnames(birch.df)
+stem.df <- birch.df[ , c("Container", "Density",   "block", "dwstem")]
+colnames(stem.df)[4] <- "dry.weight"
+stem.df$Part <- "stem"
+root.df <- birch.df[ , c("Container", "Density",   "block", "dwroot")]
+colnames(root.df)[4] <- "dry.weight"
+root.df$Part <- "root"
+birch_dw.df <- rbind(stem.df, root.df)
+birch_dw.df$Part <- factor(birch_dw.df$Part, levels = c("stem", "root"))
+rm(stem.df, root.df)
+colnames(birch_dw.df)
+comment(birch.df) <- "Data for silver birch seedlings."
+
+save(birch.df, birch_dw.df, file = "data/birch.rda")

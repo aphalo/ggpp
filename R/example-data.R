@@ -69,5 +69,12 @@
 #' colnames(birch.df)
 #' head(birch.df)
 #'
+#' colnames(birch_dw.df)
+#' head(birch_dw.df)
+#'
 "birch.df"
 
+#' @rdname birch.df
+#' @format A \code{data.frame} object with 700 rows and 5 variables.
+#'
+"birch_dw.df"

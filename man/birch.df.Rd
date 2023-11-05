@@ -3,12 +3,17 @@
 \docType{data}
 \name{birch.df}
 \alias{birch.df}
+\alias{birch_dw.df}
 \title{Birch seedlings' size}
 \format{
 A \code{data.frame} object with 350 rows and 8 variables.
+
+A \code{data.frame} object with 700 rows and 5 variables.
 }
 \usage{
 birch.df
+
+birch_dw.df
 }
 \description{
 A dataset containing the measurements on 350 birch seedlings.
@@ -23,6 +28,9 @@ of the first growing season, after leaf fall.
 \examples{
 colnames(birch.df)
 head(birch.df)
+
+colnames(birch_dw.df)
+head(birch_dw.df)
 
 }
 \references{
