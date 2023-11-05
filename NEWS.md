@@ -6,6 +6,11 @@ editor_options:
     wrap: 72
 ---
 
+# ggpp 0.5.5
+
+-   Add data set `birch.df` for birch seedlings.
+-   Move transcriptomics example data from 'ggpmisc' to 'ggpp'.
+
 # ggpp 0.5.4
 
 -   Add `geom_text_pairwise()` and `geom_label_pairwise()`suitable for 
