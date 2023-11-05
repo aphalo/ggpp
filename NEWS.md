@@ -8,8 +8,9 @@ editor_options:
 
 # ggpp 0.5.5
 
--   Add data set `birch.df` for birch seedlings.
--   Move transcriptomics example data from 'ggpmisc' to 'ggpp'.
+-   Add data sets `birch.df`and `birch_dw.df` with data for 350 birch seedlings.
+-   Move transcriptomics data sets `quadrant_example.df` and `volcano_example.df` from 'ggpmisc' to 'ggpp'.
+-   Add `position_stack_minmax()` to correctly position error bars in stacked plots.
 
 # ggpp 0.5.4
 

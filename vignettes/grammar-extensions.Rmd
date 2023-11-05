@@ -316,6 +316,7 @@ of the original coordinates kept in data.
 | `position_dodge_keep()`                     | `ggplot2::position_dodge()`       |
 | `position_dodge2_keep()`                    | `ggplot2::position_dodge2()`      |
 | `position_stack_keep()`                     | `ggplot2::position_stack()`       |
+| `position_stack_minmax()`                   |                                   |
 | `position_fill_keep()`                      | `ggplot2::position_fill()`        |
 | `position_jitterdodge_keep()` *(planned)*   | `ggplot2::position_jitterdodge()` |
 | `position_jitternudge()`                    |                                   |
