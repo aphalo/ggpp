@@ -18,4 +18,5 @@ test_that("correct reverse, vjust and x assigned", {
   expect_false(position$reverse)
   expect_identical(position$vjust, 0.5)
   expect_identical(position$x, -0.3)
+  expect_identical(position$fill, TRUE)
 })

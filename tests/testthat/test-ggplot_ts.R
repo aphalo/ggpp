@@ -20,6 +20,16 @@ test_that("ggplot.ts works as expected with the monthly time series.", {
   expect_equal(res$y, as.numeric(data))
 })
 
+test_that("ggplot.ts works as expected with the quaterly time series.", {
+  data <- presidents
+
+  expect_silent(p <- ggplot.ts(data) + geom_line())
+  res <- layer_data(p)
+
+  expect_equal(res$x, as.numeric(time(data)), tolerance = 0.001)
+  expect_equal(res$y, as.numeric(data))
+})
+
 test_that("ggplot.ts time resolution works as expected.", {
   data <- sunspot.month
   expected <- zoo::as.Date(time(data))
