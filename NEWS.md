@@ -10,7 +10,8 @@ editor_options:
 
 -   Update for compatibility with upcoming 'ggplot2' >= 3.5.0.
 -   Support the `angle` aesthetic in `geom_label_npc()`, `geom_label_s()` and 
-`geom_label_pairwise()` matching the update to `ggplot2::geom_label()`.
+`geom_label_pairwise()` matching the upcoming update to `ggplot2::geom_label()` 
+(with help from _teunbrand_).
 -   Add support for `linetype` aesthetic to `geom_label_npc()`, for consistency
 with `geom_label_s()` and `geom_label_pairwise()`.
 -   Add `position_stack_minmax()` to correctly position error bars in stacked plots.
