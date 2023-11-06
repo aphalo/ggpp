@@ -7,4 +7,5 @@ test_that("test vjust, reverse, x, y and kept.origin arguments", {
   expect_identical(position$x, 0)
   expect_identical(position$y, 0)
   expect_identical(position$kept.origin, "original")
+  expect_identical(position$fill, TRUE)
 })

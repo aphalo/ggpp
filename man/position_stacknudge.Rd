@@ -36,7 +36,10 @@ position_fill_keep(vjust = 1, reverse = FALSE)
 position_stack_minmax(
   vjust = 1,
   reverse = FALSE,
-  kept.origin = c("original", "none")
+  x = 0,
+  y = 0,
+  direction = c("none", "split", "split.x", "split.y"),
+  kept.origin = c("stacked", "original", "none")
 )
 }
 \arguments{
@@ -96,7 +99,7 @@ remember name when the need is only to have access to both the original and
 nudged coordinates.
 
 The wrapper \code{position_stack_minmax()} has the same signature and
-behaviour as \code{\link[ggplot2]{position_stack}} but stacks y, ymin and
+behaviour as \code{\link{position_stacknudge}} but stacks y, ymin and
 ymax in parallel, making it possible to stack summaries with error bars,
 works correctly with \code{geom_pointrange()}, \code{geom_linerange()} and
 \code{geom_errorbar()}.
@@ -163,6 +166,16 @@ ggplot(birch_dw.df,
                 position = "stack", alpha = 0.7, width = 0.67) +
    stat_summary(geom = "linerange", fun.data = mean_cl_normal, na.rm = TRUE,
                 position = position_stack_minmax()) +
+  labs(y = "Seedling dry mass (g)") +
+  scale_fill_grey(start = 0.7, end = 0.3) +
+  facet_wrap(facets = vars(Container))
+
+ggplot(birch_dw.df,
+       aes(y = dry.weight * 1e-3, x = Density, fill = Part)) +
+   stat_summary(geom = "col", fun = mean, na.rm = TRUE,
+                position = "stack", alpha = 0.7, width = 0.67) +
+   stat_summary(geom = "linerange", fun.data = mean_cl_normal, na.rm = TRUE,
+                position = position_stack_minmax(x = -0.1)) +
   labs(y = "Seedling dry mass (g)") +
   scale_fill_grey(start = 0.7, end = 0.3) +
   facet_wrap(facets = vars(Container))

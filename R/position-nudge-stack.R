@@ -31,7 +31,7 @@
 #' nudged coordinates.
 #'
 #' The wrapper \code{position_stack_minmax()} has the same signature and
-#' behaviour as \code{\link[ggplot2]{position_stack}} but stacks y, ymin and
+#' behaviour as \code{\link{position_stacknudge}} but stacks y, ymin and
 #' ymax in parallel, making it possible to stack summaries with error bars,
 #' works correctly with \code{geom_pointrange()}, \code{geom_linerange()} and
 #' \code{geom_errorbar()}.
@@ -124,10 +124,25 @@
 #'
 #' ggplot(birch_dw.df,
 #'        aes(y = dry.weight * 1e-3, x = Density, fill = Part)) +
-#'    stat_summary(geom = "col", fun = mean, na.rm = TRUE,
+#'    stat_summary(geom = "col", fun = mean,
 #'                 position = "stack", alpha = 0.7, width = 0.67) +
-#'    stat_summary(geom = "linerange", fun.data = mean_cl_normal, na.rm = TRUE,
+#'    stat_summary(geom = "linerange", fun.data = mean_cl_normal,
 #'                 position = position_stack_minmax()) +
+#'   labs(y = "Seedling dry mass (g)") +
+#'   scale_fill_grey(start = 0.7, end = 0.3) +
+#'   facet_wrap(facets = vars(Container))
+#'
+#' ggplot(birch_dw.df,
+#'        aes(y = dry.weight * 1e-3, x = Density, fill = Part)) +
+#'   stat_summary(geom = "col", fun = mean,
+#'                position = "stack", alpha = 0.7, width = 0.67) +
+#'   # error bars for each stack bar
+#'   stat_summary(geom = "linerange", fun.data = mean_cl_normal,
+#'                position = position_stack_minmax(x = -0.1)) +
+#'   # error bar for the total
+#'   stat_summary(data = birch.df, aes(y = (dwstem + dwroot) * 1e-3, fill = NULL),
+#'                geom = "linerange", linewidth = 0.75,
+#'                position = position_nudge(x = 0.1), fun.data = mean_cl_normal) +
 #'   labs(y = "Seedling dry mass (g)") +
 #'   scale_fill_grey(start = 0.7, end = 0.3) +
 #'   facet_wrap(facets = vars(Container))
@@ -187,16 +202,12 @@ position_fillnudge <-
                                    none = function(x) {1},
                                    split = sign,
                                    split.y = function(x) {1},
-                                   split.x = sign,
-                                   center = sign,
-                                   function(x) {1}),
+                                   split.x = sign),
                    .fun_y = switch(direction,
                                    none = function(x) {1},
                                    split = sign,
                                    split.x = function(x) {1},
-                                   split.y = sign,
-                                   center = sign,
-                                   function(x) {1}),
+                                   split.y = sign),
                    kept.origin = kept.origin,
                    vjust = vjust,
                    reverse = reverse
@@ -327,16 +338,21 @@ position_fill_keep <-
 #' @noRd
 PositionStackMinMax <-
   ggplot2::ggproto("PositionStackMinMax", ggplot2::PositionStack,
+                   x = 0,
+                   y = 0,
                    var = "y",
 
                    setup_params = function(self, data) {
                      c(
-                       list(kept.origin = self$kept.origin, var = self$var, fill = FALSE),
+                       list(nudge_x = self$x, nudge_y = self$y,
+                            .fun_x = self$.fun_x, .fun_y = self$.fun_y,
+                            kept.origin = self$kept.origin,
+                            var = self$var, fill = FALSE),
                        ggplot2::ggproto_parent(ggplot2::PositionStack, self)$setup_params(data)
                      )
                    },
 
-                   setup_data = function(self, data, params) {
+                                      setup_data = function(self, data, params) {
                      data <- flip_data(data, params$flipped_aes)
                      if (!(exists("ymax", data) && exists("ymin", data) && exists("y", data))) {
                        stop("position_stack_minmax() requires y, ymin and ymax mappings in data")
@@ -378,8 +394,27 @@ PositionStackMinMax <-
                      if (exists("ymin", data)) data$ymin <- data$y + ymin_delta
                      if (exists("ymax", data)) data$ymax <- data$y + ymax_delta
 
-                     # add original position
-                     if (params$kept.origin == "original") {
+                     # transform only the dimensions for which non-zero nudging is requested
+                     if (any(params$nudge_x != 0)) {
+                       if (any(params$nudge_y != 0)) {
+                         data <- ggplot2::transform_position(data,
+                                                             function(x) x + params$nudge_x * params$.fun_x(x),
+                                                             function(y) y + params$nudge_y * params$.fun_y(y))
+                       } else {
+                         data <- ggplot2::transform_position(data,
+                                                             function(x) x + params$nudge_x * params$.fun_x(x),
+                                                             NULL)
+                       }
+                     } else if (any(params$nudge_y != 0)) {
+                       data <- ggplot2::transform_position(data,
+                                                           function(x) x,
+                                                           function(y) y + params$nudge_y * params$.fun_y(y))
+                     }
+
+                     if (params$kept.origin == "stacked") {
+                       data$x_orig <- x_stacked
+                       data$y_orig <- y_stacked
+                     } else if (params$kept.origin == "original") {
                        data$x_orig <- x_orig
                        data$y_orig <- y_orig
                      }
@@ -399,11 +434,27 @@ PositionStackMinMax <-
 position_stack_minmax <-
   function(vjust = 1,
            reverse = FALSE,
-           kept.origin = c("none", "original")) {
+           x = 0,
+           y = 0,
+           direction = c("none", "split", "split.x", "split.y"),
+           kept.origin = c("stacked", "original", "none")) {
 
+    direction <- rlang::arg_match(direction)
     kept.origin <- rlang::arg_match(kept.origin)
 
     ggplot2::ggproto(NULL, PositionStackMinMax,
+                     x = x,
+                     y = y,
+                     .fun_x = switch(direction,
+                                     none = function(x) {1},
+                                     split = sign,
+                                     split.y = function(x) {1},
+                                     split.x = sign),
+                     .fun_y = switch(direction,
+                                     none = function(x) {1},
+                                     split = sign,
+                                     split.x = function(x) {1},
+                                     split.y = sign),
                      kept.origin = kept.origin,
                      vjust = vjust,
                      reverse = reverse

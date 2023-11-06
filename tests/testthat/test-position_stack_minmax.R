@@ -1,20 +1,20 @@
-context("position_fillnudge")
+context("position_stack_minmax")
 
 test_that("incorrect kept.origin used", {
   expect_error(
-    position_fillnudge(kept.origin = "") #,
-#    "`kept.origin` must be one of \"stacked\", \"original\", or \"none\", not \"\"."
-# rlang arg_match() adds to the error message characters that break expect_error()
+    position_stack_minmax(kept.origin = "") #,
+    #    "`kept.origin` must be one of \"stacked\", \"original\", or \"none\", not \"\"."
+    # rlang arg_match() adds to the error message characters that break expect_error()
   )
 })
 
 test_that("correct kept.origin used", {
-  position <- position_fillnudge(kept.origin = "none")
+  position <- position_stack_minmax(kept.origin = "none")
   expect_no_error(position)
 })
 
 test_that("correct kept.origin used", {
-  position <- position_fillnudge(kept.origin = "original")
+  position <- position_stack_minmax(kept.origin = "original")
   expect_no_error(position)
 })
 
@@ -46,11 +46,13 @@ test_that("correct direction used", {
   expect_no_error(position)
 })
 
-test_that("correct reverse, vjust and x assigned", {
-  position <- position_fillnudge(kept.origin = "none", vjust = 0.5, x = -0.3)
-  expect_false(position$reverse)
-  expect_identical(position$vjust, 0.5)
-  expect_identical(position$y, 0)
-  expect_identical(position$x, -0.3)
-  expect_identical(position$fill, TRUE)
+test_that("test vjust, reverse, x, y and kept.origin arguments", {
+position <- position_stack_minmax()
+expect_identical(position$vjust, 1)
+expect_identical(position$reverse, FALSE)
+expect_identical(position$x, 0)
+expect_identical(position$y, 0)
+expect_identical(position$kept.origin, "stacked")
+expect_identical(position$var, "y")
+expect_identical(position$fill, FALSE)
 })

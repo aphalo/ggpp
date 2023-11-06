@@ -16,9 +16,10 @@ with `geom_label_s()` and `geom_label_pairwise()`.
 
 # ggpp 0.5.5
 
--   Add data sets `birch.df`and `birch_dw.df` with data for 350 birch seedlings.
--   Move transcriptomics data sets `quadrant_example.df` and `volcano_example.df` from 'ggpmisc' to 'ggpp'.
 -   Add `position_stack_minmax()` to correctly position error bars in stacked plots.
+-   Add data sets `birch.df`and `birch_dw.df` with data for 350 birch seedlings.
+-   Add data set `weather_18_june_2019.df` with data at 1 min intercal for 24 h.
+-   Move transcriptomics data sets `quadrant_example.df` and `volcano_example.df` from 'ggpmisc' to 'ggpp'.
 
 # ggpp 0.5.4
 
