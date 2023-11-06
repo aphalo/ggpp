@@ -315,9 +315,21 @@ p2 +
                      y = bar.height, label = text))
 
 p2 +
+  geom_text_pairwise(data = my.ranges,
+                     aes(xmin = A, xmax = B,
+                         y = bar.height, label = text),
+                     angle = 90, hjust = -0.1)
+
+p2 +
   geom_label_pairwise(data = my.ranges,
                       aes(xmin = A, xmax = B,
-                      y = bar.height, label = text))
+                          y = bar.height, label = text),
+                     angle = 90, hjust = -0.1)
+
+p2 +
+  geom_label_pairwise(data = my.ranges,
+                      aes(xmin = A, xmax = B,
+                          y = bar.height, label = text))
 
 p2 +
   geom_text_pairwise(data = my.ranges,

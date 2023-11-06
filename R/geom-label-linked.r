@@ -155,6 +155,9 @@ GeomLabelS <-
                                         just = data$hjust,
                                         a = "x", b = "y")
                      }
+                     if (!inherits(label.padding, "margin")) {
+                       label.padding <- rep(label.padding, length.out = 4)
+                     }
 
                      if (add.segments) {
                        segments.data <-
@@ -186,6 +189,7 @@ GeomLabelS <-
                                               just = c(row$hjust, row$vjust),
                                               padding = label.padding,
                                               r = label.r,
+                                              angle = row$angle,
                                               text.gp = gpar(
                                                 col = ifelse(any(colour.target %in% c("all", "text")),
                                                              ggplot2::alpha(row$colour, text.alpha),
@@ -244,21 +248,50 @@ GeomLabelS <-
                    draw_key = draw_key_text
   )
 
-labelGrob <-
-  function(label, x = grid::unit(0.5, "npc"), y = grid::unit(0.5, "npc"),
-           just = "center", padding = grid::unit(0.25, "lines"), r = grid::unit(0.1, "snpc"),
-           default.units = "npc", name = NULL,
-           text.gp = grid::gpar(), rect.gp = grid::gpar(fill = "white"), vp = NULL) {
+labelGrob <- function(label, x = grid::unit(0.5, "npc"), y = grid::unit(0.5, "npc"),
+                      just = "center", padding = grid::unit(0.25, "lines"), r = grid::unit(0.1, "snpc"),
+                      angle = NULL, default.units = "npc", name = NULL,
+                      text.gp = grid::gpar(), rect.gp = grid::gpar(fill = "white"), vp = NULL) {
 
-    if (length(label) != 1) {
-      rlang::abort("label must be of length 1")
-    }
-
-    if (!grid::is.unit(x))
-      x <- grid::unit(x, default.units)
-    if (!grid::is.unit(y))
-      y <- grid::unit(y, default.units)
-
-    grid::gTree(label = label, x = x, y = y, just = just, padding = padding, r = r,
-                name = name, text.gp = text.gp, rect.gp = rect.gp, vp = vp, cl = "labelgrob")
+  if (length(label) != 1) {
+    rlang::abort("label must be of length 1")
   }
+
+  if (!grid::is.unit(x))
+    x <- grid::unit(x, default.units)
+  if (!grid::is.unit(y))
+    y <- grid::unit(y, default.units)
+
+  if (!is.null(angle) & is.null(vp)) {
+    vp <- grid::viewport(
+      angle = angle, x = x, y = y,
+      width = grid::unit(0, "cm"), height = grid::unit(0, "cm"),
+      gp = grid::gpar(fontsize = text.gp$fontsize)
+    )
+    x <- grid::unit(rep(0.5, length(x)), "npc")
+    y <- grid::unit(rep(0.5, length(y)), "npc")
+  }
+
+  descent <- font_descent(
+    text.gp$fontfamily, text.gp$fontface, text.gp$fontsize, text.gp$cex
+  )
+  hjust <- grid::resolveHJust(just, NULL)
+  vjust <- grid::resolveVJust(just, NULL)
+
+  text <- titleGrob(
+    label = label, hjust = hjust, vjust = vjust, x = x, y = y,
+    margin = padding,
+    margin_x = TRUE, margin_y = TRUE,
+    gp = text.gp
+  )
+
+  box <- grid::roundrectGrob(
+    x = x, y = y - (1 - vjust) * descent,
+    width  = grid::widthDetails(text),
+    height = grid::heightDetails(text),
+    just   = c(hjust, vjust),
+    r = r, gp = rect.gp, name = "box"
+  )
+
+  grid::gTree(children = grid::gList(box, text), name = name, vp = vp)
+}

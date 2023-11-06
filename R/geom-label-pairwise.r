@@ -142,6 +142,9 @@ GeomLabelPairwise <-
                                         just = data$hjust,
                                         a = "x", b = "y")
                      }
+                     if (!inherits(label.padding, "margin")) {
+                       label.padding <- rep(label.padding, length.out = 4)
+                     }
 
                      # loop needed as gpar is not vectorized
                      all.grobs <- grid::gList()
@@ -169,6 +172,7 @@ GeomLabelPairwise <-
                                               just = c(row$hjust, row$vjust),
                                               padding = label.padding,
                                               r = label.r,
+                                              angle = row$angle,
                                               text.gp = gpar(
                                                 col = ifelse(any(colour.target %in% c("all", "text")),
                                                              ggplot2::alpha(row$colour, text.alpha),

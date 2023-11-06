@@ -6,11 +6,14 @@
 #' to be given in \code{npc} graphic units, using pseudo-aesthetics. Their
 #' intended use is to add annotations to a plot.
 #'
-#' @details This geom is identical to 'ggplot2' \code{\link[ggplot2]{geom_text}}
-#'   except that it interprets \code{npcx} and \code{npcy} positions in
-#'   \code{npc} units. It translates \code{npcx} and \code{npcy} coordinates
-#'   using a pseudo-aesthetic with a fixed scale. The generation of grobs is
-#'   done with calls to functions imported from package 'ggplot2'.
+#' @details These geoms are identical to 'ggplot2'
+#'   \code{\link[ggplot2]{geom_text}} and \code{\link[ggplot2]{geom_label}}
+#'   except that they interpret \code{npcx} and \code{npcy} positions in
+#'   \code{npc} units. They translate \code{npcx} and \code{npcy} coordinates
+#'   using a pseudo-aesthetic with a fixed scale, the translation is done
+#'   separately for each plot panel. All aesthetics other than \emph{x} and
+#'   \emph{y} and grouping work as in normal geoms. These include
+#'   \code{linetype} and \code{angle} in \code{geom_label_npc()}.
 #'
 #' @inheritSection geom_text_s Plot boundaries and clipping
 #'
@@ -50,8 +53,12 @@
 #'   Useful for offsetting text from points, particularly on discrete scales.
 #' @param check_overlap If `TRUE`, text that overlaps previous text in the same
 #'   layer will not be plotted.
+#' @param size.unit How the `size` aesthetic is interpreted: as millimetres
+#'   (`"mm"`, default), points (`"pt"`), centimetres (`"cm"`), inches (`"in"`),
+#'   or picas (`"pc"`).
 #'
-#' @seealso \code{\link[ggplot2]{geom_text}}
+#' @seealso \code{\link[ggplot2]{geom_text}} and
+#'    \code{\link[ggplot2]{geom_label}} for additional details.
 #'
 #' @rdname geom_text_npc
 #'
@@ -72,6 +79,10 @@
 #' ggplot(df) +
 #'   geom_text_npc(aes(npcx = x.chr, npcy = y.chr, label = text))
 #'
+#' ggplot(df) +
+#'   geom_text_npc(aes(npcx = x.chr, npcy = y.chr, label = text),
+#'                 angle = 90)
+#'
 #' ggplot(data = mtcars, mapping = aes(wt, mpg)) +
 #'   geom_point() +
 #'   geom_text_npc(data = df, aes(npcx = x, npcy = y, label = text))
@@ -84,6 +95,11 @@
 #' ggplot(data = mtcars) +
 #'   geom_point(mapping = aes(wt, mpg)) +
 #'   geom_label_npc(data = df, aes(npcx = x, npcy = y, label = text))
+#'
+#' ggplot(data = mtcars) +
+#'   geom_point(mapping = aes(wt, mpg)) +
+#'   geom_label_npc(data = df, aes(npcx = x.chr, npcy = y.chr, label = text),
+#'                  angle = 90) # ignored by ggplot2 < 3.5.0
 #'
 geom_text_npc <- function(mapping = NULL, data = NULL,
                       stat = "identity", position = "identity",

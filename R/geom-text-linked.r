@@ -229,6 +229,10 @@
 #' p +
 #'   geom_label_s(hjust = "inward_3", nudge_y = 0.4)
 #'
+#' p +
+#'   geom_label_s(nudge_y = 1, angle = 90) +
+#'   expand_limits(y = 30)
+#'
 #' # Add aesthetic mappings and adjust arrows
 #' p +
 #'   geom_text_s(aes(colour = factor(cyl)),
@@ -554,9 +558,10 @@ compute_just2d <- function(data,
         just[position] <- "middle"
       } else {
         just[position] <-
-          c("left", "middle", "right")[2L + 1L * sign(data[[ab_orig[1L]]] - data[[ab[1L]]])]
+          c("left", "middle", "right")[2L + 1L * sign(data[[ab_orig[1L]]][position] - data[[ab[1L]]][position])]
       }
     }
+
     if (any(grepl("outward|inward", just))) {
       # we allow tags for setting center/middle position for just
       just_used <- unique(just)
@@ -679,3 +684,28 @@ shrink_segments <- function(data,
   segments.data$too.short <- final.length < min.segment.length
   segments.data
 }
+
+# from ggplot2
+resolve_text_unit <- function(unit) {
+  unit <- rlang::arg_match0(unit, c("mm", "pt", "cm", "in", "pc"))
+  switch(
+    unit,
+    "mm" = .pt,
+    "cm" = .pt * 10,
+    "in" = 72.27,
+    "pc" = 12,
+    1
+  )
+}
+
+# from ggplot2 utilities-grid.R
+#
+# Name ggplot grid object
+# Convenience function to name grid objects
+#
+# @keyword internal
+ggname <- function(prefix, grob) {
+  grob$name <- grobName(grob, prefix)
+  grob
+}
+
