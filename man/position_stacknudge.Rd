@@ -162,9 +162,9 @@ ggplot(data = df, aes(x2, x1, group = grp)) +
 
 ggplot(birch_dw.df,
        aes(y = dry.weight * 1e-3, x = Density, fill = Part)) +
-   stat_summary(geom = "col", fun = mean, na.rm = TRUE,
+   stat_summary(geom = "col", fun = mean,
                 position = "stack", alpha = 0.7, width = 0.67) +
-   stat_summary(geom = "linerange", fun.data = mean_cl_normal, na.rm = TRUE,
+   stat_summary(geom = "linerange", fun.data = mean_cl_normal,
                 position = position_stack_minmax()) +
   labs(y = "Seedling dry mass (g)") +
   scale_fill_grey(start = 0.7, end = 0.3) +
@@ -172,10 +172,15 @@ ggplot(birch_dw.df,
 
 ggplot(birch_dw.df,
        aes(y = dry.weight * 1e-3, x = Density, fill = Part)) +
-   stat_summary(geom = "col", fun = mean, na.rm = TRUE,
-                position = "stack", alpha = 0.7, width = 0.67) +
-   stat_summary(geom = "linerange", fun.data = mean_cl_normal, na.rm = TRUE,
-                position = position_stack_minmax(x = -0.1)) +
+  stat_summary(geom = "col", fun = mean,
+               position = "stack", alpha = 0.7, width = 0.67) +
+  # error bars for each stack bar
+  stat_summary(geom = "linerange", fun.data = mean_cl_normal,
+               position = position_stack_minmax(x = -0.1)) +
+  # error bar for the total
+  stat_summary(data = birch.df, aes(y = (dwstem + dwroot) * 1e-3, fill = NULL),
+               geom = "linerange", linewidth = 0.75,
+               position = position_nudge(x = 0.1), fun.data = mean_cl_normal) +
   labs(y = "Seedling dry mass (g)") +
   scale_fill_grey(start = 0.7, end = 0.3) +
   facet_wrap(facets = vars(Container))
