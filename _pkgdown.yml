@@ -59,6 +59,7 @@ reference:
     desc: Data sets as R objects. The data are used for examples in the documentation.
     contents:
     - birch.df
+    - ivy.df
     - quadrant_example.df
     - volcano_example.df
     - weather_18_june_2019.df
