@@ -78,3 +78,27 @@
 #' @format A \code{data.frame} object with 700 rows and 5 variables.
 #'
 "birch_dw.df"
+
+#' @title Ivy photosynthesis light response
+#'
+#' @description A dataset containing photosynthesis measurements on four ivy plants.
+#'
+#' @details For each plant a light response curve of photosynthesis was measured
+#' using a custom-built system and software that allowed controlling the
+#' concentrations of water vapour and carbon dioxide at the surface of the
+#' leaves, i.e., inside the air boundary layer.
+#'
+#' @references Aphalo, P. J. (1991) Interactions in Stomatal Function. PhD
+#' thesis, University of Edinburgh. \url{http://hdl.handle.net/1842/14758}.
+#'
+#' @docType data
+#' @keywords datasets
+#' @format A \code{data.frame} object with 36 rows and 6 variables.
+#' @family Plant growth and morphology data
+#'
+#' @examples
+#' colnames(ivy.df)
+#' head(ivy.df)
+#'
+"ivy.df"
+

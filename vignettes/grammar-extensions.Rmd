@@ -292,7 +292,7 @@ lines, or with respect to a polynomial or smoothing spline fitted
 on-the-fly to the the observations.
 
 A limitation of 'ggplot2' is that only one position function can be used
-in a layer. This makes it difficult to add text labels to stacked or
+in a layer. This makes it difficult to add data labels to stacked or
 dodged bars or columns, or the labelling of points that have been
 jittered. The solution provided by 'ggpp' are wrappers on these position
 functions from 'ggplot2'. These wrappers add support for nudging.
@@ -333,10 +333,10 @@ There is a storage-use cost in saving the original position, by making the
 consideration when `data` has many rows. In such cases, when a counterpart
 position function that does not keep the original coordinates exists, it is wise
 not to use the new "keep" position functions in combination with geometries that
-cannot make use of the additional information stored by them. When using those
-new position functions with no counterpart in 'ggplot2' the keeping of the
-original position can be disabled by passing `kept.position = "none"` when they
-are called.
+cannot make use of the additional information stored by them. Alternatively, and
+when using those new position functions with no counterpart in 'ggplot2' the
+keeping of the original position can be disabled by passing `kept.position =
+"none"` as an additional argument when they are called.
 
 ## Local density of observations
 
@@ -1892,6 +1892,36 @@ Here we nudge the labels down from the top of each stacked bar with `vjust = 1`.
      position = position_fillnudge(vjust = 1, y = -0.05)) +
    theme(legend.position = "none")
 
+```
+
+### position_stack_minmax()
+
+Functions `position_stack()` and `position_stack_nudge()` displace the position
+of a variable mapped to only one of `y`, `ymax` or `ymin`. So they cannot
+be used with geometries `geom_linerange()`, `geom_pointrange()` or 
+`geom_errorbar()`. `position_stack_minmax()` can be used with these geometries
+as it displaces `y`, `ymin` and `ymax` together by the same distance. Like
+`position_stack_nudge()` it also supports nudging. Thus, this new position
+functions makes it possible to add error bars to each member of stacked
+colums, the corresponding error bar. As nudging is also supported, it is
+possible as shown below, to also an additional error bar for the total quantity
+represented by the stacked bars.
+
+```{r}
+ggplot(birch_dw.df,
+       aes(y = dry.weight * 1e-3, x = Density, fill = Part)) +
+  stat_summary(geom = "col", fun = mean,
+               position = "stack", alpha = 0.7, width = 0.67) +
+  # error bars for each stack bar
+  stat_summary(geom = "linerange", fun.data = mean_cl_normal,
+               position = position_stack_minmax(x = -0.1)) +
+  # error bar for the total
+  stat_summary(data = birch.df, aes(y = (dwstem + dwroot) * 1e-3, fill = NULL),
+               geom = "linerange", linewidth = 0.75,
+               position = position_nudge(x = 0.1), fun.data = mean_cl_normal) +
+  labs(y = "Seedling dry mass (g)") +
+  scale_fill_grey(start = 0.7, end = 0.3) +
+  facet_wrap(facets = vars(Container))
 ```
 
 ### position_jitternudge()

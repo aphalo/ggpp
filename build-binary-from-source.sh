@@ -1,3 +1,3 @@
 cd ..
-R CMD INSTALL --build ggpextra_0.4.0.tar.gz
-cd ./ggpmisc
+R CMD INSTALL --build ggpp_0.5.4.9010.tar.gz
+cd ./ggpp
