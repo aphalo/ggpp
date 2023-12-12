@@ -6,6 +6,10 @@ editor_options:
     wrap: 72
 ---
 
+# ggpp 0.5.6
+
+-   Fix bug in `position_dodgenudge()`, behaviour like `position_dodge2nudge()`.
+
 # ggpp 0.5.5
 
 -   Update for compatibility with upcoming 'ggplot2' >= 3.5.0.

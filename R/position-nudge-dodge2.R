@@ -18,7 +18,7 @@ position_dodge2nudge <-
 
     fun_one <- function(x) {1}
 
-    ggplot2::ggproto(NULL, PositionDodgeAndNudge,
+    ggplot2::ggproto(NULL, PositionDodge2AndNudge,
                      x = x,
                      y = y,
                      .fun_x = switch(direction,
@@ -45,8 +45,8 @@ position_dodge2nudge <-
 #' @format NULL
 #' @usage NULL
 #' @noRd
-PositionDodgeAndNudge <-
-  ggplot2::ggproto("PositionDodgeAndNudge", ggplot2::PositionDodge2,
+PositionDodge2AndNudge <-
+  ggplot2::ggproto("PositionDodge2AndNudge", ggplot2::PositionDodge2,
                    x = 0,
                    y = 0,
 

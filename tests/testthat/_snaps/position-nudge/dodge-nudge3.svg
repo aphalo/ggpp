@@ -43,16 +43,16 @@
 <rect x='553.96' y='283.95' width='51.79' height='107.92' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #C77CFF;' />
 <rect x='450.37' y='68.11' width='51.79' height='323.76' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #F8766D;' />
 <rect x='502.16' y='391.87' width='51.79' height='107.92' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #00BFC4;' />
-<line x1='178.44' y1='155.75' x2='178.44' y2='176.03' style='stroke-width: 1.42;' />
-<text x='178.44' y='154.44' style='font-size: 11.04px; font-family: sans;' textLength='55.85px' lengthAdjust='spacingAndGlyphs'>other name</text>
 <line x1='256.14' y1='263.67' x2='256.14' y2='283.95' style='stroke-width: 1.42;' />
 <text x='256.14' y='262.36' style='font-size: 11.04px; font-family: sans;' textLength='81.63px' lengthAdjust='spacingAndGlyphs'>some long name</text>
+<line x1='178.44' y1='155.75' x2='178.44' y2='176.03' style='stroke-width: 1.42;' />
+<text x='178.44' y='154.44' style='font-size: 11.04px; font-family: sans;' textLength='55.85px' lengthAdjust='spacingAndGlyphs'>other name</text>
+<line x1='579.85' y1='263.67' x2='579.85' y2='283.95' style='stroke-width: 1.42;' />
+<text x='579.85' y='262.36' style='font-size: 11.04px; font-family: sans;' textLength='57.69px' lengthAdjust='spacingAndGlyphs'>some name</text>
 <line x1='476.26' y1='47.83' x2='476.26' y2='68.11' style='stroke-width: 1.42;' />
 <text x='476.26' y='46.53' style='font-size: 11.04px; font-family: sans;' textLength='68.13px' lengthAdjust='spacingAndGlyphs'>another name</text>
 <line x1='528.06' y1='520.06' x2='528.06' y2='499.79' style='stroke-width: 1.42;' />
 <text x='528.06' y='528.97' style='font-size: 11.04px; font-family: sans;' textLength='81.63px' lengthAdjust='spacingAndGlyphs'>some long name</text>
-<line x1='579.85' y1='263.67' x2='579.85' y2='283.95' style='stroke-width: 1.42;' />
-<text x='579.85' y='262.36' style='font-size: 11.04px; font-family: sans;' textLength='57.69px' lengthAdjust='spacingAndGlyphs'>some name</text>
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
 <text x='25.90' y='502.81' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='7.82px' lengthAdjust='spacingAndGlyphs'>-1</text>
