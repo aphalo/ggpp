@@ -35,11 +35,13 @@ become more disordered than necessary. In addition when including smooth
 regression lines the data labels may partly occlude the fitted line
 and/or the confidence band.
 
-Package 'ggpp' defines new position functions that save the starting
-position like `position_nudge_repel()` does but come in multiple
-flavors. Their use together with repulsive geometries from 'ggrepel'
+Package 'ggpp' defines new position functions that save the original
+position similarly to `position_nudge_repel()` from package 'ggrepel'.
+However, package 'ggpp' defines several new position functions that provide
+fine control of nudging, including nudging based on computations on the
+`data`. Their use together with repulsive geometries from 'ggrepel'
 makes it possible to give to the data labels an initial "push" in a
-non-random direction. This helps a lot, much more than what I expect
+non-random direction. This helps a lot, much more than what I expected
 initially, in obtaining a more orderly displacement by repulsion of the
 data labels away from a cloud of observations or a line.
 
@@ -804,8 +806,8 @@ More frequently observations follow curves rather than straight lines. If
 observations follow exactly a simple curve nudging away from the curve with
 `position_nudge_line()` can be very effective. In this case, the interpretation
 of values passed as arguments to parameters `x` and `y` of the position function
-differs from that in `position_nudge()`: positive values correspond to above and inside the curve and negative ones, the
-opposite direction.
+differs from that in `position_nudge()`: positive values correspond to above and
+inside the curve and negative ones, the opposite direction.
 
 The next plot shows the effect of nudging with the original positions
 as black dots and the nudged positions as red dots.

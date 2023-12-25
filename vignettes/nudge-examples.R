@@ -1,4 +1,4 @@
-## ---- include=FALSE, echo=FALSE-----------------------------------------------
+## ----include=FALSE, echo=FALSE------------------------------------------------
 library(knitr)
 opts_chunk$set(fig.align = 'center', 
                fig.show = 'hold', fig.width = 7, fig.height = 4)
@@ -7,7 +7,7 @@ options(warnPartialMatchArgs = FALSE,
         tibble.print.min = 4,
         dplyr.summarise.inform = FALSE)
 
-## ---- message = FALSE---------------------------------------------------------
+## ----message = FALSE----------------------------------------------------------
 library(dplyr)
 library(lubridate)
 library(ggplot2)
@@ -34,7 +34,7 @@ df <- data.frame(
 )
 
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
   geom_text_repel(position = position_nudge_keep(x = 0.3),
@@ -55,7 +55,7 @@ ggplot(df, aes(x, y, label = l)) +
               hjust = "left") +
   expand_limits(x = 2.3)
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ## Example data frame where each species' principal components have been computed.
 df1 <- data.frame(
   Species = paste("Species",1:5),
@@ -110,7 +110,7 @@ ggplot(df1, aes(x=PC1, y = PC2, label = Species, colour = Species)) +
   coord_fixed() +
   theme(legend.position = "none")
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df, aes(x, y, label = ifelse(x < 0.5, "", l) )) +
   geom_point() +
   geom_text_repel(position = 
@@ -135,7 +135,7 @@ ggplot(df2, aes(1, b, size = b)) +
   xlim(0, 2) +
   theme(legend.position = "none")
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 keep <- c("Israel", "United States", "European Union", "China", "South Africa", "Qatar",
           "Argentina", "Chile", "Brazil", "Ukraine", "Indonesia", "Bangladesh")
 
@@ -175,7 +175,7 @@ ggplot(owid,
   theme_bw() +
   theme(legend.position = "none")
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df, aes(x, y, label = round(x, 2))) +
   geom_point(size = 3) +
   geom_text_repel(position = position_nudge_to(y = -2.7), 
@@ -197,7 +197,7 @@ ggplot(df, aes(x, y, label = l)) +
                     position_nudge_center(x = 0.3, center_x = 0),
                colour = "red")
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df, aes(x, y, label = l)) +
   geom_vline(xintercept = 0, linetype = "dashed") +
   geom_point() +
@@ -235,7 +235,7 @@ ggplot(df, aes(x, y)) +
                                           direction = "split"),
                colour = "red")
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
   geom_text_repel(angle = 90,
@@ -243,7 +243,7 @@ ggplot(df, aes(x, y, label = l)) +
                     position_nudge_center(y = 0.1,
                                           direction = "split"))
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df, aes(x, y)) +
   stat_centroid(shape = "+", size = 5, colour = "red") +
   geom_point() +
@@ -253,7 +253,7 @@ ggplot(df, aes(x, y)) +
                                           direction = "split"),
                colour = "red")
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
   geom_text_repel(position = 
@@ -261,7 +261,7 @@ ggplot(df, aes(x, y, label = l)) +
                                           y = 0.15,
                                           direction = "split"))
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df, aes(x, y)) +
   stat_centroid(shape = "+", size = 5, colour = "red") +
   geom_point() +
@@ -271,7 +271,7 @@ ggplot(df, aes(x, y)) +
                                           direction = "radial"),
                colour = "red")
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
   geom_text_repel(position = 
@@ -280,7 +280,7 @@ ggplot(df, aes(x, y, label = l)) +
                                           direction = "radial"),
                   min.segment.length = 0)
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
   geom_text_repel(position = 
@@ -293,7 +293,7 @@ ggplot(df, aes(x, y, label = l)) +
                   hjust = "outward", vjust = "outward") +
   expand_limits(x = c(-2.7, +2.3))
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
   geom_text_repel(position = 
@@ -305,7 +305,7 @@ ggplot(df, aes(x, y, label = l)) +
                   min.segment.length = 0) +
   expand_limits(x = c(-3, 3))
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
   stat_dens2d_labels(geom = "text_repel",
@@ -336,13 +336,13 @@ d <- tibble::tibble(
   lab = replicate(100, { random_string() })
 )
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(data = d, aes(x, y, label = lab, colour = group)) +
   geom_point() +
   stat_dens2d_labels(geom = "text_repel", 
                      keep.fraction = 0.45)
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(data = d, aes(x, y, label = lab, colour = group)) +
   stat_dens2d_labels(geom = "label_repel", 
                      keep.fraction = 0.2, 
@@ -436,7 +436,7 @@ ggplot(df, aes(x, yy)) +
                                               direction = "split"),
                colour = "red")
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df, aes(x, yy)) +
   geom_point() +
   stat_smooth(method = "loess", formula = y ~ x) +
@@ -447,7 +447,7 @@ ggplot(df, aes(x, yy)) +
                    box.padding = 0.3,
                    min.segment.length = 0)
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df, aes(x, yy)) +
   geom_point() +
   stat_smooth(method = "loess", formula = y ~ x) +
@@ -492,7 +492,7 @@ ggplot(df, aes(x, yy)) +
                                            y = 5,
                                            direction = "split"))
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df, aes(x, yy)) +
   geom_point() +
   stat_smooth(method = "lm", 
@@ -501,7 +501,7 @@ ggplot(df, aes(x, yy)) +
                   box.padding = 0.25,
                   min.segment.length = Inf)
 
-## ---- eval=eval_ggrepel-------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 df <- tibble::tribble(
   ~y, ~x, ~grp,
   "a", 1,  "some long name",

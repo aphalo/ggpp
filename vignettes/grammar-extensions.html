@@ -12,15 +12,7 @@
 
 <meta name="author" content="Pedro J. Aphalo" />
 
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-<meta name="date" content="2023-11-05" />
-=======
-<meta name="date" content="2023-11-06" />
->>>>>>> Stashed changes
-=======
-<meta name="date" content="2023-11-08" />
->>>>>>> master
+<meta name="date" content="2023-12-25" />
 
 <title>Extensions to the Grammar of Graphics</title>
 
@@ -347,21 +339,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 <h1 class="title toc-ignore">Extensions to the Grammar of Graphics</h1>
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-<h3 class="subtitle">Package ‘ggpp’ 0.5.4.9010</h3>
+<h3 class="subtitle">Package ‘ggpp’ 0.5.5.9000</h3>
 <h4 class="author">Pedro J. Aphalo</h4>
-<h4 class="date">2023-11-05</h4>
-=======
-<h3 class="subtitle">Package ‘ggpp’ 0.5.4.9000</h3>
-<h4 class="author">Pedro J. Aphalo</h4>
-<h4 class="date">2023-11-06</h4>
->>>>>>> Stashed changes
-=======
-<h3 class="subtitle">Package ‘ggpp’ 0.5.5</h3>
-<h4 class="author">Pedro J. Aphalo</h4>
-<h4 class="date">2023-11-08</h4>
->>>>>>> master
+<h4 class="date">2023-12-25</h4>
 
 
 <div id="TOC">
@@ -1867,6 +1847,12 @@ earlier for <code>stat_dens2d_labels()</code> also apply.</p>
 </div>
 <div id="simple-position-functions" class="section level2">
 <h2>Simple position functions</h2>
+<p>While <em>jitter</em> and <em>dodge</em> are normally use to displace
+the observations being plotted to avoid overlaps and <em>stack</em> used
+to construct columns or areas that represent sums and contributions to a
+sum from different groups of observations, <em>nudge</em> is almost
+always used to displace the position of data labels relative to
+observations they are attached to, to avoid overlaps.</p>
 <p>Nudging shifts deterministically the coordinates giving an <em>x</em>
 and/or <em>y</em> position and also expands the limits of the
 corresponding scales to match. By default in ‘ggplot2’ geometries and
@@ -1894,17 +1880,18 @@ positions, repulsion is more generally applicable but like jitter is
 aleatory. Combining nudging and repulsion we can make repulsion more
 predictable with little loss of its applicability.</p>
 <p>These functions can be used with any geometry but if segments joining
-the labels to the points are desired,
-<code>ggrepel::geom_text_repel()</code> or
-<code>ggrepel::geom_label_repel()</code>, possibly setting
-<code>max.iter = 0</code> if no repulsion is desired. Several of the
-functions defined in ‘ggpp’ even if not supporting repulsion, can plot
-connecting segments. Please see the documentation for these geometries
-for the details. Drawing of segments or arrows is made possible by
-storing in <code>data</code> both the nudged and original <em>x</em> and
-<em>y</em> coordinates. This is made possible by coordinated development
-of packages ‘ggpp’ and ‘ggrepel’ and agreement on a naming convention
-for storing the original position.</p>
+the labels to the points are desired, layer functions
+<code>geom_text_s()</code>, <code>geom_label_s()</code>, etc., from
+‘ggpp’ or <code>geom_text_repel()</code> or
+<code>geom_label_repel()</code> feom ‘ggrepel’ have to be used.</p>
+<p>Several geometries defined in package ‘ggpp’ even if not supporting
+repulsion, can plot connecting segments. Please see the documentation
+for the geometries for the details. Drawing of segments or arrows is
+possible if both the nudged and original <em>x</em> and <em>y</em>
+coordinates are stored in <code>data</code>. Support of this feature
+across packages is possible by coordinated development of ‘ggpp’ and
+‘ggrepel’ and agreement on a naming convention for storing the original
+position in position functions as those described next.</p>
 <div id="position_nudge_keep-and-friends" class="section level3">
 <h3>position_nudge_keep() and friends</h3>
 <p>Function <code>position_nudge_keep()</code> is like
@@ -2154,20 +2141,35 @@ in</em> <code>position_nudge_line()</code>.</p>
 </div>
 <div id="combined-position-functions" class="section level2">
 <h2>Combined position functions</h2>
+<p>As mentioned above, while <em>jitter</em> and <em>dodge</em> are
+normally use to displace the observations being plotted to avoid
+overlaps and <em>stack</em> used to construct columns or areas that
+represent sums and contributions to a sum from different groups of
+observations, <em>nudge</em> is almost always used to displace the
+position of data labels relative to observations they are attached to,
+to avoid overlaps. Because <em>nudge</em> plays in most cases a
+different role than <em>jitter</em>, <em>dodge</em>, and <em>stack</em>,
+rather frequently it is useful to combine <em>nudge</em> with the other
+position displacements. Additional examples for this use case are given
+in the <code>vignette(&quot;Combining repulsion and nudging&quot;)</code>.</p>
 <p>Nudging text or labels in a dodged or stacked bar or column plot has
-not been easy in ‘ggplot2’. This is a rather frequent situation,
-although usually there are workarounds. Non-the-less this imposed some
-limitations on the design of plots. The examples below show the use of
-<em>position</em> functions that implement the functionality of more
-than one of the position functions available in ‘ggplot2’.</p>
+not been easy in ‘ggplot2’. This is a rather frequent situation.
+However, within ‘ggplot2’ and the Grammar of Graphics this imposed some
+limitations on the design of plots and the need to use workarounds to
+modify the data before plotting.</p>
+<p>Package ‘ggpp’ implements <em>position</em> functions that implement
+the functionality of more than one of the position functions available
+in ‘ggplot2’. The examples below demonstrate their use.</p>
 <p><strong>In all cases when labelling points or columns, to achieve the
 correct alignment, the arguments passed to the equivalent position
-functions used for observations and text to be the same.</strong></p>
+functions used for observations and text must be the same, except for
+<code>x</code> and <code>y</code> which determine amount of nudging to
+be added to the other dispalcements.</strong></p>
 <p>All the position functions described in this section are compatible
 with most geometries from <code>ggpplot2</code> and extensions. However,
 only those from packages ‘ggpp’ and ‘ggrepel’ (&gt; 0.9.1) plot segments
-and arrows linking original and displaced positions as saved by these
-position functions.</p>
+and arrows linking original and displaced positions using the saved
+original positions as “kept”, or saved, by these position functions.</p>
 <div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" tabindex="-1"></a> df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x1 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
 <span id="cb81-2"><a href="#cb81-2" tabindex="-1"></a>                  <span class="at">x2 =</span> <span class="fu">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;b&quot;</span>),</span>
 <span id="cb81-3"><a href="#cb81-3" tabindex="-1"></a>                  <span class="at">grp =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>, <span class="st">&quot;E&quot;</span>))</span></code></pre></div>
@@ -2229,18 +2231,19 @@ direction representing continuous data values or counts.)</p>
 <div id="position_stack_minmax" class="section level3">
 <h3>position_stack_minmax()</h3>
 <p>Functions <code>position_stack()</code> and
-<code>position_stack_nudge()</code> displace the position of a variable
-mapped to only one of <code>y</code>, <code>ymax</code> or
-<code>ymin</code>. So they cannot be used with geometries
-<code>geom_linerange()</code>, <code>geom_pointrange()</code> or
-<code>geom_errorbar()</code>. <code>position_stack_minmax()</code> can
-be used with these geometries as it displaces <code>y</code>,
-<code>ymin</code> and <code>ymax</code> together by the same distance.
-Like <code>position_stack_nudge()</code> it also supports nudging. Thus,
-this new position functions makes it possible to add error bars to each
-member of stacked colums, the corresponding error bar. As nudging is
-also supported, it is possible as shown below, to also an additional
-error bar for the total quantity represented by the stacked bars.</p>
+<code>position_stack_nudge()</code> from package ‘ggplot2’ displace the
+position of a variable mapped to only one of <code>y</code>,
+<code>ymax</code> or <code>ymin</code>. So they cannot be used with
+geometries <code>geom_linerange()</code>, <code>geom_pointrange()</code>
+or <code>geom_errorbar()</code>. Position function
+<code>position_stack_minmax()</code> can be used with these geometries
+as it displaces <code>y</code>, <code>ymin</code> and <code>ymax</code>
+together by the same distance. Like <code>position_stack_nudge()</code>
+it also supports nudging. Thus, this new position function makes it
+possible to add error bars to each member of a stacked colum plot. As
+nudging is also supported, it is possible, as shown below, to also
+include an error bar for the total quantity represented by the stacked
+bars.</p>
 <div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" tabindex="-1"></a><span class="fu">ggplot</span>(birch_dw.df,</span>
 <span id="cb86-2"><a href="#cb86-2" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> dry.weight <span class="sc">*</span> <span class="fl">1e-3</span>, <span class="at">x =</span> Density, <span class="at">fill =</span> Part)) <span class="sc">+</span></span>
 <span id="cb86-3"><a href="#cb86-3" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">geom =</span> <span class="st">&quot;col&quot;</span>, <span class="at">fun =</span> mean,</span>
@@ -2260,9 +2263,9 @@ error bar for the total quantity represented by the stacked bars.</p>
 <div id="position_jitternudge" class="section level3">
 <h3>position_jitternudge()</h3>
 <p>When combining jitter and nudge, we can nudge away from the jittered
-positions or from the original positions. In this example, nudge away
+positions or from the original positions. In this example, we nudge away
 from the jittered positions with <code>nudge.from = &quot;jittered&quot;</code>
-nad the direction of the nudge is on either side of the original
+and the direction of the nudge is on either side of the original
 position with <code>direction = &quot;split&quot;</code>, with nudging depending
 on the direction the jitter has moved the point.</p>
 <div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" tabindex="-1"></a> jitter <span class="ot">&lt;-</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">height =</span> <span class="dv">2</span>, <span class="at">seed =</span> <span class="dv">123</span>)</span>
@@ -2277,8 +2280,8 @@ on the direction the jitter has moved the point.</p>
 <span id="cb87-10"><a href="#cb87-10" tabindex="-1"></a>   <span class="fu">geom_text_s</span>(<span class="at">position =</span> jitter_nudge)</span></code></pre></div>
 <p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
 <p>In this second example, the nudging is away from the original
-<em>x</em>-position and the jittered <em>y</em>-position, which gives
-vertically aligned labels.</p>
+<em>x</em>-position while using the jittered <em>y</em>-position, which
+gives vertically aligned labels.</p>
 <div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" tabindex="-1"></a>jitter <span class="ot">&lt;-</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">height =</span> <span class="dv">2</span>, <span class="at">seed =</span> <span class="dv">123</span>)</span>
 <span id="cb88-2"><a href="#cb88-2" tabindex="-1"></a></span>
 <span id="cb88-3"><a href="#cb88-3" tabindex="-1"></a>jitter_nudge <span class="ot">&lt;-</span> <span class="fu">position_jitternudge</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">height =</span> <span class="dv">2</span>,</span>
@@ -2290,6 +2293,11 @@ vertically aligned labels.</p>
 <span id="cb88-9"><a href="#cb88-9" tabindex="-1"></a>   <span class="fu">geom_point</span>(<span class="at">position =</span> jitter) <span class="sc">+</span></span>
 <span id="cb88-10"><a href="#cb88-10" tabindex="-1"></a>   <span class="fu">geom_text_s</span>(<span class="at">position =</span> jitter_nudge)</span></code></pre></div>
 <p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<p>Jitter along the <em>y</em>-axis or the observed data can cause
+overlaps of data labels. To avoid this, it is a good approach to use the
+repulsive geometries <code>geom_text_repel()</code> or
+<code>geon_label_repel()</code> in combination with the position
+functions from package ‘ggrepel’.</p>
 </div>
 <div id="position_jitter_keep" class="section level3">
 <h3>position_jitter_keep()</h3>
@@ -2306,8 +2314,15 @@ have moved with jitter.</p>
 </div>
 <div id="appendix-a-more-on-density-filtering" class="section level2">
 <h2>Appendix A: More on density filtering</h2>
-<p>We define a function to simplify the generation of random data sets
-based on different probability distributions.</p>
+<p>This appendix includes additional examples of the use of the
+local-density-based filtering. These additional examples show the
+behaviour of these statistics with with pseudo-random artificial data
+based on different theoretical probability density functions. Here we
+use the <code>_filter</code> variants of these statistics. The companion
+<code>_labels</code> variants are meant to be used together with the
+repulsive geometries from package ‘ggrepel’.</p>
+<p>To start, we define a function to simplify the generation of random
+data sets based on different probability distributions.</p>
 <div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" tabindex="-1"></a>make_data_tbl <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">nrow =</span> <span class="dv">100</span>, <span class="at">rfun =</span> rnorm, ...) {</span>
 <span id="cb90-2"><a href="#cb90-2" tabindex="-1"></a>  <span class="cf">if</span> (nrow <span class="sc">%%</span> <span class="dv">2</span>) {</span>
 <span id="cb90-3"><a href="#cb90-3" tabindex="-1"></a>    nrow <span class="ot">&lt;-</span> nrow <span class="sc">+</span> <span class="dv">1</span></span>
@@ -2321,9 +2336,10 @@ based on different probability distributions.</p>
 <span id="cb90-11"><a href="#cb90-11" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>), <span class="fu">c</span>(nrow <span class="sc">/</span> <span class="dv">2</span>, nrow <span class="sc">/</span> <span class="dv">2</span>))</span>
 <span id="cb90-12"><a href="#cb90-12" tabindex="-1"></a>  )</span>
 <span id="cb90-13"><a href="#cb90-13" tabindex="-1"></a>}</span></code></pre></div>
-<p>In all the examples in this vignette we use colors to demonstrate
-which data points are selected, but any other suitable aesthetic and
-discrete scale can be used instead. With
+<p>In all the examples in this section of the vignette we use colours to
+demonstrate which data points are selected, but any other suitable
+aesthetic and discrete scale can be used instead. By overriding the
+default <code>keep.sparse = TRUE</code> with
 <code>keep.sparse = FALSE</code> we keep 1/3 of the observations in the
 denser region of the plot. Although here we first plot all data points
 and later overplot the selected ones this is not necessary.</p>
@@ -2333,8 +2349,9 @@ and later overplot the selected ones this is not necessary.</p>
 <span id="cb91-4"><a href="#cb91-4" tabindex="-1"></a>                     <span class="at">keep.sparse =</span> <span class="cn">FALSE</span>, </span>
 <span id="cb91-5"><a href="#cb91-5" tabindex="-1"></a>                     <span class="at">keep.fraction =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>)</span></code></pre></div>
 <p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
-<p>Here we highlight the observations split in three group equal groups,
-each of a different density of observations.</p>
+<p>Here we highlight the observations split into three groups, each
+containing 1/3 of the observations in <code>data</code>. Each group,
+corresponding to a different local density of observations.</p>
 <div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="fu">make_data_tbl</span>(<span class="dv">300</span>), <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
 <span id="cb92-2"><a href="#cb92-2" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb92-3"><a href="#cb92-3" tabindex="-1"></a>  <span class="fu">stat_dens2d_filter</span>(<span class="at">colour =</span> <span class="st">&quot;red&quot;</span>, </span>
@@ -2344,7 +2361,7 @@ each of a different density of observations.</p>
 <span id="cb92-7"><a href="#cb92-7" tabindex="-1"></a>                     <span class="at">keep.fraction =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>)</span></code></pre></div>
 <p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
 <p>The algorithm seems to work well also with other distributions, in
-this example the uniform distribution.</p>
+this example we use the uniform distribution.</p>
 <div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="fu">make_data_tbl</span>(<span class="dv">300</span>, <span class="at">rfun =</span> runif), <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
 <span id="cb93-2"><a href="#cb93-2" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb93-3"><a href="#cb93-3" tabindex="-1"></a>  <span class="fu">stat_dens2d_filter</span>(<span class="at">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="at">keep.fraction =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">2</span>)</span></code></pre></div>
@@ -2362,14 +2379,52 @@ this example the uniform distribution.</p>
 <h3>Time series</h3>
 <p>Several different formats for storing time series data are used in R.
 Here we use in the examples objects of class <code>ts</code> but several
-other classes are supported as <code>try.xts()</code> is used
-internally. The first example is a quarterly series.</p>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" tabindex="-1"></a><span class="fu">class</span>(austres)</span></code></pre></div>
+other classes are supported as <code>try.xts()</code> from package ‘xts’
+is used internally. Package ‘ggplot2’ supports plotting with variables
+containing date-times represented as objects of classes
+<code>POSIXct</code> or <code>Date</code>. Functions
+<code>try_data_frame()</code> and <code>try_tibble()</code> are used in
+‘ggpp’ internally in the definition of <code>ggplot()</code> method for
+time series data. Non-the-less, <code>try_data_frame()</code> and
+<code>try_tibble()</code> are exported. The two functions differ only in
+the class of the returned object. The time variable in the returned data
+frame or tibble by default belongs to class <code>Date</code> or to
+class <code>POSIXct</code> depending on the time step of the time series
+object. In the examples below we use <code>try_tibble()</code> but they
+work unchanged with <code>try_data_frame()</code>.</p>
+<p>In the first example we convert a quarterly time series into a
+tibble.</p>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" tabindex="-1"></a><span class="fu">print</span>(austres)</span></code></pre></div>
+<pre><code>##         Qtr1    Qtr2    Qtr3    Qtr4
+## 1971         13067.3 13130.5 13198.4
+## 1972 13254.2 13303.7 13353.9 13409.3
+## 1973 13459.2 13504.5 13552.6 13614.3
+## 1974 13669.5 13722.6 13772.1 13832.0
+## 1975 13862.6 13893.0 13926.8 13968.9
+## 1976 14004.7 14033.1 14066.0 14110.1
+## 1977 14155.6 14192.2 14231.7 14281.5
+## 1978 14330.3 14359.3 14396.6 14430.8
+## 1979 14478.4 14515.7 14554.9 14602.5
+## 1980 14646.4 14695.4 14746.6 14807.4
+## 1981 14874.4 14923.3 14988.7 15054.1
+## 1982 15121.7 15184.2 15239.3 15288.9
+## 1983 15346.2 15393.5 15439.0 15483.5
+## 1984 15531.5 15579.4 15628.5 15677.3
+## 1985 15736.7 15788.3 15839.7 15900.6
+## 1986 15961.5 16018.3 16076.9 16139.0
+## 1987 16203.0 16263.3 16327.9 16398.9
+## 1988 16478.3 16538.2 16621.6 16697.0
+## 1989 16777.2 16833.1 16891.6 16956.8
+## 1990 17026.3 17085.4 17106.9 17169.4
+## 1991 17239.4 17292.0 17354.2 17414.2
+## 1992 17447.3 17482.6 17526.0 17568.7
+## 1993 17627.1 17661.5</code></pre>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" tabindex="-1"></a><span class="fu">class</span>(austres)</span></code></pre></div>
 <pre><code>## [1] &quot;ts&quot;</code></pre>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" tabindex="-1"></a>austres.df <span class="ot">&lt;-</span> <span class="fu">try_tibble</span>(austres)</span>
-<span id="cb97-2"><a href="#cb97-2" tabindex="-1"></a><span class="fu">class</span>(austres.df)</span></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" tabindex="-1"></a>austres.df <span class="ot">&lt;-</span> <span class="fu">try_tibble</span>(austres)</span>
+<span id="cb99-2"><a href="#cb99-2" tabindex="-1"></a><span class="fu">class</span>(austres.df)</span></code></pre></div>
 <pre><code>## [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" tabindex="-1"></a><span class="fu">head</span>(austres.df, <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" tabindex="-1"></a><span class="fu">head</span>(austres.df, <span class="dv">4</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 4 × 2
 ##   time            x
 ##   &lt;date&gt;      &lt;dbl&gt;
@@ -2377,10 +2432,12 @@ internally. The first example is a quarterly series.</p>
 ## 2 1971-07-01 13130.
 ## 3 1971-10-01 13198.
 ## 4 1972-01-01 13254.</code></pre>
-<p>The next chunk demonstrates that numeric times are expressed as
-decimal years in the returned data frame.</p>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" tabindex="-1"></a>austres.df <span class="ot">&lt;-</span> <span class="fu">try_tibble</span>(austres, <span class="at">as.numeric =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb101-2"><a href="#cb101-2" tabindex="-1"></a><span class="fu">head</span>(austres.df, <span class="dv">4</span>)</span></code></pre></div>
+<p>The next chunk demonstrates that when passing
+<code>as.numeric = TRUE</code> to override the default, numeric times
+are expressed as years with decimal fractions in the returned data
+frame.</p>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" tabindex="-1"></a>austres.df <span class="ot">&lt;-</span> <span class="fu">try_tibble</span>(austres, <span class="at">as.numeric =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb103-2"><a href="#cb103-2" tabindex="-1"></a><span class="fu">head</span>(austres.df, <span class="dv">4</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 4 × 2
 ##    time      x
 ##   &lt;dbl&gt;  &lt;dbl&gt;
@@ -2388,23 +2445,29 @@ decimal years in the returned data frame.</p>
 ## 2 1971. 13130.
 ## 3 1972. 13198.
 ## 4 1972  13254.</code></pre>
-<p>This second example is for a series of yearly values.</p>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" tabindex="-1"></a><span class="fu">class</span>(lynx)</span></code></pre></div>
+<p>This additional example is for a series of yearly values.</p>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" tabindex="-1"></a><span class="fu">class</span>(lynx)</span></code></pre></div>
 <pre><code>## [1] &quot;ts&quot;</code></pre>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" tabindex="-1"></a>lynx.df <span class="ot">&lt;-</span> <span class="fu">try_tibble</span>(lynx)</span>
-<span id="cb105-2"><a href="#cb105-2" tabindex="-1"></a><span class="fu">class</span>(lynx.df)</span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" tabindex="-1"></a>lynx.df <span class="ot">&lt;-</span> <span class="fu">try_tibble</span>(lynx)</span>
+<span id="cb107-2"><a href="#cb107-2" tabindex="-1"></a><span class="fu">class</span>(lynx.df)</span></code></pre></div>
 <pre><code>## [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" tabindex="-1"></a><span class="fu">head</span>(lynx.df, <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" tabindex="-1"></a><span class="fu">head</span>(lynx.df, <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 3 × 2
 ##   time           x
 ##   &lt;date&gt;     &lt;dbl&gt;
 ## 1 1821-01-01   269
 ## 2 1822-01-01   321
 ## 3 1823-01-01   585</code></pre>
-<p>Above there is a small rounding error of 1 s for these old dates. We
-can correct this by rounding to year.</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" tabindex="-1"></a>lynx.df <span class="ot">&lt;-</span> <span class="fu">try_tibble</span>(lynx, <span class="st">&quot;year&quot;</span>)</span>
-<span id="cb109-2"><a href="#cb109-2" tabindex="-1"></a><span class="fu">head</span>(lynx.df, <span class="dv">3</span>)</span></code></pre></div>
+<p>In some cases there can be small rounding errors or the time steps
+can be shorter that the default <code>time.resolution = &quot;month&quot;</code>.
+We should in those cases pass an argument to
+<code>time.resolution</code> to override the default rounding. Rounding
+is done with <code>lubridate::round_date()</code> and the argument from
+<code>time.resolution</code> passed to its parameter <code>unit</code>,
+except if it is <code>NULL</code> or <code>NA</code>, in which case no
+rounding is applied.</p>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" tabindex="-1"></a>lynx.df <span class="ot">&lt;-</span> <span class="fu">try_tibble</span>(lynx, <span class="at">time.resolution =</span> <span class="cn">NULL</span>)</span>
+<span id="cb111-2"><a href="#cb111-2" tabindex="-1"></a><span class="fu">head</span>(lynx.df, <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 3 × 2
 ##   time           x
 ##   &lt;date&gt;     &lt;dbl&gt;
@@ -2413,14 +2476,14 @@ can correct this by rounding to year.</p>
 ## 3 1823-01-01   585</code></pre>
 <p>In addition we can convert the POSIXct values into numeric values in
 calendar years plus a decimal fraction.</p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" tabindex="-1"></a>lynx_n.df <span class="ot">&lt;-</span> <span class="fu">try_tibble</span>(lynx, <span class="st">&quot;year&quot;</span>, <span class="at">as.numeric =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb111-2"><a href="#cb111-2" tabindex="-1"></a><span class="fu">lapply</span>(lynx_n.df, <span class="st">&quot;class&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" tabindex="-1"></a>lynx_n.df <span class="ot">&lt;-</span> <span class="fu">try_tibble</span>(lynx, <span class="at">time.resolution =</span> <span class="st">&quot;year&quot;</span>, <span class="at">as.numeric =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb113-2"><a href="#cb113-2" tabindex="-1"></a><span class="fu">lapply</span>(lynx_n.df, <span class="st">&quot;class&quot;</span>)</span></code></pre></div>
 <pre><code>## $time
 ## [1] &quot;numeric&quot;
 ## 
 ## $x
 ## [1] &quot;numeric&quot;</code></pre>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" tabindex="-1"></a><span class="fu">head</span>(lynx_n.df, <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" tabindex="-1"></a><span class="fu">head</span>(lynx_n.df, <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 3 × 2
 ##    time     x
 ##   &lt;dbl&gt; &lt;dbl&gt;
@@ -2430,9 +2493,9 @@ calendar years plus a decimal fraction.</p>
 </div>
 <div id="other-classes" class="section level3">
 <h3>Other classes</h3>
-<p><code>try_tibble()</code> attempts to handle gracefully objects that
-are not time series.</p>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" tabindex="-1"></a><span class="fu">try_tibble</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span></code></pre></div>
+<p>Functions <code>try_data_frame()</code> and <code>try_tibble()</code>
+attempt to handle gracefully objects that are not time series.</p>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" tabindex="-1"></a><span class="fu">try_tibble</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 5 × 1
 ##       x
 ##   &lt;int&gt;
@@ -2441,7 +2504,7 @@ are not time series.</p>
 ## 3     3
 ## 4     4
 ## 5     5</code></pre>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" tabindex="-1"></a><span class="fu">try_tibble</span>(letters[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" tabindex="-1"></a><span class="fu">try_tibble</span>(letters[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>])</span></code></pre></div>
 <pre><code>## # A tibble: 5 × 1
 ##   x    
 ##   &lt;chr&gt;
@@ -2450,7 +2513,7 @@ are not time series.</p>
 ## 3 c    
 ## 4 d    
 ## 5 e</code></pre>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" tabindex="-1"></a><span class="fu">try_tibble</span>(<span class="fu">factor</span>(letters[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]))</span></code></pre></div>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" tabindex="-1"></a><span class="fu">try_tibble</span>(<span class="fu">factor</span>(letters[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]))</span></code></pre></div>
 <pre><code>## # A tibble: 5 × 1
 ##   x    
 ##   &lt;fct&gt;
@@ -2459,7 +2522,7 @@ are not time series.</p>
 ## 3 c    
 ## 4 d    
 ## 5 e</code></pre>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" tabindex="-1"></a><span class="fu">try_tibble</span>(<span class="fu">list</span>(<span class="at">x =</span> <span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">5</span>), <span class="at">y =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" tabindex="-1"></a><span class="fu">try_tibble</span>(<span class="fu">list</span>(<span class="at">x =</span> <span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">5</span>), <span class="at">y =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>))</span></code></pre></div>
 <pre><code>## # A tibble: 5 × 2
 ##       x     y
 ##   &lt;dbl&gt; &lt;int&gt;
@@ -2468,7 +2531,7 @@ are not time series.</p>
 ## 3     1     3
 ## 4     1     4
 ## 5     1     5</code></pre>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" tabindex="-1"></a><span class="fu">try_tibble</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">5</span>), <span class="at">y =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" tabindex="-1"></a><span class="fu">try_tibble</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">5</span>), <span class="at">y =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>))</span></code></pre></div>
 <pre><code>## # A tibble: 5 × 2
 ##       x     y
 ##   &lt;dbl&gt; &lt;int&gt;
@@ -2477,7 +2540,7 @@ are not time series.</p>
 ## 3     1     3
 ## 4     1     4
 ## 5     1     5</code></pre>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" tabindex="-1"></a><span class="fu">try_tibble</span>(<span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">ncol =</span> <span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1" tabindex="-1"></a><span class="fu">try_tibble</span>(<span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">ncol =</span> <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>## # A tibble: 5 × 2
 ##      V1    V2
 ##   &lt;int&gt; &lt;int&gt;

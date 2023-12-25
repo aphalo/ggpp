@@ -841,6 +841,7 @@ ggplot(data = make_data_tbl(300, rfun = rgamma, shape = 2),
   stat_dens2d_filter(colour = "red", keep.fraction = 1/3)
 
 ## -----------------------------------------------------------------------------
+print(austres)
 class(austres)
 austres.df <- try_tibble(austres)
 class(austres.df)
@@ -857,11 +858,11 @@ class(lynx.df)
 head(lynx.df, 3)
 
 ## -----------------------------------------------------------------------------
-lynx.df <- try_tibble(lynx, "year")
+lynx.df <- try_tibble(lynx, time.resolution = NULL)
 head(lynx.df, 3)
 
 ## -----------------------------------------------------------------------------
-lynx_n.df <- try_tibble(lynx, "year", as.numeric = TRUE)
+lynx_n.df <- try_tibble(lynx, time.resolution = "year", as.numeric = TRUE)
 lapply(lynx_n.df, "class")
 head(lynx_n.df, 3)
 

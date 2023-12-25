@@ -1475,6 +1475,12 @@ internally to `stats::density()` the examples given earlier for
 
 ## Simple position functions
 
+While _jitter_ and _dodge_ are normally use to displace the observations being
+plotted to avoid overlaps and _stack_ used to construct columns or areas that
+represent sums and contributions to a sum from different groups of observations,
+_nudge_ is almost always used to displace the position of data labels relative
+to observations they are attached to, to avoid overlaps.
+
 Nudging shifts deterministically the coordinates giving an *x* and/or
 *y* position and also expands the limits of the corresponding scales to
 match. By default in 'ggplot2' geometries and position functions no
@@ -1488,9 +1494,9 @@ are passed to `position_nudge()`. Geometries also have a `position`
 parameter to which we can pass an expression based on a *position
 function* which opens the door to more elaborate approaches to nudging.
 
-A new variation on simple nudge is provided by function
-`position_nudge_to()`, which accepts the desired nudged final
-coordinates directly instead of as a shift.
+A new variation on simple nudge is provided by function `position_nudge_to()`,
+which accepts the desired nudged final coordinates directly instead of as a
+shift.
 
 We can do better than simply shifting all data to the same extent and
 direction or to a fixed position. For example by nudging away from a
@@ -1504,17 +1510,21 @@ nudging and repulsion we can make repulsion more predictable with little
 loss of its applicability.
 
 These functions can be used with any geometry but if segments joining
-the labels to the points are desired, `ggrepel::geom_text_repel()` or
-`ggrepel::geom_label_repel()`, possibly setting `max.iter = 0` if no
-repulsion is desired. Several of the functions defined in 'ggpp' even if
-not supporting repulsion, can plot connecting segments. Please see the
-documentation for these geometries for the details. Drawing of segments
-or arrows is made possible by storing in `data` both the nudged and
-original *x* and *y* coordinates. This is made possible by coordinated
-development of packages 'ggpp' and 'ggrepel' and agreement on a naming
-convention for storing the original position.
+the labels to the points are desired, layer functions `geom_text_s()`,
+`geom_label_s()`, etc., from 'ggpp' or `geom_text_repel()` or
+`geom_label_repel()` feom 'ggrepel' have to be used. 
+
+Several geometries defined in package 'ggpp' even if not supporting repulsion,
+can plot connecting segments. Please see the documentation for the geometries
+for the details. Drawing of segments or arrows is possible if both the nudged
+and original *x* and *y* coordinates are stored in `data`. Support of this
+feature across packages is possible by coordinated development of 'ggpp' and
+'ggrepel' and agreement on a naming convention for storing the original
+position in position functions as those described next.
 
 ### position_nudge_keep() and friends
+
+
 
 Function `position_nudge_keep()` is like `ggplot2::position_nudge()` but
 keeps (stores) the original *x* and *y* coordinates;
@@ -1810,21 +1820,37 @@ ggplot(df, aes(x, yy)) +
 
 ## Combined position functions
 
-Nudging text or labels in a dodged or stacked bar or column plot has not
-been easy in 'ggplot2'. This is a rather frequent situation, although
-usually there are workarounds. Non-the-less this imposed some
-limitations on the design of plots. The examples below show the use of
+As mentioned above, while _jitter_ and _dodge_ are normally use to displace the
+observations being plotted to avoid overlaps and _stack_ used to construct
+columns or areas that represent sums and contributions to a sum from different
+groups of observations, _nudge_ is almost always used to displace the position
+of data labels relative to observations they are attached to, to avoid overlaps.
+Because _nudge_ plays in most cases a different role than _jitter_, _dodge_,
+and _stack_, rather frequently it is useful to combine _nudge_ with the other
+position displacements. Additional examples for this use case are given in the
+`vignette("Combining repulsion and nudging")`.
+
+Nudging text or labels in a dodged or stacked bar or column plot has not been
+easy in 'ggplot2'. This is a rather frequent situation. However, within
+'ggplot2' and the Grammar of Graphics this imposed some limitations on the
+design of plots and the need to use workarounds to modify the data before
+plotting.
+
+Package 'ggpp' implements
 *position* functions that implement the functionality of more than one of the
-position functions available in 'ggplot2'.
+position functions available in 'ggplot2'. The examples below demonstrate their
+use.
 
 **In all cases when labelling points or columns, to achieve the correct
 alignment, the arguments passed to the equivalent position functions used
-for observations and text to be the same.**
+for observations and text must be the same, except for `x` and `y` which
+determine amount of nudging to be added to the other dispalcements.**
 
 All the position functions described in this section are compatible with
 most geometries from `ggpplot2` and extensions. However, only those from
 packages 'ggpp' and 'ggrepel' (> 0.9.1) plot segments and arrows linking
-original and displaced positions as saved by these position functions.
+original and displaced positions using the saved original positions as
+"kept", or saved, by these position functions.
 
 ```{r}
  df <- data.frame(x1 = c(1, 2, 1, 3, -1),
@@ -1896,16 +1922,16 @@ Here we nudge the labels down from the top of each stacked bar with `vjust = 1`.
 
 ### position_stack_minmax()
 
-Functions `position_stack()` and `position_stack_nudge()` displace the position
-of a variable mapped to only one of `y`, `ymax` or `ymin`. So they cannot
-be used with geometries `geom_linerange()`, `geom_pointrange()` or 
-`geom_errorbar()`. `position_stack_minmax()` can be used with these geometries
-as it displaces `y`, `ymin` and `ymax` together by the same distance. Like
-`position_stack_nudge()` it also supports nudging. Thus, this new position
-functions makes it possible to add error bars to each member of stacked
-colums, the corresponding error bar. As nudging is also supported, it is
-possible as shown below, to also an additional error bar for the total quantity
-represented by the stacked bars.
+Functions `position_stack()` and `position_stack_nudge()` from package 'ggplot2'
+displace the position of a variable mapped to only one of `y`, `ymax` or `ymin`.
+So they cannot be used with geometries `geom_linerange()`, `geom_pointrange()`
+or `geom_errorbar()`. Position function `position_stack_minmax()` can be used
+with these geometries as it displaces `y`, `ymin` and `ymax` together by the
+same distance. Like `position_stack_nudge()` it also supports nudging. Thus,
+this new position function makes it possible to add error bars to each member of
+a stacked colum plot. As nudging is also supported, it is possible, as shown
+below, to also include an error bar for the total quantity represented by the
+stacked bars.
 
 ```{r}
 ggplot(birch_dw.df,
@@ -1927,8 +1953,8 @@ ggplot(birch_dw.df,
 ### position_jitternudge()
 
 When combining jitter and nudge, we can nudge away from the jittered positions
-or from the original positions. In this example, nudge away from the jittered
-positions with `nudge.from = "jittered"` nad the direction of the nudge is on
+or from the original positions. In this example, we nudge away from the jittered
+positions with `nudge.from = "jittered"` and the direction of the nudge is on
 either side of the original position with `direction = "split"`, with nudging
 depending on the direction the jitter has moved the point.
 
@@ -1946,7 +1972,7 @@ depending on the direction the jitter has moved the point.
 
 ```
 
-In this second example, the nudging is away from the original _x_-position and the
+In this second example, the nudging is away from the original _x_-position while using the
 jittered _y_-position, which gives vertically aligned labels.
 
 ```{r}
@@ -1962,9 +1988,15 @@ jitter_nudge <- position_jitternudge(width = 0.2, height = 2,
    geom_text_s(position = jitter_nudge)
 ```
 
+Jitter along the _y_-axis or the observed data can cause overlaps of data
+labels. To avoid this, it is a good approach to use the repulsive geometries
+`geom_text_repel()` or `geon_label_repel()` in combination with the position
+functions from package 'ggrepel'.
+
 ### position_jitter_keep()
 
-With no nudging but keeping the original positions we show how points have moved with jitter.
+With no nudging but keeping the original positions we show how points have moved
+with jitter.
 
 ```{r}
  ggplot(mpg[1:20, ],
@@ -1977,7 +2009,14 @@ With no nudging but keeping the original positions we show how points have moved
 
 ## Appendix A: More on density filtering
 
-We define a function to simplify the generation of random data sets
+This appendix includes additional examples of the use of the local-density-based
+filtering. These additional examples show the behaviour of these statistics with
+with pseudo-random artificial data based on different theoretical probability
+density functions. Here we use the `_filter` variants of these statistics. The
+companion `_labels` variants are meant to be used together with the repulsive
+geometries from package 'ggrepel'.
+
+To start, we define a function to simplify the generation of random data sets
 based on different probability distributions.
 
 ```{r}
@@ -1996,12 +2035,12 @@ make_data_tbl <- function(nrow = 100, rfun = rnorm, ...) {
 }
 ```
 
-In all the examples in this vignette we use colors to demonstrate which
-data points are selected, but any other suitable aesthetic and discrete
-scale can be used instead. With `keep.sparse = FALSE` we keep 1/3 of the
-observations in the denser region of the plot. Although here we first
-plot all data points and later overplot the selected ones this is not
-necessary.
+In all the examples in this section of the vignette we use colours to
+demonstrate which data points are selected, but any other suitable aesthetic and
+discrete scale can be used instead. By overriding the default `keep.sparse =
+TRUE` with `keep.sparse = FALSE` we keep 1/3 of the observations in the denser
+region of the plot. Although here we first plot all data points and later
+overplot the selected ones this is not necessary.
 
 ```{r}
 ggplot(data = make_data_tbl(300), aes(x, y)) +
@@ -2011,8 +2050,9 @@ ggplot(data = make_data_tbl(300), aes(x, y)) +
                      keep.fraction = 1/3)
 ```
 
-Here we highlight the observations split in three group equal groups,
-each of a different density of observations.
+Here we highlight the observations split into three groups, each containing 1/3
+of the observations in `data`. Each group, corresponding to a different local
+density of observations.
 
 ```{r}
 ggplot(data = make_data_tbl(300), aes(x, y)) +
@@ -2025,7 +2065,7 @@ ggplot(data = make_data_tbl(300), aes(x, y)) +
 ```
 
 The algorithm seems to work well also with other distributions, in this
-example the uniform distribution.
+example we use the uniform distribution.
 
 ```{r}
 ggplot(data = make_data_tbl(300, rfun = runif), aes(x, y)) +
@@ -2046,27 +2086,37 @@ ggplot(data = make_data_tbl(300, rfun = rgamma, shape = 2),
 
 ### Time series
 
-Several different formats for storing time series data are used in R.
-Here we use in the examples objects of class `ts` but several other
-classes are supported as `try.xts()` is used internally. The first
-example is a quarterly series.
+Several different formats for storing time series data are used in R. Here we
+use in the examples objects of class `ts` but several other classes are
+supported as `try.xts()` from package 'xts' is used internally. Package
+'ggplot2' supports plotting with variables containing date-times represented as
+objects of classes `POSIXct` or `Date`. Functions `try_data_frame()` and
+`try_tibble()` are used in 'ggpp' internally in the definition of `ggplot()`
+method for time series data. Non-the-less, `try_data_frame()` and `try_tibble()`
+are exported. The two functions differ only in the class of the returned object.
+The time variable in the returned data frame or tibble by default belongs to
+class `Date` or to class `POSIXct` depending on the time step of the time series
+object. In the examples below we use `try_tibble()` but they work unchanged
+with `try_data_frame()`.
+
+In the first example we convert a quarterly time series into a tibble.
 
 ```{r}
+print(austres)
 class(austres)
 austres.df <- try_tibble(austres)
 class(austres.df)
 head(austres.df, 4)
 ```
 
-The next chunk demonstrates that numeric times are expressed as decimal
-years in the returned data frame.
+The next chunk demonstrates that when passing `as.numeric = TRUE` to override the default, numeric times are expressed as years with decimal fractions in the returned data frame.
 
 ```{r}
 austres.df <- try_tibble(austres, as.numeric = TRUE)
 head(austres.df, 4)
 ```
 
-This second example is for a series of yearly values.
+This additional example is for a series of yearly values.
 
 ```{r}
 class(lynx)
@@ -2075,11 +2125,15 @@ class(lynx.df)
 head(lynx.df, 3)
 ```
 
-Above there is a small rounding error of 1 s for these old dates. We can
-correct this by rounding to year.
+In some cases there can be small rounding errors or the time steps can be shorter
+that the default `time.resolution = "month"`. We should in those cases pass
+an argument to `time.resolution` to override the default rounding. Rounding is
+done with `lubridate::round_date()` and the argument from `time.resolution`
+passed to its parameter `unit`, except if it is `NULL` or `NA`, in which case
+no rounding is applied.
 
 ```{r}
-lynx.df <- try_tibble(lynx, "year")
+lynx.df <- try_tibble(lynx, time.resolution = NULL)
 head(lynx.df, 3)
 ```
 
@@ -2087,15 +2141,15 @@ In addition we can convert the POSIXct values into numeric values in
 calendar years plus a decimal fraction.
 
 ```{r}
-lynx_n.df <- try_tibble(lynx, "year", as.numeric = TRUE)
+lynx_n.df <- try_tibble(lynx, time.resolution = "year", as.numeric = TRUE)
 lapply(lynx_n.df, "class")
 head(lynx_n.df, 3)
 ```
 
 ### Other classes
 
-`try_tibble()` attempts to handle gracefully objects that are not time
-series.
+Functions `try_data_frame()` and `try_tibble()` attempt to handle gracefully
+objects that are not time series.
 
 ```{r}
 try_tibble(1:5)
