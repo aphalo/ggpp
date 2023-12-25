@@ -10,16 +10,10 @@
 #' region, either in opposite directions or radially from a virtual \emph{center
 #' point}.
 #'
-#' The wrapper \code{position_nudge_keep()} with exactly the same signature and
-#' behaviour as \code{\link[ggplot2]{position_nudge}} provides an easier to remember name
-#' when the desire is only to have access to both the original and nudged
-#' coordinates.
-#'
 #' @family position adjustments
 #'
 #' @param x,y Amount of vertical and horizontal distance to move. A numeric
-#'   vector of length 1, or of the same length as rows there are in \code{data},
-#'   with nudge values in data rows order.
+#'   vector, that is recycled if shorter than the number of rows in \code{data}.
 #' @param center_x,center_y The coordinates of the virtual origin out from which
 #'   nudging radiates or splits in opposite directions. A numeric vector of
 #'   length 1 or of the same length as rows there are in \code{data}, or a
@@ -63,7 +57,7 @@
 #'   which case \code{x} or \code{y} are adjusted to ensure these segments are of the same
 #'   lengths as those at other angles.
 #'
-#'   This position is most useful when labeling points forming a cloud or
+#'   This position is most useful when labelling points forming a cloud or
 #'   grouped along vertical or horizontal lines or "divides".
 #'
 #' @seealso [ggplot2::position_nudge()], [ggrepel::position_nudge_repel()].
@@ -171,29 +165,10 @@
 #'   geom_point() +
 #'   geom_line() +
 #'   geom_text_s(aes(label = y),
-#'               position = position_nudge_center(x = -0.9,
-#'                                                y = -2.7,
-#'                                                center_x = mean,
-#'                                                center_y = max))
-#'
-#' ggplot(df, aes(x, z)) +
-#'   geom_point() +
-#'   geom_line() +
-#'   geom_text_s(aes(label = y),
 #'               position = position_nudge_center(x = 0.9,
 #'                                                y = 2.7,
 #'                                                center_x = mean,
 #'                                                center_y = max))
-#'
-#' above_max <- function(x) {1.2 * max(x)}
-#' ggplot(df, aes(x, z)) +
-#'   geom_point() +
-#'   geom_line() +
-#'   geom_text_s(aes(label = y),
-#'               position = position_nudge_center(x = -1.2,
-#'                                                y = -3,
-#'                                                center_x = mean,
-#'                                                center_y = above_max))
 #'
 #' ggplot(df, aes(x, z, color = group)) +
 #'   geom_point() +
@@ -202,7 +177,7 @@
 #'               position = position_nudge_center(x = -1.2,
 #'                                                y = -3,
 #'                                                center_x = 0,
-#'                                                center_y = above_max))
+#'                                                center_y = "above_max"))
 #'
 #' ggplot(df, aes(x, z, color = group)) +
 #'   geom_point() +
@@ -298,6 +273,8 @@ PositionNudgeCenter <-
 
       list(x = self$x,
            y = self$y,
+           x.reorder = !is.null(self$x) && length(self$x) > 1 && length(self$x) < nrow(data),
+           y.reorder = !is.null(self$y) && length(self$y) > 1 && length(self$y) < nrow(data),
            center_x = self$center_x,
            center_y = self$center_y,
            kept.origin = self$kept.origin,
@@ -344,14 +321,14 @@ PositionNudgeCenter <-
         # compute focal center by group
         if (is.function(params$center_x)) {
           x_ctr <- params$center_x(as.numeric(data[in.grp, "x"]))
-        } else if(is.numeric(params$center_x)) {
+        } else if (is.numeric(params$center_x)) {
           x_ctr <- params$center_x[1]
         } else {
           x_ctr <- -Inf # ensure all observations are to the right
         }
         if (is.function(params$center_y)) {
           y_ctr <- params$center_y(as.numeric(data[in.grp, "y"]))
-        } else if(is.numeric(params$center_y)) {
+        } else if (is.numeric(params$center_y)) {
           y_ctr <- params$center_y[1]
         } else {
           y_ctr <- -Inf # ensure all observations are above
@@ -399,8 +376,18 @@ PositionNudgeCenter <-
             warning("Ignoring unrecognized direction \"",
                     params$direction, "\".")
           }
-          x_nudge[in.grp] <- params$x
-          y_nudge[in.grp] <- params$y
+          # behaviour similar to position_nudge() except for handling of vectors of nudges
+          # and possibly respecting groups for alternating nudges
+          if (params$x.reorder && length(params$x) > 1 && length(params$x < sum(in.grp))) {
+            x_nudge[in.grp] <- rep_len(params$x, sum(in.grp))[order(order(data$x[in.grp]))]
+          } else {
+            x_nudge[in.grp] <- rep_len(params$x, sum(in.grp))
+          }
+          if (params$y.reorder && length(params$y) > 1 && length(params$y < sum(in.grp))) {
+            y_nudge[in.grp] <- rep_len(params$y, sum(in.grp))[order(order(data$y[in.grp]))]
+          } else {
+            y_nudge[in.grp] <- rep_len(params$y, sum(in.grp))
+          }
         }
       }
       # transform only the dimensions for which new coordinates exist
@@ -429,16 +416,95 @@ PositionNudgeCenter <-
 #'
 position_nudge_centre <- position_nudge_center
 
-#' @rdname position_nudge_center
+#' Nudge points a fixed distance
+#'
+#' The function \code{position_nudge_keep()} has an additional parameters
+#' compared to \code{\link[ggplot2]{position_nudge}}, \code{obey_grouping} and
+#' by default the same behaviour when the values passed as arguments to \code{x}
+#' and \code{y} have length one.
+#'
+#' @details When \code{x} or \code{y} have length > 1, they are treated
+#'   specially. If the lengths is the same as there are rows in data, the nudges
+#'   are applied in the order of the rows in data. When they are shorter, they
+#'   are recycled and applied to the data values after ordering. This makes it
+#'   possible to have alternating mudging right and left or up and down. If
+#'   \code{obey_grouping = TRUE} is passed in the call, the alternation will
+#'   take place within groups.
+#'
+#'   As other position functions from package 'ggpp', \code{position_nudge_keep()}
+#'   by default renames and keeps the original positions of the observations in
+#'   \code{data} making it possible to draw connecting segments or conencting
+#'   arrows.
+#'
+#' @family position adjustments
+#'
+#' @param x,y Amount of vertical and horizontal distance to move. A numeric
+#'   vector of length 1, or of the same length as rows there are in \code{data},
+#'   with nudge values in data rows order.
+#' @param obey_grouping A logical flag indicating whether to obey or not
+#'   groupings of the observations. By default, grouping is obeyed when both of
+#'   the variables mapped to \emph{x} and \emph{y} are continuous numeric and
+#'   ignored otherwise.
+#' @param kept.origin One of \code{"original"} or \code{"none"}.
+#'
+#' @note Irrespective of the action, the ordering of rows in \code{data} is
+#'   preserved.
+#'
+#' @return A \code{"Position"} object.
 #'
 #' @export
 #'
-position_nudge_keep <- function(x = 0, y = 0) {
-  position_nudge_center(x = x,
-                        y = y,
-                        center_x = NULL,
-                        center_y = NULL,
-                        direction = NULL,
-                        obey_grouping = NULL,
-                        kept.origin = "original")
-}
+#' @examples
+#' df <- data.frame(
+#'   x = c(1,3,2,5,4,2.5),
+#'   y = c("abc","cd","d","c","bcd","a")
+#' )
+#'
+#' # Plain nudging, same as with ggplot2::position_nudge()
+#'
+#' ggplot(df, aes(x, y, label = y)) +
+#'   geom_point() +
+#'   geom_text_s(hjust = "left", vjust = "bottom",
+#'               position = position_nudge_keep(x = 0.2, y = 0.2))
+#'
+#' # alternating nudging
+#' ggplot(df, aes(x, y, label = y)) +
+#'   geom_point() +
+#'   geom_text_s(position = position_nudge_keep(x = c(0.2, -0.2)))
+#'
+#' # direct nudging
+#' ggplot(df, aes(x, y, label = y)) +
+#'   geom_point() +
+#'   geom_text_s(position = position_nudge_keep(x = rep_len(c(0.2, -0.2), 6)))
+#'
+position_nudge_keep <-
+  function(x = 0,
+           y = 0,
+           obey_grouping = NULL,
+           kept.origin = c("original", "none")) {
+
+    kept.origin <- rlang::arg_match(kept.origin)
+
+    if (is.null(obey_grouping)) {
+      # default needs to be set in panel_function when we have access to data
+      obey_grouping <- NA
+    }
+
+    if (lubridate::is.duration(x)) {
+      x <- as.numeric(x)
+    }
+    if (lubridate::is.duration(y)) {
+      y <- as.numeric(y)
+    }
+
+    # we reuse the code from the position defined above
+    ggplot2::ggproto(NULL, PositionNudgeCenter,
+                     x = x,
+                     y = y,
+                     center_x = NULL,
+                     center_y = NULL,
+                     kept.origin = kept.origin,
+                     direction = "none",
+                     obey_grouping = obey_grouping
+    )
+  }

@@ -3,7 +3,6 @@
 \name{position_nudge_center}
 \alias{position_nudge_center}
 \alias{position_nudge_centre}
-\alias{position_nudge_keep}
 \title{Nudge labels away from a central point}
 \usage{
 position_nudge_center(
@@ -25,13 +24,10 @@ position_nudge_centre(
   obey_grouping = NULL,
   kept.origin = c("original", "none")
 )
-
-position_nudge_keep(x = 0, y = 0)
 }
 \arguments{
 \item{x, y}{Amount of vertical and horizontal distance to move. A numeric
-vector of length 1, or of the same length as rows there are in \code{data},
-with nudge values in data rows order.}
+vector, that is recycled if shorter than the number of rows in \code{data}.}
 
 \item{center_x, center_y}{The coordinates of the virtual origin out from which
 nudging radiates or splits in opposite directions. A numeric vector of
@@ -66,11 +62,6 @@ but extends it by adding support for nudging that varies across the plotting
 region, either in opposite directions or radially from a virtual \emph{center
 point}.
 
-The wrapper \code{position_nudge_keep()} with exactly the same signature and
-behaviour as \code{\link[ggplot2]{position_nudge}} provides an easier to remember name
-when the desire is only to have access to both the original and nudged
-coordinates.
-
 Positive values as arguments to \code{x} and \code{y} are added to
   the original position along either axis. If no arguments are passed to
   \code{center_x}, \code{center_y} or \code{direction}, the nudging is
@@ -100,7 +91,7 @@ Some situations are handled as special cases. When \code{direction =
   which case \code{x} or \code{y} are adjusted to ensure these segments are of the same
   lengths as those at other angles.
 
-  This position is most useful when labeling points forming a cloud or
+  This position is most useful when labelling points forming a cloud or
   grouped along vertical or horizontal lines or "divides".
 }
 \examples{
@@ -202,29 +193,10 @@ ggplot(df, aes(x, z)) +
   geom_point() +
   geom_line() +
   geom_text_s(aes(label = y),
-              position = position_nudge_center(x = -0.9,
-                                               y = -2.7,
-                                               center_x = mean,
-                                               center_y = max))
-
-ggplot(df, aes(x, z)) +
-  geom_point() +
-  geom_line() +
-  geom_text_s(aes(label = y),
               position = position_nudge_center(x = 0.9,
                                                y = 2.7,
                                                center_x = mean,
                                                center_y = max))
-
-above_max <- function(x) {1.2 * max(x)}
-ggplot(df, aes(x, z)) +
-  geom_point() +
-  geom_line() +
-  geom_text_s(aes(label = y),
-              position = position_nudge_center(x = -1.2,
-                                               y = -3,
-                                               center_x = mean,
-                                               center_y = above_max))
 
 ggplot(df, aes(x, z, color = group)) +
   geom_point() +
@@ -233,7 +205,7 @@ ggplot(df, aes(x, z, color = group)) +
               position = position_nudge_center(x = -1.2,
                                                y = -3,
                                                center_x = 0,
-                                               center_y = above_max))
+                                               center_y = "above_max"))
 
 ggplot(df, aes(x, z, color = group)) +
   geom_point() +
@@ -253,6 +225,7 @@ ggplot(df, aes(x, z, color = group)) +
 Other position adjustments: 
 \code{\link{position_dodgenudge}()},
 \code{\link{position_jitternudge}()},
+\code{\link{position_nudge_keep}()},
 \code{\link{position_nudge_line}()},
 \code{\link{position_nudge_to}()},
 \code{\link{position_stacknudge}()}

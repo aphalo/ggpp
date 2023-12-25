@@ -15,8 +15,7 @@ position_nudge_to(
 \arguments{
 \item{x, y}{Coordinates of the destination position. A vector of mode
 \code{numeric}, that is extended if needed, to the same length as rows
-there are in \code{data}. The values are applied in the order of the
-observations in data. The default, \code{NULL}, leaves the original
+there are in \code{data}. The default, \code{NULL}, leaves the original
 coordinates unchanged.}
 
 \item{x.action, y.action}{character string, one of \code{"none"}, or
@@ -40,10 +39,16 @@ preserves the original position to allow the text to be linked back to its
 original position with a segment or arrow.
 }
 \details{
-The nudged \code{x} or \code{y} replace the original ones in
+The nudged to \code{x} and/or \code{y} values replace the original ones in
   \code{data}, while the original coordinates are returned in \code{x_orig}
   and \code{y_orig}. Values supported are those of \emph{mode} numeric,
   thus including dates and times.
+
+  If the length of \code{x} and/or \code{y} is more than one but less than
+  rows are present in the data, the vector is both recycled and reordered so
+  that the nudges are applied sequentially based on the data values. If their
+  length matches the number of rows in data, they are assumed to be already
+  in data order.
 }
 \note{
 Irrespective of the action, the ordering of rows in \code{data} is
@@ -56,23 +61,52 @@ df <- data.frame(
   label = c("abc","cd","d","c","bcd","a")
 )
 
+# default does nothing
+ggplot(df, aes(x, y, label = label)) +
+  geom_point() +
+  geom_text(position = position_nudge_to())
+
+# a single y (or x) value nudges all observations to this data value
 ggplot(df, aes(x, y, label = label)) +
   geom_point() +
   geom_text(position = position_nudge_to(y = 3))
 
+# with a suitable geom, segments or arrows can be added
 ggplot(df, aes(x, y, label = label)) +
   geom_point() +
   geom_text_s(position = position_nudge_to(y = 3))
 
+# alternating in y value order because y has fewer values than rows in data
+ggplot(df, aes(x, y, label = label)) +
+  geom_point() +
+  geom_text_s(position = position_nudge_to(y = c(3, 0)))
+
+ggplot(df, aes(x, y, label = label)) +
+  geom_point() +
+  geom_text_s(position = position_nudge_to(y = c(0, 3)))
+
+# in data row order because y has as many values as rows in data
+ggplot(df, aes(x, y, label = label)) +
+  geom_point() +
+  geom_text_s(position = position_nudge_to(y = rep_len(c(0, 3), 6)))
+
+# spread the values at equal distance within the available space
 ggplot(df, aes(x, y, label = label)) +
   geom_point() +
   geom_text_s(position =
     position_nudge_to(y = 3, x.action = "spread"))
 
+# spread the values at equal distance within the range given by x
 ggplot(df, aes(x, y, label = label)) +
   geom_point() +
   geom_text_s(position =
     position_nudge_to(y = 3, x = c(2,4), x.action = "spread"),
+    hjust = "center")
+
+ggplot(df, aes(x, y, label = label)) +
+  geom_point() +
+  geom_text_s(position =
+    position_nudge_to(y = 3, x = c(0,6), x.action = "spread"),
     hjust = "center")
 
 }
@@ -84,6 +118,7 @@ Other position adjustments:
 \code{\link{position_dodgenudge}()},
 \code{\link{position_jitternudge}()},
 \code{\link{position_nudge_center}()},
+\code{\link{position_nudge_keep}()},
 \code{\link{position_nudge_line}()},
 \code{\link{position_stacknudge}()}
 }

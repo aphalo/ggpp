@@ -45,6 +45,7 @@ reference:
   - title: Positions
     desc: Advanced nudge functions
     contents:
+    - position_nudge_keep
     - position_nudge_to
     - position_nudge_center
     - position_nudge_line

@@ -13,8 +13,7 @@
 #'
 #' @param x,y Coordinates of the destination position. A vector of mode
 #'   \code{numeric}, that is extended if needed, to the same length as rows
-#'   there are in \code{data}. The values are applied in the order of the
-#'   observations in data. The default, \code{NULL}, leaves the original
+#'   there are in \code{data}. The default, \code{NULL}, leaves the original
 #'   coordinates unchanged.
 #' @param x.action,y.action character string, one of \code{"none"}, or
 #'   \code{"spread"}. With \code{"spread"} evenly distributing the positions
@@ -22,10 +21,16 @@
 #'   range the variable mapped to \emph{x} or \code{y}, otherwise.
 #' @param kept.origin One of \code{"original"} or \code{"none"}.
 #'
-#' @details The nudged \code{x} or \code{y} replace the original ones in
+#' @details The nudged to \code{x} and/or \code{y} values replace the original ones in
 #'   \code{data}, while the original coordinates are returned in \code{x_orig}
 #'   and \code{y_orig}. Values supported are those of \emph{mode} numeric,
 #'   thus including dates and times.
+#'
+#'   If the length of \code{x} and/or \code{y} is more than one but less than
+#'   rows are present in the data, the vector is both recycled and reordered so
+#'   that the nudges are applied sequentially based on the data values. If their
+#'   length matches the number of rows in data, they are assumed to be already
+#'   in data order.
 #'
 #' @note Irrespective of the action, the ordering of rows in \code{data} is
 #'   preserved.
@@ -44,23 +49,52 @@
 #'   label = c("abc","cd","d","c","bcd","a")
 #' )
 #'
+#' # default does nothing
+#' ggplot(df, aes(x, y, label = label)) +
+#'   geom_point() +
+#'   geom_text(position = position_nudge_to())
+#'
+#' # a single y (or x) value nudges all observations to this data value
 #' ggplot(df, aes(x, y, label = label)) +
 #'   geom_point() +
 #'   geom_text(position = position_nudge_to(y = 3))
 #'
+#' # with a suitable geom, segments or arrows can be added
 #' ggplot(df, aes(x, y, label = label)) +
 #'   geom_point() +
 #'   geom_text_s(position = position_nudge_to(y = 3))
 #'
+#' # alternating in y value order because y has fewer values than rows in data
+#' ggplot(df, aes(x, y, label = label)) +
+#'   geom_point() +
+#'   geom_text_s(position = position_nudge_to(y = c(3, 0)))
+#'
+#' ggplot(df, aes(x, y, label = label)) +
+#'   geom_point() +
+#'   geom_text_s(position = position_nudge_to(y = c(0, 3)))
+#'
+#' # in data row order because y has as many values as rows in data
+#' ggplot(df, aes(x, y, label = label)) +
+#'   geom_point() +
+#'   geom_text_s(position = position_nudge_to(y = rep_len(c(0, 3), 6)))
+#'
+#' # spread the values at equal distance within the available space
 #' ggplot(df, aes(x, y, label = label)) +
 #'   geom_point() +
 #'   geom_text_s(position =
 #'     position_nudge_to(y = 3, x.action = "spread"))
 #'
+#' # spread the values at equal distance within the range given by x
 #' ggplot(df, aes(x, y, label = label)) +
 #'   geom_point() +
 #'   geom_text_s(position =
 #'     position_nudge_to(y = 3, x = c(2,4), x.action = "spread"),
+#'     hjust = "center")
+#'
+#' ggplot(df, aes(x, y, label = label)) +
+#'   geom_point() +
+#'   geom_text_s(position =
+#'     position_nudge_to(y = 3, x = c(0,6), x.action = "spread"),
 #'     hjust = "center")
 #'
 position_nudge_to <-
@@ -110,6 +144,8 @@ PositionNudgeTo <-
            y = self$y,
            x.action = self$x.action,
            y.action = self$y.action,
+           x.reorder = !is.null(self$x) && length(self$x) > 1 && length(self$x) < nrow(data),
+           y.reorder = !is.null(self$y) && length(self$y) > 1 && length(self$y) < nrow(data),
            kept.origin = self$kept.origin
       )
     },
@@ -123,11 +159,15 @@ PositionNudgeTo <-
         if (params$x.action == "none") {
           params$x <- rep_len(0, nrow(data))
         } else if (params$x.action == "spread") {
-           params$x <- range(x_orig)
+          params$x <- range(x_orig)
         }
       } else if (is.numeric(params$x)) {
         if (params$x.action == "none") {
-          params$x <- rep_len(params$x, nrow(data)) - x_orig
+          if (params$x.reorder) {
+            params$x <- rep_len(params$x, nrow(data))[match(1:nrow(data), order(data$x))] - x_orig
+          } else {
+            params$x <- rep_len(params$x, nrow(data)) - x_orig
+          }
         } else if (params$x.action == "spread") {
           params$x <- range(params$x)
         }
@@ -148,7 +188,11 @@ PositionNudgeTo <-
         }
       } else if (is.numeric(params$y)) {
         if (params$y.action == "none") {
-          params$y <- rep_len(params$y, nrow(data)) - y_orig
+          if (params$y.reorder) {
+            params$y <- rep_len(params$y, nrow(data))[match(1:nrow(data), order(data$y))] - y_orig
+          } else {
+            params$y <- rep_len(params$y, nrow(data)) - y_orig
+          }
         } else if (params$y.action == "spread") {
           params$y <- range(params$y)
         }
@@ -157,7 +201,7 @@ PositionNudgeTo <-
         # evenly spaced sequence ordered as in data
         params$y <- seq(from = params$y[1],
                         to = params$y[2],
-                        length.out = nrow(data))[order(order(data$y))] - y_orig
+                        length.out = nrow(data))[match(1:nrow(data), order(data$y))] - y_orig
       }
 
       # As in 'ggplot2' we apply the nudge to xmin, xmax, xend, ymin, ymax, and yend.
