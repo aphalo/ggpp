@@ -1,10 +1,27 @@
 context("position_dodge_keep")
 
-test_that("test expected arguments", {
+test_that("test expected sefault arguments", {
   position <- position_dodge_keep()
   expect_identical(position$width, 1)
   expect_identical(position$preserve, "total")
   expect_identical(position$x, 0)
   expect_identical(position$y, 0)
   expect_identical(position$kept.origin, "original")
+  expect_type(position$compute_panel, "closure")
+  expect_type(position$compute_layer, "closure")
+  expect_type(position$setup_data, "closure")
+  expect_type(position$setup_params, "closure")
+})
+
+test_that("test expected user arguments", {
+  position <- position_dodge_keep(preserve = "single", width = 0.5)
+  expect_identical(position$width, 0.5)
+  expect_identical(position$preserve, "single")
+  expect_identical(position$x, 0)
+  expect_identical(position$y, 0)
+  expect_identical(position$kept.origin, "original")
+  expect_type(position$compute_panel, "closure")
+  expect_type(position$compute_layer, "closure")
+  expect_type(position$setup_data, "closure")
+  expect_type(position$setup_params, "closure")
 })

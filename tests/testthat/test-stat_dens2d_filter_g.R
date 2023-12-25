@@ -34,3 +34,17 @@ test_that("stat_dens2d_filter_g, incorrect argument", {
                          shape = 1, size = 3, keep.fraction = 2))
 })
 
+test_that("stat_dens2d_filter_g, invalid keep.fraction arguments", {
+  expect_error(stat_dens2d_filter_g(shape = 1, size = 3, keep.fraction = rep(0.1, 5), pool.along = "none"))
+  expect_warning(stat_dens2d_filter_g(shape = 1, size = 3, keep.fraction = rep(0.1, 2), pool.along = "xy"))
+  expect_warning(stat_dens2d_filter_g(shape = 1, size = 3, keep.fraction = rep(0.1, 3), pool.along = "x"))
+  expect_warning(stat_dens2d_filter_g(shape = 1, size = 3, keep.fraction = rep(0.1, 3), pool.along = "y"))
+})
+
+test_that("stat_dens2d_filter_g, invalid keep.number arguments", {
+  expect_error(stat_dens2d_filter_g(shape = 1, size = 3, keep.number = rep(2, 5), pool.along = "none"))
+  expect_warning(stat_dens2d_filter_g(shape = 1, size = 3, keep.number = rep(2, 2), pool.along = "xy"))
+  expect_warning(stat_dens2d_filter_g(shape = 1, size = 3, keep.number = rep(2, 3), pool.along = "x"))
+  expect_warning(stat_dens2d_filter_g(shape = 1, size = 3, keep.number = rep(2, 3), pool.along = "y"))
+})
+
