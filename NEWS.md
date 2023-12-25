@@ -9,6 +9,7 @@ editor_options:
 # ggpp 0.5.6
 
 -   Fix bug in `position_dodgenudge()`, behaviour like `position_dodge2nudge()`.
+-   Fix bug in `stat_density2d_filter()`.
 
 # ggpp 0.5.5
 
