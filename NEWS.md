@@ -8,8 +8,8 @@ editor_options:
 
 # ggpp 0.5.6
 
--   Fix bug in `position_dodgenudge()`, behaviour like `position_dodge2nudge()`.
 -   Fix bug in `stat_density2d_filter()`.
+-   Fix bug in `position_dodgenudge()`, behaviour like `position_dodge2nudge()`.
 -   Improve handling of nudging with `x` or `y` nudge vectors longer than one
     but shorter than the number of rows in `data` by reordering them based on
     the ordering of the data values to which they are applied.

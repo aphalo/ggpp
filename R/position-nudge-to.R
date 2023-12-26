@@ -162,9 +162,12 @@ PositionNudgeTo <-
           params$x <- range(x_orig)
         }
       } else if (is.numeric(params$x)) {
+        if (length(params$x) > nrow(data)) {
+          warning("Argument passed to 'x' is too long; discarding its tail!")
+        }
         if (params$x.action == "none") {
           if (params$x.reorder) {
-            params$x <- rep_len(params$x, nrow(data))[match(1:nrow(data), order(data$x))] - x_orig
+            params$x <- rep_len(params$x, nrow(data))[order(order(data$x))] - x_orig
           } else {
             params$x <- rep_len(params$x, nrow(data)) - x_orig
           }
@@ -189,7 +192,7 @@ PositionNudgeTo <-
       } else if (is.numeric(params$y)) {
         if (params$y.action == "none") {
           if (params$y.reorder) {
-            params$y <- rep_len(params$y, nrow(data))[match(1:nrow(data), order(data$y))] - y_orig
+            params$y <- rep_len(params$y, nrow(data))[order(order(data$y))] - y_orig
           } else {
             params$y <- rep_len(params$y, nrow(data)) - y_orig
           }
@@ -201,7 +204,7 @@ PositionNudgeTo <-
         # evenly spaced sequence ordered as in data
         params$y <- seq(from = params$y[1],
                         to = params$y[2],
-                        length.out = nrow(data))[match(1:nrow(data), order(data$y))] - y_orig
+                        length.out = nrow(data))[order(order(data$y))] - y_orig
       }
 
       # As in 'ggplot2' we apply the nudge to xmin, xmax, xend, ymin, ymax, and yend.

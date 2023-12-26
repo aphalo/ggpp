@@ -296,8 +296,12 @@ PositionNudgeCenter <-
           # we ignore grouping as position_nudge() does
           params$obey_grouping <- FALSE
         } else {
-          # we respect groups
-          params$obey_grouping <- TRUE
+          if (length(params$x) >= nrow(data)) {
+            params$obey_grouping <- FALSE
+          } else {
+            # we respect groups
+            params$obey_grouping <- TRUE
+          }
         }
       }
 
@@ -318,7 +322,7 @@ PositionNudgeCenter <-
           # selector for all rows
           in.grp <- rep(TRUE, nrow(data))
         }
-        # compute focal center by group
+        # compute focal centre by group
         if (is.function(params$center_x)) {
           x_ctr <- params$center_x(as.numeric(data[in.grp, "x"]))
         } else if (is.numeric(params$center_x)) {
@@ -378,12 +382,12 @@ PositionNudgeCenter <-
           }
           # behaviour similar to position_nudge() except for handling of vectors of nudges
           # and possibly respecting groups for alternating nudges
-          if (params$x.reorder && length(params$x) > 1 && length(params$x < sum(in.grp))) {
+          if (params$x.reorder) {
             x_nudge[in.grp] <- rep_len(params$x, sum(in.grp))[order(order(data$x[in.grp]))]
           } else {
             x_nudge[in.grp] <- rep_len(params$x, sum(in.grp))
           }
-          if (params$y.reorder && length(params$y) > 1 && length(params$y < sum(in.grp))) {
+          if (params$y.reorder) {
             y_nudge[in.grp] <- rep_len(params$y, sum(in.grp))[order(order(data$y[in.grp]))]
           } else {
             y_nudge[in.grp] <- rep_len(params$y, sum(in.grp))
@@ -391,13 +395,13 @@ PositionNudgeCenter <-
         }
       }
       # transform only the dimensions for which new coordinates exist
-      if (any(params$x != 0)) {
-        if (any(params$y != 0)) {
+      if (any(x_nudge != 0)) {
+        if (any(y_nudge != 0)) {
           data <- transform_position(data, function(x) x + x_nudge, function(y) y + y_nudge)
         } else {
           data <- transform_position(data, function(x) x + x_nudge, NULL)
         }
-      } else if (any(params$y != 0)) {
+      } else if (any(y_nudge != 0)) {
         data <- transform_position(data, NULL, function(y) y + y_nudge)
       }
       # add original position

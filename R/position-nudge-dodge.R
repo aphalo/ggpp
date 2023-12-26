@@ -139,8 +139,12 @@ PositionDodgeAndNudge <-
 
                    setup_params = function(self, data) {
                      c(
-                       list(nudge_x = self$x, nudge_y = self$y,
-                            .fun_x = self$.fun_x, .fun_y = self$.fun_y,
+                       list(nudge_x = self$x,
+                            nudge_y = self$y,
+                            .fun_x = self$.fun_x,
+                            .fun_y = self$.fun_y,
+                            x.reorder = !is.null(self$x) && length(self$x) > 1 && length(self$x) < nrow(data),
+                            y.reorder = !is.null(self$y) && length(self$y) > 1 && length(self$y) < nrow(data),
                             kept.origin = self$kept.origin),
                        ggplot2::ggproto_parent(ggplot2::PositionDodge, self)$setup_params(data)
                      )
@@ -154,6 +158,18 @@ PositionDodgeAndNudge <-
 
                      x_dodged <- data$x
                      y_dodged <- data$y
+
+                     if (params$x.reorder) {
+                       params$nudge_x <- rep_len(params$nudge_x, nrow(data))[order(order(data$x))]
+                     } else {
+                       params$nudge_x <- rep_len(params$nudge_x, nrow(data))
+                     }
+                     if (params$y.reorder) {
+                       params$nudge_y <- rep_len(params$nudge_y, nrow(data))[order(order(data$y))]
+                     } else {
+                       params$nudge_y <- rep_len(params$nudge_y, nrow(data))
+                     }
+
                      # transform only the dimensions for which non-zero nudging is requested
                      if (any(params$nudge_x != 0)) {
                        if (any(params$nudge_y != 0)) {

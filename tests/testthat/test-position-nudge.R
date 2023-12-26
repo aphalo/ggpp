@@ -13,8 +13,8 @@ test_that("stacknudge", {
 
   vdiffr::expect_doppelganger("stack_nudge1",
                               p + geom_text(aes(label = grp),
-                                position = position_stacknudge(vjust = 0.5, y = 0.3))
-                              )
+                                            position = position_stacknudge(vjust = 0.5, y = 0.3))
+  )
   vdiffr::expect_doppelganger("stack_nudge2",
                               p + geom_text_s(aes(label = grp),
                                                    vjust = 0,
@@ -29,6 +29,64 @@ test_that("stacknudge", {
                               p + geom_text(aes(label = grp),
                                             hjust = 0, angle = 90,
                                             position = position_stacknudge(vjust = 0, x = 0.1, y = -0.21))
+  )
+  vdiffr::expect_doppelganger("stack_nudge5",
+                              p + geom_text_s(aes(label = grp),
+                                              vjust = 0.5,
+                                              box.padding = 0.99,
+                                              position = position_stacknudge(vjust = 0.5, y = c(0.3, -0.3)))
+  )
+  vdiffr::expect_doppelganger("stack_nudge6",
+                              p + geom_text_s(aes(label = grp),
+                                              vjust = 0.5,
+                                              box.padding = 0.99,
+                                              position = position_stacknudge(vjust = 0.5,
+                                                                             y = c(rep(0.3, 2), rep(-0.3, 3))))
+  )
+})
+
+test_that("fillnudge", {
+  df <- data.frame(x1 = c(1, 2, 1, 3, -1),
+                   x2 = c("a", "a", "b", "b", "b"),
+                   grp = c("some long name", "other name", "some name",
+                           "another name", "some long name"))
+
+  p <-
+    ggplot(data = df, aes(x1, x2, group = grp)) +
+    geom_col(aes(fill = grp), width = 0.5, position = "fill") +
+    theme(legend.position = "none")
+
+  vdiffr::expect_doppelganger("fill_nudge1",
+                              p + geom_text(aes(label = grp),
+                                            position = position_fillnudge(vjust = 0.5, y = 0.3))
+  )
+  vdiffr::expect_doppelganger("fill_nudge2",
+                              p + geom_text_s(aes(label = grp),
+                                              vjust = 0,
+                                              position = position_fillnudge(vjust = 0.5, y = 0.3))
+  )
+  vdiffr::expect_doppelganger("fill_nudge3",
+                              p + geom_text(aes(label = grp),
+                                            angle = 90,
+                                            position = position_fillnudge(vjust = 0, x = 0.1))
+  )
+  vdiffr::expect_doppelganger("fill_nudge4",
+                              p + geom_text(aes(label = grp),
+                                            hjust = 0, angle = 90,
+                                            position = position_fillnudge(vjust = 0, x = 0.1, y = -0.21))
+  )
+  vdiffr::expect_doppelganger("fill_nudge5",
+                              p + geom_text_s(aes(label = grp),
+                                              vjust = 0.5,
+                                              box.padding = 0.99,
+                                              position = position_fillnudge(vjust = 0.5, y = c(0.3, -0.3)))
+  )
+  vdiffr::expect_doppelganger("fill_nudge6",
+                              p + geom_text_s(aes(label = grp),
+                                              vjust = 0.5,
+                                              box.padding = 0.99,
+                                              position = position_fillnudge(vjust = 0.5,
+                                                                             y = c(rep(0.3, 2), rep(-0.3, 3))))
   )
 })
 
@@ -52,19 +110,30 @@ test_that("dodgenudge", {
   vdiffr::expect_doppelganger("dodge_nudge2",
                               p + geom_text(aes(label = grp),
                                             position = position_dodgenudge(width = 0.5, y = 0.1,
-                                                                                direction = "split"))
+                                                                           direction = "split"))
   )
   vdiffr::expect_doppelganger("dodge_nudge3",
                               p + geom_text_s(aes(label = grp),
-                                            hjust = 0,
-                                            position = position_dodgenudge(width = 0.5, y = 0.2,
-                                                                                direction = "split"))
+                                              hjust = 0,
+                                              position = position_dodgenudge(width = 0.5, y = 0.2,
+                                                                             direction = "split"))
   )
   vdiffr::expect_doppelganger("dodge_nudge4",
                               p + geom_text(aes(label = grp),
                                             hjust = "center",
-                                            position = position_dodgenudge(width = 0.5, y = -0.05,
-                                                                                direction = "split"))
+                                            position = position_dodgenudge(width = 0.5, y = -0.075,
+                                                                           direction = "split"))
+  )
+  # assumes the default order of factor levels
+  vdiffr::expect_doppelganger("dodge_nudge5",
+                              p + geom_text(aes(label = grp),
+                                            position = position_dodgenudge(width = 0.5,
+                                                                           y = c(rep(0.1, 4), -0.1)))
+  )
+  vdiffr::expect_doppelganger("dodge_nudge6",
+                              p + geom_text(aes(label = grp),
+                                            position = position_dodgenudge(width = 0.5,
+                                                                           y = 0.1))
   )
 })
 
@@ -82,7 +151,7 @@ test_that("nudge_keep", {
   vdiffr::expect_doppelganger("nudge_keep1",
                               p + geom_text_s(aes(label = grp),
                                               vjust = 0, hjust = 0.5,
-                                            position = position_nudge_keep(y = 0.12))
+                                              position = position_nudge_keep(y = 0.12))
   )
   vdiffr::expect_doppelganger("nudge_keep2",
                               p + geom_text_s(aes(label = grp),
@@ -97,6 +166,19 @@ test_that("nudge_keep", {
   vdiffr::expect_doppelganger("nudge_keep4",
                               p + geom_text_s(aes(label = grp),
                                                position = position_nudge_keep(y = 0.12))
+  )
+  vdiffr::expect_doppelganger("nudge_keep5",
+                              p + geom_text_s(aes(label = grp),
+                                              position = position_nudge_keep(y = c(rep(0.12, 4), -0.12)))
+  )
+  vdiffr::expect_doppelganger("nudge_keep6",
+                              p + geom_text_s(aes(label = grp),
+                                              position = position_nudge_keep(y = c(rep(0.12, 4), -0.12),
+                                                                             obey_grouping = TRUE))
+  )
+  vdiffr::expect_doppelganger("nudge_keep7",
+                              p + geom_text_s(aes(label = grp),
+                                              position = position_nudge_keep(y = c(0.12, -0.12)))
   )
 })
 
@@ -129,6 +211,22 @@ test_that("nudge_center", {
                                           position = position_nudge_center(x = 0.05,
                                                                            y = 0.07,
                                                                            direction = "none")
+                                )
+  )
+  vdiffr::expect_doppelganger("nudge_center1b",
+                              ggplot(df, aes(x, y, label = y)) +
+                                geom_point() +
+                                geom_text(hjust = 0, vjust = 0,
+                                          position = position_nudge_center(x = c(0.05, -0.05),
+                                                                           y = 0.07)
+                                )
+  )
+  vdiffr::expect_doppelganger("nudge_center1c",
+                              ggplot(df, aes(x, y, label = y)) +
+                                geom_point() +
+                                geom_text(hjust = 0, vjust = 0,
+                                          position = position_nudge_center(x = 0.05,
+                                                                           y = c(0.1, -0.1))
                                 )
   )
   vdiffr::expect_doppelganger("nudge_center2",
@@ -209,6 +307,14 @@ test_that("nudge_line", {
                                 geom_abline(intercept = 5, slope = 2) +
                                 geom_point() +
                                 geom_text(position = position_nudge_line(abline = c(5, 2)))
+  )
+  vdiffr::expect_doppelganger("nudge_line3a",
+                              ggplot(df, aes(x, x * 2 + 5, label = l)) +
+                                geom_abline(intercept = 5, slope = 2) +
+                                geom_point() +
+                                geom_text(position = position_nudge_line(abline = c(5, 2),
+                                                                         x = c(-0.5, 0.5),
+                                                                         y = c(-0.5, 0.5)))
   )
   vdiffr::expect_doppelganger("nudge_line4",
                               ggplot(subset(df, x >= 0), aes(x, yyy)) +
@@ -319,13 +425,19 @@ test_that("nudge_to", {
                               ggplot(df, aes(x, y, label = label)) +
                                 geom_point() +
                                 geom_text_s(position = position_nudge_to(y = 3),
-                                                 vjust = 0)
+                                            vjust = 0)
+  )
+  vdiffr::expect_doppelganger("nudge_to1a",
+                              ggplot(df, aes(x, y, label = label)) +
+                                geom_point() +
+                                geom_text_s(position = position_nudge_to(y = 3 + (1:6) / 6),
+                                            vjust = 0)
   )
   vdiffr::expect_doppelganger("nudge_to2",
                               ggplot(df, aes(x, y, label = label)) +
                                 geom_point() +
                                 geom_text_s(position = position_nudge_to(x = 6),
-                                                 hjust = 0)
+                                            hjust = 0)
   )
   vdiffr::expect_doppelganger("nudge_to_spread_x1",
                               ggplot(df, aes(x, y, label = label)) +
