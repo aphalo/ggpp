@@ -18,7 +18,7 @@ position_nudge_line(
 }
 \arguments{
 \item{x, y}{Amount of vertical and horizontal distance to move. A numeric
-vector of length 1.}
+vector of length 1 or longer.}
 
 \item{xy_relative}{Nudge relative to \emph{x} and \emph{y} data expanse, ignored unless
 \code{x} and \code{y} are both \code{NA}s.}
