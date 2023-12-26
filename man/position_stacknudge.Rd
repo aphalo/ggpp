@@ -29,9 +29,9 @@ position_fillnudge(
   kept.origin = c("stacked", "original", "none")
 )
 
-position_stack_keep(vjust = 1, reverse = FALSE)
+position_stack_keep(vjust = 1, reverse = FALSE, kept.origin = "original")
 
-position_fill_keep(vjust = 1, reverse = FALSE)
+position_fill_keep(vjust = 1, reverse = FALSE, kept.origin = "original")
 
 position_stack_minmax(
   vjust = 1,

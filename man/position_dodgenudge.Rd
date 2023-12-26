@@ -20,9 +20,17 @@ position_dodgenudge(
   kept.origin = c("dodged", "original", "none")
 )
 
-position_dodge_keep(width = 1, preserve = c("total", "single"))
+position_dodge_keep(
+  width = 1,
+  preserve = c("total", "single"),
+  kept.origin = "original"
+)
 
-position_dodge2_keep(width = 1, preserve = c("total", "single"))
+position_dodge2_keep(
+  width = 1,
+  preserve = c("total", "single"),
+  kept.origin = "original"
+)
 
 position_dodge2nudge(
   width = 1,

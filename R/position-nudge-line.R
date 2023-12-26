@@ -249,6 +249,13 @@ PositionNudgeLine <-
     },
 
     compute_panel = function(data, params, scales) {
+
+      if (length(params$x) > nrow(data)) {
+        warning("Argument 'x' longer than data: some values dropped!")
+      }
+      if (length(params$y) > nrow(data)) {
+        warning("Argument 'y' longer than data: some values dropped!")
+      }
       x_orig <- data$x
       y_orig <- data$y
       # set parameter defaults that depend on the scale

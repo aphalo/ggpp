@@ -54,3 +54,22 @@ test_that("correct reverse, vjust and x assigned", {
   expect_identical(position$x, -0.3)
   expect_identical(position$fill, TRUE)
 })
+
+test_that("warn on x or y longer than data", {
+  expect_no_warning(
+  ggplot(mtcars, aes(x = am, y = mpg, label = mpg)) +
+    geom_text_s(
+      position = position_stacknudge(x = 0.05, y = rep(5, nrow(mtcars))),
+      size = 2.5
+    )
+)
+
+expect_no_warning(
+  ggplot(mtcars, aes(x = am, y = mpg, label = mpg)) +
+    geom_text_s(
+      position = position_stacknudge(y = 0, x = rep(0.05, nrow(mtcars))),
+      size = 2.5
+    )
+)
+})
+

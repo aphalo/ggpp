@@ -163,7 +163,7 @@ PositionNudgeTo <-
         }
       } else if (is.numeric(params$x)) {
         if (length(params$x) > nrow(data)) {
-          warning("Argument passed to 'x' is too long; discarding its tail!")
+          warning("Argument 'x' longer than data: some values dropped!")
         }
         if (params$x.action == "none") {
           if (params$x.reorder) {
@@ -191,6 +191,9 @@ PositionNudgeTo <-
         }
       } else if (is.numeric(params$y)) {
         if (params$y.action == "none") {
+          if (length(params$y) > nrow(data)) {
+            warning("Argument 'y' longer than data: some values dropped!")
+          }
           if (params$y.reorder) {
             params$y <- rep_len(params$y, nrow(data))[order(order(data$y))] - y_orig
           } else {

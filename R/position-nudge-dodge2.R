@@ -64,6 +64,13 @@ PositionDodge2AndNudge <-
                    },
 
                    compute_layer = function(self, data, params, layout) {
+
+                     if (length(params$nudge_x) > nrow(data)) {
+                       warning("Argument 'x' longer than data: some values dropped!")
+                     }
+                     if (length(params$nudge_y) > nrow(data)) {
+                       warning("Argument 'y' longer than data: some values dropped!")
+                     }
                      x_orig <- data$x
                      y_orig <- data$y
                      # operate on the dodged positions

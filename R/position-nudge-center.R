@@ -284,6 +284,12 @@ PositionNudgeCenter <-
 
     compute_panel = function(self, data, params, scales) {
 
+      if (length(params$x) > nrow(data)) {
+        warning("Argument 'x' longer than data: some values dropped!")
+      }
+      if (length(params$y) > nrow(data)) {
+        warning("Argument 'y' longer than data: some values dropped!")
+      }
       x_orig <- data$x
       y_orig <- data$y
       # we handle grouping by ourselves

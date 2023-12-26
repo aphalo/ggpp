@@ -238,7 +238,14 @@ PositionStackAndNudge <-
                    },
 
                    compute_layer = function(self, data, params, layout) {
+                     if (length(params$nudge_x) > nrow(data)) {
+                       warning("Argument 'x' longer than data: some values dropped!")
+                     }
+                     if (length(params$nudge_y) > nrow(data)) {
+                       warning("Argument 'y' longer than data: some values dropped!")
+                     }
                      x_orig <- data$x
+                     y_orig <- data$y
 
                      # operate on the stacked positions (updated in August 2020)
                      data = ggplot2::ggproto_parent(ggplot2::PositionStack, self)$compute_layer(data, params, layout)
@@ -295,13 +302,14 @@ PositionStackAndNudge <-
 #'
 position_stack_keep <-
   function(vjust = 1,
-           reverse = FALSE) {
+           reverse = FALSE,
+           kept.origin = "original") {
     position_stacknudge(vjust = vjust,
                         reverse = reverse,
                         x = 0,
                         y = 0,
                         direction = "none",
-                        kept.origin = "original")
+                        kept.origin = kept.origin)
   }
 
 #' @rdname ggpp-ggproto
@@ -319,13 +327,14 @@ PositionFillAndNudge <-
 #'
 position_fill_keep <-
   function(vjust = 1,
-           reverse = FALSE) {
+           reverse = FALSE,
+           kept.origin = "original") {
     position_fillnudge(vjust = vjust,
                        reverse = reverse,
                        x = 0,
                        y = 0,
                        direction = "none",
-                       kept.origin = "original")
+                       kept.origin = kept.origin)
   }
 
 #' @rdname ggpp-ggproto
@@ -340,15 +349,18 @@ PositionStackMinMax <-
 
                    setup_params = function(self, data) {
                      c(
-                       list(nudge_x = self$x, nudge_y = self$y,
-                            .fun_x = self$.fun_x, .fun_y = self$.fun_y,
+                       list(nudge_x = self$x,
+                            nudge_y = self$y,
+                            .fun_x = self$.fun_x,
+                            .fun_y = self$.fun_y,
                             kept.origin = self$kept.origin,
-                            var = self$var, fill = FALSE),
+                            var = self$var,
+                            fill = FALSE),
                        ggplot2::ggproto_parent(ggplot2::PositionStack, self)$setup_params(data)
                      )
                    },
 
-                                      setup_data = function(self, data, params) {
+                   setup_data = function(self, data, params) {
                      data <- flip_data(data, params$flipped_aes)
                      if (!(exists("ymax", data) && exists("ymin", data) && exists("y", data))) {
                        stop("position_stack_minmax() requires y, ymin and ymax mappings in data")
@@ -357,6 +369,13 @@ PositionStackMinMax <-
                    },
 
                    compute_layer = function(self, data, params, layout) {
+
+                     if (length(params$nudge_x) > nrow(data)) {
+                       warning("Argument 'x' longer than data: some values dropped!")
+                     }
+                     if (length(params$nudge_y) > nrow(data)) {
+                       warning("Argument 'y' longer than data: some values dropped!")
+                     }
                      x_orig <- data$x
                      if (exists("xmin", data)) {
                        xmin_delta <-  data$xmin - data$x
@@ -389,6 +408,17 @@ PositionStackMinMax <-
                      if (exists("xmax", data)) data$xmax <- data$x + xmax_delta
                      if (exists("ymin", data)) data$ymin <- data$y + ymin_delta
                      if (exists("ymax", data)) data$ymax <- data$y + ymax_delta
+
+                     if (params$x.reorder) {
+                       params$nudge_x <- rep_len(params$nudge_x, nrow(data))[order(order(data$x))]
+                     } else {
+                       params$nudge_x <- rep_len(params$nudge_x, nrow(data))
+                     }
+                     if (params$y.reorder) {
+                       params$nudge_y <- rep_len(params$nudge_y, nrow(data))[order(order(data$y))]
+                     } else {
+                       params$nudge_y <- rep_len(params$nudge_y, nrow(data))
+                     }
 
                      # transform only the dimensions for which non-zero nudging is requested
                      if (any(params$nudge_x != 0)) {

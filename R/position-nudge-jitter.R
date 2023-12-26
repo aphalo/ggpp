@@ -225,6 +225,13 @@ PositionJitterAndNudge <-
                    },
 
                    compute_layer = function(self, data, params, layout) {
+
+                     if (length(params$nudge_x) > nrow(data)) {
+                       warning("Argument 'x' longer than data: some values dropped!")
+                     }
+                     if (length(params$nudge_y) > nrow(data)) {
+                       warning("Argument 'y' longer than data: some values dropped!")
+                     }
                      x_orig <- data$x
                      y_orig <- data$y
 
@@ -290,7 +297,8 @@ PositionJitterAndNudge <-
 #'
 position_jitter_keep <- function(width = NULL,
                                  height = NULL,
-                                 seed = NA) {
+                                 seed = NA,
+                                 kept.origin = "original") {
   position_jitternudge(width = width,
                        height = height,
                        seed = seed,
@@ -298,5 +306,5 @@ position_jitter_keep <- function(width = NULL,
                        y = 0,
                        direction = "as.is",
                        nudge.from = "jittered",
-                       kept.origin = "original")
+                       kept.origin = kept.origin)
 }

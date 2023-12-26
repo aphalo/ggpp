@@ -37,3 +37,21 @@ test_that("test if correct arguments are assigned", {
   expect_identical(position$seed, 123)
 
 })
+
+test_that("warn on x or y longer than data", {
+  expect_no_warning(
+    ggplot(mtcars, aes(x = am, y = mpg, label = mpg)) +
+      geom_text_s(
+        position = position_jitternudge(x = 0, y = rep(0.5, nrow(mtcars))),
+        size = 2.5
+      )
+  )
+
+  expect_no_warning(
+    ggplot(mtcars, aes(x = am, y = mpg, label = mpg)) +
+      geom_text_s(
+        position = position_jitternudge(y = 0, x = rep(0.05, nrow(mtcars))),
+        size = 2.5
+      )
+  )
+})

@@ -20,7 +20,12 @@ position_jitternudge(
   kept.origin = c("jittered", "original", "none")
 )
 
-position_jitter_keep(width = NULL, height = NULL, seed = NA)
+position_jitter_keep(
+  width = NULL,
+  height = NULL,
+  seed = NA,
+  kept.origin = "original"
+)
 }
 \arguments{
 \item{width, height}{Amount of vertical and horizontal jitter. The jitter is

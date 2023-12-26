@@ -151,6 +151,13 @@ PositionDodgeAndNudge <-
                    },
 
                    compute_layer = function(self, data, params, layout) {
+
+                     if (length(params$nudge_x) > nrow(data)) {
+                       warning("Argument 'x' longer than data: some values dropped!")
+                     }
+                     if (length(params$nudge_y) > nrow(data)) {
+                       warning("Argument 'y' longer than data: some values dropped!")
+                     }
                      x_orig <- data$x
                      y_orig <- data$y
                      # operate on the dodged positions
@@ -208,13 +215,14 @@ PositionDodgeAndNudge <-
 #' @export
 #'
 position_dodge_keep <- function(width = 1,
-                                preserve = c("total", "single")) {
+                                preserve = c("total", "single"),
+                                kept.origin = "original") {
   position_dodgenudge(width = width,
                       preserve = preserve,
                       x = 0,
                       y = 0,
                       direction = "none",
-                      kept.origin = "original")
+                      kept.origin = kept.origin)
 }
 
 #' @rdname position_dodgenudge
@@ -222,11 +230,12 @@ position_dodge_keep <- function(width = 1,
 #' @export
 #'
 position_dodge2_keep <- function(width = 1,
-                                 preserve = c("total", "single")) {
+                                 preserve = c("total", "single"),
+                                 kept.origin = "original") {
   position_dodge2nudge(width = width,
                        preserve = preserve,
                        x = 0,
                        y = 0,
                        direction = "none",
-                       kept.origin = "original")
+                       kept.origin = kept.origin)
 }
