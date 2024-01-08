@@ -53,9 +53,6 @@
 #' @examples
 #' # We can add icons to the margin of a plot to signal events
 #'
-#'
-#'
-#'
 geom_x_margin_grob <- function(mapping = NULL, data = NULL,
                                stat = "identity", position = "identity",
                                ...,

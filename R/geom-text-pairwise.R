@@ -166,27 +166,6 @@
 #'                      parse = TRUE)
 #'
 #' p1 +
-#'   geom_text_pairwise(data = my.pairs,
-#'                      aes(xmin = A, xmax = B,
-#'                          y = bar.height,
-#'                          label = sprintf("italic(P)~`=`~%.2f", p.value)),
-#'                      arrow = grid::arrow(angle = 90,
-#'                                          length = unit(1, "mm"),
-#'                                          ends = "both"),
-#'                      parse = TRUE)
-#'
-#' p1 +
-#'   geom_text_pairwise(data = my.pairs,
-#'                      aes(xmin = A, xmax = B,
-#'                          y = bar.height,
-#'                          label = sprintf("italic(P)~`=`~%.2f", p.value)),
-#'                      colour = "red",
-#'                      arrow = grid::arrow(angle = 90,
-#'                                          length = unit(1, "mm"),
-#'                                          ends = "both"),
-#'                      parse = TRUE)
-#'
-#' p1 +
 #'   geom_label_pairwise(data = my.pairs,
 #'                       aes(xmin = A, xmax = B,
 #'                           y = bar.height,
@@ -235,18 +214,6 @@
 #'   geom_text_pairwise(data = my.ranges,
 #'                      aes(xmin = A, xmax = B,
 #'                      y = bar.height, label = text))
-#'
-#' p2 +
-#'   geom_text_pairwise(data = my.ranges,
-#'                      aes(xmin = A, xmax = B,
-#'                          y = bar.height, label = text),
-#'                      angle = 90, hjust = -0.1)
-#'
-#' p2 +
-#'   geom_label_pairwise(data = my.ranges,
-#'                       aes(xmin = A, xmax = B,
-#'                           y = bar.height, label = text),
-#'                      angle = 90, hjust = -0.1)
 #'
 #' p2 +
 #'   geom_label_pairwise(data = my.ranges,

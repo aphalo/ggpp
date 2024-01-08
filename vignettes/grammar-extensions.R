@@ -238,6 +238,89 @@ ggplot(my.cars, aes(wt, mpg, label = name)) +
   scale_colour_discrete(l = 40) +
   expand_limits(x = 6.5)
 
+## -----------------------------------------------------------------------------
+# With a factor mapped to x, highlight pairs
+
+my.cars <- mtcars
+my.cars$name <- rownames(my.cars)
+p1 <- ggplot(my.cars, aes(factor(cyl), mpg)) +
+       geom_boxplot(width = 0.33)
+
+## -----------------------------------------------------------------------------
+my.pairs <-
+  data.frame(A = 1:2, B = 2:3, bar.height = c(12, 30),
+             p.value = c(0.01, 0.05678))
+
+## -----------------------------------------------------------------------------
+p1 +
+  geom_text_pairwise(data = my.pairs,
+                     aes(xmin = A, xmax = B,
+                         y = bar.height,
+                         label = p.value),
+                     parse = TRUE)
+
+
+## -----------------------------------------------------------------------------
+p1 +
+  geom_label_pairwise(data = my.pairs,
+                      aes(xmin = A, xmax = B,
+                          y = bar.height,
+                          label = sprintf("italic(P)~`=`~%.2f", p.value)),
+                      colour = "red", size = 2.75,
+                      arrow = grid::arrow(angle = 30,
+                                          length = unit(1.5, "mm"),
+                                          ends = "both"),
+                      parse = TRUE)
+
+## -----------------------------------------------------------------------------
+p1 +
+  geom_text_pairwise(data = my.pairs,
+                     aes(xmin = A, xmax = B,
+                         y = bar.height,
+                         label = sprintf("italic(P)~`=`~%.2f", p.value)),
+                     colour = "red", colour.target = "segment",
+                     arrow = grid::arrow(angle = 90,
+                                         length = unit(1, "mm"),
+                                         ends = "both"),
+                     parse = TRUE)
+
+## -----------------------------------------------------------------------------
+p1 +
+  geom_text_pairwise(data = my.pairs,
+                     aes(xmin = A, xmax = B,
+                         y = bar.height,
+                         label = sprintf("italic(P)~`=`~%.2f", p.value)),
+                     colour = "red", colour.target = "text",
+                     arrow = grid::arrow(angle = 90,
+                                         length = unit(1, "mm"),
+                                         ends = "both"),
+                     parse = TRUE)
+
+## -----------------------------------------------------------------------------
+# with a numeric vector mapped to x, indicate range
+
+p2 <-
+  ggplot(my.cars, aes(disp, mpg)) +
+    geom_point()
+
+my.ranges <-
+  data.frame(A = c(50, 400),
+             B = c(200, 500),
+             bar.height = 5,
+             text = c("small", "large"))
+
+## -----------------------------------------------------------------------------
+p2 +
+  geom_text_pairwise(data = my.ranges,
+                     aes(xmin = A, xmax = B,
+                     y = bar.height, label = text))
+
+## -----------------------------------------------------------------------------
+p2 +
+  geom_label_pairwise(data = my.ranges,
+                      aes(xmin = A, xmax = B,
+                          y = bar.height, label = text))
+
 ## ----eval=eval_magick---------------------------------------------------------
 file.name <- 
   system.file("extdata", "Robinin.png", 
@@ -389,6 +472,7 @@ ggplot(my.data, aes(x, y)) +
 ggplot(my.data, aes(x, y)) +
   geom_quadrant_lines(colour = "red") +
   stat_quadrant_counts(colour = "red", quadrants = c(1:4)) +
+  scale_y_continuous(expand = expansion(mult = 0.12)) + # add space
   geom_point()
 
 ## -----------------------------------------------------------------------------

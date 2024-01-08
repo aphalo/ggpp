@@ -285,15 +285,7 @@ p +
   geom_text_s(hjust = "left", nudge_x = 0.12) +
   expand_limits(x = 6.2)
 p +
-  geom_text_s(nudge_y = 0.1, nudge_x = 0.07) +
-  expand_limits(x = 6.2)
-p +
   geom_text_s(nudge_y = 1, angle = 90) +
-  expand_limits(y = 30)
-p +
-  geom_text_s(angle = 90, nudge_y = 1,
-              arrow = arrow(length = grid::unit(1.5, "mm")),
-              colour.target = "segment", colour = "red") +
   expand_limits(y = 30)
 p +
   geom_text_s(angle = 90, nudge_y = 1,
@@ -318,12 +310,6 @@ p +
 p +
   geom_label_s(hjust = "outward_1", nudge_x = 0.12) +
   expand_limits(x = 6.2)
-p +
-  geom_label_s(hjust = "inward_3", nudge_y = 0.4)
-
-p +
-  geom_label_s(nudge_y = 1, angle = 90) +
-  expand_limits(y = 30)
 
 # Add aesthetic mappings and adjust arrows
 p +
@@ -352,24 +338,6 @@ p +
   expand_limits(y = 27)
 
 p +
-  geom_label_s(aes(colour = factor(cyl)),
-              nudge_x = 0.3,
-              arrow = arrow(angle = 20,
-                            length = grid::unit(1/3, "lines"))) +
-  scale_colour_discrete(l = 40) + # luminance, make colours darker
-  expand_limits(x = 7)
-
-p +
-  geom_label_s(aes(colour = factor(cyl)),
-              nudge_x = 0.3,
-              colour.target = c("box", "segment"),
-              linewidth = 0.6,
-              arrow = arrow(angle = 20,
-                            length = grid::unit(1/3, "lines"))) +
-  scale_colour_discrete(l = 40) + # luminance, make colours darker
-  expand_limits(x = 7)
-
-p +
   geom_label_s(aes(colour = factor(cyl), fill = factor(cyl)),
               nudge_x = 0.3,
               alpha.target = "box",
@@ -379,11 +347,6 @@ p +
                             length = grid::unit(1/3, "lines"))) +
   scale_colour_discrete(l = 40) + # luminance, make colours darker
   expand_limits(x = 7)#' # Scale height of text, rather than sqrt(height)
-
-p +
-  geom_text_s(aes(size = wt), nudge_x = -0.1) +
-  scale_radius(range = c(3,6)) + # override scale_area()
-    expand_limits(x = c(1.8, 5.5))
 
 }
 \seealso{
