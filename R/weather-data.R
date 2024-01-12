@@ -33,6 +33,7 @@
 #' @examples
 #' names(weather_18_june_2019.df)
 #' head(weather_18_june_2019.df)
+#' nrow(weather_18_june_2019.df)
 #'
 #' @references P. J. Aphalo, unpublished data.
 #'

@@ -245,8 +245,8 @@ support plotting of connecting segments or arrows when a the coordinates
 have been modified by a *position* function.
 
 +-------------------------------+---------------------+----------------------+
-| Data labels                   | Annotations  (npc)  | `label` aes.         |
-+===============================+=====================+======================+
+|  Data labels                  | Annotations  (npc)  | `label` aes.         |
++:==============================+:====================+:=====================+
 | `ggplot2::geom_text()`        | `geom_text_npc()`   | `character`          |
 +-------------------------------+---------------------+----------------------+
 | `ggplot2::geom_label()`       | `geom_label_npc()`  | `character`          |
@@ -259,6 +259,10 @@ have been modified by a *position* function.
 +-------------------------------+---------------------+----------------------+
 | `geom_label_s()`              |                     | `character`          |
 +-------------------------------+---------------------+----------------------+
+| `geom_text_pairwise()`        |                     | `character`          |
++-------------------------------+---------------------+----------------------+
+| `geom_label_pairwise()`       |                     | `character`          |
++-------------------------------+---------------------+----------------------+
 | `geom_point_s()`              |                     | _not supported_      |
 +-------------------------------+---------------------+----------------------+
 | `geom_plot()`                 | `geom_plot_npc()`   | `list(<ggplot>)`     |
@@ -268,9 +272,50 @@ have been modified by a *position* function.
 | `geom_grob()`                 | `geom_grob_npc()`   | `list(<grob>)`       |
 +-------------------------------+---------------------+----------------------+
 | `geom_img()`  *(planned)*     | `geom_img_npc()`    | `list(<raster>)`     |
-+-------------------------------+---------------------+----------------------+
++===============================+=====================+======================+
 
-: Geometries
+: **Table**. Geometries useful for data labels and annotations. Currently
+implemented *ordinary* geometries and their *npc* versions. The
+rightmost column shows the expected class of the objects mapped to the
+`label` aesthetic. When using `annotate()` to add a single plot, table
+or grob as an inset, enclosing them in a list is allowed, but not a
+requirement.
+
+## Highlighting data features
+
+Marginal annotations with symbols and vertical and horizontal lines can be used
+to highlight summary values or events/conditions. The *geoms*
+`geom_quadrant_lines()`, `geom_vhlines()`, `geom_x_margin_arrow()`,
+`geom_x_margin_grob()`, `geom_x_margin_point()`, `geom_y_margin_arrow()`,
+`geom_y_margin_grob()` and `geom_y_margin_point()` make such labelling easy.
+These work similarly to geoms `geom_hline()` and `geom_vline()` from 'ggplot2'
+and plays a similar role. Of course, they can also be used to add annotations
+not derived from the observations.
+
+
++-------------------------------+---------------------+----------------------+
+|  Marginal marks               | Location aesthetic  | `label` aes.         |
++===============================+=====================+======================+
+| `geom_x_margin_arrow()`       | `xintercept`        | _not supported_      |
++-------------------------------+---------------------+----------------------+
+| `geom_y_margin_arrow()`       | `yintercept`        | _not supported_      |
++-------------------------------+---------------------+----------------------+
+| `geom_x_margin_grob()`        | `xintercept`        | `list(<grob>)`       |
++-------------------------------+---------------------+----------------------+
+| `geom_y_margin_grob()`        | `yintercept`        | `list(<grob>)`       |
++-------------------------------+---------------------+----------------------+
+| `geom_x_margin_point()`       | `xintercept`        | _not supported_      |
++-------------------------------+---------------------+----------------------+
+| `geom_y_margin_point()`       | `yintercept`        | _not supported_      |
++-------------------------------+---------------------+----------------------+
+| `geom_quadrant_lines()`       |                     | _not supported_      |
++-------------------------------+---------------------+----------------------+
+| `geom_vhlines()`              | `xintercept`        | _not supported_      |
+|                               | `yintercept`        |                      |
++===============================+=====================+======================+
+
+: **Table**. Geometries useful for data labels and annotations, lines and marginal marks. The middle columns shows the aesthetic that determines the position of the lines or marks on the edge of the plotting area. The rightmost column shows the expected class of the objects mapped to the `label` aesthetic.
+
 
 When adding an informative element to a plot, assess whether it is an
 *annotation* or a *data label*. To decide on the best approach, consider
@@ -279,6 +324,34 @@ original data units or as position relative to the edges or centre of
 the plotting area. In the second case, prefer the "npc" geoms as you are
 dealing with *annotations*, otherwise, use the ordinary geometries as
 you are dealing with data labels or data points.
+
+## Summary statistics
+
+Frequently, maxima or minima are features of interest that may need to be
+labelled or highlighted in a plot. This can be done easily with functions
+`stat_peaks()` and `stat_valleys()`. 
+
+With some types of data it is common to compute a summary per plot quadrant,
+rather than based on a prior grouping. The *stat* `stat_quadrant_counts()` can
+de used to annotate plots with the number of observations in each quadrant,
+selected quadrants, or quadrants pooled along _x_ and/or _y_. Similarly,
+`stat_group_counts()` and `stat_panel_counts()` can be used to annotate plots
+with the number of observations per panel, or per group within each panel.
+
+In many cases, such as rug plots or other representations on plot margins, _x_
+and _y_ summaries can be computed in separate plot layers using the statistics
+from 'ggplot2'. In contrast, in other cases, such as when showing the _x_ and
+_y_ position of the means in the plotting area itself, it is necessary to
+compute summaries for both _x_ and _y_ in the same plot layer. Function
+`stat_summary_xy()` is similar to `stat_summary()` from 'ggplot2' but useful
+when both *x* and *y* are continuous variables. It allows the use of the same,
+or different functions to summarize the data over *x* and *y*. In contrast, its
+simpler counterpart, `stat_centroid()`, always applies the same function over *x*
+and *y*. 
+
+An additional variation is statistic `stat_apply_group`, which can apply
+functions to _x_ and _y_ values in parallel, which is most useful for
+accumulating or differencing consecutive data values.
 
 ## Positioning data labels
 
@@ -318,12 +391,12 @@ of the original coordinates kept in data.
 | `position_stack_keep()`                     | `ggplot2::position_stack()`       |
 | `position_stack_minmax()`                   |                                   |
 | `position_fill_keep()`                      | `ggplot2::position_fill()`        |
-| `position_jitterdodge_keep()` *(planned)*   | `ggplot2::position_jitterdodge()` |
 | `position_jitternudge()`                    |                                   |
 | `position_dodgenudge()`                     |                                   |
 | `position_dodge2nudge()`                    |                                   |
 | `position_stacknudge()`                     |                                   |
 | `position_fillnudge()`                      |                                   |
+| `position_jitterdodge_keep()` *(planned)*   | `ggplot2::position_jitterdodge()` |
 | `position_jitterdodgenudge()` *(planned)*   |                                   |
 
 : Position functions
@@ -378,45 +451,6 @@ and even be different, for each quadrant or tail. For example, we can
 highlight or label the same fraction of observations, or alternatively the same
 number of observations in each quadrant or tail even if the overall density
 of observations is different between tails or among quadrants.
-
-## Highlighting data features
-
-Frequently, maxima or minima are features of interest that may need to be
-labelled or highlighted in a plot. This can be done easily with functions
-`stat_peaks()` and `stat_valleys()`. 
-
-Marginal annotations with symbols and vertical and horizontal lines can be used
-to highlight summary values or events/conditions. The *geoms*
-`geom_quadrant_lines()`, `geom_vhlines()`, `geom_x_margin_arrow()`,
-`geom_x_margin_grob()`, `geom_x_margin_point()`, `geom_y_margin_arrow()`,
-`geom_y_margin_grob()` and `geom_y_margin_point()` make such labelling easy.
-These work similarly to geoms `geom_hline()` and `geom_vline()` from 'ggplot2'
-and plays a similar role. Of course, they can also be used to add annotations
-not derived from the observations.
-
-## Summary statistics
-
-With some types of data it is common to compute a summary per plot quadrant,
-rather than based on a prior grouping. The *stat* `stat_quadrant_counts()` can
-de used to annotate plots with the number of observations in each quadrant,
-selected quadrants, or quadrants pooled along _x_ and/or _y_. Similarly,
-`stat_group_counts()` and `stat_panel_counts()` can be used to annotate plots
-with the number of observations per panel, or per group within each panel.
-
-In many cases, such as rug plots or other representations on plot margins, _x_
-and _y_ summaries can be computed in separate plot layers using the statistics
-from 'ggplot2'. In contrast, in other cases, such as when showing the _x_ and
-_y_ position of the means in the plotting area itself, it is necessary to
-compute summaries for both _x_ and _y_ in the same plot layer. Function
-`stat_summary_xy()` is similar to `stat_summary()` from 'ggplot2' but useful
-when both *x* and *y* are continuous variables. It allows the use of the same,
-or different functions to summarize the data over *x* and *y*. In contrast, its
-simpler counterpart, `stat_centroid()`, always applies the same function over *x*
-and *y*. 
-
-An additional variation is statistic `stat_apply_group`, which can apply
-functions to _x_ and _y_ values in parallel, which is most useful for
-accumulating or differencing consecutive data values.
 
 ## ggplot methods
 
@@ -490,6 +524,25 @@ native plot coordinates for positioning elements in the plotting area.
 Obviously these geometries are not meant to be used to display data, but
 instead they make it possible to add annotations to plots consistently
 across data sets even when using scales with varying limits.
+
+| Geometry                                   | Main use                        | Aesthetics                                                                                                | Segment |
+|-------------|-------------|---------------------------------|-------------|
+| `geom_text_s()`                            | data labels                     | x, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                           | yes     |
+| `geom_label_s()`                           | data labels                     | x, y, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust       | yes     |
+| `geom_text_pairwise()`                     | data labels                     | x, xmin, xmax, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                     | horiz.     |
+| `geom_label_pairwise()`                    | data labels                     | x, xmin, xmax, y, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust | horiz.     |
+| `geom_text_npc()`                          | annotations                     | npcx, npcy, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                     | no      |
+| `geom_label_npc()`                         | annotations                     | npcx, npcy, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust | no      |
+| `geom_point_s()`                           | data labels                     | x, y, size, colour, fill, alpha, shape, stroke, group                                                     | yes     |
+| `geom_table()`                             | data labels                     | x, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                           | yes     |
+| `geom_table_npc()`                         | annotations                     | npcx, npcy, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                     | no      |
+| `geom_plot()` , `geom_grob()`              | data labels                     | x, y, label, group, angle, vjust, hjust                                                                   | yes     |
+| `geom_plot_npc()` , `geom_grob_npc()`      | annotations                     | npcx, npcy, label, group, vjust, hjust                                                                    | no      |
+| `geom_margin_arrow()`                      | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                | no      |
+| `geom_margin_point()`                      | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                | no      |
+| `geom_margin_grob()`                       | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                | no      |
+| `geom_quadrant_lines()` , `geom_vhlines()` | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                | no                                                                                         |         |
+: Geometries defined in package 'ggpp'
 
 ### geom_table() and stat_fmt_table()
 
@@ -834,6 +887,104 @@ ggplot(my.cars, aes(wt, mpg, label = name)) +
   expand_limits(x = 6.5)
 ```
 
+### geom_text_pairwise() and geom_label_pairwise()
+
+When labels show the results of pairwise comparisons, it is natural to use a 
+segment to connect the members of the pairs compared to a textual label.
+
+```{r}
+# With a factor mapped to x, highlight pairs
+
+my.cars <- mtcars
+my.cars$name <- rownames(my.cars)
+p1 <- ggplot(my.cars, aes(factor(cyl), mpg)) +
+       geom_boxplot(width = 0.33)
+```
+
+```{r}
+my.pairs <-
+  data.frame(A = 1:2, B = 2:3, bar.height = c(12, 30),
+             p.value = c(0.01, 0.05678))
+```
+
+```{r}
+p1 +
+  geom_text_pairwise(data = my.pairs,
+                     aes(xmin = A, xmax = B,
+                         y = bar.height,
+                         label = p.value),
+                     parse = TRUE)
+
+```
+```{r}
+p1 +
+  geom_label_pairwise(data = my.pairs,
+                      aes(xmin = A, xmax = B,
+                          y = bar.height,
+                          label = sprintf("italic(P)~`=`~%.2f", p.value)),
+                      colour = "red", size = 2.75,
+                      arrow = grid::arrow(angle = 30,
+                                          length = unit(1.5, "mm"),
+                                          ends = "both"),
+                      parse = TRUE)
+```
+
+```{r}
+p1 +
+  geom_text_pairwise(data = my.pairs,
+                     aes(xmin = A, xmax = B,
+                         y = bar.height,
+                         label = sprintf("italic(P)~`=`~%.2f", p.value)),
+                     colour = "red", colour.target = "segment",
+                     arrow = grid::arrow(angle = 90,
+                                         length = unit(1, "mm"),
+                                         ends = "both"),
+                     parse = TRUE)
+```
+
+```{r}
+p1 +
+  geom_text_pairwise(data = my.pairs,
+                     aes(xmin = A, xmax = B,
+                         y = bar.height,
+                         label = sprintf("italic(P)~`=`~%.2f", p.value)),
+                     colour = "red", colour.target = "text",
+                     arrow = grid::arrow(angle = 90,
+                                         length = unit(1, "mm"),
+                                         ends = "both"),
+                     parse = TRUE)
+```
+
+Another situation where horizontal or vertical segments can be useful if to label ranges of values of a continuous variable.
+
+```{r}
+# with a numeric vector mapped to x, indicate range
+
+p2 <-
+  ggplot(my.cars, aes(disp, mpg)) +
+    geom_point()
+
+my.ranges <-
+  data.frame(A = c(50, 400),
+             B = c(200, 500),
+             bar.height = 5,
+             text = c("small", "large"))
+```
+
+```{r}
+p2 +
+  geom_text_pairwise(data = my.ranges,
+                     aes(xmin = A, xmax = B,
+                     y = bar.height, label = text))
+```
+
+```{r}
+p2 +
+  geom_label_pairwise(data = my.ranges,
+                      aes(xmin = A, xmax = B,
+                          y = bar.height, label = text))
+```
+
 ### Normalised Parent Coordinates
 
 R's 'grid' package defines several units that can be used to describe
@@ -991,6 +1142,28 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
 
 ## Statistics
 
+| Statistic                 | Main use                   | Usual geometries    | Most used with   | Compute function |
+|---------------------------|----------------------------|---------------------|------------------|-------------|
+| `stat_fmt_tb()`           | formatting and selection   | `geom_table()`    | tables as data labels                | group |
+| `stat_fmt_tb()`           | formatting and selection   | `geom_table_npc()`    | tables as annotations                | group |
+| `stat_dens2d_filter()`    | local 2D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()`  | text as data labels  | panel |
+| `stat_dens2d_label()`     | local 2D density filtering | `geom_text_repel()`, `geom_label_repel()`  | text as data labels  | panel |
+| `stat_dens1d_filter()`    | local 1D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()`  | text as data labels  | panel |
+| `stat_dens1d_label()`     | local 1D density filtering | `geom_text_repel()`, `geom_label_repel()`  | text as data labels  | panel |
+| `stat_dens2d_filter_g()`  | local 2D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()`  | text as data labels  | group |
+| `stat_dens2d_label_g()`   | local 2D density filtering | `geom_text_repel()`, `geom_label_repel()`  | text as data labels  | group |
+| `stat_dens1d_filter_g()`  | local 1D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()`  | text as data labels  | group |
+| `stat_dens1d_label_g()`   | local 1D density filtering | `geom_text_repel()`, `geom_label_repel()`  | data labels  | group |
+| `stat_panel_counts()`     | number of observations     | `geom_text()`, `geom_label()` | text as annotation | panel |
+| `stat_group_counts()`     | number of observations     | `geom_text()`, `geom_label()` | text as annotation | panel |
+| `stat_quadrant_counts()`  | number of observations     | `geom_text()`, `geom_label()` | text as annotation | panel |
+| `stat_apply_panel()`      | cummulative summaries      | `geom_point()`, `geom_line()`, etc. | scatter and line plots | panel |
+| `stat_apply_group()`      | cummulative summaries      | `geom_point()`, `geom_line()`, etc. | scatter and line plots | group |
+| `stat_centroid()`         | joint x and y summaries    | `geom_point()`, `geom_rug()`, `geom_margin_arrow()`, etc. | data summary | group |
+| `stat_summary_xy()`       | joint x and y summaries    | `geom_point()`, `geom_rug()`, `geom_margin_arrow()`, etc. | data summary | group |
+| `stat_functions()`        | compute y from x range     | `geom_line()`, `geom_point()`, etc. | draw function curves | group |
+: Statistics defined in package 'ggpp'.
+
 ### stat_centroid()
 
 It can be useful to mark the centroid of a group of observations with a
@@ -1144,6 +1317,7 @@ Annotation of only specific quadrants.
 ggplot(my.data, aes(x, y)) +
   geom_quadrant_lines(colour = "red") +
   stat_quadrant_counts(colour = "red", quadrants = c(1:4)) +
+  scale_y_continuous(expand = expansion(mult = 0.12)) + # add space
   geom_point()
 ```
 
@@ -1522,9 +1696,23 @@ feature across packages is possible by coordinated development of 'ggpp' and
 'ggrepel' and agreement on a naming convention for storing the original
 position in position functions as those described next.
 
+| Position                  | Main use       | Displacement                    | Most used with              |
+|-----------------|-----------------|---------------------|------------------|
+| `position_nudge_keep()`   | nudge          | x, y (fixed distance)           | data labels                 |
+| `position_jitter_keep()`  | jitter         | x, y (random)                   | dot plots                   |
+| `position_stack_keep()`   | stack          | vertical (absolute)             | column and bar plots        |
+| `position_stack_minmax()` | stack          | vertical (absolute)             | error bars                  |
+| `position_fill_keep()`    | fill           | vertical (relative, fractional) | column plots                |
+| `position_dodge_keep()`   | dodge          | sideways (absolute)             | column and bar plots        |
+| `position_dosge2_keep()`  | dodge2         | sideways (absolute)             | box plots                   |
+| `position_nudge_to()`     | nudge          | x, y (fixed position)           | data labels                 |
+| `position_nudge_center()` | nudge          | x, y (away or towards target)   | data labels                 |
+| `position_nudge_line()`   | nudge          | x, y (away or towards target)   | data labels                 |
+
+: Simple position functions defined in package 'ggpp'
+
+
 ### position_nudge_keep() and friends
-
-
 
 Function `position_nudge_keep()` is like `ggplot2::position_nudge()` but
 keeps (stores) the original *x* and *y* coordinates;
@@ -1840,6 +2028,16 @@ Package 'ggpp' implements
 *position* functions that implement the functionality of more than one of the
 position functions available in 'ggplot2'. The examples below demonstrate their
 use.
+
+| Position                  | Main use       | Displacement                    | Most used with              |
+|-----------------|-----------------|---------------------|------------------|
+| `position_stacknudge()`   | stack + nudge  | combined, see above             | data labels in column plots |
+| `position_fillnudge()`    | fill + nudge   | combined, see above             | data labels in column plots |
+| `position_jitternudge()`  | jitter + nudge | combined, see above             | data labels in dot plots    |
+| `position_dodgenudge()`   | dodge + nudge  | combined, see above             | data labels in column plots |
+| `position_dodge2nudge()`  | dodge2 + nudge | combined, see above             | data labels in box plots    |
+
+: Combined position functions defined in package 'ggpp'
 
 **In all cases when labelling points or columns, to achieve the correct
 alignment, the arguments passed to the equivalent position functions used
