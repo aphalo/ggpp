@@ -27,7 +27,7 @@
 </defs>
 <g clip-path='url(#cpMzcuNjl8NzE0LjUyfDIyLjc4fDU0NS4xMQ==)'>
 <rect x='37.69' y='22.78' width='676.83' height='522.33' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<polyline points='85.35,46.53 114.42,134.12 143.50,212.49 172.57,281.64 201.65,341.57 230.73,392.29 259.80,433.78 288.88,466.05 317.95,489.10 347.03,502.93 376.10,507.54 405.18,502.93 434.26,489.10 463.33,466.05 492.41,433.78 521.48,392.29 550.56,341.57 579.63,281.64 608.71,212.49 637.79,134.12 666.86,46.53 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='85.35,46.53 114.42,134.12 143.50,212.49 172.57,281.64 201.65,341.57 230.73,392.29 259.80,433.78 288.88,466.05 317.95,489.10 347.03,502.93 376.10,507.54 405.18,502.93 434.26,489.10 463.33,466.05 492.41,433.78 521.48,392.29 550.56,341.57 579.63,281.64 608.71,212.49 637.78,134.12 666.86,46.53 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <circle cx='85.35' cy='46.53' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='114.42' cy='134.12' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='143.50' cy='212.49' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
@@ -47,7 +47,7 @@
 <circle cx='550.56' cy='341.57' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='579.63' cy='281.64' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='608.71' cy='212.49' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='637.79' cy='134.12' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
+<circle cx='637.78' cy='134.12' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='666.86' cy='46.53' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <text x='68.45' y='53.77' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='6.14px' lengthAdjust='spacingAndGlyphs'>a</text>
 <text x='97.60' y='141.59' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='6.14px' lengthAdjust='spacingAndGlyphs'>b</text>
@@ -57,7 +57,7 @@
 <text x='215.12' y='402.27' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='3.07px' lengthAdjust='spacingAndGlyphs'>f</text>
 <text x='245.01' y='444.91' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='6.14px' lengthAdjust='spacingAndGlyphs'>g</text>
 <text x='275.48' y='478.70' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='6.14px' lengthAdjust='spacingAndGlyphs'>h</text>
-<text x='307.06' y='503.70' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='2.45px' lengthAdjust='spacingAndGlyphs'>i</text>
+<text x='307.05' y='503.70' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='2.45px' lengthAdjust='spacingAndGlyphs'>i</text>
 <text x='340.55' y='519.57' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='2.45px' lengthAdjust='spacingAndGlyphs'>j</text>
 <text x='376.10' y='525.17' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='5.52px' lengthAdjust='spacingAndGlyphs'>k</text>
 <text x='411.66' y='519.57' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='2.45px' lengthAdjust='spacingAndGlyphs'>l</text>

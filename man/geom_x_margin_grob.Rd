@@ -124,6 +124,9 @@ personality" as both annotations and geometries.
 \examples{
 # We can add icons to the margin of a plot to signal events
 
+
+
+
 }
 \seealso{
 \code{\link[grid]{grid-package}}, \code{\link[ggplot2]{geom_rug}},

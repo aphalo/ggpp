@@ -170,6 +170,11 @@ ggplot(data = mtcars, mapping = aes(wt, mpg)) +
   geom_point() +
   geom_text_npc(data = df, aes(npcx = x, npcy = y, label = text))
 
+ggplot(data = mtcars, mapping = aes(wt, mpg)) +
+  geom_point() +
+  geom_text_npc(data = df, aes(npcx = x, npcy = y, label = text)) +
+  expand_limits(y = 40, x = 6)
+
 ggplot(data = mtcars) +
   geom_point(mapping = aes(wt, mpg)) +
   geom_label_npc(data = df, aes(npcx = x, npcy = y, label = text))
