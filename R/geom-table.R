@@ -204,6 +204,15 @@
 #'              arrow = arrow(length = unit(0.5, "lines"))) +
 #'   theme_classic()
 #'
+#' # Using native plot coordinates instead of data coordinates
+#' dfnpc <- tibble(x = 0.95, y = 0.95, tb = list(tb))
+#'
+#' ggplot(mtcars,
+#'        aes(wt, mpg, colour = factor(cyl))) +
+#'   geom_point() +
+#'   geom_table_npc(data = dfnpc,
+#'                  aes(npcx = x, npcy = y, label = tb))
+#'
 geom_table <- function(mapping = NULL, data = NULL,
                        stat = "identity", position = "identity",
                        ...,

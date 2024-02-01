@@ -64,6 +64,10 @@
 #'   geom_point()
 #'
 #' ggplot(my.data, aes(x, y)) +
+#'   geom_quadrant_lines(linetype = "dotted") +
+#'   geom_point()
+#'
+#' ggplot(my.data, aes(x, y)) +
 #'   geom_quadrant_lines(xintercept = 50,
 #'                       yintercept = 10,
 #'                       colour = "blue") +
@@ -74,6 +78,14 @@
 #'                       pool.along = "y",
 #'                       colour = "blue") +
 #'   geom_point()
+#'
+#' ggplot(my.data, aes(x, y)) +
+#'   geom_vhlines(xintercept = c(25, 50, 75),
+#'                yintercept = 10 ,
+#'                linetype = "dotted",
+#'                colour = "red") +
+#'   geom_point() +
+#'   theme_bw()
 #'
 #' ggplot(my.data, aes(x, y)) +
 #'   geom_vhlines(xintercept = c(25, 50, 75),

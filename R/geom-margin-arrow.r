@@ -44,6 +44,8 @@
 #' @examples
 #' p <- ggplot(mtcars, aes(wt, mpg)) +
 #'   geom_point()
+#' p
+#' p + geom_x_margin_arrow(xintercept = 3.5)
 #' p + geom_y_margin_arrow(yintercept = c(18, 28, 15))
 #' p + geom_x_margin_arrow(data = data.frame(x = c(2.5, 4.5)),
 #'                         mapping = aes(xintercept = x))
