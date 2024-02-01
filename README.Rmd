@@ -1,11 +1,8 @@
 ---
-output: github_document
-editor_options: 
-  markdown: 
-    wrap: 72
+output:
+  github_document:
+    html_preview: TRUE
 ---
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r readme-01, echo = FALSE}
 knitr::opts_chunk$set(

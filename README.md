@@ -1,6 +1,4 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # ggpp <img src="man/figures/logo-ggpp.png" align="right" width="150"/>
 
 <!-- badges: start -->
@@ -369,6 +367,6 @@ Computational and Graphical Statistics 19 (1): 3–28.
 
 ## License
 
-© 2016-2023 Pedro J. Aphalo (<pedro.aphalo@helsinki.fi>). Released under
+© 2016-2024 Pedro J. Aphalo (<pedro.aphalo@helsinki.fi>). Released under
 the GPL, version 2 or greater. This software carries no warranty of any
 kind.
