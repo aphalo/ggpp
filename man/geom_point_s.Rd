@@ -12,7 +12,8 @@ geom_point_s(
   ...,
   nudge_x = 0,
   nudge_y = 0,
-  arrow = grid::arrow(length = unit(1/3, "lines")),
+  move.point = TRUE,
+  arrow = grid::arrow(length = unit(1/3, "lines"), ends = "first"),
   default.colour = "black",
   default.color = default.colour,
   colour.target = "point",
@@ -46,16 +47,18 @@ as a string.}
 call to a position adjustment function.}
 
 \item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. There
-  are three types of arguments you can use here:
-
-  \itemize{ \item Aesthetics: to set an aesthetic to a fixed value, like
-  \code{colour = "red"} or \code{size = 3}. \item Other arguments to the
-  layer, for example you override the default \code{stat} associated with the
-  layer. \item Other arguments passed on to the stat. }}
+are three types of arguments you can use here:
+\itemize{ \item Aesthetics: to set an aesthetic to a fixed value, like
+\code{colour = "red"} or \code{size = 3}. \item Other arguments to the
+layer, for example you override the default \code{stat} associated with the
+layer. \item Other arguments passed on to the stat. }}
 
 \item{nudge_x, nudge_y}{Horizontal and vertical adjustments to nudge the
 starting position of each text label. The units for \code{nudge_x} and
 \code{nudge_y} are the same as for the data units on the x-axis and y-axis.}
+
+\item{move.point}{logical If \code{TRUE} the point is drawn at the nudged
+position while if \code{FALSE} the point is drawn at the original position.}
 
 \item{arrow}{specification for arrow heads, as created by
 \code{\link[grid]{arrow}}}
@@ -151,7 +154,15 @@ ggplot(mpg[1:20, ],
        aes(cyl, hwy, label = drv)) +
   geom_point_s(position = position_nudge_keep(x = 0.2),
                colour = "red") +
-  geom_point_s(colour = "blue")
+  geom_point_s(colour = "blue") +
+  expand_limits(x = c(3.5, 8.5))
+
+ggplot(mpg[1:20, ],
+       aes(cyl, hwy, label = drv)) +
+  geom_point_s(position = position_nudge_keep(x = 0.2),
+               colour = "blue",
+               move.point = FALSE) +
+  expand_limits(x = c(3.5, 8.5))
 
 # with segment drawn after nudging
 ggplot(mpg[1:20, ],
@@ -182,7 +193,9 @@ ggplot(mpg[1:50, ],
                                                nudge.from = "jittered",
                                                kept.origin = "original"),
                colour = "red",
-               arrow = grid::arrow(length = grid::unit(0.4, "lines"))) +
+               alpha = 0.3, alpha.target = "segment",
+               arrow = grid::arrow(length = grid::unit(0.4, "lines"),
+                                   ends = "first")) +
   geom_point_s(colour = "blue")
 
 }

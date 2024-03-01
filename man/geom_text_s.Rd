@@ -55,6 +55,7 @@ geom_text_s(
   min.segment.length = 0,
   arrow = NULL,
   check_overlap = FALSE,
+  size.unit = "mm",
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -139,6 +140,10 @@ plot specification, e.g., \code{\link[ggplot2]{borders}}.}
 same layer will not be plotted. \code{check_overlap} takes place at draw
 time and in the order of the data, thus its action depends of the size at
 which the plot is drawn.}
+
+\item{size.unit}{How the `size` aesthetic is interpreted: as millimetres
+(`"mm"`, default), points (`"pt"`), centimetres (`"cm"`), inches (`"in"`),
+or picas (`"pc"`).}
 }
 \value{
 A plot layer instance.

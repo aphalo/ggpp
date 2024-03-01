@@ -14,15 +14,22 @@ checks](https://badges.cranchecks.info/worst/ggpp.svg)](https://cran.r-project.o
 ## Purpose
 
 Package ‘**ggpp**’ provides a set of building blocks that extend the
-Grammar of Graphics implemented in package ‘ggplot2’ (\>= 3.0.0). The
+Grammar of Graphics implemented in package ‘ggplot2’ (\>= 3.5.0). The
 extensions enhance the support of data labels and annotations in plots.
-New geometries support insets in plots, data labels, marginal marks and
-the use of native plot coordinates (npc). Position functions implement
-new approaches to nudging usable with any geometry, but especially
-useful together with `geom_text_s()` and `geom_label_s()` from this
-package and `geom_text_repel()` and `geom_label_repel()` from package
-‘ggrepel’ (\>= 0.9.2). See: (<https://ggrepel.slowkow.com>) for
-installation instructions and news about releases.
+Position functions implement new approaches to nudging usable with any
+geometry, but especially useful together with `geom_text_s()` and
+`geom_label_s()` from this package and `geom_text_repel()` and
+`geom_label_repel()` from package ‘ggrepel’ (\>= 0.9.2). See:
+(<https://ggrepel.slowkow.com>) for installation instructions and news
+about releases.
+
+## A great news
+
+**`npc` coordinates are supported natively by ‘ggplot2’ starting from
+version 3.5.0 by means of the identity function `I()`, and this should
+work with every normal geom. This makes all the `_npc` geometries from
+‘ggpp’ redundant. Please, stop using them as they are now deprecated and
+may be soon removed from the package.**
 
 ## Extended Grammar of graphics
 
@@ -49,13 +56,9 @@ position functions, that we will describe in the next section.
 | `geom_label_s()`                           | data labels                     | x, y, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust             | yes     |
 | `geom_text_pairwise()`                     | data labels                     | x, xmin, xmax, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                     | horiz.  |
 | `geom_label_pairwise()`                    | data labels                     | x, xmin, xmax, y, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust | horiz.  |
-| `geom_text_npc()`                          | annotations                     | npcx, npcy, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                           | no      |
-| `geom_label_npc()`                         | annotations                     | npcx, npcy, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust       | no      |
 | `geom_point_s()`                           | data labels                     | x, y, size, colour, fill, alpha, shape, stroke, group                                                           | yes     |
 | `geom_table()`                             | data labels                     | x, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                                 | yes     |
-| `geom_table_npc()`                         | annotations                     | npcx, npcy, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                           | no      |
 | `geom_plot()` , `geom_grob()`              | data labels                     | x, y, label, group, angle, vjust, hjust                                                                         | yes     |
-| `geom_plot_npc()` , `geom_grob_npc()`      | annotations                     | npcx, npcy, label, group, vjust, hjust                                                                          | no      |
 | `geom_margin_arrow()`                      | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                      | no      |
 | `geom_margin_point()`                      | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                      | no      |
 | `geom_margin_grob()`                       | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                      | no      |
@@ -117,18 +120,6 @@ keep in the `data` object the original coordinates.
 | `position_dodge2nudge()`  | dodge2 + nudge | combined, see above             | data labels in box plots    |
 
 Position functions defined in package ‘ggpp’
-
-### Aesthetics and scales
-
-Scales `scale_npcx_continuous()` and `scale_npcy_continuous()` and the
-corresponding new aesthetics `npcx` and `npcy` make it possible to add
-graphic elements and text as nnotations to plots using coordinates
-expressed in `npc` units for the location within the plotting area. The
-difference to using function `annotate()` is that while annotate is
-driven only by constant values and does not support facets, the geoms
-that use these pseudo-aesthetics do, opening the door to the easy
-addition of a whole range of new annotations within the grammar of
-graphics.
 
 ### Statistics
 
@@ -233,9 +224,8 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
 
 A plot with an inset plot.
 
-Inset plot positioned using native plot coordinates (npc) and using
-keywords insted of numerical values in the range 0..1 which are also
-accepted.
+Inset plot positioned using native plot coordinates (npc) using
+numerical values in the range 0..1 together with `I()`.
 
 ``` r
 p <- ggplot(mtcars, aes(factor(cyl), mpg, colour = factor(cyl))) +
@@ -245,7 +235,8 @@ p <- ggplot(mtcars, aes(factor(cyl), mpg, colour = factor(cyl))) +
 
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point(show.legend = FALSE) +
-  annotate("plot_npc", npcx = "left", npcy = "bottom", label = p) +
+  annotate("plot", x = I(0.05), y = I(0.05), label = p, 
+           hjust = "inward", vjust = "inward") +
   expand_limits(y = 0, x = 0)
 ```
 
@@ -298,13 +289,24 @@ ggplot(data = df, aes(x2, x1, group = grp)) +
 
 ## Installation
 
-Installation of the most recent stable version from CRAN:
+Installation of the most recent stable version from CRAN (sources, Mac
+and Win binaries):
 
 ``` r
 install.packages("ggpp")
 ```
 
-Installation of the current unstable version from GitHub:
+Installation of the current unstable version from R-Universe CRAN-like
+repository (binaries for Mac, Win, Webassembly, and Linux, as well as
+sources avialble):
+
+``` r
+install.packages('ggpp', 
+                 repos = c('https://aphalo.r-universe.dev', 
+                           'https://cloud.r-project.org'))
+```
+
+Installation of the current unstable version from GitHub (from sources):
 
 ``` r
 # install.packages("devtools")

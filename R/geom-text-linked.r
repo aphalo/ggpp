@@ -97,6 +97,9 @@
 #'   same layer will not be plotted. \code{check_overlap} takes place at draw
 #'   time and in the order of the data, thus its action depends of the size at
 #'   which the plot is drawn.
+#' @param size.unit How the `size` aesthetic is interpreted: as millimetres
+#'   (`"mm"`, default), points (`"pt"`), centimetres (`"cm"`), inches (`"in"`),
+#'   or picas (`"pc"`).
 #' @param ... other arguments passed on to \code{\link[ggplot2]{layer}}. There
 #'   are three types of arguments you can use here:
 #'
@@ -314,6 +317,7 @@ geom_text_s <- function(mapping = NULL,
                         min.segment.length = 0,
                         arrow = NULL,
                         check_overlap = FALSE,
+                        size.unit = "mm",
                         na.rm = FALSE,
                         show.legend = NA,
                         inherit.aes = TRUE) {
@@ -358,6 +362,7 @@ geom_text_s <- function(mapping = NULL,
       min.segment.length = min.segment.length,
       arrow = arrow,
       check_overlap = check_overlap,
+      size.unit = size.unit,
       na.rm = na.rm,
       ...
     )
@@ -371,6 +376,8 @@ geom_text_s <- function(mapping = NULL,
 GeomTextS <-
   ggplot2::ggproto("GeomTextS", ggplot2::Geom,
                    required_aes = c("x", "y", "label"),
+
+                   non_missing_aes = "angle",
 
                    default_aes = ggplot2::aes(
                      colour = "black",
@@ -394,6 +401,7 @@ GeomTextS <-
                                          alpha.target = "all",
                                          na.rm = FALSE,
                                          check_overlap = FALSE,
+                                         size.unit = "mm",
                                          add.segments = TRUE,
                                          box.padding = 0.25,
                                          point.padding = 1e-06,
@@ -415,6 +423,7 @@ GeomTextS <-
                      }
 
                      data <- coord$transform(data, panel_params)
+
                      if (all(c("x_orig", "y_orig") %in% colnames(data))) {
                        data_orig <- data.frame(x = data$x_orig, y = data$y_orig)
                        data_orig <- coord$transform(data_orig, panel_params)
@@ -438,6 +447,8 @@ GeomTextS <-
                                         just = data$hjust,
                                         a = "x", b = "y")
                      }
+
+                     size.unit <- resolve_text_unit(size.unit)
 
                      if (add.segments) {
                        segments.data <-
@@ -466,7 +477,7 @@ GeomTextS <-
                            col = ifelse(any(colour.target %in% c("all", "text")),
                                         ggplot2::alpha(row$colour, text.alpha),
                                         ggplot2::alpha(default.colour, text.alpha)),
-                           fontsize = row$size * .pt,
+                           fontsize = row$size * size.unit,
                            fontfamily = row$family,
                            fontface = row$fontface,
                            lineheight = row$lineheight
@@ -508,7 +519,7 @@ GeomTextS <-
 
                    },
 
-                   draw_key = draw_key_text
+                   draw_key = ggplot2::draw_key_text
   )
 
 # heavily modified from geom-text.r from 'ggplot2' 3.1.0
@@ -708,4 +719,18 @@ ggname <- function(prefix, grob) {
   grob$name <- grobName(grob, prefix)
   grob
 }
+
+# from ggplot2 utilities-grid.R
+resolve_text_unit <- function(unit) {
+  unit <- rlang::arg_match0(unit, c("mm", "pt", "cm", "in", "pc"))
+  switch(
+    unit,
+    "mm" = .pt,
+    "cm" = .pt * 10,
+    "in" = 72.27,
+    "pc" = 12,
+    1
+  )
+}
+
 

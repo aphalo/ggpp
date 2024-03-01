@@ -9,6 +9,11 @@ editor_options:
 # ggpp 0.5.7
 
 -   Fix bug in `geom_point_s()`, `alpha_target = "point"` ignored.
+-   Update `geom_point_s()` adding parameter `move.point` to allow its use to highlight point at the original position with an arrow with its start given
+by the action of a position function.
+-   Change in `geom_point_s()` the end at which the tip of the arrow is drawn to its most frequently used direction, even if opposite to the default for
+`geom_text_s()` and `geom_label_s()`.
+-   Update `geom_text_s()` adding parameter `size.unit` tracking change in `geom_text()` in 'ggplot2' 3.5.0.
 
 # ggpp 0.5.6
 
