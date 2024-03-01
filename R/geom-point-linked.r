@@ -248,7 +248,7 @@ GeomPointS <-
                      for (row.idx in 1:nrow(data)) {
                        row <- data[row.idx, , drop = FALSE]
                        point.alpha <-
-                         ifelse(any(alpha.target %in% c("all", "points")),
+                         ifelse(any(alpha.target %in% c("all", "point")),
                                 row$alpha, default.alpha)
                        segment.alpha <-
                          ifelse(any(alpha.target %in% c("all", "segment")),

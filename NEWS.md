@@ -6,6 +6,10 @@ editor_options:
     wrap: 72
 ---
 
+# ggpp 0.5.7
+
+-   Fix bug in `geom_point_s()`, `alpha_target = "point"` ignored.
+
 # ggpp 0.5.6
 
 -   Fix bug in `stat_density2d_filter()`.
