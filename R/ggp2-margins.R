@@ -1,4 +1,4 @@
-## copied from ggplot2 GitHub development version on 2023-09-14
+## copied from ggplot2 GitHub development version on 2024-03-02
 ## needed for new labelGrob() definition
 
 #' Create a text grob with the proper location and margins

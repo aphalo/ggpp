@@ -719,18 +719,3 @@ ggname <- function(prefix, grob) {
   grob$name <- grobName(grob, prefix)
   grob
 }
-
-# from ggplot2 utilities-grid.R
-resolve_text_unit <- function(unit) {
-  unit <- rlang::arg_match0(unit, c("mm", "pt", "cm", "in", "pc"))
-  switch(
-    unit,
-    "mm" = .pt,
-    "cm" = .pt * 10,
-    "in" = 72.27,
-    "pc" = 12,
-    1
-  )
-}
-
-
