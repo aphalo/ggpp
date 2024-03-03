@@ -28,6 +28,7 @@ geom_label_s <-
            point.padding = 1e-06,
            min.segment.length = 0,
            arrow = NULL,
+           size.unit = "mm",
            na.rm = FALSE,
            show.legend = NA,
            inherit.aes = TRUE) {
@@ -73,6 +74,7 @@ geom_label_s <-
       point.padding = point.padding,
       min.segment.length = min.segment.length,
       arrow = arrow,
+      size.unit = size.unit,
       na.rm = na.rm,
       ...
     )
@@ -105,6 +107,7 @@ GeomLabelS <-
                    draw_panel = function(data, panel_params, coord, #panel_scales,
                                          parse = FALSE,
                                          na.rm = FALSE,
+                                         size.unit = "mm",
                                          add.segments = TRUE,
                                          default.colour = "black",
                                          colour.target = "all",
@@ -155,6 +158,9 @@ GeomLabelS <-
                                         just = data$hjust,
                                         a = "x", b = "y")
                      }
+
+                     size.unit <- resolve_text_unit(size.unit)
+
                      if (!inherits(label.padding, "margin")) {
                        label.padding <- rep(label.padding, length.out = 4)
                      }
@@ -194,7 +200,7 @@ GeomLabelS <-
                                                 col = ifelse(any(colour.target %in% c("all", "text")),
                                                              ggplot2::alpha(row$colour, text.alpha),
                                                              ggplot2::alpha(default.colour, text.alpha)),
-                                                fontsize = row$size * .pt,
+                                                fontsize = row$size * size.unit,
                                                 fontfamily = row$family,
                                                 fontface = row$fontface,
                                                 lineheight = row$lineheight
@@ -245,7 +251,7 @@ GeomLabelS <-
 
                    },
 
-                   draw_key = draw_key_text
+                   draw_key = ggplot2::draw_key_label
   )
 
 labelGrob <- function(label, x = grid::unit(0.5, "npc"), y = grid::unit(0.5, "npc"),
