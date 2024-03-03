@@ -28,6 +28,7 @@ geom_label_s(
   point.padding = 1e-06,
   min.segment.length = 0,
   arrow = NULL,
+  size.unit = "mm",
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -124,6 +125,10 @@ are not rendered, in mm.}
 \item{arrow}{specification for arrow heads, as created by
 \code{\link[grid]{arrow}}}
 
+\item{size.unit}{How the `size` aesthetic is interpreted: as millimetres
+(`"mm"`, default), points (`"pt"`), centimetres (`"cm"`), inches (`"in"`),
+or picas (`"pc"`).}
+
 \item{na.rm}{If \code{FALSE} (the default), removes missing values with a
 warning.  If \code{TRUE} silently removes missing values.}
 
@@ -140,10 +145,6 @@ plot specification, e.g., \code{\link[ggplot2]{borders}}.}
 same layer will not be plotted. \code{check_overlap} takes place at draw
 time and in the order of the data, thus its action depends of the size at
 which the plot is drawn.}
-
-\item{size.unit}{How the `size` aesthetic is interpreted: as millimetres
-(`"mm"`, default), points (`"pt"`), centimetres (`"cm"`), inches (`"in"`),
-or picas (`"pc"`).}
 }
 \value{
 A plot layer instance.

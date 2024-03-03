@@ -158,3 +158,21 @@ get_guide_data(p2, aesthetic = "alpha")
 
 p2
 
+### Another bug
+
+library(ggpp)
+
+my.cars <- mtcars[c(TRUE, FALSE, FALSE, FALSE), ]
+my.cars$name <- rownames(my.cars)
+my.cars <- my.cars[order(my.cars$wt), ]
+ggplot(my.cars, aes(wt, mpg, label = name)) +
+  geom_point() +
+  geom_label_s(aes(colour = factor(cyl)),
+               size = 2.5,
+               linewidth = 0.5,
+               colour.target = c("box", "segment"),
+               nudge_x = 0.2,
+               arrow = arrow(length = grid::unit(1.5, "mm"))) +
+  scale_colour_discrete(l = 40) +
+  expand_limits(x = 6.5)
+

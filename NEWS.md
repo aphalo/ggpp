@@ -13,7 +13,9 @@ editor_options:
 by the action of a position function.
 -   Change in `geom_point_s()` the end at which the tip of the arrow is drawn to its most frequently used direction, even if opposite to the default for
 `geom_text_s()` and `geom_label_s()`.
--   Update `geom_text_s()` adding parameter `size.unit` tracking change in `geom_text()` in 'ggplot2' 3.5.0.
+-   Update `geom_text_s()`, `geom_label_s()`. `geom_text_pairwise()` and 
+`geom_label_pairwise()` adding parameter `size.unit` tracking change in 
+`geom_text()` and `geom_label()` in 'ggplot2' 3.5.0.
 
 # ggpp 0.5.6
 

@@ -91,6 +91,9 @@
 #'   same layer will not be plotted. \code{check_overlap} takes place at draw
 #'   time and in the order of the data, thus its action depends of the size at
 #'   which the plot is drawn.
+#' @param size.unit How the `size` aesthetic is interpreted: as millimetres
+#'   (`"mm"`, default), points (`"pt"`), centimetres (`"cm"`), inches (`"in"`),
+#'   or picas (`"pc"`).
 #' @param ... other arguments passed on to \code{\link[ggplot2]{layer}}. There
 #'   are three types of arguments you can use here:
 #'
@@ -276,6 +279,7 @@ geom_text_pairwise <- function(mapping = NULL,
                                segment.linewidth = 0.5,
                                arrow = NULL,
                                check_overlap = FALSE,
+                               size.unit = "mm",
                                na.rm = FALSE,
                                show.legend = NA,
                                inherit.aes = FALSE) {
@@ -316,6 +320,7 @@ geom_text_pairwise <- function(mapping = NULL,
       segment.linewidth = segment.linewidth,
       arrow = arrow,
       check_overlap = check_overlap,
+      size.unit = size.unit,
       na.rm = na.rm,
       ...
     )
@@ -347,6 +352,7 @@ GeomTextPairwise <-
                                          panel_params,
                                          coord, #panel_scales,
                                          parse = FALSE,
+                                         size.unit = "mm",
                                          default.colour = "black",
                                          colour.target = "all",
                                          default.alpha = 1,
@@ -386,6 +392,8 @@ GeomTextPairwise <-
                                         a = "x", b = "y")
                      }
 
+                     size.unit <- resolve_text_unit(size.unit)
+
                      # loop needed as gpar is not vectorized
                      all.grobs <- grid::gList()
 
@@ -409,7 +417,7 @@ GeomTextPairwise <-
                            col = ifelse(any(colour.target %in% c("all", "text")),
                                         ggplot2::alpha(row$colour, text.alpha),
                                         ggplot2::alpha(default.colour, text.alpha)),
-                           fontsize = row$size * .pt,
+                           fontsize = row$size * size.unit,
                            fontfamily = row$family,
                            fontface = row$fontface,
                            lineheight = row$lineheight
