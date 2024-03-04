@@ -251,7 +251,7 @@ GeomLabelS <-
 
                    },
 
-                   draw_key = ggplot2::draw_key_label
+                   draw_key = ggplot2::draw_key_text
   )
 
 labelGrob <- function(label, x = grid::unit(0.5, "npc"), y = grid::unit(0.5, "npc"),
