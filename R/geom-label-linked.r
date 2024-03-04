@@ -1,4 +1,5 @@
 #' @rdname geom_text_s
+#' @include ggp2-margins.R utilities.R ggpp-legend-draw.R
 #'
 #' @param label.padding Amount of padding around label. Defaults to 0.25 lines.
 #' @param label.r Radius of rounded corners. Defaults to 0.15 lines.
@@ -89,6 +90,8 @@ GeomLabelS <-
   ggplot2::ggproto("GeomLabelS", ggplot2::Geom,
                    required_aes = c("x", "y", "label"),
 
+                   non_missing_aes = "angle",
+
                    default_aes = ggplot2::aes(
                      colour = "black",
                      fill = "white",
@@ -123,6 +126,11 @@ GeomLabelS <-
 
                      add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
 
+                     # ensure compatibility with 'ggplot2'
+                     if (exists("label.size", data)) {
+                       data$line.width <- data$label.size * .pt / ggplot2::.stroke
+                       data$label.size <- NULL
+                     }
                      data$label <- as.character(data$label)
                      data <- subset(data, !is.na(label) & label != "")
                      if (nrow(data) == 0L) {
@@ -251,7 +259,7 @@ GeomLabelS <-
 
                    },
 
-                   draw_key = ggplot2::draw_key_text
+                   draw_key = draw_key_label_s
   )
 
 labelGrob <- function(label, x = grid::unit(0.5, "npc"), y = grid::unit(0.5, "npc"),

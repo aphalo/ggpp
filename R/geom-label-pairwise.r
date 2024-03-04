@@ -1,4 +1,5 @@
 #' @rdname geom_text_pairwise
+#' @include ggp2-margins.R utilities.R ggpp-legend-draw.R
 #'
 #' @param label.padding Amount of padding around label. Defaults to 0.25 lines.
 #' @param label.r Radius of rounded corners. Defaults to 0.15 lines.
@@ -233,5 +234,5 @@ GeomLabelPairwise <-
 
                    },
 
-                   draw_key = ggplot2::draw_key_label
+                   draw_key = draw_key_label_s
   )

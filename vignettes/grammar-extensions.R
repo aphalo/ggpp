@@ -388,10 +388,10 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
   geom_point(alpha = 0.33) +
   stat_centroid(shape = "cross", size = 4)
 
-## ----eval = FALSE-------------------------------------------------------------
-#  ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
-#    geom_point(alpha = 0.33) +
-#    stat_centroid(shape = "cross", size = 4, .fun = median)
+## -----------------------------------------------------------------------------
+ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
+  geom_point(alpha = 0.33) +
+  stat_centroid(shape = "cross", size = 4, .fun = median)
 
 ## -----------------------------------------------------------------------------
 ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
@@ -596,19 +596,19 @@ ggplot(data = d, aes(x, y, label = lab, colour = group)) +
                      vjust = "outward", hjust = "outward") +
   scale_x_continuous(expand = expansion(c(0.1, 0.1)))
 
-## ----eval = FALSE-------------------------------------------------------------
-#  random_string <- function(len = 6) {
-#  paste(sample(letters, len, replace = TRUE), collapse = "")
-#  }
-#  
-#  # Make random data.
-#  set.seed(1001)
-#  d <- tibble::tibble(
-#    x = rnorm(100),
-#    y = rnorm(100),
-#    group = rep(c("A", "B"), c(50, 50)),
-#    lab = replicate(100, { random_string() })
-#  )
+## -----------------------------------------------------------------------------
+random_string <- function(len = 6) {
+paste(sample(letters, len, replace = TRUE), collapse = "")
+}
+
+# Make random data.
+set.seed(1001)
+d <- tibble::tibble(
+  x = rnorm(100),
+  y = rnorm(100),
+  group = rep(c("A", "B"), c(50, 50)),
+  lab = replicate(100, { random_string() })
+)
 
 ## -----------------------------------------------------------------------------
 ggplot(data = d, aes(x, y)) +
