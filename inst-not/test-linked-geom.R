@@ -68,7 +68,7 @@ get_guide_data(p1, aesthetic = "alpha")
 p2 <-
   ggplot(my.cars, aes(wt, mpg, label = name)) +
   geom_point() +
-  geom_text_s(aes(size = wt), nudge_x = -0.1, hjust = "right") +
+  geom_text_s(aes(size = wt), nudge_x = -0.1, hjust = "right", colour = "red", colour.target = "segment") +
   scale_radius(range = c(3,6)) + # override scale_area()
   expand_limits(x = c(1.8, 5.5))
 
@@ -102,13 +102,15 @@ p3
 p4 <-
   ggplot(my.cars, aes(wt, mpg, label = name)) +
   geom_point() +
-  geom_label_s(aes(size = wt), nudge_x = -0.1, hjust = "right") +
+  geom_label_s(aes(size = wt), nudge_x = -0.1, nudge_y = -0.1, hjust = "right",
+               colour.target = "text", default.colour = "grey80",
+               linetype = "dashed", linewidth = 0.5) +
   scale_radius(range = c(3,6)) + # override scale_area()
   expand_limits(x = c(1.8, 5.5))
 
-get_guide_data(p4, aesthetic = "size")
-
 p4
+
+get_guide_data(p4, aesthetic = "size")
 
 ###
 

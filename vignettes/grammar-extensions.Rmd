@@ -1182,7 +1182,7 @@ Other functions can be passed to this statistic as long as they return a
 single value that can be mapped to the `x` and `y` aesthetics (numeric,
 time or a factor).
 
-```{r, eval = FALSE}
+```{r}
 ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
   geom_point(alpha = 0.33) +
   stat_centroid(shape = "cross", size = 4, .fun = median)
@@ -1585,7 +1585,7 @@ and the selection of points less dependent on immediate neighbours.
 
 We use the same data as in the previous sections.
 
-```{r, eval = FALSE}
+```{r}
 random_string <- function(len = 6) {
 paste(sample(letters, len, replace = TRUE), collapse = "")
 }

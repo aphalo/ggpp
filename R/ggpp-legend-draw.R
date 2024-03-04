@@ -18,6 +18,8 @@
 #'
 #' # key glyphs can be specified via their drawing function
 #' p + geom_line(key_glyph = draw_key_rect)
+#'
+#' @keywords internal
 #' @name ggpp_draw_key
 NULL
 
@@ -25,8 +27,12 @@ NULL
 #' @rdname ggpp_draw_key
 draw_key_text_s <- function(data, params, size) {
   data  <- replace_null(unclass(data), label = "a", angle = 0)
-  hjust <- compute_just(data$hjust %||% 0.5)
-  vjust <- compute_just(data$vjust %||% 0.5)
+  hjust <- ifelse(data$hjust %in% c("left", "middle", "right"),
+                  compute_just(data$hjust %||% 0.5),
+                  0.5)
+  vjust <- ifelse(data$vjust %in% c("left", "middle", "right"),
+                  compute_just(data$vjust %||% 0.5),
+                  0.5)
   just  <- rotate_just(data$angle, hjust, vjust)
   grob  <- titleGrob(
     data$label,
@@ -35,7 +41,10 @@ draw_key_text_s <- function(data, params, size) {
     hjust = hjust,
     vjust = vjust,
     gp = gpar(
-      col = alpha(data$colour %||% data$fill %||% "black", data$alpha),
+      col = ifelse(params$colour.target %in% c("text", "all"),
+                   alpha(data$colour %||% data$fill %||% params$default.colour %||% "black",
+                         data$alpha %||% params$default.alpha %||% 1),
+                   params$default.colour %||% "black"),
       fontfamily = data$family   %||% "",
       fontface   = data$fontface %||% 1,
       fontsize   = (data$size %||% 3.88) * .pt
@@ -53,8 +62,12 @@ draw_key_text_s <- function(data, params, size) {
 draw_key_label_s <- function(data, params, size) {
   data <- replace_null(unclass(data), label = "a", angle = 0)
   params$label.size <- params$label.size %||% 0.25
-  hjust <- compute_just(data$hjust %||% 0.5)
-  vjust <- compute_just(data$vjust %||% 0.5)
+  hjust <- ifelse(data$hjust %in% c("left", "middle", "right"),
+                  compute_just(data$hjust %||% 0.5),
+                  0.5)
+  vjust <- ifelse(data$vjust %in% c("left", "middle", "right"),
+                  compute_just(data$vjust %||% 0.5),
+                  0.5)
   just  <- rotate_just(data$angle, hjust, vjust)
   padding <- rep(params$label.padding %||% unit(0.25, "lines"), length.out = 4)
   descent <- font_descent(
@@ -71,15 +84,27 @@ draw_key_label_s <- function(data, params, size) {
     padding = padding,
     r = params$label.r %||% unit(0.15, "lines"),
     text.gp = gpar(
-      col = data$colour %||% "black",
+      col = ifelse(params$colour.target %in% c("text", "all"),
+                   alpha(data$colour %||% data$fill %||% params$default.colour  %||% "black",
+                         data$alpha%||% params$default.alpha %||% 1),
+                   params$default.colour %||% "black"),
       fontfamily = data$family   %||% "",
       fontface   = data$fontface %||% 1,
       fontsize   = (data$size %||% 3.88) * .pt
     ),
     rect.gp = gpar(
-      col  = if (isTRUE(all.equal(params$label.size, 0))) NA else data$colour,
-      fill = alpha(data$fill %||% "white", data$alpha),
-      lwd  = params$label.size * .pt
+      col  = if (isTRUE(all.equal(params$label.size, 0))) {
+        NA
+        } else {
+        ifelse(params$colour.target %in% c("box", "all"),
+                     alpha(data$colour %||% data$fill %||% params$default.colour %||% "black",
+                           data$alpha %||% params$default.alpha %||% 1),
+               params$default.colour %||% "black")
+        },
+      fill = alpha(data$fill %||% "white",
+                   data$alpha %||% params$default.alpha %||% 1),
+      lwd  = (data$linewidth %||% 0.25) * ggplot2::.stroke,
+      lty = data$linetype %||% "solid"
     )
   )
   angle  <- deg2rad(data$angle %||% 0)

@@ -35,4 +35,6 @@ p + geom_line(key_glyph = "timeseries")
 
 # key glyphs can be specified via their drawing function
 p + geom_line(key_glyph = draw_key_rect)
+
 }
+\keyword{internal}
