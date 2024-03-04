@@ -74,6 +74,10 @@ p2 <-
 
 p2
 
+# pdf("inst-not/p2-test.pdf")
+# print(p2)
+# dev.off()
+
 get_guide_data(p2, aesthetic = "size")
 get_guide_data(p2, aesthetic = "colour")
 get_guide_data(p2, aesthetic = "alpha")
