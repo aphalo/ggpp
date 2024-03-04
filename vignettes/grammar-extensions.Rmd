@@ -871,7 +871,7 @@ ggplot(my.cars, aes(wt, mpg, label = name)) +
   expand_limits(y = 0)
 ```
 
-```{r, eval=FALSE}
+```{r}
 my.cars <- mtcars[c(TRUE, FALSE, FALSE, FALSE), ]
 my.cars$name <- rownames(my.cars)
 my.cars <- my.cars[order(my.cars$wt), ]

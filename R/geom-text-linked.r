@@ -1,4 +1,5 @@
 #' @title Linked Text
+#' @include ggp2-margins.R utilities.R ggpp-legend-draw.R
 #'
 #' @description Linked text geometries are most useful for adding data labels to
 #'   plots. `geom_text_s()` and `geom_label_s()` add text to the plot and for
@@ -519,7 +520,7 @@ GeomTextS <-
 
                    },
 
-                   draw_key = ggplot2::draw_key_text
+                   draw_key = draw_key_text_s
   )
 
 # heavily modified from geom-text.r from 'ggplot2' 3.1.0

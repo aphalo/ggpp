@@ -1,4 +1,5 @@
-#' Label pairwise comparisons
+#' @title Label pairwise comparisons
+#' @include ggp2-margins.R utilities.R ggpp-legend-draw.R
 #'
 #' @description Add a plot layer with a text label and a segment connecting two
 #'   values along the \code{x} aesthetic. These are usually two levels of a
@@ -452,5 +453,5 @@ GeomTextPairwise <-
 
                    },
 
-                   draw_key = draw_key_text
+                   draw_key = draw_key_text_s
   )
