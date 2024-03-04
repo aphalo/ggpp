@@ -96,8 +96,8 @@ GeomLabelS <-
                      colour = "black",
                      fill = "white",
                      size = 3.88,
-                     angle = 0, # currently ignored
-                     linewidth = 0.25,
+                     angle = 0,
+                     linewidth = 0.5,
                      linetype = "solid",
                      hjust = "position",
                      vjust = "position",

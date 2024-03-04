@@ -41,9 +41,11 @@ draw_key_text_s <- function(data, params, size) {
     hjust = hjust,
     vjust = vjust,
     gp = gpar(
-      col = ifelse(params$colour.target %in% c("text", "all"),
-                   alpha(data$colour %||% data$fill %||% params$default.colour %||% "black",
-                         data$alpha %||% params$default.alpha %||% 1),
+      col = ifelse(any((params$colour.target %||% "text") %in% c("text", "all")),
+                   alpha(data$colour %||% params$default.colour  %||% "black",
+                         ifelse(any((params$alpha.target %||% "all") %in% c("text", "all")),
+                                data$alpha%||% params$default.alpha %||% 1,
+                                params$default.alpha %||% 1)),
                    params$default.colour %||% "black"),
       fontfamily = data$family   %||% "",
       fontface   = data$fontface %||% 1,
@@ -84,9 +86,11 @@ draw_key_label_s <- function(data, params, size) {
     padding = padding,
     r = params$label.r %||% unit(0.15, "lines"),
     text.gp = gpar(
-      col = ifelse(params$colour.target %in% c("text", "all"),
-                   alpha(data$colour %||% data$fill %||% params$default.colour  %||% "black",
-                         data$alpha%||% params$default.alpha %||% 1),
+      col = ifelse(any((params$colour.target %||% "all") %in% c("text", "all")),
+                   alpha(data$colour %||% params$default.colour  %||% "black",
+                         ifelse(any((params$alpha.target %||% "fill") %in% c("text", "all")),
+                                data$alpha%||% params$default.alpha %||% 1,
+                                params$default.alpha %||% 1)),
                    params$default.colour %||% "black"),
       fontfamily = data$family   %||% "",
       fontface   = data$fontface %||% 1,
@@ -96,10 +100,12 @@ draw_key_label_s <- function(data, params, size) {
       col  = if (isTRUE(all.equal(params$label.size, 0))) {
         NA
         } else {
-        ifelse(params$colour.target %in% c("box", "all"),
-                     alpha(data$colour %||% data$fill %||% params$default.colour %||% "black",
-                           data$alpha %||% params$default.alpha %||% 1),
-               params$default.colour %||% "black")
+          ifelse(any((params$colour.target %||% "all") %in% c("box", "all")),
+                 alpha(data$colour %||% params$default.colour  %||% "black",
+                       ifelse(any((params$alpha.target %||% "fill") %in% c("box", "all")),
+                              data$alpha%||% params$default.alpha %||% 1,
+                              params$default.alpha %||% 1)),
+                 params$default.colour %||% "black")
         },
       fill = alpha(data$fill %||% "white",
                    data$alpha %||% params$default.alpha %||% 1),
