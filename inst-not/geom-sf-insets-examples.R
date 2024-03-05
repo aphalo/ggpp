@@ -35,3 +35,48 @@ library(ggpp)
               parse = TRUE) +
     theme(axis.title = element_blank())
 
+  p1 +
+    geom_table(data = inset.data,
+               mapping = aes(label = lab, x = as_npc(x), y = as_npc(y)),
+               parse = TRUE) +
+    theme(axis.title = element_blank())
+
+  inset.data <-
+    data.frame(lab =
+                 I(list(data.frame(
+                   a = 1:3,
+                   b = c("some text",
+                         "more text",
+                         "alpha^{3} %*%~beta %*%~sqrt(123)")))
+                 ),
+               x = "left",
+               y = "bottom")
+  p1 +
+    geom_table(data = inset.data,
+               mapping = aes(label = lab, x = as_npcx(x), y = as_npcy(y)),
+               parse = TRUE) +
+    theme(axis.title = element_blank())
+
+  p1 +
+    geom_table(data = inset.data,
+               mapping = aes(label = lab, x = as_npc(x), y = as_npc(y)),
+               parse = TRUE) +
+    theme(axis.title = element_blank())
+
+  p1 +
+    geom_table(data = inset.data,
+               mapping = aes(label = lab, x = as_npc(x, margin = 0), y = as_npc(y, margin = 0.1)),
+               parse = TRUE) +
+    theme(axis.title = element_blank())
+
+  p1 + annotate(geom = "plot",
+                label = p1 + theme(legend.position = "none"),
+                vp.width = 1/3, vp.height = 1/3,
+                x = as_npc("left"),
+                y = as_npc("bottom"))
+
+  p1 + annotate(geom = "text",
+                label = "test",
+                hjust = "inward", vjust = "inward",
+                x = as_npc("left"),
+                y = as_npc("bottom"))
