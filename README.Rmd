@@ -291,7 +291,7 @@ Installation of the most recent stable version from CRAN (sources, Mac and Win b
 install.packages("ggpp")
 ```
 
-Installation of the current unstable version from R-Universe CRAN-like repository (binaries for Mac, Win, Webassembly, and Linux, as well as sources avialble):
+Installation of the current unstable version from R-Universe CRAN-like repository (binaries for Mac, Win, Webassembly, and Linux, as well as sources available):
 
 ```{r, eval=FALSE}
 install.packages('ggpp', 
