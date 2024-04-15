@@ -44,7 +44,6 @@
 #'   default plot specification, e.g. \code{\link[ggplot2]{borders}}.
 #' @param ... other arguments passed on to \code{\link[ggplot2]{layer}}. There
 #'   are three types of arguments you can use here:
-#'
 #'   \itemize{ \item Aesthetics: to set an aesthetic to a fixed value, like
 #'   \code{colour = "red"} or \code{size = 3}. \item Other arguments to the
 #'   layer, for example you override the default \code{stat} associated with the
@@ -52,6 +51,8 @@
 #' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
 #'   starting position of each text label. The units for \code{nudge_x} and
 #'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
+#' @param move.point logical If \code{TRUE} the point is drawn at the nudged
+#'   position while if \code{FALSE} the point is drawn at the original position.
 #' @param default.colour,default.color A colour definition to use for elements not targeted by
 #'   the colour aesthetic.
 #' @param colour.target,color.target A character string, one of \code{"all"},
@@ -84,7 +85,15 @@
 #'        aes(cyl, hwy, label = drv)) +
 #'   geom_point_s(position = position_nudge_keep(x = 0.2),
 #'                colour = "red") +
-#'   geom_point_s(colour = "blue")
+#'   geom_point_s(colour = "blue") +
+#'   expand_limits(x = c(3.5, 8.5))
+#'
+#' ggplot(mpg[1:20, ],
+#'        aes(cyl, hwy, label = drv)) +
+#'   geom_point_s(position = position_nudge_keep(x = 0.2),
+#'                colour = "blue",
+#'                move.point = FALSE) +
+#'   expand_limits(x = c(3.5, 8.5))
 #'
 #' # with segment drawn after nudging
 #' ggplot(mpg[1:20, ],
@@ -115,7 +124,9 @@
 #'                                                nudge.from = "jittered",
 #'                                                kept.origin = "original"),
 #'                colour = "red",
-#'                arrow = grid::arrow(length = grid::unit(0.4, "lines"))) +
+#'                alpha = 0.3, alpha.target = "segment",
+#'                arrow = grid::arrow(length = grid::unit(0.4, "lines"),
+#'                                    ends = "first")) +
 #'   geom_point_s(colour = "blue")
 #'
 geom_point_s <- function(mapping = NULL, data = NULL,
@@ -123,7 +134,9 @@ geom_point_s <- function(mapping = NULL, data = NULL,
                          ...,
                          nudge_x = 0,
                          nudge_y = 0,
-                         arrow = grid::arrow(length = unit(1/3, "lines")),
+                         move.point = TRUE,
+                         arrow = grid::arrow(length = unit(1/3, "lines"),
+                                             ends = "first"),
                          default.colour = "black",
                          default.color = default.colour,
                          colour.target = "point",
@@ -169,6 +182,7 @@ geom_point_s <- function(mapping = NULL, data = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
+      move.point = move.point,
       default.colour = default.color,
       colour.target = colour.target,
       default.alpha = default.alpha,
@@ -205,6 +219,7 @@ GeomPointS <-
                    draw_panel = function(data,
                                          panel_params,
                                          coord,
+                                         move.point = TRUE,
                                          default.colour = "black",
                                          colour.target = "point",
                                          default.alpha = 1,
@@ -245,6 +260,17 @@ GeomPointS <-
                      # loop needed as gpar is not vectorized
                      all.grobs <- grid::gList()
 
+                     if (move.point) {
+                       x0.name <- "x"
+                       y0.name <- "y"
+                       x1.name <- "x_orig"
+                       y1.name <- "y_orig"
+                     } else {
+                       x0.name <- "x_orig"
+                       y0.name <- "y_orig"
+                       x1.name <- "x"
+                       y1.name <- "y"
+                     }
                      for (row.idx in 1:nrow(data)) {
                        row <- data[row.idx, , drop = FALSE]
                        point.alpha <-
@@ -254,7 +280,7 @@ GeomPointS <-
                          ifelse(any(alpha.target %in% c("all", "segment")),
                                 row$alpha, default.alpha)
                        user.grob <- grid::pointsGrob(
-                         row$x, row$y, default.units = "native",
+                         row[[x0.name]], row[[y0.name]], default.units = "native",
                          pch = row$shape,
                          gp = gpar(
                            col = ifelse(any(colour.target %in% c("all", "point")),
@@ -276,10 +302,10 @@ GeomPointS <-
                            segment.grob <- grid::nullGrob()
                          } else {
                            segment.grob <-
-                             grid::segmentsGrob(x0 = segment.row$x_orig,
-                                                y0 = segment.row$y_orig,
-                                                x1 = segment.row$x,
-                                                y1 = segment.row$y,
+                             grid::segmentsGrob(x0 = segment.row[[x0.name]],
+                                                y0 = segment.row[[y0.name]],
+                                                x1 = segment.row[[x1.name]],
+                                                y1 = segment.row[[y1.name]],
                                                 arrow = arrow,
                                                 gp = grid::gpar(
                                                   col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'

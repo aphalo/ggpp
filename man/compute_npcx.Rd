@@ -3,15 +3,27 @@
 \name{compute_npcx}
 \alias{compute_npcx}
 \alias{compute_npcy}
-\title{Compute npc coordinates}
+\alias{as_npcx}
+\alias{as_npcy}
+\alias{compute_npc}
+\alias{as_npc}
+\title{Compute NPC coordinates}
 \usage{
 compute_npcx(x, group = 1L, h.step = 0.1, margin.npc = 0.05, each.len = 1)
 
 compute_npcy(y, group = 1L, v.step = 0.1, margin.npc = 0.05, each.len = 1)
+
+as_npcx(x, ...)
+
+as_npcy(y, ...)
+
+compute_npc(a, margin.npc = 0.05)
+
+as_npc(a, margin.npc = 0.05)
 }
 \arguments{
-\item{x}{numeric or if character, one of "right", "left", "centre",
-"center" or "middle".}
+\item{x}{numeric or if character, one of "right", "left", "maximum",
+"minimum", "centre", "center" or "middle".}
 
 \item{group}{integer vector, ggplot's group id. Used to shift coordinates to
 avoid overlaps.}
@@ -25,40 +37,65 @@ plotting area edge when converting character coordinates into npc. Usually
 
 \item{each.len}{integer The number of steps per group.}
 
-\item{y}{numeric or if character, one of "top", "bottom", "centre",
-"center" or "middle".}
+\item{y}{numeric or if character, one of "top", "bottom", "maximum",
+"minimum", "centre", "center" or "middle".}
+
+\item{...}{named arguments passed to \code{compute_npcx()} or
+\code{compute_npcy()}.}
+
+\item{a}{numeric or if character, one of "right", "left", "top", "maximum",
+"minimum", "bottom", "centre", "center" or "middle".}
 }
 \value{
 A numeric vector with values in the range [0..1] representing
   npc coordinates.
 }
 \description{
-Convert character-encoded positions to npc units and shift positions to
-avoid overlaps when grouping is active. If numeric, validate npc values.
+Translate and/or compute NPC (Normalised Parent Coordinates) for use with
+aesthetics \code{x} and \code{y}.
 }
 \details{
-These functions use NPC (normalized plot coordinates) instead of
-  data coordinates. They translate named positions into numeric values in
-  [0..1] and they can also shift the position according to the group, e.g.,
-  for each increase in the group number displace the position inwards or
-  outwards, by a user-supplied distance. They make it possible to set
-  automatically set default positions for grouped text labels.
+Functions \code{compute_npcx} and \code{compute_npcy} convert
+  character-encoded positions to npc units and shift positions to avoid
+  overlaps when grouping is active. If numeric, they validate the npc values.
+  Function \code{compute_npcx} does the translation either for both \code{x}
+  and \code{y} aesthetics, but does not implement a shift for grpups.
+  Functions \code{as_npcx()},  \code{as_npcy()} and \code{as_npc()} are
+  wrappers on these functions that return the value as objects of class
+  \code{"AsIs"} so that in 'ggplot2' >= 3.5.0 they can be used with any layer
+  function.
+
+  These functions use NPC (Normalised Parent Coordinates) instead of data
+  coordinates. They translate named positions into numeric values in [0..1]
+  and they can also shift the position according to the group, e.g., for each
+  increase in the group number displace the position inwards or outwards, by
+  a user-supplied distance. They make it possible to set automatically set
+  default positions for grouped text labels.
 
   Out of bounds numeric values are constrained to [0..1]. Unrecognized
   character values are silently converted into \code{NA_integer_}.
 }
 \note{
-These functions are used by several layer functions in packages
-  'ggpp' and 'ggpmisc', and can be useful to developers of other 'ggplot2'
-  extensions.
+The \emph{as_npc()} functions make it easier the use of NPC coordinates
+  with 'ggplot2' >= 3.5.0. The _compute_ functions are used by several layer
+  functions in packages 'ggpp' and 'ggpmisc', are compatible with 'ggplot2'
+  <= 3.4.4 and can be useful to developers of other 'ggplot2' extensions.
 }
 \examples{
 compute_npcx("right")
 compute_npcx(c("left", "right"))
+compute_npcx(c("minimum", "maximum"))
+compute_npcx(c("left", "right"), margin.npc = 0)
 compute_npcy("bottom")
 compute_npcy("bottom", group = 1L:3L)
+compute_npcy("bottom", group = 1L:3L, v.step = 0.2)
 compute_npcy("bottom", group = 2L)
 compute_npcx(0.5)
 compute_npcx(1)
+compute_npcx(-2)
+
+as_npc("right")
+class(as_npc("right"))
+class(compute_npcx("right"))
 
 }

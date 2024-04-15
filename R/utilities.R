@@ -28,6 +28,10 @@ parse_safe <- function(text) {
   out
 }
 
+# Helpers to convert degrees to radians and vice versa
+rad2deg <- function(rad) rad * 180 / pi
+deg2rad <- function(deg) deg * pi / 180
+
 
 # function from ggplot2, needed in annotate() but not exported
 compact <- function (x)
@@ -63,3 +67,21 @@ new_data_frame <- function (x = list(), n = NULL) {
 # copied from ggplot2's utilities.r
 dummy_data <- function() new_data_frame(list(x = NA), n = 1)
 
+# This function is used to vectorise the following pattern:
+#
+# obj$name1 <- obj$name1 %||% value
+# obj$name2 <- obj$name2 %||% value
+#
+# and express this pattern as:
+#
+# replace_null(obj, name1 = value, name2 = value)
+replace_null <- function(obj, ..., env = rlang::caller_env()) {
+  # Collect dots without evaluating
+  dots <- rlang::enexprs(...)
+  # Select arguments that are null in `obj`
+  nms  <- names(dots)
+  nms  <- nms[vapply(obj[nms], is.null, logical(1))]
+  # Replace those with the evaluated dots
+  obj[nms] <- rlang::inject(list(!!!dots[nms]), env = env)
+  obj
+}
