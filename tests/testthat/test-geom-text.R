@@ -25,5 +25,24 @@ test_that("multiple_rows_tb", {
                                 geom_text_npc(data = df,
                                               mapping = aes(npcx = x, npcy = y, label = to.parse),
                                               parse = TRUE))
+  expect_error(
+    ggplot(data = mtcars) +
+      geom_point(mapping = aes(wt, mpg)) +
+      geom_text_npc(data = df,
+                    mapping = aes(npcx = x, npcy = y, label = to.parse),
+                    parse = TRUE,
+                    nudge_y = 0.1,
+                    position = "stack")
+  )
+
+  expect_no_error(
+    ggplot(data = mtcars) +
+      geom_point(mapping = aes(wt, mpg)) +
+      geom_text_npc(data = df,
+                    mapping = aes(npcx = x, npcy = y, label = to.parse),
+                    parse = TRUE,
+                    nudge_x = 0.1,
+                    position = "identity")
+  )
 })
 
