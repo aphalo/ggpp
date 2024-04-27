@@ -403,7 +403,7 @@ GeomTextS <-
                      angle = 0,
                      hjust = "position",
                      vjust = "position",
-                     alpha = 1,
+                     alpha = NA,
                      family = "",
                      fontface = 1,
                      lineheight = 1.2
