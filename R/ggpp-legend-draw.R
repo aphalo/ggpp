@@ -40,9 +40,9 @@ draw_key_text_s <- function(data, params, size) {
   text.colour <- ifelse(colour2text,
                         data$colour %||% params$default.colour  %||% "black",
                         params$default.colour %||% "black")
-  colour.lacks.alpha <- ifelse(nrow(col2rgb(text.colour)) == 3,
+  colour.lacks.alpha <- ifelse(nrow(grDevices::col2rgb(text.colour)) == 3,
                                rep(TRUE, length(text.colour)),
-                               is.na(col2rgb(text.colour)[4, ]))
+                               is.na(grDevices::col2rgb(text.colour)[4, ]))
   colour.alpha <- ifelse(is.na(data$alpha),
                          ifelse(colour.lacks.alpha,
                                 params$default.alpha %||% 1,
@@ -96,9 +96,9 @@ draw_key_label_s <- function(data, params, size) {
   text.colour <- ifelse(colour2text,
                         data$colour %||% params$default.colour  %||% "black",
                         params$default.colour %||% "black")
-  colour.lacks.alpha <- ifelse(nrow(col2rgb(text.colour)) == 3,
+  colour.lacks.alpha <- ifelse(nrow(grDevices::col2rgb(text.colour)) == 3,
                                rep(TRUE, length(text.colour)),
-                               is.na(col2rgb(text.colour)[4, ]))
+                               is.na(grDevices::col2rgb(text.colour)[4, ]))
   colour.alpha <- ifelse(is.na(data$alpha),
                          ifelse(colour.lacks.alpha,
                                 params$default.alpha %||% 1,
@@ -131,9 +131,9 @@ draw_key_label_s <- function(data, params, size) {
         box.colour <- ifelse(colour2box,
                              data$colour %||% params$default.colour  %||% "black",
                              params$default.colour %||% "black")
-        colour.lacks.alpha <- ifelse(nrow(col2rgb(box.colour)) == 3,
+        colour.lacks.alpha <- ifelse(nrow(grDevices::col2rgb(box.colour)) == 3,
                                      rep(TRUE, length(box.colour)),
-                                     is.na(col2rgb(box.colour)[4, ]))
+                                     is.na(grDevices::col2rgb(box.colour)[4, ]))
         colour.alpha <- ifelse(is.na(data$alpha),
                                ifelse(colour.lacks.alpha,
                                       params$default.alpha %||% 1,
@@ -150,9 +150,9 @@ draw_key_label_s <- function(data, params, size) {
         {
           alpha2fill <- any((params$alpha.target %||% "all") %in% c("box", "box.fill", "all"))
           box.fill <- data$fill %||% params$default.fill %||% "white"
-          fill.lacks.alpha <- ifelse(nrow(col2rgb(box.fill)) == 3,
+          fill.lacks.alpha <- ifelse(nrow(grDevices::col2rgb(box.fill)) == 3,
                                      rep(TRUE, length(box.fill)),
-                                     is.na(col2rgb(box.fill)[4, ]))
+                                     is.na(grDevices::col2rgb(box.fill)[4, ]))
           fill.alpha <- ifelse(is.na(data$alpha),
                                ifelse(fill.lacks.alpha,
                                       params$default.alpha %||% 1,
