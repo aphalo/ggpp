@@ -7,8 +7,11 @@
 version](https://www.r-pkg.org/badges/version/ggpp)](https://cran.r-project.org/package=ggpp)
 [![cran
 checks](https://badges.cranchecks.info/worst/ggpp.svg)](https://cran.r-project.org/web/checks/check_results_ggpp.html)
+[![ggpp status
+badge](https://aphalo.r-universe.dev/badges/ggpp)](https://aphalo.r-universe.dev/ggpp)
 [![R-CMD-check](https://github.com/aphalo/ggpp/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/aphalo/ggpp/actions/workflows/R-CMD-check.yaml)
 [![Coverage](https://raw.githubusercontent.com/aphalo/ggpp/_xml_coverage_reports/data/master/badge.svg)](https://raw.githubusercontent.com/aphalo/ggpp/_xml_coverage_reports/data/master/coverage.xml)
+<a href="https://docs.r4photobiology.info/ggpp/"><img src="https://img.shields.io/badge/documentation-ggpp-informational.svg" alt="" /></a>
 <!-- badges: end -->
 
 ## Purpose
@@ -23,7 +26,7 @@ geometry, but especially useful together with `geom_text_s()` and
 (<https://ggrepel.slowkow.com>) for installation instructions and news
 about releases.
 
-## A great news
+## A great news!
 
 **`npc` coordinates are supported natively by ‘ggplot2’ starting from
 version 3.5.0 by means of the identity function `I()`, and this should
@@ -298,7 +301,7 @@ install.packages("ggpp")
 
 Installation of the current unstable version from R-Universe CRAN-like
 repository (binaries for Mac, Win, Webassembly, and Linux, as well as
-sources avialble):
+sources available):
 
 ``` r
 install.packages('ggpp', 
@@ -359,8 +362,12 @@ reciprocal contributions by Kamil Slowikowski to ‘ggpp’ and by myself to
 
 ## References
 
-Aphalo, Pedro J. (2020) *Learn R: As a Language.* The R Series. Boca
-Raton and London: Chapman and Hall/CRC Press. ISBN: 978-0-367-18253-3.
+Aphalo, Pedro J. (2024) *Learn R: As a Language.* 2ed. The R Series.
+Boca Raton and London: Chapman and Hall/CRC Press. ISBN: 9781032516998.
+466 pp.
+
+Aphalo, Pedro J. (2020) *Learn R: As a Language.* 1ed. The R Series.
+Boca Raton and London: Chapman and Hall/CRC Press. ISBN: 9780367182533.
 350 pp.
 
 Wickham, Hadley. 2010. “A Layered Grammar of Graphics.” Journal of

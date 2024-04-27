@@ -29,3 +29,12 @@ test_that("numeric input values
             expect_equal(compute_npcy(y), c(0,1))
           })
 
+test_that("Value is returned 'AsIs'", {
+  expect_is(as_npcy("top"), "AsIs")
+  expect_equal(as_npcy("top"), I(0.95))
+  expect_equal(as_npcy("bottom"), I(0.05))
+  expect_equal(as_npcy("middle"), I(0.5))
+  expect_equal(as_npcx("center"), I(0.5))
+  expect_equal(as_npcx("centre"), I(0.5))
+})
+

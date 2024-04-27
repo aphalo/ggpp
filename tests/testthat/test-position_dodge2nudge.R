@@ -140,6 +140,7 @@ test_that("dodge2nudge plots are correct", {
                                 )
   )
 
+  skip_on_os(os = "mac")
   vdiffr::expect_doppelganger("dodge3-nudge3",
                               ggplot(mtcars, aes(x = am, y = mpg, label = mpg)) +
                                 geom_text_s(

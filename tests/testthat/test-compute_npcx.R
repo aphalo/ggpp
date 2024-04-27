@@ -28,3 +28,11 @@ test_that("numeric input value
             x <- c(-0.5, 2)
             expect_equal(compute_npcx(x), c(0,1))
           })
+
+test_that("Value is returned 'AsIs'", {
+  expect_is(as_npcx("right"), "AsIs")
+  expect_equal(as_npcx("right"), I(0.95))
+  expect_equal(as_npcx("left"), I(0.05))
+  expect_equal(as_npcx("centre"), I(0.5))
+  expect_equal(as_npcx("center"), I(0.5))
+})
