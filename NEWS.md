@@ -31,6 +31,9 @@ to its most frequently used direction, even if opposite to the default for
 `geom_label_pairwise()` so that graphic elements in the keys match those in
 the plot, even when using the additional features available in 'ggplot2' in
 >= 3.5.0.
+-   Update `geom_text_s()`, `geom_label_s()`. `geom_text_pairwise()` and 
+`geom_label_pairwise()` so that they respect the `alpha` component of
+color defintions.
 -   Fix in `geom_text_s()`, `geom_label_s()`. `geom_text_pairwise()` and 
 `geom_label_pairwise()` an infrequent problem with incomplete guides in 
 'ggplot2' 3.5.0.
