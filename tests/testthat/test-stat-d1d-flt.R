@@ -240,13 +240,13 @@ test_that("numbers_x_tb", {
                                                    keep.fraction = 0.01)
   )
   vdiffr::expect_doppelganger("stat_d1d_flt_08",
-                              ggplot(data = make_data_tbl(2000), aes(x, y)) +
+                              ggplot(data = make_data_tbl(1000), aes(x, y)) +
                                 geom_point() +
                                 stat_dens1d_filter(colour = "red",
                                                    keep.sparse = FALSE)
   )
   vdiffr::expect_doppelganger("stat_d1d_flt_09",
-                              ggplot(data = make_data_tbl(2000), aes(x, y)) +
+                              ggplot(data = make_data_tbl(1000), aes(x, y)) +
                                 geom_point() +
                                 stat_dens1d_filter(colour = "red",
                                                    keep.sparse = FALSE)+
@@ -873,14 +873,14 @@ test_that("labels_x_tb", {
                                                    orientation = "x")
   )
   vdiffr::expect_doppelganger("stat_d1d_lbl_x08",
-                              ggplot(data = make_labs_tbl(2000), aes(x, y, label = lab)) +
+                              ggplot(data = make_labs_tbl(1000), aes(x, y, label = lab)) +
                                 geom_point() +
                                 stat_dens1d_labels(colour = "red",
                                                    keep.sparse = FALSE,
                                                    orientation = "x")
   )
   vdiffr::expect_doppelganger("stat_d1d_lbl_x09",
-                              ggplot(data = make_labs_tbl(2000), aes(x, y, label = lab)) +
+                              ggplot(data = make_labs_tbl(1000), aes(x, y, label = lab)) +
                                 geom_point() +
                                 stat_dens1d_labels(colour = "red",
                                                    keep.sparse = FALSE,
