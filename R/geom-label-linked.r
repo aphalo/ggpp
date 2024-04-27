@@ -94,14 +94,14 @@ GeomLabelS <-
 
                    default_aes = ggplot2::aes(
                      colour = "black",
-                     fill = "white",
+                     fill = rgb(1, 1, 1, alpha = 0.75), # "white", but occluded data are visible
                      size = 3.88,
                      angle = 0,
                      linewidth = 0.5,
                      linetype = "solid",
                      hjust = "position",
                      vjust = "position",
-                     alpha = 0.75, # ensure that occluded data are visible by default
+                     alpha = NA,
                      family = "",
                      fontface = 1,
                      lineheight = 1.2
@@ -215,7 +215,7 @@ GeomLabelS <-
                                               ),
                                               rect.gp = gpar(
                                                 col = if (row$linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
-                                                  ifelse(any(colour.target %in% c("all", "box")),
+                                                  ifelse(any(colour.target %in% c("all", "box", "box.line")),
                                                          ggplot2::alpha(row$colour, box.colour.alpha),
                                                          ggplot2::alpha(default.colour, box.colour.alpha)),
                                                 fill = alpha(row$fill, box.fill.alpha),

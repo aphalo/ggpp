@@ -34,6 +34,24 @@ draw_key_text_s <- function(data, params, size) {
                   compute_just(data$vjust %||% 0.5),
                   0.5)
   just  <- rotate_just(data$angle, hjust, vjust)
+
+  colour2text <- any((params$colour.target %||% "text") %in% c("text", "all"))
+  alpha2text <- any((params$alpha.target %||% "text") %in% c("text", "all"))
+  text.colour <- ifelse(colour2text,
+                        data$colour %||% params$default.colour  %||% "black",
+                        params$default.colour %||% "black")
+  colour.lacks.alpha <- ifelse(nrow(col2rgb(text.colour)) == 3,
+                               rep(TRUE, length(text.colour)),
+                               is.na(col2rgb(text.colour)[4, ]))
+  colour.alpha <- ifelse(is.na(data$alpha),
+                         ifelse(colour.lacks.alpha,
+                                params$default.alpha %||% 1,
+                                params$default.alpha),
+                         data$alpha)
+  if (alpha2text) {
+    text.colour <- ggplot2::alpha(text.colour, colour.alpha)
+  }
+
   grob  <- titleGrob(
     data$label,
     x = unit(just$hjust, "npc"), y = unit(just$vjust, "npc"),
@@ -41,12 +59,7 @@ draw_key_text_s <- function(data, params, size) {
     hjust = hjust,
     vjust = vjust,
     gp = gpar(
-      col = ifelse(any((params$colour.target %||% "text") %in% c("text", "all")),
-                   alpha(data$colour %||% params$default.colour  %||% "black",
-                         ifelse(any((params$alpha.target %||% "all") %in% c("text", "all")),
-                                data$alpha%||% params$default.alpha %||% 1,
-                                params$default.alpha %||% 1)),
-                   params$default.colour %||% "black"),
+      col = text.colour,
       fontfamily = data$family   %||% "",
       fontface   = data$fontface %||% 1,
       fontsize   = (data$size %||% 3.88) * .pt
@@ -77,6 +90,24 @@ draw_key_label_s <- function(data, params, size) {
     face = data$fontface %||% 1,
     size = data$size %||% 3.88
   )
+
+  colour2text <- any((params$colour.target %||% "text") %in% c("text", "all"))
+  alpha2text <- any((params$alpha.target %||% "all") %in% c("text", "all"))
+  text.colour <- ifelse(colour2text,
+                        data$colour %||% params$default.colour  %||% "black",
+                        params$default.colour %||% "black")
+  colour.lacks.alpha <- ifelse(nrow(col2rgb(text.colour)) == 3,
+                               rep(TRUE, length(text.colour)),
+                               is.na(col2rgb(text.colour)[4, ]))
+  colour.alpha <- ifelse(is.na(data$alpha),
+                         ifelse(colour.lacks.alpha,
+                                params$default.alpha %||% 1,
+                                params$default.alpha),
+                         data$alpha)
+  if (alpha2text) {
+    text.colour <- ggplot2::alpha(text.colour, colour.alpha)
+  }
+
   grob <- labelGrob(
     data$label,
     x = unit(just$hjust, "npc"),
@@ -86,12 +117,7 @@ draw_key_label_s <- function(data, params, size) {
     padding = padding,
     r = params$label.r %||% unit(0.15, "lines"),
     text.gp = gpar(
-      col = ifelse(any((params$colour.target %||% "all") %in% c("text", "all")),
-                   alpha(data$colour %||% params$default.colour  %||% "black",
-                         ifelse(any((params$alpha.target %||% "fill") %in% c("text", "all")),
-                                data$alpha%||% params$default.alpha %||% 1,
-                                params$default.alpha %||% 1)),
-                   params$default.colour %||% "black"),
+      col = text.colour,
       fontfamily = data$family   %||% "",
       fontface   = data$fontface %||% 1,
       fontsize   = (data$size %||% 3.88) * .pt
@@ -99,16 +125,45 @@ draw_key_label_s <- function(data, params, size) {
     rect.gp = gpar(
       col  = if (isTRUE(all.equal(params$label.size, 0))) {
         NA
+      } else {
+        colour2box <- any((params$colour.target %||% "text") %in% c("box", "box.line", "all"))
+        alpha2box <- any((params$alpha.target %||% "all") %in% c("box", "box.line", "all"))
+        box.colour <- ifelse(colour2box,
+                             data$colour %||% params$default.colour  %||% "black",
+                             params$default.colour %||% "black")
+        colour.lacks.alpha <- ifelse(nrow(col2rgb(box.colour)) == 3,
+                                     rep(TRUE, length(box.colour)),
+                                     is.na(col2rgb(box.colour)[4, ]))
+        colour.alpha <- ifelse(is.na(data$alpha),
+                               ifelse(colour.lacks.alpha,
+                                      params$default.alpha %||% 1,
+                                      params$default.alpha),
+                               data$alpha)
+        if (alpha2box) {
+          ggplot2::alpha(box.colour, colour.alpha)
         } else {
-          ifelse(any((params$colour.target %||% "all") %in% c("box", "all")),
-                 alpha(data$colour %||% params$default.colour  %||% "black",
-                       ifelse(any((params$alpha.target %||% "fill") %in% c("box", "all")),
-                              data$alpha%||% params$default.alpha %||% 1,
-                              params$default.alpha %||% 1)),
-                 params$default.colour %||% "black")
+          box.colour
+        }
+
+      },
+      fill =
+        {
+          alpha2fill <- any((params$alpha.target %||% "all") %in% c("box", "box.fill", "all"))
+          box.fill <- data$fill %||% params$default.fill %||% "white"
+          fill.lacks.alpha <- ifelse(nrow(col2rgb(box.fill)) == 3,
+                                     rep(TRUE, length(box.fill)),
+                                     is.na(col2rgb(box.fill)[4, ]))
+          fill.alpha <- ifelse(is.na(data$alpha),
+                               ifelse(fill.lacks.alpha,
+                                      params$default.alpha %||% 1,
+                                      params$default.alpha),
+                               data$alpha)
+          if (alpha2fill) {
+            box.fill <- alpha(box.fill, fill.alpha)
+          }
+
+          box.fill
         },
-      fill = alpha(data$fill %||% "white",
-                   data$alpha %||% params$default.alpha %||% 1),
       lwd  = (data$linewidth %||% 0.25) * ggplot2::.stroke,
       lty = data$linetype %||% "solid"
     )

@@ -29,11 +29,13 @@ to its most frequently used direction, even if opposite to the default for
 `geom_text()` and `geom_label()` in 'ggplot2' 3.5.0.
 -   Update `geom_text_s()`, `geom_label_s()`. `geom_text_pairwise()` and 
 `geom_label_pairwise()` so that graphic elements in the keys match those in
-the plot, even when using the additional features not availablr in 'ggplot2'.
+the plot, even when using the additional features available in 'ggplot2' in
+>= 3.5.0.
 -   Fix in `geom_text_s()`, `geom_label_s()`. `geom_text_pairwise()` and 
 `geom_label_pairwise()` an infrequent problem with incomplete guides in 
 'ggplot2' 3.5.0.
 -   Fix bug in `geom_point_s()`, `alpha_target = "point"` ignored.
+-   Fix bug in `geom_label_s()`, `colour_target = "box.line"` ignored.
 
 # ggpp 0.5.6
 
