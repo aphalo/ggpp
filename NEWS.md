@@ -13,6 +13,8 @@ Add some new features matching those new in 'ggplot2'. General improvements
 and bug fixes.
 
 -   This version depends on 'ggplot2' >= 3.5.0.
+-   Add helper function `wrap_labels()`, useful to insert new lines into
+characters strings stored in a vector.
 -   Add `as_npc()`, `as_npcx()` and `as_npcy()` helper functions that translate
 positions given as character strings in numeric values in [0..1] into NPC
 (Normalised Parent Coordinates) and validate the range of numeric values if
