@@ -269,6 +269,24 @@ test_that("nudge_center", {
                                                                            center_x = 1.5,
                                                                            direction = "radial"))
   )
+  vdiffr::expect_doppelganger("nudge_center6",
+                              ggplot(df, aes(x, y)) +
+                                geom_point() +
+                                geom_text(aes(label = y),
+                                          vjust = "outward", hjust = "outward",
+                                          position = position_nudge_center(x = 0.06,
+                                                                           y = 0.08,
+                                                                           center_y = 2))
+  )
+  vdiffr::expect_doppelganger("nudge_center7",
+                              ggplot(df, aes(x, y)) +
+                                geom_point() +
+                                geom_text(aes(label = y),
+                                          vjust = "outward", hjust = "outward",
+                                          position = position_nudge_center(x = 0.06,
+                                                                           y = 0.08,
+                                                                           center_x = 1.5))
+                                )
 })
 
 test_that("nudge_line", {

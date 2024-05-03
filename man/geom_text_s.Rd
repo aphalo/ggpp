@@ -93,8 +93,8 @@ displayed as described in \code{?plotmath}.}
 starting position of each text label. The units for \code{nudge_x} and
 \code{nudge_y} are the same as for the data units on the x-axis and y-axis.}
 
-\item{default.colour, default.color}{A colour definition to use for elements not targeted by
-the colour aesthetic.}
+\item{default.colour, default.color}{A colour definition to use for elements
+not targeted by the colour aesthetic.}
 
 \item{colour.target, color.target}{A vector of character strings; \code{"all"},
 \code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
