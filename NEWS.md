@@ -6,11 +6,11 @@ editor_options:
     wrap: 72
 ---
 
-# ggpp 0.5.7/0.6.0
+# ggpp 0.5.7
 
-Track changes in 'ggplot2' 3.5.0. Fix a couple of minor incompatibilities. 
-Add some new features matching those new in 'ggplot2'. General improvements
-and bug fixes.
+Track changes in 'ggplot2' 3.5.0 and 3,5,1. Fix a couple of minor
+incompatibilities. Add some new features matching those new in 'ggplot2'.
+General improvements and bug fixes.
 
 -   This version depends on 'ggplot2' >= 3.5.0.
 -   Add helper function `wrap_labels()`, useful to insert new lines into
@@ -28,7 +28,7 @@ to its most frequently used direction, even if opposite to the default for
 `geom_text_s()` and `geom_label_s()`.
 -   Update `geom_text_s()`, `geom_label_s()`. `geom_text_pairwise()` and 
 `geom_label_pairwise()` adding parameter `size.unit` tracking change in 
-`geom_text()` and `geom_label()` in 'ggplot2' 3.5.0.
+`geom_text()` and `geom_label()` in 'ggplot2' >= 3.5.0.
 -   Update `geom_text_s()`, `geom_label_s()`. `geom_text_pairwise()` and 
 `geom_label_pairwise()` so that graphic elements in the keys match those in
 the plot, even when using the additional features available in 'ggplot2' in
@@ -38,7 +38,7 @@ the plot, even when using the additional features available in 'ggplot2' in
 color defintions.
 -   Fix in `geom_text_s()`, `geom_label_s()`. `geom_text_pairwise()` and 
 `geom_label_pairwise()` an infrequent problem with incomplete guides in 
-'ggplot2' 3.5.0.
+'ggplot2' >= 3.5.0.
 -   Fix bug in `geom_point_s()`, `alpha_target = "point"` ignored.
 -   Fix bug in `geom_label_s()`, `colour_target = "box.line"` ignored.
 

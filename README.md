@@ -28,14 +28,15 @@ about releases.
 
 ## NPC support in ggplot2
 
-**`npc` coordinates are supported natively by ‘ggplot2’ starting from
-version 3.5.0 by means of the identity function `I()`. However, this
-works only when continuous variables are mapped to the *x* and/or *y*
-aesthetics. This new approach should work with almost every normal geom.
-If support for factors and other discrete variables is added in the
-future to ‘ggplot2’, all the `_npc` geometries from ‘ggpp’ could become
-redundant. Meanwhile, the layer functions from ‘ggpp’ still fill a gap,
-albeit a smaller one, in the support of NPC by ‘ggplot2’.**
+**Normalised Parent Coordinates (NPC) are supported natively by
+‘ggplot2’ \>= 3.5.0 by means of R’s identity function `I()`. This new
+approach does not require special geometries as it should work with
+almost every existing geometry. However, currently this works only when
+continuous variables are mapped to the *x* and/or *y* aesthetics. If
+this mechanism is extended to support factors and other discrete
+variables in the future , all the `_npc` geometries from ‘ggpp’ could
+become redundant. Meanwhile, these special geometries from ‘ggpp’ still
+fill a gap, albeit a smaller one, in the support of NPC by ‘ggplot2’.**
 
 ## Extended Grammar of graphics
 
@@ -43,34 +44,38 @@ albeit a smaller one, in the support of NPC by ‘ggplot2’.**
 
 The distinction between observations or data mapped to *x* and *y*
 aesthetics and data labels is that data labels are linked to a the
-coordinates of the data, but own location is usually nearby but not
-exactly that of the data. In other words the location of a data label in
-*x* and *y* coordinates is flexible as long as the link to a data
-observation can be inferred. In the case of annotations the location on
-the plotting area is arbitrary, dictated by available graphic design
-considerations and the requirement of not occluding data observations.
-In the table below we list the geometries defined in package ‘ggpp’,
-whether they are intended to for data labels, annotations or data, the
-aesthetics and pseudo-aesthetic they obey and whether the can connect
-the original data position to the displaced position where the data
-label is anchored. These requires also a change in the behaviour of
-position functions, that we will describe in the next section.
+coordinates of the data, but their own location is usually nearby but
+not exactly that of the data. In other words the location of a data
+label in *x* and *y* coordinates is flexible as long as the link to a
+data observation can be inferred. In the case of annotations the
+location on the plotting area is arbitrary, dictated by available
+graphic design considerations and the requirement of not occluding data
+observations. In the table below we list for the geometries defined in
+package ‘ggpp’: 1) whether they are intended for data labels,
+annotations or data, 2) the aesthetics and pseudo-aesthetics they obey,
+and 3) whether they can connect the original data position to the
+displaced position. The drawing of connecting segments or arrows between
+the displaced and original positions, those of the observation and the
+displaced label, requires also a change in the data returned by position
+functions (see the next section).
 
-| Geometry                                   | Main use                        | Aesthetics                                                                                                      | Segment |
-|--------------------------------------------|---------------------------------|-----------------------------------------------------------------------------------------------------------------|---------|
-| `geom_text_s()`                            | data labels                     | x, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                                 | yes     |
-| `geom_label_s()`                           | data labels                     | x, y, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust             | yes     |
-| `geom_text_pairwise()`                     | data labels                     | x, xmin, xmax, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                     | horiz.  |
-| `geom_label_pairwise()`                    | data labels                     | x, xmin, xmax, y, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust | horiz.  |
-| `geom_point_s()`                           | data labels                     | x, y, size, colour, fill, alpha, shape, stroke, group                                                           | yes     |
-| `geom_table()`                             | data labels                     | x, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                                 | yes     |
-| `geom_plot()` , `geom_grob()`              | data labels                     | x, y, label, group, angle, vjust, hjust                                                                         | yes     |
-| `geom_margin_arrow()`                      | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                      | no      |
-| `geom_margin_point()`                      | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                      | no      |
-| `geom_margin_grob()`                       | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                      | no      |
-| `geom_quadrant_lines()` , `geom_vhlines()` | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                      | no      |
+| Geometry                                             | Main use                        | Aesthetics                                                                                                      | Segment |
+|------------------------------------------------------|---------------------------------|-----------------------------------------------------------------------------------------------------------------|---------|
+| `geom_text_s()`                                      | data labels                     | x, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                                 | yes     |
+| `geom_label_s()`                                     | data labels                     | x, y, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust             | yes     |
+| `geom_text_pairwise()`                               | data labels                     | x, xmin, xmax, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                     | horiz.  |
+| `geom_label_pairwise()`                              | data labels                     | x, xmin, xmax, y, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust | horiz.  |
+| `geom_point_s()`                                     | data labels                     | x, y, size, colour, fill, alpha, shape, stroke, group                                                           | yes     |
+| `geom_table()`<sup>1</sup>                           | data labels                     | x, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                                 | yes     |
+| `geom_plot()`<sup>1</sup>, `geom_grob()`<sup>1</sup> | data labels                     | x, y, label, group, angle, vjust, hjust                                                                         | yes     |
+| `geom_margin_arrow()`                                | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                      | no      |
+| `geom_margin_point()`                                | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                      | no      |
+| `geom_margin_grob()`                                 | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                      | no      |
+| `geom_quadrant_lines()` , `geom_vhlines()`           | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                      | no      |
 
-Geometries defined in package ‘ggpp’
+Geometries defined in package ‘ggpp’. <sup>1</sup> NPC versions exist
+for these geometries, as well as for `geom_text()` and `geom_label()`,
+used mainly for plot annotations.
 
 ## Position functions
 
@@ -99,7 +104,7 @@ the the observations.
 
 Position functions `position_stacknudge()`, `position_fillnudge()`,
 `position_jitternudge()`, `position_dodgenudge()` and
-`position_dodge2nudge()` each combines the roles of two *position*
+`position_dodge2nudge()` combine each the roles of two *position*
 functions. They make it possible to easily nudge labels in plot layers
 that use stacking, dodging or jitter. Functions
 `position_jitter_keep()`, `position_stack_keep()`,
@@ -125,7 +130,7 @@ keep in the `data` object the original coordinates.
 | `position_dodgenudge()`   | dodge + nudge  | combined, see above             | data labels in column plots |
 | `position_dodge2nudge()`  | dodge2 + nudge | combined, see above             | data labels in box plots    |
 
-Position functions defined in package ‘ggpp’
+Position functions defined in package ‘ggpp’.
 
 ### Statistics
 
