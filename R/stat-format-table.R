@@ -1,9 +1,10 @@
 #' @title Select and slice a tibble nested in \code{data}
 #'
 #' @description \code{stat_fmt_tb} selects, reorders and/or renames columns and
-#'   or rows of a tibble nested in \code{data}. This stat is intended to be used
-#'   to pre-process \code{tibble} objects mapped to the \code{label} aesthetic
-#'   before adding them to a plot with \code{geom_table}.
+#'   or rows of a tibble nested in \code{data}. It can also apply user supplied
+#'   functions to data columns. This stat is intended to be used to pre-process
+#'   \code{tibble} objects mapped to the \code{label} aesthetic before adding
+#'   them to a plot with \code{geom_table}.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be
@@ -26,10 +27,11 @@
 #' @param na.rm	a logical indicating whether \code{NA} values should be stripped
 #'   before the computation proceeds.
 #' @param digits integer indicating the number of significant digits to be
-#'   retained in data.
+#'   retained in data. Use \code{digits = Inf} to skip.
 #' @param tb.vars,tb.rows character or numeric vectors, optionally named, used
 #'   to select and/or rename the columns or rows in the table
 #'   returned.
+#' @param tb.funs named list of functions to be applied to \code{data} columns.
 #' @param table.theme NULL, list or function A 'gridExtra' \code{ttheme}
 #'   definition, or a constructor for a \code{ttheme} or \code{NULL} for
 #'   default.
@@ -39,6 +41,10 @@
 #'   headings of the table.
 #' @param parse If \code{TRUE}, the labels will be parsed into expressions and
 #'   displayed as described in \code{?plotmath}.
+#'
+#' @details One or more functions to be applied can be passed in a named list to
+#'   parameter `tb.funs`. Functions are matched by name to columns, after column
+#'   selection and renaming have been applied.
 #'
 #' @seealso See \code{\link{geom_table}} for details on how tables respond
 #'   to mapped aesthetics and table themes. For details on predefined table
@@ -87,6 +93,15 @@
 #'                tb.rows = 1:3) +
 #'   expand_limits(x = c(0,3), y = c(-2, 6))
 #'
+#' # apply functions to columns
+#' ggplot(my.df, aes(x, y, label = tbs)) +
+#'   stat_fmt_tb(tb.vars = c(value = 1, group = 2),
+#'                tb.rows = 1:3,
+#'                tb.funs = list(group = function(x) {sprintf("italic(%s)", x)},
+#'                               value = function(x) {ifelse(x > 2, "bold(zz)", x)}),
+#'                parse = TRUE) +
+#'   expand_limits(x = c(0,3), y = c(-2, 6))
+#'
 #' # selection, reordering and renaming by column position
 #' ggplot(my.df, aes(x, y, label = tbs)) +
 #'   stat_fmt_tb(tb.vars = c(group = 2, value = 1),
@@ -104,6 +119,7 @@ stat_fmt_tb <- function(mapping = NULL,
                         geom = "table",
                         tb.vars = NULL,
                         tb.rows = NULL,
+                        tb.funs = list(),
                         digits = 3,
                         position = "identity",
                         table.theme = NULL,
@@ -120,6 +136,7 @@ stat_fmt_tb <- function(mapping = NULL,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(tb.vars = tb.vars,
                   tb.rows = tb.rows,
+                  tb.funs = tb.funs,
                   digits = digits,
                   table.theme = table.theme,
                   table.rownames = table.rownames,
@@ -141,6 +158,7 @@ StatFmtTb <-
                                               scales,
                                               tb.vars = NULL,
                                               tb.rows = NULL,
+                                              tb.funs = list(),
                                               digits = 3) {
                      stopifnot(is.list(data$label))
 
@@ -219,6 +237,21 @@ StatFmtTb <-
                              selector <- names(tb.rows) != ""
                              colnames(temp_tb)[selector] <- names(tb.rows)[selector]
                            }
+                         }
+                       }
+
+                       funs2apply <-
+                         intersect(names(tb.funs), colnames(temp_tb))
+
+                       for (f in funs2apply) {
+                         if (is.character(tb.funs[[f]])) {
+                           tb.funs[[f]] <- match.fun(tb.funs[[f]])
+                         }
+                         if (is.function(tb.funs[[f]])) {
+                           temp_tb[[f]] <- tb.funs[[f]](temp_tb[[f]])
+                         } else {
+                           warning("'tb.funs[[", f, "]]' is not a function or a visible function name", sep = "")
+                           temp_tb[[f]] <- NA
                          }
                        }
 

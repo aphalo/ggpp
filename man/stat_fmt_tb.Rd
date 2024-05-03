@@ -10,6 +10,7 @@ stat_fmt_tb(
   geom = "table",
   tb.vars = NULL,
   tb.rows = NULL,
+  tb.funs = list(),
   digits = 3,
   position = "identity",
   table.theme = NULL,
@@ -37,8 +38,10 @@ the plot defaults.}
 to select and/or rename the columns or rows in the table
 returned.}
 
+\item{tb.funs}{named list of functions to be applied to \code{data} columns.}
+
 \item{digits}{integer indicating the number of significant digits to be
-retained in data.}
+retained in data. Use \code{digits = Inf} to skip.}
 
 \item{position}{The position adjustment to use for overlapping points on this
 layer}
@@ -79,9 +82,15 @@ A plot layer instance. Using as output \code{data} a copy of the
 }
 \description{
 \code{stat_fmt_tb} selects, reorders and/or renames columns and
-  or rows of a tibble nested in \code{data}. This stat is intended to be used
-  to pre-process \code{tibble} objects mapped to the \code{label} aesthetic
-  before adding them to a plot with \code{geom_table}.
+  or rows of a tibble nested in \code{data}. It can also apply user supplied
+  functions to data columns. This stat is intended to be used to pre-process
+  \code{tibble} objects mapped to the \code{label} aesthetic before adding
+  them to a plot with \code{geom_table}.
+}
+\details{
+One or more functions to be applied can be passed in a named list to
+  parameter `tb.funs`. Functions are matched by name to columns, after column
+  selection and renaming have been applied.
 }
 \section{Computed variables}{
  The output of sequentially applying
@@ -120,6 +129,15 @@ ggplot(my.df, aes(x, y, label = tbs)) +
 ggplot(my.df, aes(x, y, label = tbs)) +
   stat_fmt_tb(tb.vars = c(value = 1, group = 2),
                tb.rows = 1:3) +
+  expand_limits(x = c(0,3), y = c(-2, 6))
+
+# apply functions to columns
+ggplot(my.df, aes(x, y, label = tbs)) +
+  stat_fmt_tb(tb.vars = c(value = 1, group = 2),
+               tb.rows = 1:3,
+               tb.funs = list(group = function(x) {sprintf("italic(\%s)", x)},
+                              value = function(x) {ifelse(x > 2, "bold(zz)", x)}),
+               parse = TRUE) +
   expand_limits(x = c(0,3), y = c(-2, 6))
 
 # selection, reordering and renaming by column position
