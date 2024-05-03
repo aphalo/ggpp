@@ -121,8 +121,8 @@
 #' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
 #'   starting position of each text label. The units for \code{nudge_x} and
 #'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
-#' @param default.colour,default.color A colour definition to use for elements not targeted by
-#'   the colour aesthetic.
+#' @param default.colour,default.color A colour definition to use for elements
+#'   not targeted by the colour aesthetic.
 #' @param colour.target,color.target A vector of character strings; \code{"all"},
 #'   \code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
 #'   \code{"box.fill"} or \code{"none"}.
@@ -549,7 +549,7 @@ GeomTextS <-
 # arbitrary positions along the axis.
 #
 # We support "position" (could be called "away") when nudging or other
-# displacement has been applied and the original postion saved.
+# displacement has been applied and the original position saved.
 #
 # This function can handle either hjust or vjust, but only one at a time.
 compute_just2d <- function(data,
@@ -588,7 +588,9 @@ compute_just2d <- function(data,
         just[position] <- "middle"
       } else {
         just[position] <-
-          c("left", "middle", "right")[2L + 1L * sign(data[[ab_orig[1L]]][position] - data[[ab[1L]]][position])]
+          c("left", "middle", "right")[2L + 1L *
+                                         sign(data[[ab_orig[1L]]][position] -
+                                                data[[ab[1L]]][position])]
       }
     }
 
@@ -681,14 +683,14 @@ compute_just <- function(just, a, b = a, angle = 0) {
 # shorten segments to add padding
 # code based on https://stackoverflow.com/questions/22649781/
 #
+# box.padding and point.pading givern in mm
+#
 shrink_segments <- function(data,
                             box.padding = 0,
                             point.padding = 0,
                             min.segment.length = 0.5) {
   stopifnot("'box.padding' must be >= 0" = box.padding >= 0,
-            "'point.padding' must be >= 0" =  point.padding >= 0,
-            "'box.padding + point.padding' must be < 1" =
-              (box.padding + point.padding) < 1)
+            "'point.padding' must be >= 0" =  point.padding >= 0)
   segments.data <- data[ , c("x_orig", "y_orig", "x", "y")]
   starting.length <- apply(segments.data, 1,
                            function(x) stats::dist(rbind(x[1:2], x[3:4])))
