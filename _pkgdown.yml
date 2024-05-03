@@ -9,12 +9,12 @@ reference:
     contents:
     - '`ggpp-package`'
   - title: Scales
-    desc: Scales control de mapping of data to aesthetics.
+    desc: Scales control de mapping of values in data to values of an aesthetic, or the propeerties of the plot's graphic elements.
     contents:
     - scale_continuous_npc
     - compute_npcx
   - title: Geoms
-    desc: Geoms, short for geometric objects, describe the type of plot you will produce.
+    desc: Geoms, short for geometric objects, describe the type of plot you will produce. They add a plot layer containing graphic elements representing values in the data,
     contents:
     - annotate
     - geom_text_npc
@@ -31,7 +31,7 @@ reference:
     - ttheme_gtdefault
     - ttheme_set
   - title: Statistics
-    desc: It is often useful to summarize data before plotting, and that is what these transformations do.
+    desc: It is often useful to summarize data before plotting, e.g., fiting models or computing means, or modifying the data in some other way.
     contents:
     - stat_dens1d_filter
     - stat_dens1d_labels
@@ -43,7 +43,7 @@ reference:
     - stat_apply_group
     - stat_functions
   - title: Positions
-    desc: Advanced nudge functions
+    desc: It is often useful to displace plot elements away from their original positions to obtain stacked, side-by-side or non-overlapping plot elements.
     contents:
     - position_nudge_keep
     - position_nudge_to
@@ -53,9 +53,15 @@ reference:
     - position_stacknudge
     - position_jitternudge
   - title: Plot creation
-    desc: Additional ggplot methods
+    desc: Additional ggplot methods for specific classes of data objects.
     contents:
     - ggplot
+  - title: Helper functions
+    desc: Additional functions that can be useful when creating plots.
+    contents:
+    - dark_or_light
+    - try_data_frame
+    - wrap_labels
   - title: Example data
     desc: Data sets as R objects. The data are used for examples in the documentation.
     contents:
@@ -64,14 +70,6 @@ reference:
     - quadrant_example.df
     - volcano_example.df
     - weather_18_june_2019.df
-  - title: Fortify or Try
-    desc: Convert R objects containing observations in other formats into 'tibble' objects suitable for plotting.
-    contents:
-    - try_data_frame
-  - title: Utilities
-    desc: Utility functions
-    contents:
-    - dark_or_light
 
 navbar:
   structure:

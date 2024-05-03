@@ -1,8 +1,8 @@
 Package: ggpp
 Type: Package
 Title: Grammar Extensions to 'ggplot2'
-Version: 0.5.6.9001
-Date: 2024-04-27
+Version: 0.5.6.9002
+Date: 2024-05-03
 Authors@R:
     c(
     person("Pedro J.", "Aphalo", email = "pedro.aphalo@helsinki.fi", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3385-972X")),
@@ -32,6 +32,7 @@ Imports:
     grid,
     grDevices,
     rlang (>= 1.0.6),
+    vctrs (>= 0.6.0),
     magrittr (>= 2.0.1),
     glue (>= 1.6.0),
     gridExtra (>= 2.3),
@@ -100,3 +101,4 @@ Collate:
     'stat-quadrant-counts.R'
     'try-data-frame.R'
     'weather-data.R'
+    'wrap-labels.R'

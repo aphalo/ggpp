@@ -65,7 +65,7 @@ ggplot(my.cars, aes(wt, mpg, label = name)) +
   geom_label_s(aes(size = wt), nudge_x = -0.1, hjust = "right",
                fill = "yellow",
                colour = "red",
-               alpha = .7,
+               alpha = .5,
                #               default.colour = rgb(0.5,0,0),
                colour.target = "none",
                alpha.target = "all") +

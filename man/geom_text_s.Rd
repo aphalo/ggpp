@@ -18,7 +18,7 @@ geom_label_s(
   default.color = default.colour,
   colour.target = c("text", "box"),
   color.target = colour.target,
-  default.alpha = 1,
+  default.alpha = NA,
   alpha.target = "all",
   label.padding = grid::unit(0.25, "lines"),
   label.r = grid::unit(0.15, "lines"),
@@ -47,7 +47,7 @@ geom_text_s(
   default.color = default.colour,
   colour.target = "text",
   color.target = colour.target,
-  default.alpha = 1,
+  default.alpha = NA,
   alpha.target = "all",
   add.segments = TRUE,
   box.padding = 0.25,
@@ -171,11 +171,12 @@ Geometries \code{geom_text_s()} and \code{geom_label_s()} have an
   for the segment, assumed not to be used to display information
   only in coordination with other graphic elements.
 
-  The default for the \code{alpha = 0.75} aesthetic applied in in
-  \code{geom_label_s()} to the box fill differs from \code{alpha = 1} used in
-  \code{geom_label()}: the fill is semitransparent with with the intention
-  that accidental occlusion of observations is obvious irrespective of the
-  order in which layers are added to the plot.
+  In \code{geom_label_s()} the default \code{fill} is similar to
+  \code{"white"} but with its \code{alpha} component set to 0.75. This
+  differs from \code{"white"} used in \code{geom_label()}: the default fill
+  is semitransparent with the intention that accidental occlusion of
+  observations is obvious irrespective of the order in which layers are added
+  to the plot.
 
   Layer functions \code{geom_text_s()} and \code{geom_label_s()} use by
   default \code{\link{position_nudge_keep}} which is backwards compatible

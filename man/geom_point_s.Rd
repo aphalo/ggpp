@@ -18,7 +18,7 @@ geom_point_s(
   default.color = default.colour,
   colour.target = "point",
   color.target = colour.target,
-  default.alpha = 1,
+  default.alpha = NA,
   alpha.target = "all",
   add.segments = TRUE,
   box.padding = 0.25,
