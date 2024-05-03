@@ -32,6 +32,7 @@ Imports:
     grid,
     grDevices,
     rlang (>= 1.0.6),
+    vctrs (>= 0.6.0),
     magrittr (>= 2.0.1),
     glue (>= 1.6.0),
     gridExtra (>= 2.3),
@@ -100,3 +101,4 @@ Collate:
     'stat-quadrant-counts.R'
     'try-data-frame.R'
     'weather-data.R'
+    'wrap-labels.R'
