@@ -33,6 +33,17 @@ test_that("stat_fmt_tb", {
     stat_fmt_tb(table.colnames = FALSE,
                 table.rownames = TRUE))
 
+  expect_silent(result3 <- ggplot(my.df, aes(x, y, label = tbs)) +
+                  stat_fmt_tb(tb.funs = list(Xa = function(x) {x * 2},
+                                             Xb = function(x) {x * 3},
+                                             Y = function(x) {toupper(x)})) +
+                  expand_limits(x = c(0,3), y = c(-2, 6)))
+  result <- ggplot2::layer_data(result3,1)
+  expect_equal(result$label[[1]][["Xa"]], my.df$tbs[["a"]][["Xa"]] * 2)
+  expect_equal(result$label[[2]][["Xb"]], my.df$tbs[["b"]][["Xb"]] * 3)
+  expect_equal(result$label[[1]][["Y"]], toupper(my.df$tbs[["a"]][["Y"]]))
+  expect_equal(result$label[[2]][["Y"]], toupper(my.df$tbs[["b"]][["Y"]]))
+
   # Use a theme for the table
   ggplot(my.df, aes(x, y, label = tbs)) +
     stat_fmt_tb(table.theme = ttheme_gtlight) +
