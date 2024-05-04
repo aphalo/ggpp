@@ -313,13 +313,13 @@ devtools::install_github("aphalo/ggpp")
 HTML documentation for the package, including help pages and the *User
 Guide*, is available at (<https://docs.r4photobiology.info/ggpp/>).
 
-News about updates are regularly posted at
-(<https://www.r4photobiology.info/>).
+News about updates are posted at (<https://www.r4photobiology.info/>).
 
-Chapter 7 in Aphalo (2020) explains both basic concepts of the grammar
-of graphics as implemented in 'ggplot2' as well as extensions to this
-grammar including several of those made available by packages 'ggpp' and
-'ggpmisc'.
+Chapter 7 in Aphalo (2020) and Chapter 9 in Aphalo (2024) explain basic concepts
+of the grammar of graphics as implemented in 'ggplot2' as well as extensions to
+this grammar including several of those made available by packages 'ggpp' and
+'ggpmisc'. Information related to the book is available at
+[https://www.learnr-book.info/](https://www.learnr-book.info/).
 
 ## Contributing
 
