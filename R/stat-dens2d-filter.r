@@ -191,7 +191,7 @@
 #'                      keep.these = 1:30)
 #'
 #' # looking under the hood with gginnards::geom_debug()
-#' gginnards.installed <- requireNamespace("ggrepel", quietly = TRUE)
+#' gginnards.installed <- requireNamespace("gginnards", quietly = TRUE)
 #' if (gginnards.installed) {
 #'   library(gginnards)
 #'
