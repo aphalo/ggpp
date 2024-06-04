@@ -288,7 +288,7 @@ ggplot(data = d, aes(x, y, label = lab, colour = group)) +
   stat_dens1d_filter(geom = "text", hjust = "outward")
 
 # looking under the hood with gginnards::geom_debug()
-gginnards.installed <- requireNamespace("ggrepel", quietly = TRUE)
+gginnards.installed <- requireNamespace("gginnards", quietly = TRUE)
 if (gginnards.installed) {
   library(gginnards)
 

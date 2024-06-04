@@ -6,6 +6,10 @@ editor_options:
     wrap: 72
 ---
 
+# ggpp 0.5.8
+
+-  Fix wrong test for availability of 'ggpmisc' in examples (reported by _Joshua Ulrich_ in issue #53)
+
 # ggpp 0.5.7
 
 Track changes in 'ggplot2' 3.5.0 and 3,5,1. Fix a couple of minor
