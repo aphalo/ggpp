@@ -8,7 +8,7 @@ editor_options:
 
 # ggpp 0.5.8
 
--  Fix wrong test for availability of 'ggpmisc' in examples (reported by _Joshua Ulrich_ in issue #53)
+-  Fix wrong test for availability of 'gginnards' in examples (reported by _Joshua Ulrich_ in issue #53)
 
 # ggpp 0.5.7
 
