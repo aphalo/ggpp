@@ -12,6 +12,7 @@ badge](https://aphalo.r-universe.dev/badges/ggpp)](https://aphalo.r-universe.dev
 [![R-CMD-check](https://github.com/aphalo/ggpp/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/aphalo/ggpp/actions/workflows/R-CMD-check.yaml)
 [![Coverage](https://raw.githubusercontent.com/aphalo/ggpp/_xml_coverage_reports/data/master/badge.svg)](https://raw.githubusercontent.com/aphalo/ggpp/_xml_coverage_reports/data/master/coverage.xml)
 <a href="https://docs.r4photobiology.info/ggpp/"><img src="https://img.shields.io/badge/documentation-ggpp-informational.svg" alt="" /></a>
+[![](https://img.shields.io/badge/doi-10.32614/CRAN.package.ggpp-black.svg)](https://doi.org/10.32614/CRAN.package.ggpp)
 <!-- badges: end -->
 
 ## Purpose
@@ -329,13 +330,13 @@ devtools::install_github("aphalo/ggpp")
 HTML documentation for the package, including help pages and the *User
 Guide*, is available at (<https://docs.r4photobiology.info/ggpp/>).
 
-News about updates are regularly posted at
-(<https://www.r4photobiology.info/>).
+News about updates are posted at (<https://www.r4photobiology.info/>).
 
-Chapter 7 in Aphalo (2020) explains both basic concepts of the grammar
-of graphics as implemented in ‘ggplot2’ as well as extensions to this
-grammar including several of those made available by packages ‘ggpp’ and
-‘ggpmisc’.
+Chapter 7 in Aphalo (2020) and Chapter 9 in Aphalo (2024) explain basic
+concepts of the grammar of graphics as implemented in ‘ggplot2’ as well
+as extensions to this grammar including several of those made available
+by packages ‘ggpp’ and ‘ggpmisc’. Information related to the book is
+available at <https://www.learnr-book.info/>.
 
 ## Contributing
 
@@ -350,6 +351,22 @@ publications, please cite according to:
 
 ``` r
 citation("ggpp")
+#> To cite package 'ggpp' in publications use:
+#> 
+#>   Aphalo P (2024). _ggpp: Grammar Extensions to 'ggplot2'_. R package
+#>   version 0.5.7.9000, https://github.com/aphalo/ggpp,
+#>   <https://docs.r4photobiology.info/ggpp/>.
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Manual{,
+#>     title = {ggpp: Grammar Extensions to 'ggplot2'},
+#>     author = {Pedro J. Aphalo},
+#>     year = {2024},
+#>     note = {R package version 0.5.7.9000, 
+#> https://github.com/aphalo/ggpp},
+#>     url = {https://docs.r4photobiology.info/ggpp/},
+#>   }
 ```
 
 ## Acknowledgements

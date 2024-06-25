@@ -23,6 +23,7 @@ version](https://www.r-pkg.org/badges/version/ggpp)](https://cran.r-project.org/
 [![R-CMD-check](https://github.com/aphalo/ggpp/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/aphalo/ggpp/actions/workflows/R-CMD-check.yaml)
 [![Coverage](https://raw.githubusercontent.com/aphalo/ggpp/_xml_coverage_reports/data/master/badge.svg)](https://raw.githubusercontent.com/aphalo/ggpp/_xml_coverage_reports/data/master/coverage.xml)
 <a href="https://docs.r4photobiology.info/ggpp/"><img src="https://img.shields.io/badge/documentation-ggpp-informational.svg" alt="" /></a>
+[![](https://img.shields.io/badge/doi-10.32614/CRAN.package.ggpp-black.svg)](https://doi.org/10.32614/CRAN.package.ggpp)
 <!-- badges: end -->
 
 ## Purpose
@@ -332,7 +333,7 @@ Please report bugs and request new features at
 If you use this package to produce scientific or commercial
 publications, please cite according to:
 
-```{r, eval=FALSE}
+```{r}
 citation("ggpp")
 ```
 
