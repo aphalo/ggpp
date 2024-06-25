@@ -16,9 +16,13 @@
 #'   there are in \code{data}. The default, \code{NULL}, leaves the original
 #'   coordinates unchanged.
 #' @param x.action,y.action character string, one of \code{"none"}, or
-#'   \code{"spread"}. With \code{"spread"} evenly distributing the positions
+#'   \code{"spread"}. With \code{"spread"} distributing the positions
 #'   within the range of argument \code{x} or \code{y}, if non-null, or the
 #'   range the variable mapped to \emph{x} or \code{y}, otherwise.
+#' @param x.distance,y.distance character or numeric Currently only \code{"equal"} is
+#'   implemented.
+#' @param x.expansion,y.expansion numeric vectors of length 1 or 2, as a
+#'   fraction of width of the range.
 #' @param kept.origin One of \code{"original"} or \code{"none"}.
 #'
 #' @details The nudged to \code{x} and/or \code{y} values replace the original ones in
@@ -84,6 +88,18 @@
 #'   geom_text_s(position =
 #'     position_nudge_to(y = 3, x.action = "spread"))
 #'
+#' # spread the values at equal distance within the expanded available space
+#' ggplot(df, aes(x, y, label = label)) +
+#'   geom_point() +
+#'   geom_text_s(position =
+#'     position_nudge_to(y = 3, x.action = "spread", x.expansion = 0.1))
+#'
+#' # spread the values at equal distance within the contracted available space
+#' ggplot(df, aes(x, y, label = label)) +
+#'   geom_point() +
+#'   geom_text_s(position =
+#'     position_nudge_to(y = 3, x.action = "spread", x.expansion = -0.1))
+#'
 #' # spread the values at equal distance within the range given by x
 #' ggplot(df, aes(x, y, label = label)) +
 #'   geom_point() +
@@ -102,6 +118,10 @@ position_nudge_to <-
            y = NULL,
            x.action = c("none", "spread"),
            y.action = c("none", "spread"),
+           x.distance = "equal",
+           y.distance = "equal",
+           x.expansion = 0,
+           y.expansion = 0,
            kept.origin = c("original", "none")) {
     kept.origin <- rlang::arg_match(kept.origin)
     x.action <- rlang::arg_match(x.action)
@@ -124,6 +144,10 @@ position_nudge_to <-
                      y = y,
                      x.action = x.action,
                      y.action = y.action,
+                     x.distance = x.distance,
+                     y.distance = y.distance,
+                     x.expansion = rep_len(x.expansion, 2),
+                     y.expansion = rep_len(y.expansion, 2),
                      kept.origin = kept.origin
     )
   }
@@ -144,6 +168,10 @@ PositionNudgeTo <-
            y = self$y,
            x.action = self$x.action,
            y.action = self$y.action,
+           x.distance = self$x.distance,
+           y.distance = self$y.distance,
+           x.expansion = self$x.expansion,
+           y.expansion = self$y.expansion,
            x.reorder = !is.null(self$x) && length(self$x) > 1 && length(self$x) < nrow(data),
            y.reorder = !is.null(self$y) && length(self$y) > 1 && length(self$y) < nrow(data),
            kept.origin = self$kept.origin
@@ -160,6 +188,9 @@ PositionNudgeTo <-
           params$x <- rep_len(0, nrow(data))
         } else if (params$x.action == "spread") {
           params$x <- range(x_orig)
+          x.spread <- diff(params$x)
+          params$x[1] <- params$x[1] - params$x.expansion[1] * x.spread
+          params$x[2] <- params$x[2] + params$x.expansion[2] * x.spread
         }
       } else if (is.numeric(params$x)) {
         if (length(params$x) > nrow(data)) {
@@ -176,10 +207,13 @@ PositionNudgeTo <-
         }
       }
       if (params$x.action == "spread") {
-        # evenly spaced sequence ordered as in data
-        params$x <- seq(from = params$x[1],
-                        to = params$x[2],
-                        length.out = nrow(data))[order(order(data$x))] - x_orig
+        if (params$x.distance == "equal") {
+          # evenly spaced sequence ordered as in data
+          params$x <- seq(from = params$x[1],
+                          to = params$x[2],
+                          length.out = nrow(data))[order(order(data$x))] - x_orig
+        }
+        # other strategies could be added here
       }
 
       # compute/convert y nudges
@@ -188,6 +222,9 @@ PositionNudgeTo <-
           params$y <- rep_len(0, nrow(data))
         } else if (params$y.action == "spread") {
           params$y <- range(y_orig)
+          y.spread <- diff(params$y)
+          params$y[1] <- params$y[1] - params$y.expansion[1] * y.spread
+          params$y[2] <- params$y[2] + params$y.expansion[2] * y.spread
         }
       } else if (is.numeric(params$y)) {
         if (params$y.action == "none") {
@@ -204,10 +241,13 @@ PositionNudgeTo <-
         }
       }
       if (params$y.action == "spread") {
-        # evenly spaced sequence ordered as in data
-        params$y <- seq(from = params$y[1],
-                        to = params$y[2],
-                        length.out = nrow(data))[order(order(data$y))] - y_orig
+        if (params$y.distance == "equal") {
+          # evenly spaced sequence ordered as in data
+          params$y <- seq(from = params$y[1],
+                          to = params$y[2],
+                          length.out = nrow(data))[order(order(data$y))] - y_orig
+        }
+        # other strategies could be added here
       }
 
       # As in 'ggplot2' we apply the nudge to xmin, xmax, xend, ymin, ymax, and yend.

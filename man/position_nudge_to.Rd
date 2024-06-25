@@ -9,6 +9,10 @@ position_nudge_to(
   y = NULL,
   x.action = c("none", "spread"),
   y.action = c("none", "spread"),
+  x.distance = "equal",
+  y.distance = "equal",
+  x.expansion = 0,
+  y.expansion = 0,
   kept.origin = c("original", "none")
 )
 }
@@ -19,9 +23,15 @@ there are in \code{data}. The default, \code{NULL}, leaves the original
 coordinates unchanged.}
 
 \item{x.action, y.action}{character string, one of \code{"none"}, or
-\code{"spread"}. With \code{"spread"} evenly distributing the positions
+\code{"spread"}. With \code{"spread"} distributing the positions
 within the range of argument \code{x} or \code{y}, if non-null, or the
 range the variable mapped to \emph{x} or \code{y}, otherwise.}
+
+\item{x.distance, y.distance}{character or numeric Currently only \code{"equal"} is
+implemented.}
+
+\item{x.expansion, y.expansion}{numeric vectors of length 1 or 2, as a
+fraction of width of the range.}
 
 \item{kept.origin}{One of \code{"original"} or \code{"none"}.}
 }
@@ -95,6 +105,18 @@ ggplot(df, aes(x, y, label = label)) +
   geom_point() +
   geom_text_s(position =
     position_nudge_to(y = 3, x.action = "spread"))
+
+# spread the values at equal distance within the expanded available space
+ggplot(df, aes(x, y, label = label)) +
+  geom_point() +
+  geom_text_s(position =
+    position_nudge_to(y = 3, x.action = "spread", x.expansion = 0.1))
+
+# spread the values at equal distance within the contracted available space
+ggplot(df, aes(x, y, label = label)) +
+  geom_point() +
+  geom_text_s(position =
+    position_nudge_to(y = 3, x.action = "spread", x.expansion = -0.1))
 
 # spread the values at equal distance within the range given by x
 ggplot(df, aes(x, y, label = label)) +
