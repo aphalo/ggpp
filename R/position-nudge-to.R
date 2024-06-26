@@ -126,8 +126,10 @@ position_nudge_to <-
     kept.origin <- rlang::arg_match(kept.origin)
     x.action <- rlang::arg_match(x.action)
     y.action <- rlang::arg_match(y.action)
-    stopifnot("'x' must be NULL or of mode numeric" = is.null(x) || mode(x) == "numeric")
-    stopifnot("'y' must be NULL or of mode numeric" = is.null(y) || mode(y) == "numeric")
+    stopifnot("'x' must be NULL or of mode numeric" = length(x) == 0 ||
+                (!anyNA(x) && mode(x) == "numeric"))
+    stopifnot("'y' must be NULL or of mode numeric" = length(y) == 0 ||
+                (!anyNA(y) && mode(y) == "numeric"))
 
     # this works as long as nudge and mapped variable are of the same class
     # ggplot2's behaviour has been in the past and seems to be again to expect
@@ -183,20 +185,20 @@ PositionNudgeTo <-
       y_orig <- data$y
 
       # compute/convert x nudges
-      if (is.null(params$x)) {
+      if (!length(params$x)) {
+        # set default x
         if (params$x.action == "none") {
           params$x <- rep_len(0, nrow(data))
         } else if (params$x.action == "spread") {
           params$x <- range(x_orig)
-          x.spread <- diff(params$x)
-          params$x[1] <- params$x[1] - params$x.expansion[1] * x.spread
-          params$x[2] <- params$x[2] + params$x.expansion[2] * x.spread
         }
       } else if (is.numeric(params$x)) {
+        # check user supplied x
         if (length(params$x) > nrow(data)) {
           warning("Argument 'x' longer than data: some values dropped!")
         }
         if (params$x.action == "none") {
+          # recycle or trim x as needed
           if (params$x.reorder) {
             params$x <- rep_len(params$x, nrow(data))[order(order(data$x))] - x_orig
           } else {
@@ -206,31 +208,36 @@ PositionNudgeTo <-
           params$x <- range(params$x)
         }
       }
+
       if (params$x.action == "spread") {
+        # apply x.expansion to x
+        x.spread <- diff(params$x)
+        params$x[1] <- params$x[1] - params$x.expansion[1] * x.spread
+        params$x[2] <- params$x[2] + params$x.expansion[2] * x.spread
         if (params$x.distance == "equal") {
-          # evenly spaced sequence ordered as in data
+          # evenly spaced sequence of positions ordered as in data
           params$x <- seq(from = params$x[1],
                           to = params$x[2],
                           length.out = nrow(data))[order(order(data$x))] - x_orig
         }
-        # other strategies could be added here
+        # other strategies to distribute positions could be added here
       }
 
       # compute/convert y nudges
-      if (is.null(params$y)) {
+      if (!length(params$y)) {
+        # set default y
         if (params$y.action == "none") {
           params$y <- rep_len(0, nrow(data))
         } else if (params$y.action == "spread") {
           params$y <- range(y_orig)
-          y.spread <- diff(params$y)
-          params$y[1] <- params$y[1] - params$y.expansion[1] * y.spread
-          params$y[2] <- params$y[2] + params$y.expansion[2] * y.spread
         }
       } else if (is.numeric(params$y)) {
+        # check user supplied y
+        if (length(params$y) > nrow(data)) {
+          warning("Argument 'y' longer than data: some values dropped!")
+        }
         if (params$y.action == "none") {
-          if (length(params$y) > nrow(data)) {
-            warning("Argument 'y' longer than data: some values dropped!")
-          }
+          # recycle or trim y as needed
           if (params$y.reorder) {
             params$y <- rep_len(params$y, nrow(data))[order(order(data$y))] - y_orig
           } else {
@@ -240,7 +247,11 @@ PositionNudgeTo <-
           params$y <- range(params$y)
         }
       }
+
       if (params$y.action == "spread") {
+        y.spread <- diff(params$y)
+        params$y[1] <- params$y[1] - params$y.expansion[1] * y.spread
+        params$y[2] <- params$y[2] + params$y.expansion[2] * y.spread
         if (params$y.distance == "equal") {
           # evenly spaced sequence ordered as in data
           params$y <- seq(from = params$y[1],
