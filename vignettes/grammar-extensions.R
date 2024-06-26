@@ -661,6 +661,40 @@ ggplot(df, aes(x, y, label = ifelse(x < 1, "", l) )) +
 ## -----------------------------------------------------------------------------
 ggplot(df, aes(x, y, label = l)) +
   geom_point() +
+  geom_text_s(data = function(x) {x[x$x > 0, ]},
+              position = position_nudge_to(x = 2.3, y.action = "spread"),
+              colour = "red",
+              arrow = arrow(length = unit(0.015, "npc")),
+              vjust = 0.5) +
+  expand_limits(x = 2.7)
+
+## -----------------------------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_s(data = function(x) {x[x$x > 0, ]},
+              position = position_nudge_to(x = 2.3, 
+                                           y.action = "spread",
+                                           y.expansion = 0.1),
+              colour = "red",
+              arrow = arrow(length = unit(0.015, "npc")),
+              vjust = 0.5) +
+  expand_limits(x = 2.7)
+
+## -----------------------------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_s(data = function(x) {x[x$x > 0, ]},
+              position = position_nudge_to(x = 2.3, 
+                                           y = c(-1.5, 5),
+                                           y.action = "spread"),
+              colour = "red",
+              arrow = arrow(length = unit(0.015, "npc")),
+              vjust = 0.5) +
+  expand_limits(x = 2.7)
+
+## -----------------------------------------------------------------------------
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
   geom_text_s(position = 
                     position_nudge_center(x = -0.1, center_x = 0))
 

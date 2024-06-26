@@ -1780,6 +1780,49 @@ ggplot(df, aes(x, y, label = ifelse(x < 1, "", l) )) +
               angle = 90) +
   expand_limits(x = 3)
 ```
+This function also supports distributing the positions in the available space,
+with action `"spread".
+
+```{r}
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_s(data = function(x) {x[x$x > 0, ]},
+              position = position_nudge_to(x = 2.3, y.action = "spread"),
+              colour = "red",
+              arrow = arrow(length = unit(0.015, "npc")),
+              vjust = 0.5) +
+  expand_limits(x = 2.7)
+```
+
+The space used can be expanded.
+
+```{r}
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_s(data = function(x) {x[x$x > 0, ]},
+              position = position_nudge_to(x = 2.3, 
+                                           y.action = "spread",
+                                           y.expansion = 0.1),
+              colour = "red",
+              arrow = arrow(length = unit(0.015, "npc")),
+              vjust = 0.5) +
+  expand_limits(x = 2.7)
+```
+
+The range can be also set manually.
+
+```{r}
+ggplot(df, aes(x, y, label = l)) +
+  geom_point() +
+  geom_text_s(data = function(x) {x[x$x > 0, ]},
+              position = position_nudge_to(x = 2.3, 
+                                           y = c(-1.5, 5),
+                                           y.action = "spread"),
+              colour = "red",
+              arrow = arrow(length = unit(0.015, "npc")),
+              vjust = 0.5) +
+  expand_limits(x = 2.7)
+```
 
 ### position_nudge_center()
 

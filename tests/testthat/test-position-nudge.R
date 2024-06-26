@@ -372,6 +372,8 @@ test_that("nudge_to", {
     label = c("abc","cd","d","c","bcd","a")
   )
 
+  # errors ------------------------------------------------------------------
+
   expect_error(
     ggplot(df, aes(x, y, label = label)) +
       geom_text_s(position =
@@ -389,6 +391,20 @@ test_that("nudge_to", {
       geom_text_s(position =
                     position_nudge_to(y = 3,
                                       y.action = "wrong value"))
+  )
+  expect_error(
+    ggplot(df, aes(x, y, label = label)) +
+      geom_point() +
+      geom_text_s(position =
+                    position_nudge_to(x = NA_real_,
+                                      y.action = "spread"))
+  )
+  expect_error(
+    ggplot(df, aes(x, y, label = label)) +
+      geom_point() +
+      geom_text_s(position =
+                    position_nudge_to(x = NA,
+                                      y.action = "spread"))
   )
 
   expect_no_error(
@@ -439,6 +455,44 @@ test_that("nudge_to", {
                                     y.action = "spread"))
   )
 
+
+# warnings ----------------------------------------------------------------
+
+  ## works outside testthat, but warning seems to be muted by testthat
+  # expect_warning(
+  #   ggplot(df, aes(x, y, label = label)) +
+  #     geom_point() +
+  #     geom_text_s(position =
+  #                   position_nudge_to(x = rep(0, 7),
+  #                                     y.action = "spread"))
+  # )
+
+  expect_no_warning(
+    ggplot(df, aes(x, y, label = label)) +
+      geom_point() +
+      geom_text_s(position =
+                    position_nudge_to(x = rep(0, 6),
+                                      y.action = "spread"))
+  )
+
+  expect_no_warning(
+    ggplot(df, aes(x, y, label = label)) +
+      geom_point() +
+      geom_text_s(position =
+                    position_nudge_to(x = NULL,
+                                      y.action = "spread"))
+  )
+
+  expect_no_warning(
+    ggplot(df, aes(x, y, label = label)) +
+      geom_point() +
+      geom_text_s(position =
+                    position_nudge_to(x = numeric(0),
+                                      y.action = "spread"))
+  )
+
+  # x.action = none, y.action = none -----------------------------------------
+
   vdiffr::expect_doppelganger("nudge_to1",
                               ggplot(df, aes(x, y, label = label)) +
                                 geom_point() +
@@ -457,10 +511,37 @@ test_that("nudge_to", {
                                 geom_text_s(position = position_nudge_to(x = 6),
                                             hjust = 0)
   )
+
+  # x.action = spread, y.action = none --------------------------------------
+
   vdiffr::expect_doppelganger("nudge_to_spread_x1",
                               ggplot(df, aes(x, y, label = label)) +
                                 geom_point() +
                                 geom_text_s(position = position_nudge_to(x.action = "spread", y = 3),
+                                            hjust = 0)
+  )
+  vdiffr::expect_doppelganger("nudge_to_expand_x1",
+                              ggplot(df, aes(x, y, label = label)) +
+                                geom_point() +
+                                geom_text_s(position = position_nudge_to(x.action = "spread",
+                                                                         y = 3,
+                                                                         x.expansion = 0.1),
+                                            hjust = 0)
+  )
+  vdiffr::expect_doppelganger("nudge_to_contract_x1",
+                              ggplot(df, aes(x, y, label = label)) +
+                                geom_point() +
+                                geom_text_s(position = position_nudge_to(x.action = "spread",
+                                                                         y = 3,
+                                                                         x.expansion = -0.1),
+                                            hjust = 0)
+  )
+  vdiffr::expect_doppelganger("nudge_to_contract_expand_x1",
+                              ggplot(df, aes(x, y, label = label)) +
+                                geom_point() +
+                                geom_text_s(position = position_nudge_to(x.action = "spread",
+                                                                         y = 3,
+                                                                         x.expansion = c(-0.1, 0.1)),
                                             hjust = 0)
   )
   vdiffr::expect_doppelganger("nudge_to_spread_x2",
@@ -470,10 +551,45 @@ test_that("nudge_to", {
                                                                          x = c(2, 4), y = 3),
                                             hjust = 0)
   )
+  vdiffr::expect_doppelganger("nudge_to_expand_x2",
+                              ggplot(df, aes(x, y, label = label)) +
+                                geom_point() +
+                                geom_text_s(position = position_nudge_to(x.action = "spread",
+                                                                         x = c(2, 4), y = 3,
+                                                                         x.expansion = 0.1),
+                                            hjust = 0)
+  )
+
+  # x.action = none, y.action = spread --------------------------------------
+
   vdiffr::expect_doppelganger("nudge_to_spread_y1",
                               ggplot(df, aes(x, y, label = label)) +
                                 geom_point() +
                                 geom_text_s(position = position_nudge_to(x = 6, y.action = "spread"),
+                                            hjust = 0)
+  )
+  vdiffr::expect_doppelganger("nudge_to_expand_y1",
+                              ggplot(df, aes(x, y, label = label)) +
+                                geom_point() +
+                                geom_text_s(position = position_nudge_to(x = 6,
+                                                                         y.action = "spread",
+                                                                         y.expansion = 0.1),
+                                            hjust = 0)
+  )
+  vdiffr::expect_doppelganger("nudge_to_contract_y1",
+                              ggplot(df, aes(x, y, label = label)) +
+                                geom_point() +
+                                geom_text_s(position = position_nudge_to(x = 6,
+                                                                         y.action = "spread",
+                                                                         y.expansion = -0.1),
+                                            hjust = 0)
+  )
+  vdiffr::expect_doppelganger("nudge_to_contract_expand_y1",
+                              ggplot(df, aes(x, y, label = label)) +
+                                geom_point() +
+                                geom_text_s(position = position_nudge_to(x = 6,
+                                                                         y.action = "spread",
+                                                                         y.expansion = c(-0.1, 0.1)),
                                             hjust = 0)
   )
   vdiffr::expect_doppelganger("nudge_to_spread_y2",
@@ -482,5 +598,30 @@ test_that("nudge_to", {
                                 geom_text_s(position = position_nudge_to(x = 6, y = c(1, 3),
                                                                          y.action = "spread"),
                                             hjust = 0)
+  )
+  vdiffr::expect_doppelganger("nudge_to_expand_y2",
+                              ggplot(df, aes(x, y, label = label)) +
+                                geom_point() +
+                                geom_text_s(position = position_nudge_to(x = 6, y = c(1, 3),
+                                                                         y.action = "spread",
+                                                                         y.expansion = 0.1),
+                                            hjust = 0)
+  )
+
+  # x.action = spread, y.action = spread ------------------------------------
+
+  vdiffr::expect_doppelganger("nudge_to_spread_x1y1",
+                              ggplot(df, aes(x, y, label = label)) +
+                                geom_point() +
+                                geom_text_s(position = position_nudge_to(x.action = "spread",
+                                                                         y.action = "spread"))
+  )
+  vdiffr::expect_doppelganger("nudge_to_expand_x1y1",
+                              ggplot(df, aes(x, y, label = label)) +
+                                geom_point() +
+                                geom_text_s(position = position_nudge_to(x.action = "spread",
+                                                                         y.action = "spread",
+                                                                         x.expansion = 0.05,
+                                                                         y.expansion = 0.05))
   )
 })

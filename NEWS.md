@@ -8,7 +8,10 @@ editor_options:
 
 # ggpp 0.5.8
 
--  Fix wrong test for availability of 'gginnards' in examples (reported by _Joshua Ulrich_ in issue #53)
+-  Fix wrong test for availability of 'gginnards' in examples (reported by
+_Joshua Ulrich_ in issue #53).
+-  Revise `position_nudge_to()` to support expansion and contraction of the
+range within which to spread the positions.
 
 # ggpp 0.5.7
 
