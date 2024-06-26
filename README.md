@@ -1,5 +1,5 @@
 
-# ggpp <img src="man/figures/logo-ggpp.png" align="right" width="150"/>
+# ggpp <img src="man/figures/logo.png" align="right" width="150"/>
 
 <!-- badges: start -->
 
