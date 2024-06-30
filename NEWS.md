@@ -6,10 +6,12 @@ editor_options:
     wrap: 72
 ---
 
-# ggpp 0.5.8
+# ggpp 0.5.8-1
 
 -  Fix wrong test for availability of 'gginnards' in examples (reported by
 _Joshua Ulrich_ in issue #53).
+-  Add to vignette _Combining repulsion and nudging_ three missing tests for 
+availability of package 'ggrepel'.
 -  Revise `position_nudge_to()` to support expansion and contraction of the
 range within which to spread the positions.
 

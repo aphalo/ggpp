@@ -6,6 +6,8 @@
 \alias{ggpp-package}
 \title{ggpp: Grammar Extensions to 'ggplot2'}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Extensions to 'ggplot2' respecting the grammar of graphics paradigm. Geometries: geom_table(), geom_plot() and geom_grob() add insets to plots using native data coordinates, while geom_table_npc(), geom_plot_npc() and geom_grob_npc() do the same using "npc" coordinates through new aesthetics "npcx" and "npcy". Statistics: select observations based on 2D density. Positions: radial nudging away from a center point and nudging away from a line or curve; combined stacking and nudging; combined dodging and nudging.
 }
 \details{

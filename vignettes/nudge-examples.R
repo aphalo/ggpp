@@ -55,13 +55,14 @@ ggplot(df, aes(x, y, label = l)) +
               hjust = "left") +
   expand_limits(x = 2.3)
 
-## ----eval=eval_ggrepel--------------------------------------------------------
+## -----------------------------------------------------------------------------
 ## Example data frame where each species' principal components have been computed.
 df1 <- data.frame(
   Species = paste("Species",1:5),
   PC1     = c(-4, -3.5, 1, 2, 3),
   PC2     = c(-1, -1, 0, -0.5, 0.7)) 
 
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df1, aes(x=PC1, y = PC2, label = Species, colour = Species)) +
   geom_hline(aes(yintercept = 0), linewidth = .2) +
   geom_vline(aes(xintercept = 0), linewidth = .2) +
@@ -78,7 +79,7 @@ ggplot(df1, aes(x=PC1, y = PC2, label = Species, colour = Species)) +
   coord_fixed() +
   theme(legend.position = "none")
 
-## -----------------------------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df1, aes(x=PC1, y = PC2, label = Species, colour = Species)) +
   geom_hline(aes(yintercept = 0), linewidth = .2) +
   geom_vline(aes(xintercept = 0), linewidth = .2) +
@@ -350,14 +351,11 @@ ggplot(data = d, aes(x, y, label = lab, colour = group)) +
     geom_point()
 
 ## -----------------------------------------------------------------------------
-library(ggplot2)
-library(ggpp)
-library(ggrepel)
 syms = c(letters[1:5], LETTERS[1:5], 0:9)
 labs = do.call(paste0, expand.grid(syms, syms))
 dset = data.frame(x=rnorm(1e3), y=rnorm(1e3), label=sample(labs, 1e3, replace=TRUE))
 
-## -----------------------------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(dset, aes(x=x, y=y, label = label)) +
   geom_point(colour = "grey85") +
   stat_dens2d_filter(geom = "text_repel",
@@ -466,7 +464,7 @@ ggplot(df, aes(x, yy)) +
                box.padding = 0,
                min.segment.length = 0)
 
-## -----------------------------------------------------------------------------
+## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df, aes(x, yy)) +
   geom_point() +
   stat_smooth(method = "lm", 
