@@ -20,9 +20,10 @@ knitr::opts_chunk$set(
 version](https://www.r-pkg.org/badges/version/ggpp)](https://cran.r-project.org/package=ggpp)
 [![cran checks](https://badges.cranchecks.info/worst/ggpp.svg)](https://cran.r-project.org/web/checks/check_results_ggpp.html)
 [![ggpp status badge](https://aphalo.r-universe.dev/badges/ggpp)](https://aphalo.r-universe.dev/ggpp)
+[![R-CMD-check](https://github.com/aphalo/ggpp/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/aphalo/ggpp/actions/workflows/R-CMD-check.yaml)
 [![Coverage](https://raw.githubusercontent.com/aphalo/ggpp/_xml_coverage_reports/data/master/badge.svg)](https://raw.githubusercontent.com/aphalo/ggpp/_xml_coverage_reports/data/master/coverage.xml)
-<a href="https://docs.r4photobiology.info/ggpp/"><img src="https://img.shields.io/badge/documentation-ggpp-informational.svg" alt="" /></a>
-[![](https://img.shields.io/badge/doi-10.32614/CRAN.package.ggpp-blue.svg)](https://doi.org/10.32614/CRAN.package.ggpp)
+[![Documentation](https://img.shields.io/badge/documentation-ggpp-informational.svg)](https://docs.r4photobiology.info/ggpp/)
+[![doi](https://img.shields.io/badge/doi-10.32614/CRAN.package.ggpp-blue.svg)](https://doi.org/10.32614/CRAN.package.ggpp)
 <!-- badges: end -->
 
 ## Purpose
