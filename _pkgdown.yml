@@ -79,6 +79,7 @@ navbar:
     intro:
       icon: fas fa-home fa-lg
       href: index.html
+      aria-label: Home
     reference:
       text: Reference
       href: reference/index.html
@@ -88,6 +89,7 @@ navbar:
     github:
       icon: fab fa-github fa-lg
       href: https://github.com/aphalo/ggpp/
+      aria-label: GitHub
     articles:
       text: Cheat sheet and articles
       menu:
