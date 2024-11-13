@@ -33,12 +33,12 @@
 <circle cx='676.41' cy='241.82' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='525.79' cy='326.07' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='299.85' cy='494.56' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<text x='67.98' y='421.55' text-anchor='end' style='font-size: 11.04px; font-family: sans;' textLength='17.80px' lengthAdjust='spacingAndGlyphs'>abc</text>
-<text x='375.58' y='151.69' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='11.66px' lengthAdjust='spacingAndGlyphs'>cd</text>
-<text x='221.95' y='67.79' text-anchor='end' style='font-size: 11.04px; font-family: sans;' textLength='6.14px' lengthAdjust='spacingAndGlyphs'>d</text>
-<text x='683.73' y='240.45' style='font-size: 11.04px; font-family: sans;' textLength='5.52px' lengthAdjust='spacingAndGlyphs'>c</text>
-<text x='532.62' y='336.14' style='font-size: 11.04px; font-family: sans;' textLength='17.80px' lengthAdjust='spacingAndGlyphs'>bcd</text>
-<text x='298.61' y='507.98' text-anchor='end' style='font-size: 11.04px; font-family: sans;' textLength='6.14px' lengthAdjust='spacingAndGlyphs'>a</text>
+<text x='67.98' y='421.52' text-anchor='end' style='font-size: 11.00px; font-family: sans;' textLength='17.74px' lengthAdjust='spacingAndGlyphs'>abc</text>
+<text x='375.58' y='151.69' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='11.62px' lengthAdjust='spacingAndGlyphs'>cd</text>
+<text x='221.95' y='67.79' text-anchor='end' style='font-size: 11.00px; font-family: sans;' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>d</text>
+<text x='683.73' y='240.45' style='font-size: 11.00px; font-family: sans;' textLength='5.50px' lengthAdjust='spacingAndGlyphs'>c</text>
+<text x='532.62' y='336.11' style='font-size: 11.00px; font-family: sans;' textLength='17.74px' lengthAdjust='spacingAndGlyphs'>bcd</text>
+<text x='298.61' y='507.95' text-anchor='end' style='font-size: 11.00px; font-family: sans;' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>a</text>
 <rect x='37.20' y='22.78' width='677.32' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>

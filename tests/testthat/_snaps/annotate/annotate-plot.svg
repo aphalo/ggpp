@@ -70,6 +70,8 @@
 </g>
 <g clip-path='url(#cpMzIuNzl8NzE0LjUyfDIyLjc4fDU0NS4xMQ==)'>
 </g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
+</g>
 <defs>
   <clipPath id='cpNDM3LjY3fDY3OS4wNXw1MS4wMXwyMzAuMTk='>
     <rect x='437.67' y='51.01' width='241.38' height='179.18' />
@@ -97,39 +99,41 @@
 <polyline points='532.08,230.19 532.08,51.01 ' style='stroke-width: 0.87; stroke: #EBEBEB; stroke-linecap: butt;' />
 <polyline points='588.18,230.19 588.18,51.01 ' style='stroke-width: 0.87; stroke: #EBEBEB; stroke-linecap: butt;' />
 <polyline points='644.29,230.19 644.29,51.01 ' style='stroke-width: 0.87; stroke: #EBEBEB; stroke-linecap: butt;' />
-<circle cx='510.76' cy='148.57' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='525.06' cy='148.57' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='493.92' cy='136.09' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='544.14' cy='145.80' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='556.76' cy='164.51' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='557.88' cy='168.67' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='564.06' cy='195.01' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='542.74' cy='125.00' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='540.49' cy='136.09' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='556.76' cy='161.04' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='556.76' cy='170.75' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='592.11' cy='180.45' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='573.03' cy='174.21' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='575.84' cy='188.77' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='658.32' cy='222.04' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='668.08' cy='222.04' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='663.65' cy='192.24' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='487.19' cy='69.55' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='454.37' cy='83.41' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='466.71' cy='59.15' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='502.06' cy='145.10' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='561.25' cy='186.69' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='556.48' cy='188.77' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='579.21' cy='201.94' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='579.49' cy='161.04' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='472.32' cy='104.90' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='483.82' cy='113.91' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='448.64' cy='83.41' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='541.61' cy='184.61' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='519.17' cy='157.58' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='564.06' cy='190.16' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='519.73' cy='145.80' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
+<circle cx='510.76' cy='148.57' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='525.06' cy='148.57' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='493.92' cy='136.09' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='544.14' cy='145.80' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='556.76' cy='164.51' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='557.88' cy='168.67' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='564.06' cy='195.01' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='542.74' cy='125.00' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='540.49' cy='136.09' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='556.76' cy='161.04' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='556.76' cy='170.75' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='592.11' cy='180.45' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='573.03' cy='174.21' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='575.84' cy='188.77' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='658.32' cy='222.04' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='668.08' cy='222.04' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='663.65' cy='192.24' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='487.19' cy='69.55' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='454.37' cy='83.41' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='466.71' cy='59.15' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='502.06' cy='145.10' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='561.25' cy='186.69' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='556.48' cy='188.77' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='579.21' cy='201.94' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='579.49' cy='161.04' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='472.32' cy='104.90' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='483.82' cy='113.91' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='448.64' cy='83.41' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='541.61' cy='184.61' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='519.17' cy='157.58' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='564.06' cy='190.16' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
+<circle cx='519.73' cy='145.80' r='1.60' style='stroke-width: 0.58; fill: #000000;' />
 <rect x='437.67' y='51.01' width='241.38' height='179.18' style='stroke-width: 0.87; stroke: #333333;' />
+</g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
 </g>
 <g clip-path='url(#cpMzIuNzl8NzE0LjUyfDIyLjc4fDU0NS4xMQ==)'>
 </g>

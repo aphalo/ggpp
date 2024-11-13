@@ -4,7 +4,7 @@
 <!-- badges: start -->
 
 [![cran
-version](https://www.r-pkg.org/badges/version/ggpp)](https://cran.r-project.org/package=ggpp)
+version](https://www.r-pkg.org/badges/version-last-release/ggpp)](https://cran.r-project.org/package=ggpp)
 [![cran
 checks](https://badges.cranchecks.info/worst/ggpp.svg)](https://cran.r-project.org/web/checks/check_results_ggpp.html)
 [![ggpp status
@@ -60,19 +60,19 @@ the displaced and original positions, those of the observation and the
 displaced label, requires also a change in the data returned by position
 functions (see the next section).
 
-| Geometry                                             | Main use                        | Aesthetics                                                                                                      | Segment |
-|------------------------------------------------------|---------------------------------|-----------------------------------------------------------------------------------------------------------------|---------|
-| `geom_text_s()`                                      | data labels                     | x, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                                 | yes     |
-| `geom_label_s()`                                     | data labels                     | x, y, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust             | yes     |
-| `geom_text_pairwise()`                               | data labels                     | x, xmin, xmax, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                     | horiz.  |
-| `geom_label_pairwise()`                              | data labels                     | x, xmin, xmax, y, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust | horiz.  |
-| `geom_point_s()`                                     | data labels                     | x, y, size, colour, fill, alpha, shape, stroke, group                                                           | yes     |
-| `geom_table()`<sup>1</sup>                           | data labels                     | x, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust                                 | yes     |
-| `geom_plot()`<sup>1</sup>, `geom_grob()`<sup>1</sup> | data labels                     | x, y, label, group, angle, vjust, hjust                                                                         | yes     |
-| `geom_margin_arrow()`                                | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                      | no      |
-| `geom_margin_point()`                                | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                      | no      |
-| `geom_margin_grob()`                                 | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                      | no      |
-| `geom_quadrant_lines()` , `geom_vhlines()`           | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                      | no      |
+| Geometry | Main use | Aesthetics | Segment |
+|----|----|----|----|
+| `geom_text_s()` | data labels | x, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust | yes |
+| `geom_label_s()` | data labels | x, y, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust | yes |
+| `geom_text_pairwise()` | data labels | x, xmin, xmax, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust | horiz. |
+| `geom_label_pairwise()` | data labels | x, xmin, xmax, y, label, size, family, font face, colour, fill, alpha, linewidth, linetype, group, vjust, hjust | horiz. |
+| `geom_point_s()` | data labels | x, y, size, colour, fill, alpha, shape, stroke, group | yes |
+| `geom_table()`<sup>1</sup> | data labels | x, y, label, size, family, font face, colour, alpha, group, angle, vjust, hjust | yes |
+| `geom_plot()`<sup>1</sup>, `geom_grob()`<sup>1</sup> | data labels | x, y, label, group, angle, vjust, hjust | yes |
+| `geom_margin_arrow()` | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust | no |
+| `geom_margin_point()` | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust | no |
+| `geom_margin_grob()` | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust | no |
+| `geom_quadrant_lines()` , `geom_vhlines()` | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust | no |
 
 Geometries defined in package ‘ggpp’. <sup>1</sup> NPC versions exist
 for these geometries, as well as for `geom_text()` and `geom_label()`,
@@ -113,23 +113,23 @@ that use stacking, dodging or jitter. Functions
 `position_dosge2_keep()` behave like the positions from ‘ggplot2’ but
 keep in the `data` object the original coordinates.
 
-| Position                  | Main use       | Displacement                    | Most used with              |
-|---------------------------|----------------|---------------------------------|-----------------------------|
-| `position_nudge_keep()`   | nudge          | x, y (fixed distance)           | data labels                 |
-| `position_jitter_keep()`  | jitter         | x, y (random)                   | dot plots                   |
-| `position_stack_keep()`   | stack          | vertical (absolute)             | column and bar plots        |
-| `position_stack_minmax()` | stack          | vertical (absolute)             | error bars                  |
-| `position_fill_keep()`    | fill           | vertical (relative, fractional) | column plots                |
-| `position_dodge_keep()`   | dodge          | sideways (absolute)             | column and bar plots        |
-| `position_dosge2_keep()`  | dodge2         | sideways (absolute)             | box plots                   |
-| `position_nudge_to()`     | nudge          | x, y (fixed position)           | data labels                 |
-| `position_nudge_center()` | nudge          | x, y (away or towards target)   | data labels                 |
-| `position_nudge_line()`   | nudge          | x, y (away or towards target)   | data labels                 |
-| `position_stacknudge()`   | stack + nudge  | combined, see above             | data labels in column plots |
-| `position_fillnudge()`    | fill + nudge   | combined, see above             | data labels in column plots |
-| `position_jitternudge()`  | jitter + nudge | combined, see above             | data labels in dot plots    |
-| `position_dodgenudge()`   | dodge + nudge  | combined, see above             | data labels in column plots |
-| `position_dodge2nudge()`  | dodge2 + nudge | combined, see above             | data labels in box plots    |
+| Position | Main use | Displacement | Most used with |
+|----|----|----|----|
+| `position_nudge_keep()` | nudge | x, y (fixed distance) | data labels |
+| `position_jitter_keep()` | jitter | x, y (random) | dot plots |
+| `position_stack_keep()` | stack | vertical (absolute) | column and bar plots |
+| `position_stack_minmax()` | stack | vertical (absolute) | error bars |
+| `position_fill_keep()` | fill | vertical (relative, fractional) | column plots |
+| `position_dodge_keep()` | dodge | sideways (absolute) | column and bar plots |
+| `position_dosge2_keep()` | dodge2 | sideways (absolute) | box plots |
+| `position_nudge_to()` | nudge | x, y (fixed position) | data labels |
+| `position_nudge_center()` | nudge | x, y (away or towards target) | data labels |
+| `position_nudge_line()` | nudge | x, y (away or towards target) | data labels |
+| `position_stacknudge()` | stack + nudge | combined, see above | data labels in column plots |
+| `position_fillnudge()` | fill + nudge | combined, see above | data labels in column plots |
+| `position_jitternudge()` | jitter + nudge | combined, see above | data labels in dot plots |
+| `position_dodgenudge()` | dodge + nudge | combined, see above | data labels in column plots |
+| `position_dodge2nudge()` | dodge2 + nudge | combined, see above | data labels in box plots |
 
 Position functions defined in package ‘ggpp’.
 
@@ -156,26 +156,26 @@ and passing them to a geom.
 The statistics `stat_quadrant_counts()` and `stat_panel_counts()` make
 it easy to annotate plots with the number of observations.
 
-| Statistic                | Main use                   | Usual geometries                                                 | Most used with         | Compute function |
-|--------------------------|----------------------------|------------------------------------------------------------------|------------------------|------------------|
-| `stat_fmt_tb()`          | formatting and selection   | `geom_table()`                                                   | tables as data labels  | group            |
-| `stat_fmt_tb()`          | formatting and selection   | `geom_table_npc()`                                               | tables as annotations  | group            |
-| `stat_dens2d_filter()`   | local 2D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()` | text as data labels    | panel            |
-| `stat_dens2d_label()`    | local 2D density filtering | `geom_text_repel()`, `geom_label_repel()`                        | text as data labels    | panel            |
-| `stat_dens1d_filter()`   | local 1D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()` | text as data labels    | panel            |
-| `stat_dens1d_label()`    | local 1D density filtering | `geom_text_repel()`, `geom_label_repel()`                        | text as data labels    | panel            |
-| `stat_dens2d_filter_g()` | local 2D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()` | text as data labels    | group            |
-| `stat_dens2d_label_g()`  | local 2D density filtering | `geom_text_repel()`, `geom_label_repel()`                        | text as data labels    | group            |
-| `stat_dens1d_filter_g()` | local 1D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()` | text as data labels    | group            |
-| `stat_dens1d_label_g()`  | local 1D density filtering | `geom_text_repel()`, `geom_label_repel()`                        | data labels            | group            |
-| `stat_panel_counts()`    | number of observations     | `geom_text()`, `geom_label()`                                    | text as annotation     | panel            |
-| `stat_group_counts()`    | number of observations     | `geom_text()`, `geom_label()`                                    | text as annotation     | panel            |
-| `stat_quadrant_counts()` | number of observations     | `geom_text()`, `geom_label()`                                    | text as annotation     | panel            |
-| `stat_apply_panel()`     | cummulative summaries      | `geom_point()`, `geom_line()`, etc.                              | scatter and line plots | panel            |
-| `stat_apply_group()`     | cummulative summaries      | `geom_point()`, `geom_line()`, etc.                              | scatter and line plots | group            |
-| `stat_centroid()`        | joint x and y summaries    | `geom_point()`, `geom_rug()`, `geom_margin_arrow()`, etc.        | data summary           | group            |
-| `stat_summary_xy()`      | joint x and y summaries    | `geom_point()`, `geom_rug()`, `geom_margin_arrow()`, etc.        | data summary           | group            |
-| `stat_functions()`       | compute y from x range     | `geom_line()`, `geom_point()`, etc.                              | draw function curves   | group            |
+| Statistic | Main use | Usual geometries | Most used with | Compute function |
+|----|----|----|----|----|
+| `stat_fmt_tb()` | formatting and selection | `geom_table()` | tables as data labels | group |
+| `stat_fmt_tb()` | formatting and selection | `geom_table_npc()` | tables as annotations | group |
+| `stat_dens2d_filter()` | local 2D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()` | text as data labels | panel |
+| `stat_dens2d_label()` | local 2D density filtering | `geom_text_repel()`, `geom_label_repel()` | text as data labels | panel |
+| `stat_dens1d_filter()` | local 1D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()` | text as data labels | panel |
+| `stat_dens1d_label()` | local 1D density filtering | `geom_text_repel()`, `geom_label_repel()` | text as data labels | panel |
+| `stat_dens2d_filter_g()` | local 2D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()` | text as data labels | group |
+| `stat_dens2d_label_g()` | local 2D density filtering | `geom_text_repel()`, `geom_label_repel()` | text as data labels | group |
+| `stat_dens1d_filter_g()` | local 1D density filtering | `geom_text_s()`, `geom_label_s()`, `geom_text()`, `geom_label()` | text as data labels | group |
+| `stat_dens1d_label_g()` | local 1D density filtering | `geom_text_repel()`, `geom_label_repel()` | data labels | group |
+| `stat_panel_counts()` | number of observations | `geom_text()`, `geom_label()` | text as annotation | panel |
+| `stat_group_counts()` | number of observations | `geom_text()`, `geom_label()` | text as annotation | panel |
+| `stat_quadrant_counts()` | number of observations | `geom_text()`, `geom_label()` | text as annotation | panel |
+| `stat_apply_panel()` | cummulative summaries | `geom_point()`, `geom_line()`, etc. | scatter and line plots | panel |
+| `stat_apply_group()` | cummulative summaries | `geom_point()`, `geom_line()`, etc. | scatter and line plots | group |
+| `stat_centroid()` | joint x and y summaries | `geom_point()`, `geom_rug()`, `geom_margin_arrow()`, etc. | data summary | group |
+| `stat_summary_xy()` | joint x and y summaries | `geom_point()`, `geom_rug()`, `geom_margin_arrow()`, etc. | data summary | group |
+| `stat_functions()` | compute y from x range | `geom_line()`, `geom_point()`, etc. | draw function curves | group |
 
 Statistics defined in package ‘ggpp’.
 
@@ -354,8 +354,7 @@ citation("ggpp")
 #> To cite package 'ggpp' in publications use:
 #> 
 #>   Aphalo P (2024). _ggpp: Grammar Extensions to 'ggplot2'_. R package
-#>   version 0.5.8, https://github.com/aphalo/ggpp,
-#>   <https://docs.r4photobiology.info/ggpp/>.
+#>   version 0.5.8-1, <https://CRAN.R-project.org/package=ggpp>.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -363,9 +362,8 @@ citation("ggpp")
 #>     title = {ggpp: Grammar Extensions to 'ggplot2'},
 #>     author = {Pedro J. Aphalo},
 #>     year = {2024},
-#>     note = {R package version 0.5.8, 
-#> https://github.com/aphalo/ggpp},
-#>     url = {https://docs.r4photobiology.info/ggpp/},
+#>     note = {R package version 0.5.8-1},
+#>     url = {https://CRAN.R-project.org/package=ggpp},
 #>   }
 ```
 
