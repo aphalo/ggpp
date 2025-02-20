@@ -2,7 +2,7 @@ Package: ggpp
 Type: Package
 Title: Grammar Extensions to 'ggplot2'
 Version: 0.5.8-1.9000
-Date: 2024-11-13
+Date: 2025-02-20
 Authors@R:
     c(
     person("Pedro J.", "Aphalo", email = "pedro.aphalo@helsinki.fi", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3385-972X")),
@@ -57,7 +57,7 @@ URL: https://docs.r4photobiology.info/ggpp/,
      https://github.com/aphalo/ggpp
 BugReports: https://github.com/aphalo/ggpp/issues
 Encoding: UTF-8
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 Collate: 
     'annotate.r'
@@ -82,13 +82,13 @@ Collate:
     'geom-text-npc.r'
     'geom-text-pairwise.R'
     'ggpp.R'
+    'position-dodge-nudge-to.R'
+    'position-dodge-nudge.R'
+    'position-dodge2-nudge.R'
+    'position-jitter-nudge.R'
     'position-nudge-center.R'
-    'position-nudge-dodge.R'
-    'position-nudge-dodge2.R'
-    'position-nudge-jitter.R'
     'position-nudge-line.R'
-    'position-nudge-stack.R'
-    'position-nudge-to.R'
+    'position-stack-nudge.R'
     'scale-continuous-npc.r'
     'stat-apply.R'
     'stat-dens1d-filter.r'

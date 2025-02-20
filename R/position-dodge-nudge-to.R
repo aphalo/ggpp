@@ -1,20 +1,27 @@
 #' Nudge labels to new positions
 #'
-#' \code{position_nudge_to()} is generally useful for adjusting the position of
-#' labels or text, both on a discrete or continuous scale.
-#' \code{position_nudge_to()} differs from \code{\link[ggplot2]{position_nudge}}
-#' in that the coordinates of the new position are given directly, rather than
-#' as a displacement from the original location. It optionally sets an even
-#' distance among positions. As other position functions in this package, it
-#' preserves the original position to allow the text to be linked back to its
-#' original position with a segment or arrow.
+#' \code{position_dodgenudge_to()} is generally useful for adjusting the
+#' position of labels or text, both on a discrete or continuous scale.
+#' \code{position_dodgenudge_to()} and \code{position_nudge_to()} differ from
+#' \code{\link[ggplot2]{position_nudge}} in that the coordinates of the new
+#' position are given directly, rather than as a displacement from the original
+#' location. It optionally sets an even spacing among positions within a range.
+#' In \code{position_dodgenudge_to()} this nudging can be combined with dodging.
+#' As with other position functions in this package, the original positions are
+#' preserved to allow the text or labels to be linked back to their original
+#' position with a segment or arrow.
 #'
 #' @family position adjustments
 #'
+#' @param width Dodging width, when different to the width of the individual
+#'   elements. This is useful when you want to align narrow geoms with wider
+#'   geoms. See the examples.
+#' @param preserve Should dodging preserve the total width of all elements at a
+#'   position, or the width of a single element?.
 #' @param x,y Coordinates of the destination position. A vector of mode
 #'   \code{numeric}, that is extended if needed, to the same length as rows
 #'   there are in \code{data}. The default, \code{NULL}, leaves the original
-#'   coordinates unchanged.
+#'   coordinates unchanged after dodging.
 #' @param x.action,y.action character string, one of \code{"none"}, or
 #'   \code{"spread"}. With \code{"spread"} distributing the positions
 #'   within the range of argument \code{x} or \code{y}, if non-null, or the
@@ -23,12 +30,13 @@
 #'   implemented.
 #' @param x.expansion,y.expansion numeric vectors of length 1 or 2, as a
 #'   fraction of width of the range.
-#' @param kept.origin One of \code{"original"} or \code{"none"}.
+#' @param kept.origin One of \code{"original"}, \code{"dodged"} or
+#'   \code{"none"}.
 #'
 #' @details The nudged to \code{x} and/or \code{y} values replace the original ones in
-#'   \code{data}, while the original coordinates are returned in \code{x_orig}
-#'   and \code{y_orig}. Values supported are those of \emph{mode} numeric,
-#'   thus including dates and times.
+#'   \code{data}, while the original or the dodged coordinates are returned in \code{x_orig}
+#'   and \code{y_orig}. Nudge values supported are those of \emph{mode} numeric,
+#'   thus including dates and times when they match the mapped data.
 #'
 #'   If the length of \code{x} and/or \code{y} is more than one but less than
 #'   rows are present in the data, the vector is both recycled and reordered so
@@ -36,12 +44,36 @@
 #'   length matches the number of rows in data, they are assumed to be already
 #'   in data order.
 #'
+#'   The applied dodge is identical to that by
+#'   \code{\link[ggplot2]{position_dodge}} while nudging is different to that by
+#'   \code{\link[ggplot2]{position_nudge}}.
+#'
+#' There are two possible uses for these functions. First, without using dodging
+#' they can be used to obtain aligned labels when the labelled objects are not
+#' aligned. This is the most common use.
+#'
+#' The second use is to label dodged bars, boxplots or points with labels
+#' aligned. In this case, it is mandatory to use
+#' the same argument to \code{width} when passing \code{position_dodge()} to
+#' \code{geom_col()} and \code{position_dodgenudge_to()} to \code{geom_text()} or
+#' \code{geom_label()} or their repulsive equivalents. Otherwise the arrows or
+#' segments will fail to connect to the labels. In other words dodging is
+#' computed twice. Dodge is identical to that obtained with the same arguments
+#' in \code{\link[ggplot2]{position_dodge}} as \code{position_dodgenudge_to()}
+#' simply calls the same code from package 'ggplot2' ahead of applying
+#' nudging.
+#'
+#' When applying dodging, the return of original positions instead of the dodged
+#' ones is achieved by passing \code{origin = "original"} instead of the default
+#' of \code{origin = "dodged"}.
+#'
 #' @note Irrespective of the action, the ordering of rows in \code{data} is
 #'   preserved.
 #'
 #' @return A \code{"Position"} object.
 #'
 #' @seealso \code{\link[ggplot2]{position_nudge}},
+#'   \code{\link[ggplot2]{position_dodge}},
 #'   \code{\link[ggrepel]{position_nudge_repel}}.
 #'
 #' @export
@@ -57,6 +89,10 @@
 #' ggplot(df, aes(x, y, label = label)) +
 #'   geom_point() +
 #'   geom_text(position = position_nudge_to())
+#'
+#' ggplot(df, aes(x, y, label = label)) +
+#'   geom_point() +
+#'   geom_text(position = position_dodgenudge_to())
 #'
 #' # a single y (or x) value nudges all observations to this data value
 #' ggplot(df, aes(x, y, label = label)) +
@@ -98,7 +134,7 @@
 #' ggplot(df, aes(x, y, label = label)) +
 #'   geom_point() +
 #'   geom_text_s(position =
-#'     position_nudge_to(y = 3, x.action = "spread", x.expansion = -0.1))
+#'     position_dodgenudge_to(y = 3, x.action = "spread", x.expansion = -0.1))
 #'
 #' # spread the values at equal distance within the range given by x
 #' ggplot(df, aes(x, y, label = label)) +
@@ -113,8 +149,10 @@
 #'     position_nudge_to(y = 3, x = c(0,6), x.action = "spread"),
 #'     hjust = "center")
 #'
-position_nudge_to <-
-  function(x = NULL,
+position_dodgenudge_to <-
+  function(width = 1,
+           preserve = c("total", "single"),
+           x = NULL,
            y = NULL,
            x.action = c("none", "spread"),
            y.action = c("none", "spread"),
@@ -123,6 +161,7 @@ position_nudge_to <-
            x.expansion = 0,
            y.expansion = 0,
            kept.origin = c("original", "none")) {
+    preserve <- rlang::arg_match(preserve)
     kept.origin <- rlang::arg_match(kept.origin)
     x.action <- rlang::arg_match(x.action)
     y.action <- rlang::arg_match(y.action)
@@ -141,7 +180,7 @@ position_nudge_to <-
       y <- as.numeric(y)
     }
 
-    ggplot2::ggproto(NULL, PositionNudgeTo,
+    ggplot2::ggproto(NULL, PositionDodgeNudgeTo,
                      x = x,
                      y = y,
                      x.action = x.action,
@@ -150,7 +189,9 @@ position_nudge_to <-
                      y.distance = y.distance,
                      x.expansion = rep_len(x.expansion, 2),
                      y.expansion = rep_len(y.expansion, 2),
-                     kept.origin = kept.origin
+                     kept.origin = kept.origin,
+                     width = width,
+                     preserve = rlang::arg_match(preserve)
     )
   }
 
@@ -158,9 +199,9 @@ position_nudge_to <-
 #' @format NULL
 #' @usage NULL
 #' @export
-PositionNudgeTo <-
+PositionDodgeNudgeTo <-
   ggplot2::ggproto(
-    "PositionNudgeTo",
+    "PositionDodgeNudgeTo",
     Position,
     x = NULL,
     y = NULL,
@@ -181,6 +222,11 @@ PositionNudgeTo <-
     },
 
     compute_layer = function(self, data, params, layout) {
+      # operate on the dodged positions
+      data = ggplot2::ggproto_parent(ggplot2::PositionDodge, self)$compute_layer(data, params, layout)
+
+      x_dodged <- data$x
+      y_dodged <- data$y
       x_orig <- data$x
       y_orig <- data$y
 
@@ -273,11 +319,48 @@ PositionNudgeTo <-
         data <- transform_position(data, NULL, function(y) y + params$y)
       }
       # add original position
-      if (params$kept.origin == "original") {
+      if (params$kept.origin == "dodged") {
+        data$x_orig <- x_dodged
+        data$y_orig <- y_dodged
+      } else if (params$kept.origin == "original") {
         data$x_orig <- x_orig
         data$y_orig <- y_orig
       }
 
       data
+    },
+
+    compute_panel = function(self, data, params, scales) {
+      ggplot2::ggproto_parent(PositionDodge, self)$compute_panel(data, params, scales)
     }
   )
+
+#' @rdname position_dodgenudge_to
+#'
+#' @export
+#'
+# for backwards compatibility with arguments passed by position
+position_nudge_to <-
+  function(x = NULL,
+           y = NULL,
+           x.action = c("none", "spread"),
+           y.action = c("none", "spread"),
+           x.distance = "equal",
+           y.distance = "equal",
+           x.expansion = 0,
+           y.expansion = 0,
+           kept.origin = c("original", "none")) {
+
+    position_dodgenudge_to(width = 1,
+                           preserve = "total",
+                           x = x,
+                           y = y,
+                           x.action = x.action,
+                           y.action = y.action,
+                           x.distance = x.distance,
+                           y.distance = y.distance,
+                           x.expansion = x.expansion,
+                           y.expansion = y.expansion,
+                           kept.origin = kept.origin
+    )
+  }

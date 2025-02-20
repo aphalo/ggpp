@@ -43,11 +43,11 @@
 <rect x='356.35' y='105.88' width='74.31' height='118.71' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #C77CFF;' />
 <rect x='430.66' y='105.88' width='222.93' height='118.71' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #F8766D;' />
 <rect x='59.11' y='105.88' width='297.24' height='118.71' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #00BFC4;' />
-<text transform='translate(389.86,402.66) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='81.34px' lengthAdjust='spacingAndGlyphs'>some long name</text>
-<text transform='translate(488.94,402.66) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='55.65px' lengthAdjust='spacingAndGlyphs'>other name</text>
-<text transform='translate(389.86,165.24) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='57.49px' lengthAdjust='spacingAndGlyphs'>some name</text>
-<text transform='translate(464.17,165.24) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='67.89px' lengthAdjust='spacingAndGlyphs'>another name</text>
-<text transform='translate(92.62,165.24) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='81.34px' lengthAdjust='spacingAndGlyphs'>some long name</text>
+<text transform='translate(389.87,402.66) rotate(-90)' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='81.63px' lengthAdjust='spacingAndGlyphs'>some long name</text>
+<text transform='translate(488.95,402.66) rotate(-90)' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='55.85px' lengthAdjust='spacingAndGlyphs'>other name</text>
+<text transform='translate(389.87,165.24) rotate(-90)' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='57.69px' lengthAdjust='spacingAndGlyphs'>some name</text>
+<text transform='translate(464.18,165.24) rotate(-90)' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='68.13px' lengthAdjust='spacingAndGlyphs'>another name</text>
+<text transform='translate(92.63,165.24) rotate(-90)' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='81.63px' lengthAdjust='spacingAndGlyphs'>some long name</text>
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
 <text x='22.97' y='405.69' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>a</text>

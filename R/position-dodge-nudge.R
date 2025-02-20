@@ -6,29 +6,32 @@
 #' combines into one function the action of
 #' \code{\link[ggplot2]{position_dodge2}} and
 #' \code{\link[ggplot2]{position_nudge}}. They are useful when labelling plots
-#' such as grouped bars, columns, etc. and when adding dodged to text labels
-#' linked to observations plotted without dodge. It can replace other position
-#' functions as it is backwards compatible. Like all other position functions in
-#' 'ggpp' and 'ggrepel' it preserves the initial position to allow drawing of
-#' segments or arrow linking the original position to the displaced one.
+#' such as grouped bars, columns, etc. and when adding dodged text labels linked
+#' to observations plotted without dodge. It can replace other position
+#' functions as they are backwards compatible. Like all other position functions
+#' in 'ggpp' and 'ggrepel' they preserve the initial position to allow drawing
+#' of segments or arrow linking the original position to the displaced one.
 #'
 #' @details The applied dodge is identical to that by
 #'   \code{\link[ggplot2]{position_dodge}} or
 #'   \code{\link[ggplot2]{position_dodge2}} while nudging is similar to that by
 #'   \code{\link[ggplot2]{position_nudge}}.
 #'
-#' There are two posible uses for these functions. First they can be used to
+#' There are two possible uses for these functions. First they can be used to
 #' label dodged bars or boxplots. In this case, it is mandatory to use the same
 #' argument to \code{width} when passing \code{position_dodge()} to
 #' \code{geom_col()} and \code{position_dodgenudge()} to \code{geom_text()} or
 #' \code{geom_label()} or their repulsive equivalents. Otherwise the arrows or
-#' segments will fail to connect to the labels. In other words jittering is
-#' computed twice. Jitter should be identical with the same arguments as
-#' \code{position_dodgenudge()} as this last function simply call the same code
-#' from package 'ggplot2'.
+#' segments will fail to connect to the labels. In other words dodging is
+#' computed twice. Dodge is identical to that obtained with the same arguments
+#' in \code{\link[ggplot2]{position_dodge}} as \code{position_dodgenudge()} last
+#' function simply calls the same code from package 'ggplot2' ahead of applying
+#' nudging.
 #'
 #' The second use is to dodge labels to be connected to elements that have not
-#' been jittered. The return of original positions instead of the dodged
+#' been dodged.
+#'
+#' When applying dodging, the return of original positions instead of the dodged
 #' ones is achieved by passing \code{origin = "original"} instead of the default
 #' of \code{origin = "dodged"}.
 #'
@@ -53,8 +56,6 @@
 #'   negative slices.
 #' @param kept.origin One of \code{"original"}, \code{"dodged"} or
 #'   \code{"none"}.
-#'
-#' @param kept.origin One of \code{"original"} or \code{"none"}.
 #'
 #' @seealso \code{\link[ggplot2]{position_nudge}},
 #' \code{\link[ggrepel]{position_nudge_repel}}.

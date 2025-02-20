@@ -224,10 +224,10 @@ ggplot(df, aes(x, z, color = group)) +
 
 Other position adjustments: 
 \code{\link{position_dodgenudge}()},
+\code{\link{position_dodgenudge_to}()},
 \code{\link{position_jitternudge}()},
 \code{\link{position_nudge_keep}()},
 \code{\link{position_nudge_line}()},
-\code{\link{position_nudge_to}()},
 \code{\link{position_stacknudge}()}
 }
 \concept{position adjustments}
