@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.924482924482924" branch-rate="0" lines-covered="1922" lines-valid="2079" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2025-02-20 21:11:51.654106">
+<coverage line-rate="0.92433734939759" branch-rate="0" lines-covered="1918" lines-valid="2075" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2025-02-21 09:51:06.999738">
   <sources>
     <source>/__w/ggpp/ggpp/ggpp</source>
   </sources>
   <packages>
-    <package name="ggpp" line-rate="0.924482924482924" branch-rate="0" complexity="0">
+    <package name="ggpp" line-rate="0.92433734939759" branch-rate="0" complexity="0">
       <classes>
         <class name="annotate.r" filename="R/annotate.r" line-rate="0.793103448275862" branch-rate="0" complexity="0">
           <methods>
@@ -2883,39 +2883,36 @@
             <line number="179" hits="5" branch="false"/>
           </lines>
         </class>
-        <class name="position-dodge-nudge-to.R" filename="R/position-dodge-nudge-to.R" line-rate="0.945945945945946" branch-rate="0" complexity="0">
+        <class name="position-dodge-nudge-to.R" filename="R/position-dodge-nudge-to.R" line-rate="0.939393939393939" branch-rate="0" complexity="0">
           <methods>
-            <method name="position_dodgenudge_to" signature="" line-rate="0.92" branch-rate="0" complexity="0">
+            <method name="position_dodgenudge_to" signature="" line-rate="0.904761904761905" branch-rate="0" complexity="0">
               <lines>
-                <line number="164" hits="16" branch="false"/>
                 <line number="165" hits="16" branch="false"/>
-                <line number="166" hits="15" branch="false"/>
+                <line number="166" hits="16" branch="false"/>
                 <line number="167" hits="14" branch="false"/>
-                <line number="168" hits="13" branch="false"/>
-                <line number="169" hits="13" branch="false"/>
-                <line number="170" hits="11" branch="false"/>
-                <line number="171" hits="11" branch="false"/>
-                <line number="176" hits="11" branch="false"/>
+                <line number="168" hits="14" branch="false"/>
+                <line number="173" hits="14" branch="false"/>
+                <line number="174" hits="0" branch="false"/>
+                <line number="176" hits="14" branch="false"/>
                 <line number="177" hits="0" branch="false"/>
-                <line number="179" hits="11" branch="false"/>
-                <line number="180" hits="0" branch="false"/>
-                <line number="183" hits="11" branch="false"/>
-                <line number="184" hits="11" branch="false"/>
-                <line number="185" hits="11" branch="false"/>
-                <line number="186" hits="11" branch="false"/>
-                <line number="187" hits="11" branch="false"/>
-                <line number="188" hits="11" branch="false"/>
-                <line number="189" hits="11" branch="false"/>
-                <line number="190" hits="11" branch="false"/>
-                <line number="191" hits="11" branch="false"/>
-                <line number="192" hits="11" branch="false"/>
-                <line number="193" hits="11" branch="false"/>
-                <line number="194" hits="11" branch="false"/>
-                <line number="195" hits="11" branch="false"/>
+                <line number="180" hits="14" branch="false"/>
+                <line number="181" hits="14" branch="false"/>
+                <line number="182" hits="14" branch="false"/>
+                <line number="183" hits="14" branch="false"/>
+                <line number="184" hits="14" branch="false"/>
+                <line number="185" hits="14" branch="false"/>
+                <line number="186" hits="14" branch="false"/>
+                <line number="187" hits="14" branch="false"/>
+                <line number="188" hits="14" branch="false"/>
+                <line number="189" hits="14" branch="false"/>
+                <line number="190" hits="14" branch="false"/>
+                <line number="191" hits="14" branch="false"/>
+                <line number="192" hits="14" branch="false"/>
               </lines>
             </method>
             <method name="position_nudge_to" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
+                <line number="353" hits="16" branch="false"/>
                 <line number="354" hits="16" branch="false"/>
                 <line number="355" hits="16" branch="false"/>
                 <line number="356" hits="16" branch="false"/>
@@ -2927,36 +2924,32 @@
                 <line number="362" hits="16" branch="false"/>
                 <line number="363" hits="16" branch="false"/>
                 <line number="364" hits="16" branch="false"/>
-                <line number="365" hits="16" branch="false"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="164" hits="16" branch="false"/>
             <line number="165" hits="16" branch="false"/>
-            <line number="166" hits="15" branch="false"/>
+            <line number="166" hits="16" branch="false"/>
             <line number="167" hits="14" branch="false"/>
-            <line number="168" hits="13" branch="false"/>
-            <line number="169" hits="13" branch="false"/>
-            <line number="170" hits="11" branch="false"/>
-            <line number="171" hits="11" branch="false"/>
-            <line number="176" hits="11" branch="false"/>
+            <line number="168" hits="14" branch="false"/>
+            <line number="173" hits="14" branch="false"/>
+            <line number="174" hits="0" branch="false"/>
+            <line number="176" hits="14" branch="false"/>
             <line number="177" hits="0" branch="false"/>
-            <line number="179" hits="11" branch="false"/>
-            <line number="180" hits="0" branch="false"/>
-            <line number="183" hits="11" branch="false"/>
-            <line number="184" hits="11" branch="false"/>
-            <line number="185" hits="11" branch="false"/>
-            <line number="186" hits="11" branch="false"/>
-            <line number="187" hits="11" branch="false"/>
-            <line number="188" hits="11" branch="false"/>
-            <line number="189" hits="11" branch="false"/>
-            <line number="190" hits="11" branch="false"/>
-            <line number="191" hits="11" branch="false"/>
-            <line number="192" hits="11" branch="false"/>
-            <line number="193" hits="11" branch="false"/>
-            <line number="194" hits="11" branch="false"/>
-            <line number="195" hits="11" branch="false"/>
+            <line number="180" hits="14" branch="false"/>
+            <line number="181" hits="14" branch="false"/>
+            <line number="182" hits="14" branch="false"/>
+            <line number="183" hits="14" branch="false"/>
+            <line number="184" hits="14" branch="false"/>
+            <line number="185" hits="14" branch="false"/>
+            <line number="186" hits="14" branch="false"/>
+            <line number="187" hits="14" branch="false"/>
+            <line number="188" hits="14" branch="false"/>
+            <line number="189" hits="14" branch="false"/>
+            <line number="190" hits="14" branch="false"/>
+            <line number="191" hits="14" branch="false"/>
+            <line number="192" hits="14" branch="false"/>
+            <line number="353" hits="16" branch="false"/>
             <line number="354" hits="16" branch="false"/>
             <line number="355" hits="16" branch="false"/>
             <line number="356" hits="16" branch="false"/>
@@ -2968,7 +2961,6 @@
             <line number="362" hits="16" branch="false"/>
             <line number="363" hits="16" branch="false"/>
             <line number="364" hits="16" branch="false"/>
-            <line number="365" hits="16" branch="false"/>
           </lines>
         </class>
         <class name="position-dodge-nudge.R" filename="R/position-dodge-nudge.R" line-rate="0.941176470588235" branch-rate="0" complexity="0">
