@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.914204003813155" branch-rate="0" lines-covered="1918" lines-valid="2098" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2025-02-21 20:26:07.982666">
+<coverage line-rate="0.896261682242991" branch-rate="0" lines-covered="1918" lines-valid="2140" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2025-02-21 21:19:10.358772">
   <sources>
     <source>/__w/ggpp/ggpp/ggpp</source>
   </sources>
   <packages>
-    <package name="ggpp" line-rate="0.914204003813155" branch-rate="0" complexity="0">
+    <package name="ggpp" line-rate="0.896261682242991" branch-rate="0" complexity="0">
       <classes>
         <class name="annotate.r" filename="R/annotate.r" line-rate="0.793103448275862" branch-rate="0" complexity="0">
           <methods>
@@ -3637,6 +3637,104 @@
             <line number="487" hits="11" branch="false"/>
             <line number="488" hits="11" branch="false"/>
             <line number="489" hits="11" branch="false"/>
+          </lines>
+        </class>
+        <class name="position-stacknudge-to.R" filename="R/position-stacknudge-to.R" line-rate="0" branch-rate="0" complexity="0">
+          <methods>
+            <method name="position_stacknudge_to" signature="" line-rate="0" branch-rate="0" complexity="0">
+              <lines>
+                <line number="70" hits="0" branch="false"/>
+                <line number="71" hits="0" branch="false"/>
+                <line number="72" hits="0" branch="false"/>
+                <line number="73" hits="0" branch="false"/>
+                <line number="78" hits="0" branch="false"/>
+                <line number="79" hits="0" branch="false"/>
+                <line number="81" hits="0" branch="false"/>
+                <line number="82" hits="0" branch="false"/>
+                <line number="85" hits="0" branch="false"/>
+                <line number="86" hits="0" branch="false"/>
+                <line number="87" hits="0" branch="false"/>
+                <line number="88" hits="0" branch="false"/>
+                <line number="89" hits="0" branch="false"/>
+                <line number="90" hits="0" branch="false"/>
+                <line number="91" hits="0" branch="false"/>
+                <line number="92" hits="0" branch="false"/>
+                <line number="93" hits="0" branch="false"/>
+                <line number="94" hits="0" branch="false"/>
+                <line number="95" hits="0" branch="false"/>
+                <line number="96" hits="0" branch="false"/>
+                <line number="97" hits="0" branch="false"/>
+              </lines>
+            </method>
+            <method name="position_fillnudge_to" signature="" line-rate="0" branch-rate="0" complexity="0">
+              <lines>
+                <line number="278" hits="0" branch="false"/>
+                <line number="279" hits="0" branch="false"/>
+                <line number="280" hits="0" branch="false"/>
+                <line number="281" hits="0" branch="false"/>
+                <line number="286" hits="0" branch="false"/>
+                <line number="287" hits="0" branch="false"/>
+                <line number="289" hits="0" branch="false"/>
+                <line number="290" hits="0" branch="false"/>
+                <line number="293" hits="0" branch="false"/>
+                <line number="294" hits="0" branch="false"/>
+                <line number="295" hits="0" branch="false"/>
+                <line number="296" hits="0" branch="false"/>
+                <line number="297" hits="0" branch="false"/>
+                <line number="298" hits="0" branch="false"/>
+                <line number="299" hits="0" branch="false"/>
+                <line number="300" hits="0" branch="false"/>
+                <line number="301" hits="0" branch="false"/>
+                <line number="302" hits="0" branch="false"/>
+                <line number="303" hits="0" branch="false"/>
+                <line number="304" hits="0" branch="false"/>
+                <line number="305" hits="0" branch="false"/>
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="70" hits="0" branch="false"/>
+            <line number="71" hits="0" branch="false"/>
+            <line number="72" hits="0" branch="false"/>
+            <line number="73" hits="0" branch="false"/>
+            <line number="78" hits="0" branch="false"/>
+            <line number="79" hits="0" branch="false"/>
+            <line number="81" hits="0" branch="false"/>
+            <line number="82" hits="0" branch="false"/>
+            <line number="85" hits="0" branch="false"/>
+            <line number="86" hits="0" branch="false"/>
+            <line number="87" hits="0" branch="false"/>
+            <line number="88" hits="0" branch="false"/>
+            <line number="89" hits="0" branch="false"/>
+            <line number="90" hits="0" branch="false"/>
+            <line number="91" hits="0" branch="false"/>
+            <line number="92" hits="0" branch="false"/>
+            <line number="93" hits="0" branch="false"/>
+            <line number="94" hits="0" branch="false"/>
+            <line number="95" hits="0" branch="false"/>
+            <line number="96" hits="0" branch="false"/>
+            <line number="97" hits="0" branch="false"/>
+            <line number="278" hits="0" branch="false"/>
+            <line number="279" hits="0" branch="false"/>
+            <line number="280" hits="0" branch="false"/>
+            <line number="281" hits="0" branch="false"/>
+            <line number="286" hits="0" branch="false"/>
+            <line number="287" hits="0" branch="false"/>
+            <line number="289" hits="0" branch="false"/>
+            <line number="290" hits="0" branch="false"/>
+            <line number="293" hits="0" branch="false"/>
+            <line number="294" hits="0" branch="false"/>
+            <line number="295" hits="0" branch="false"/>
+            <line number="296" hits="0" branch="false"/>
+            <line number="297" hits="0" branch="false"/>
+            <line number="298" hits="0" branch="false"/>
+            <line number="299" hits="0" branch="false"/>
+            <line number="300" hits="0" branch="false"/>
+            <line number="301" hits="0" branch="false"/>
+            <line number="302" hits="0" branch="false"/>
+            <line number="303" hits="0" branch="false"/>
+            <line number="304" hits="0" branch="false"/>
+            <line number="305" hits="0" branch="false"/>
           </lines>
         </class>
         <class name="scale-continuous-npc.r" filename="R/scale-continuous-npc.r" line-rate="1" branch-rate="0" complexity="0">
