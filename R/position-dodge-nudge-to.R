@@ -160,11 +160,8 @@ position_dodgenudge_to <-
            y.distance = "equal",
            x.expansion = 0,
            y.expansion = 0,
-           kept.origin = c("original", "none")) {
-    preserve <- rlang::arg_match(preserve)
-    kept.origin <- rlang::arg_match(kept.origin)
-    x.action <- rlang::arg_match(x.action)
-    y.action <- rlang::arg_match(y.action)
+           kept.origin = c("dodged", "original", "none")) {
+
     stopifnot("'x' must be NULL or of mode numeric" = length(x) == 0 ||
                 (!anyNA(x) && mode(x) == "numeric"))
     stopifnot("'y' must be NULL or of mode numeric" = length(y) == 0 ||
@@ -183,13 +180,13 @@ position_dodgenudge_to <-
     ggplot2::ggproto(NULL, PositionDodgeNudgeTo,
                      x = x,
                      y = y,
-                     x.action = x.action,
-                     y.action = y.action,
+                     x.action = rlang::arg_match(x.action),
+                     y.action = rlang::arg_match(y.action),
                      x.distance = x.distance,
                      y.distance = y.distance,
                      x.expansion = rep_len(x.expansion, 2),
                      y.expansion = rep_len(y.expansion, 2),
-                     kept.origin = kept.origin,
+                     kept.origin = rlang::arg_match(kept.origin),
                      width = width,
                      preserve = rlang::arg_match(preserve)
     )
@@ -217,7 +214,9 @@ PositionDodgeNudgeTo <-
            y.expansion = self$y.expansion,
            x.reorder = !is.null(self$x) && length(self$x) > 1 && length(self$x) < nrow(data),
            y.reorder = !is.null(self$y) && length(self$y) > 1 && length(self$y) < nrow(data),
-           kept.origin = self$kept.origin
+           kept.origin = self$kept.origin,
+           width = self$width,
+           preserve = self$preserve
       )
     },
 
@@ -355,12 +354,12 @@ position_nudge_to <-
                            preserve = "total",
                            x = x,
                            y = y,
-                           x.action = x.action,
-                           y.action = y.action,
+                           x.action = rlang::arg_match(x.action),
+                           y.action = rlang::arg_match(y.action),
                            x.distance = x.distance,
                            y.distance = y.distance,
                            x.expansion = x.expansion,
                            y.expansion = y.expansion,
-                           kept.origin = kept.origin
+                           kept.origin = rlang::arg_match(kept.origin)
     )
   }

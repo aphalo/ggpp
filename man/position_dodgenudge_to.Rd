@@ -16,7 +16,7 @@ position_dodgenudge_to(
   y.distance = "equal",
   x.expansion = 0,
   y.expansion = 0,
-  kept.origin = c("original", "none")
+  kept.origin = c("dodged", "original", "none")
 )
 
 position_nudge_to(

@@ -125,7 +125,7 @@ position_dodgenudge <-
                                      center = sign),
                      kept.origin = kept.origin,
                      width = width,
-                     preserve = rlang::arg_match(preserve)
+                     preserve = preserve
     )
   }
 
