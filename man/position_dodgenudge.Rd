@@ -149,7 +149,8 @@ Other position adjustments:
 \code{\link{position_nudge_center}()},
 \code{\link{position_nudge_keep}()},
 \code{\link{position_nudge_line}()},
-\code{\link{position_stacknudge}()}
+\code{\link{position_stacknudge}()},
+\code{\link{position_stacknudge_to}()}
 }
 \author{
 Michał Krassowski, edited by Pedro J. Aphalo.

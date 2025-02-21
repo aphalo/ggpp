@@ -10,6 +10,8 @@ editor_options:
 
 - Add `position_dodgenudge_to()` and `position_dodge2nudge_to()` that allow the 
 action of `position_nudge_to()` to be combined with dodging.
+- Add `position_stacknudge_to()` and `position_fillnudge_to()` that allow the 
+action of `position_nudge_to()` to be combined with stacking.
 
 # ggpp 0.5.8-1
 

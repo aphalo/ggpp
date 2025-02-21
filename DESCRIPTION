@@ -90,6 +90,7 @@ Collate:
     'position-nudge-center.R'
     'position-nudge-line.R'
     'position-stack-nudge.R'
+    'position-stacknudge-to.R'
     'scale-continuous-npc.r'
     'stat-apply.R'
     'stat-dens1d-filter.r'
