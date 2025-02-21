@@ -8,8 +8,8 @@ editor_options:
 
 # ggpp 0.5.9
 
-- Add `position_dodgenudge_to()` that allows the action of `position_nudge_to()`
-to preceded by dodging. 
+- Add `position_dodgenudge_to()` and `position_dodge2nudge_to()` that allow the 
+action of `position_nudge_to()` to be combined with dodging.
 
 # ggpp 0.5.8-1
 

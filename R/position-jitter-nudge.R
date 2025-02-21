@@ -235,7 +235,7 @@ PositionJitterAndNudge <-
                      x_orig <- data$x
                      y_orig <- data$y
 
-                     # operate on the dodged positions
+                     # operate on the jittered positions
                      data = ggplot2::ggproto_parent(ggplot2::PositionJitter, self)$compute_layer(data, params, layout)
 
                      x_jittered <- data$x

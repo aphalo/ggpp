@@ -1,4 +1,4 @@
-#' Nudge labels to new positions
+#' Nudge or dodge plus nudge labels to new positions
 #'
 #' \code{position_dodgenudge_to()} is generally useful for adjusting the
 #' position of labels or text, both on a discrete or continuous scale.
@@ -18,6 +18,10 @@
 #'   geoms. See the examples.
 #' @param preserve Should dodging preserve the total width of all elements at a
 #'   position, or the width of a single element?.
+#' @param padding Padding between elements at the same position. Elements are
+#'   shrunk by this proportion to allow space between them. Defaults to 0.1.
+#' @param reverse If TRUE, will reverse the default stacking order. This is
+#'   useful if you're rotating both the plot and legend.
 #' @param x,y Coordinates of the destination position. A vector of mode
 #'   \code{numeric}, that is extended if needed, to the same length as rows
 #'   there are in \code{data}. The default, \code{NULL}, leaves the original
@@ -221,13 +225,14 @@ PositionDodgeNudgeTo <-
     },
 
     compute_layer = function(self, data, params, layout) {
-      # operate on the dodged positions
-      data = ggplot2::ggproto_parent(ggplot2::PositionDodge, self)$compute_layer(data, params, layout)
-
-      x_dodged <- data$x
-      y_dodged <- data$y
       x_orig <- data$x
       y_orig <- data$y
+      if (!is.na(params$width)) {
+        # operate on the dodged positions
+        data = ggplot2::ggproto_parent(ggplot2::PositionDodge, self)$compute_layer(data, params, layout)
+      }
+      x_dodged <- data$x
+      y_dodged <- data$y
 
       # compute/convert x nudges
       if (!length(params$x)) {
@@ -235,7 +240,7 @@ PositionDodgeNudgeTo <-
         if (params$x.action == "none") {
           params$x <- rep_len(0, nrow(data))
         } else if (params$x.action == "spread") {
-          params$x <- range(x_orig)
+          params$x <- range(x_dodged)
         }
       } else if (is.numeric(params$x)) {
         # check user supplied x
@@ -245,9 +250,9 @@ PositionDodgeNudgeTo <-
         if (params$x.action == "none") {
           # recycle or trim x as needed
           if (params$x.reorder) {
-            params$x <- rep_len(params$x, nrow(data))[order(order(data$x))] - x_orig
+            params$x <- rep_len(params$x, nrow(data))[order(order(data$x))] - x_dodged
           } else {
-            params$x <- rep_len(params$x, nrow(data)) - x_orig
+            params$x <- rep_len(params$x, nrow(data)) - x_dodged
           }
         } else if (params$x.action == "spread") {
           params$x <- range(params$x)
@@ -263,7 +268,7 @@ PositionDodgeNudgeTo <-
           # evenly spaced sequence of positions ordered as in data
           params$x <- seq(from = params$x[1],
                           to = params$x[2],
-                          length.out = nrow(data))[order(order(data$x))] - x_orig
+                          length.out = nrow(data))[order(order(data$x))] - x_dodged
         }
         # other strategies to distribute positions could be added here
       }
@@ -274,7 +279,7 @@ PositionDodgeNudgeTo <-
         if (params$y.action == "none") {
           params$y <- rep_len(0, nrow(data))
         } else if (params$y.action == "spread") {
-          params$y <- range(y_orig)
+          params$y <- range(y_dodged)
         }
       } else if (is.numeric(params$y)) {
         # check user supplied y
@@ -284,9 +289,9 @@ PositionDodgeNudgeTo <-
         if (params$y.action == "none") {
           # recycle or trim y as needed
           if (params$y.reorder) {
-            params$y <- rep_len(params$y, nrow(data))[order(order(data$y))] - y_orig
+            params$y <- rep_len(params$y, nrow(data))[order(order(data$y))] - y_dodged
           } else {
-            params$y <- rep_len(params$y, nrow(data)) - y_orig
+            params$y <- rep_len(params$y, nrow(data)) - y_dodged
           }
         } else if (params$y.action == "spread") {
           params$y <- range(params$y)
@@ -301,7 +306,7 @@ PositionDodgeNudgeTo <-
           # evenly spaced sequence ordered as in data
           params$y <- seq(from = params$y[1],
                           to = params$y[2],
-                          length.out = nrow(data))[order(order(data$y))] - y_orig
+                          length.out = nrow(data))[order(order(data$y))] - y_dodged
         }
         # other strategies could be added here
       }
@@ -318,7 +323,7 @@ PositionDodgeNudgeTo <-
         data <- transform_position(data, NULL, function(y) y + params$y)
       }
       # add original position
-      if (params$kept.origin == "dodged") {
+      if (params$kept.origin == "dodged" && !is.na(params$width)) {
         data$x_orig <- x_dodged
         data$y_orig <- y_dodged
       } else if (params$kept.origin == "original") {
@@ -350,7 +355,7 @@ position_nudge_to <-
            y.expansion = 0,
            kept.origin = c("original", "none")) {
 
-    position_dodgenudge_to(width = 1,
+    position_dodgenudge_to(width = NA_real_, # used as flag to disable dodging
                            preserve = "total",
                            x = x,
                            y = y,

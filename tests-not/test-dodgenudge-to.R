@@ -20,7 +20,7 @@ data %>%
   geom_line(position = position_dodge(width = .3))+
   geom_text_repel(data= data_labels,
                   aes(label = group),
-                  position = position_dodgenudge_to(width = .3, x = .8, kept.origin = "dodged"),
+                  position = position_dodgenudge_to(width = .3, x = .8),
                   direction = "y",
                   hjust = "right",
                   size = 3,

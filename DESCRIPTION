@@ -85,6 +85,7 @@ Collate:
     'position-dodge-nudge-to.R'
     'position-dodge-nudge.R'
     'position-dodge2-nudge.R'
+    'position-dodge2nudge-to.R'
     'position-jitter-nudge.R'
     'position-nudge-center.R'
     'position-nudge-line.R'
