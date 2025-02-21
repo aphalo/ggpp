@@ -52,6 +52,47 @@
 #' @seealso \code{\link{position_nudge_to}},
 #'   \code{\link[ggplot2]{position_stack}}.
 #'
+#' @examples
+#'
+#' cols.df <- data.frame(x1 = c(1, 2, 1, 3),
+#'                        x2 = c("a", "a", "b", "b"),
+#'                        grp = c("A", "B", "C", "D"))
+#'
+#'  ggplot(data = cols.df, aes(x2, x1, group = grp)) +
+#'  geom_col(aes(fill = grp), width=0.5, position = "stack") +
+#'    geom_vline(xintercept = 0) +
+#'    geom_text_s(
+#'      aes(label = x1),
+#'      position = position_stacknudge_to(x = c(1.4, 1.4, 1.6, 1.6))) +
+#'    theme(legend.position = "none")
+#'
+#'  ggplot(data = cols.df, aes(x2, x1, group = grp)) +
+#'  geom_col(aes(fill = grp), width=0.5, position = "fill") +
+#'    geom_vline(xintercept = 0) +
+#'    geom_text_s(
+#'      aes(label = grp),
+#'      position = position_fillnudge_to(x = c(1.4, 1.4, 1.6, 1.6))) +
+#'    theme(legend.position = "none")
+#'
+#'  ggplot(data = cols.df, aes(x2, x1, group = grp)) +
+#'  geom_col(aes(fill = grp), width=0.5, position = "fill") +
+#'    geom_vline(xintercept = 0) +
+#'    geom_text_s(
+#'      aes(label = x1),
+#'      position = position_fillnudge_to(vjust = 0.5,
+#'                                       x = c(1.4, 1.4, 1.6, 1.6))) +
+#'    theme(legend.position = "none")
+#'
+#'  ggplot(data = cols.df, aes(x2, x1, group = grp)) +
+#'  geom_col(aes(fill = grp), width=0.5, position = "fill") +
+#'    geom_vline(xintercept = 0) +
+#'    geom_text_s(
+#'      aes(label = x1), vjust = 0.5,
+#'      position = position_fillnudge_to(vjust = 0.5,
+#'                                       x = c(1.4, 1.4, 1.6, 1.6),
+#'                                       y = c(0.85, 0.35, 0.85, 0.35))) +
+#'    theme(legend.position = "none")
+#'
 #' @export
 #'
 position_stacknudge_to <-
@@ -65,7 +106,7 @@ position_stacknudge_to <-
            y.distance = "equal",
            x.expansion = 0,
            y.expansion = 0,
-           kept.origin = c("stakked", "original", "none")) {
+           kept.origin = c("stacked", "original", "none")) {
 
     stopifnot("'x' must be NULL or of mode numeric" = length(x) == 0 ||
                 (!anyNA(x) && mode(x) == "numeric"))
@@ -105,6 +146,7 @@ PositionStackNudgeTo <-
   ggplot2::ggproto(
     "PositionStackNudgeTo",
     ggplot2::PositionStack,
+    fill = FALSE,
     x = NULL,
     y = NULL,
 
@@ -145,12 +187,11 @@ PositionStackNudgeTo <-
     },
 
     compute_layer = function(self, data, params, layout) {
-      x_orig <- data$x
+      x_orig <- x_stacked <- data$x
       y_orig <- data$y
 
       # operate on the stacked positions (updated in August 2020)
       data = ggplot2::ggproto_parent(ggplot2::PositionStack, self)$compute_layer(data, params, layout)
-      x_stacked <- data$x
       y_stacked <- data$y
 
       # compute/convert x nudges
@@ -249,7 +290,6 @@ PositionStackNudgeTo <-
         data$x_orig <- x_orig
         data$y_orig <- y_orig
       }
-
       data
     },
 
@@ -273,7 +313,7 @@ position_fillnudge_to <-
            y.distance = "equal",
            x.expansion = 0,
            y.expansion = 0,
-           kept.origin = c("stakked", "original", "none")) {
+           kept.origin = c("stacked", "original", "none")) {
 
     stopifnot("'x' must be NULL or of mode numeric" = length(x) == 0 ||
                 (!anyNA(x) && mode(x) == "numeric"))
