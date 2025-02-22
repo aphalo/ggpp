@@ -1,11 +1,12 @@
 #' Stack plus nudge labels to new positions
 #'
-#' \code{position_stacknudge_to()} is generally useful for aligning the position
-#' of labels or text so that the coordinates of the new position are given
-#' directly, rather than as a displacement from the original location. This
-#' nudging can be combined with stacking. As with other position functions in
-#' this package, the original positions are preserved to allow the text or
-#' labels to be linked back to their original position with a segment or arrow.
+#' Functions \code{position_stacknudge_to()} and \code{position_fillnudge_to()}
+#' are meant to complement \code{position_stack()} and \code{position_fill()}
+#' from 'ggplot2', adding as a second action that of \code{position_nudge_to()}.
+#' These positions are generally useful for adjusting the position of labels or
+#' text. As with other position functions in this package, the original
+#' positions are preserved to allow the text or labels to be linked back to
+#' their original position with a segment or arrow.
 #'
 #' @family position adjustments
 #'
@@ -22,17 +23,25 @@
 #'   \code{"spread"}. With \code{"spread"} distributing the positions
 #'   within the range of argument \code{x} or \code{y}, if non-null, or the
 #'   range the variable mapped to \emph{x} or \code{y}, otherwise.
-#' @param x.distance,y.distance character or numeric Currently only \code{"equal"} is
-#'   implemented.
+#' @param x.distance,y.distance character or numeric Currently only
+#'   \code{"equal"} is implemented.
 #' @param x.expansion,y.expansion numeric vectors of length 1 or 2, as a
 #'   fraction of width of the range.
 #' @param kept.origin One of \code{"original"}, \code{"stacked"} or
 #'   \code{"none"}.
 #'
-#' @details The nudged to \code{x} and/or \code{y} values replace the original ones in
-#'   \code{data}, while the original or the stacked coordinates are returned in \code{x_orig}
-#'   and \code{y_orig}. Nudge values supported are those of \emph{mode} numeric,
-#'   thus including dates and times when they match the mapped data.
+#' @details These positions apply sequentially two actions, in the order they
+#'   appear in their names. The applied stacking is similar to that by
+#'   \code{\link[ggplot2]{position_stack}} and
+#'   \code{\link[ggplot2]{position_fill}} while nudging is different to that
+#'   by \code{\link[ggplot2]{position_nudge}} and equal to that applied by
+#'   \code{\link{position_nudge_to}}.
+#'
+#'   The nudged to \code{x} and/or \code{y} values replace the original
+#'   ones in \code{data}, while the original or the stacked coordinates are
+#'   returned in \code{x_orig} and \code{y_orig}. Nudge values supported are
+#'   those of \emph{mode} numeric, thus including dates and times when they
+#'   match the mapped data.
 #'
 #'   If the length of \code{x} and/or \code{y} is more than one but less than
 #'   rows are present in the data, the vector is both recycled and reordered so
@@ -40,9 +49,9 @@
 #'   length matches the number of rows in data, they are assumed to be already
 #'   in data order.
 #'
-#' When applying stacking, the return of original positions instead of the stacked
-#' ones is achieved by passing \code{origin = "original"} instead of the default
-#' of \code{origin = "stacked"}.
+#'   When applying stacking, the return of original positions instead of the
+#'   stacked ones is achieved by passing \code{origin = "original"} instead of
+#'   the default of \code{origin = "stacked"}.
 #'
 #' @note Irrespective of the action, the ordering of rows in \code{data} is
 #'   preserved.

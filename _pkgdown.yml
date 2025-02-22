@@ -46,12 +46,14 @@ reference:
     desc: It is often useful to displace plot elements away from their original positions to obtain stacked, side-by-side or non-overlapping plot elements.
     contents:
     - position_nudge_keep
-    - position_nudge_to
     - position_nudge_center
     - position_nudge_line
+    - position_nudge_to
     - position_dodgenudge
     - position_stacknudge
     - position_jitternudge
+    - position_dodgenudge_to
+    - position_stacknudge_to
   - title: Plot creation
     desc: Additional ggplot methods for specific classes of data objects.
     contents:

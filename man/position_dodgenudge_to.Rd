@@ -3,9 +3,8 @@
 %   R/position-dodge2nudge-to.R
 \name{position_dodgenudge_to}
 \alias{position_dodgenudge_to}
-\alias{position_nudge_to}
 \alias{position_dodge2nudge_to}
-\title{Nudge or dodge plus nudge labels to new positions}
+\title{Dodge plus nudge labels to new positions}
 \usage{
 position_dodgenudge_to(
   width = 1,
@@ -19,18 +18,6 @@ position_dodgenudge_to(
   x.expansion = 0,
   y.expansion = 0,
   kept.origin = c("dodged", "original", "none")
-)
-
-position_nudge_to(
-  x = NULL,
-  y = NULL,
-  x.action = c("none", "spread"),
-  y.action = c("none", "spread"),
-  x.distance = "equal",
-  y.distance = "equal",
-  x.expansion = 0,
-  y.expansion = 0,
-  kept.origin = c("original", "none")
 )
 
 position_dodge2nudge_to(
@@ -86,22 +73,28 @@ useful if you're rotating both the plot and legend.}
 A \code{"Position"} object.
 }
 \description{
-\code{position_dodgenudge_to()} is generally useful for adjusting the
-position of labels or text, both on a discrete or continuous scale.
-\code{position_dodgenudge_to()} and \code{position_nudge_to()} differ from
-\code{\link[ggplot2]{position_nudge}} in that the coordinates of the new
-position are given directly, rather than as a displacement from the original
-location. It optionally sets an even spacing among positions within a range.
-In \code{position_dodgenudge_to()} this nudging can be combined with dodging.
-As with other position functions in this package, the original positions are
-preserved to allow the text or labels to be linked back to their original
-position with a segment or arrow.
+Functions \code{position_dodgenudge_to()} and
+\code{position_dodge2nudge_to()} are meant to complement
+\code{position_dodge()} and \code{position_dodge2()} from 'ggplot2', adding
+as a second action that of \code{position_nudge_to()}. These positions are
+generally useful for adjusting the position of labels or text. As with other
+position functions in this package, the original positions are preserved to
+allow the text or labels to be linked back to their original position with a
+segment or arrow.
 }
 \details{
-The nudged to \code{x} and/or \code{y} values replace the original ones in
-  \code{data}, while the original or the dodged coordinates are returned in \code{x_orig}
-  and \code{y_orig}. Nudge values supported are those of \emph{mode} numeric,
-  thus including dates and times when they match the mapped data.
+These positions apply sequentially two actions, in the order they
+  appear in their names. The applied dodge is similar to that by
+  \code{\link[ggplot2]{position_dodge}} and
+  \code{\link[ggplot2]{position_dodge2}} while nudging is different to that
+  by \code{\link[ggplot2]{position_nudge}} and equal to that applied by
+  \code{\link{position_nudge_to}}.
+
+  The dodged and nudged to \code{x} and/or \code{y} values replace the
+  original ones in \code{data}, while the original or the dodged coordinates
+  are returned in \code{x_orig} and \code{y_orig}. Nudge values supported are
+  those of \emph{mode} numeric, thus including dates and times when they
+  match the mapped data.
 
   If the length of \code{x} and/or \code{y} is more than one but less than
   rows are present in the data, the vector is both recycled and reordered so
@@ -109,109 +102,97 @@ The nudged to \code{x} and/or \code{y} values replace the original ones in
   length matches the number of rows in data, they are assumed to be already
   in data order.
 
-  The applied dodge is identical to that by
-  \code{\link[ggplot2]{position_dodge}} while nudging is different to that by
-  \code{\link[ggplot2]{position_nudge}}.
+  The intended use is to label dodged bars, boxplots or points with labels
+  aligned. In this case, it is mandatory to use the same argument to
+  \code{width} when passing \code{position_dodge()} to \code{geom_col()} and
+  \code{position_dodgenudge_to()} to \code{geom_text()}, \code{geom_label()},
+  \code{geom_text_s()}, \code{geom_label_s()} or their repulsive equivalents
+  from package 'ggrepel'. Otherwise the arrows or segments will fail to
+  connect to the labels.
 
-There are two possible uses for these functions. First, without using dodging
-they can be used to obtain aligned labels when the labelled objects are not
-aligned. This is the most common use.
-
-The second use is to label dodged bars, boxplots or points with labels
-aligned. In this case, it is mandatory to use
-the same argument to \code{width} when passing \code{position_dodge()} to
-\code{geom_col()} and \code{position_dodgenudge_to()} to \code{geom_text()} or
-\code{geom_label()} or their repulsive equivalents. Otherwise the arrows or
-segments will fail to connect to the labels. In other words dodging is
-computed twice. Dodge is identical to that obtained with the same arguments
-in \code{\link[ggplot2]{position_dodge}} as \code{position_dodgenudge_to()}
-simply calls the same code from package 'ggplot2' ahead of applying
-nudging.
-
-When applying dodging, the return of original positions instead of the dodged
-ones is achieved by passing \code{origin = "original"} instead of the default
-of \code{origin = "dodged"}.
+  When applying dodging, the return of original positions instead of the
+  dodged ones is achieved by passing \code{origin = "original"} instead of
+  the default of \code{origin = "dodged"}.
 }
 \note{
 Irrespective of the action, the ordering of rows in \code{data} is
   preserved.
 }
 \examples{
+
 df <- data.frame(
   x = c(1,3,2,5,4,2.5),
-  y = c(2, 1, 2.5, 1.8, 2.8, 1.5),
+  y = c(2, 3, 2.5, 1.8, 2.8, 1.5),
+  grp = c("A", "A", "A", "B", "B", "B"),
+  grp.inner = c("a", "b", "c", "a", "b", "c"),
   label = c("abc","cd","d","c","bcd","a")
 )
 
-# default does nothing
-ggplot(df, aes(x, y, label = label)) +
-  geom_point() +
-  geom_text(position = position_nudge_to())
+# default is no nudging
+ggplot(df, aes(grp, y, label = label, fill = label)) +
+  geom_col(position = position_dodge(width = 0.92)) +
+  geom_text(position = position_dodgenudge_to(width = 0.92),
+            vjust = -0.2) +
+  theme(legend.position = "none")
 
-ggplot(df, aes(x, y, label = label)) +
-  geom_point() +
-  geom_text(position = position_dodgenudge_to())
+ggplot(df, aes(grp, y, label = label, fill = grp.inner)) +
+  geom_col(position = position_dodge(width = 0.92)) +
+  geom_text(position = position_dodgenudge_to(width = 0.92),
+            vjust = -0.2)
 
-# a single y (or x) value nudges all observations to this data value
-ggplot(df, aes(x, y, label = label)) +
-  geom_point() +
-  geom_text(position = position_nudge_to(y = 3))
+ggplot(df, aes(grp, y, label = label, fill = label)) +
+  geom_col(position = position_dodge2(width = 0.92)) +
+  geom_text(position = position_dodge2nudge_to(width = 0.92),
+            vjust = -0.2) +
+  theme(legend.position = "none")
 
-# with a suitable geom, segments or arrows can be added
-ggplot(df, aes(x, y, label = label)) +
-  geom_point() +
-  geom_text_s(position = position_nudge_to(y = 3))
+ggplot(df, aes(grp, y, label = label, fill = grp.inner)) +
+  geom_col(position = position_dodge2(width = 0.92)) +
+  geom_text(position = position_dodge2nudge_to(width = 0.92),
+            vjust = -0.2)
 
-# alternating in y value order because y has fewer values than rows in data
-ggplot(df, aes(x, y, label = label)) +
-  geom_point() +
-  geom_text_s(position = position_nudge_to(y = c(3, 0)))
+# nudging all labels to a given y value
+ggplot(df, aes(grp, y, label = label, fill = grp.inner)) +
+  geom_col(position = position_dodge(width = 0.92)) +
+  geom_text(position = position_dodgenudge_to(width = 0.92, y = 0.8))
 
-ggplot(df, aes(x, y, label = label)) +
-  geom_point() +
-  geom_text_s(position = position_nudge_to(y = c(0, 3)))
+ggplot(df, aes(grp, y, label = label, fill = grp.inner)) +
+  geom_col(position = position_dodge2(width = 0.92)) +
+  geom_text(position = position_dodge2nudge_to(width = 0.92, y = 0.8))
 
-# in data row order because y has as many values as rows in data
-ggplot(df, aes(x, y, label = label)) +
-  geom_point() +
-  geom_text_s(position = position_nudge_to(y = rep_len(c(0, 3), 6)))
+ggplot(df, aes(grp, y, label = label, fill = grp.inner)) +
+  geom_col(position = position_dodge(width = 0.92)) +
+  geom_text(position = position_dodgenudge_to(width = 0.92, y = 0.8))
 
-# spread the values at equal distance within the available space
-ggplot(df, aes(x, y, label = label)) +
-  geom_point() +
-  geom_text_s(position =
-    position_nudge_to(y = 3, x.action = "spread"))
+ggplot(df[-1, ], aes(grp, y, label = label, fill = grp.inner)) +
+  geom_col(position = position_dodge(width = 0.92)) +
+  geom_text(position = position_dodgenudge_to(width = 0.92, y = 0.8))
 
-# spread the values at equal distance within the expanded available space
-ggplot(df, aes(x, y, label = label)) +
-  geom_point() +
-  geom_text_s(position =
-    position_nudge_to(y = 3, x.action = "spread", x.expansion = 0.1))
+ggplot(df[-1, ], aes(grp, y, label = label, fill = grp.inner)) +
+  geom_col(position = position_dodge(width = 0.92, preserve = "total")) +
+  geom_text(position = position_dodgenudge_to(width = 0.92, y = 0.8,
+                                              preserve = "total"))
 
-# spread the values at equal distance within the contracted available space
-ggplot(df, aes(x, y, label = label)) +
-  geom_point() +
-  geom_text_s(position =
-    position_dodgenudge_to(y = 3, x.action = "spread", x.expansion = -0.1))
+ggplot(df[-1, ], aes(grp, y, label = label, fill = grp.inner)) +
+  geom_col(position = position_dodge(width = 0.92, preserve = "single")) +
+  geom_text(position = position_dodgenudge_to(width = 0.92, y = 0.8,
+                                              preserve = "single"))
 
-# spread the values at equal distance within the range given by x
-ggplot(df, aes(x, y, label = label)) +
-  geom_point() +
-  geom_text_s(position =
-    position_nudge_to(y = 3, x = c(2,4), x.action = "spread"),
-    hjust = "center")
+ggplot(df[-1, ], aes(grp, y, label = label, fill = grp.inner)) +
+  geom_col(position = position_dodge2(width = 0.92, preserve = "total")) +
+  geom_text(position = position_dodge2nudge_to(width = 0.92, y = 0.8,
+                                              preserve = "total"))
 
-ggplot(df, aes(x, y, label = label)) +
-  geom_point() +
-  geom_text_s(position =
-    position_nudge_to(y = 3, x = c(0,6), x.action = "spread"),
-    hjust = "center")
+ggplot(df[-1, ], aes(grp, y, label = label, fill = grp.inner)) +
+  geom_col(position = position_dodge2(width = 0.92, preserve = "single")) +
+  geom_text(position = position_dodge2nudge_to(width = 0.92, y = 0.8,
+                                              preserve = "single"))
 
 }
 \seealso{
-\code{\link[ggplot2]{position_nudge}},
+\code{\link{position_nudge_to}},
   \code{\link[ggplot2]{position_dodge}},
-  \code{\link[ggrepel]{position_nudge_repel}}.
+  \code{\link[ggplot2]{position_dodge2}}.
 
 Other position adjustments: 
 \code{\link{position_dodgenudge}()},
@@ -219,6 +200,7 @@ Other position adjustments:
 \code{\link{position_nudge_center}()},
 \code{\link{position_nudge_keep}()},
 \code{\link{position_nudge_line}()},
+\code{\link{position_nudge_to}()},
 \code{\link{position_stacknudge}()},
 \code{\link{position_stacknudge_to}()}
 }
