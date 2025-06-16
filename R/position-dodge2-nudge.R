@@ -123,5 +123,18 @@ PositionDodge2AndNudge <-
                    }
   )
 
-
+#' @rdname position_dodgenudge
+#'
+#' @export
+#'
+position_dodge2_keep <- function(width = 1,
+                                 preserve = c("total", "single"),
+                                 kept.origin = "original") {
+  position_dodge2nudge(width = width,
+                       preserve = preserve,
+                       x = 0,
+                       y = 0,
+                       direction = "none",
+                       kept.origin = kept.origin)
+}
 

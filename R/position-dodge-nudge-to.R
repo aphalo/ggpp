@@ -19,8 +19,7 @@
 #' @param reverse logical If TRUE, will reverse the default dodging order.
 #' @param padding Padding between elements at the same position. Elements are
 #'   shrunk by this proportion to allow space between them. Defaults to 0.1.
-#' @param reverse If TRUE, will reverse the default stacking order. This is
-#'   useful if you're rotating both the plot and legend.
+#' @param reverse If TRUE, will reverse the default dodging order.
 #' @param x,y Coordinates of the destination position. A vector of mode
 #'   \code{numeric}, that is extended if needed, to the same length as rows
 #'   there are in \code{data}. The default, \code{NULL}, leaves the original

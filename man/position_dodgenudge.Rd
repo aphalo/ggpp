@@ -4,8 +4,8 @@
 \name{position_dodgenudge}
 \alias{position_dodgenudge}
 \alias{position_dodge_keep}
-\alias{position_dodge2_keep}
 \alias{position_dodge2nudge}
+\alias{position_dodge2_keep}
 \title{Combined positions dodge and nudge}
 \source{
 \url{https://github.com/slowkow/ggrepel/issues/161}.
@@ -14,6 +14,7 @@
 position_dodgenudge(
   width = 1,
   preserve = c("total", "single"),
+  reverse = FALSE,
   x = 0,
   y = 0,
   direction = c("none", "split", "split.x", "split.y", "center"),
@@ -23,12 +24,7 @@ position_dodgenudge(
 position_dodge_keep(
   width = 1,
   preserve = c("total", "single"),
-  kept.origin = "original"
-)
-
-position_dodge2_keep(
-  width = 1,
-  preserve = c("total", "single"),
+  reverse = FALSE,
   kept.origin = "original"
 )
 
@@ -42,6 +38,12 @@ position_dodge2nudge(
   direction = c("none", "split", "split.x", "split.y", "center"),
   kept.origin = c("dodged", "original", "none")
 )
+
+position_dodge2_keep(
+  width = 1,
+  preserve = c("total", "single"),
+  kept.origin = "original"
+)
 }
 \arguments{
 \item{width}{Dodging width, when different to the width of the individual
@@ -50,6 +52,9 @@ geoms. See the examples.}
 
 \item{preserve}{Should dodging preserve the total width of all elements at a
 position, or the width of a single element?.}
+
+\item{reverse}{If TRUE, will reverse the default stacking order. This is
+useful if you're rotating both the plot and legend.}
 
 \item{x, y}{Amount of vertical and horizontal distance to move. A numeric
 vector of length 1, or of the same length as rows there are in `data`,
@@ -66,9 +71,6 @@ negative slices.}
 
 \item{padding}{Padding between elements at the same position. Elements are
 shrunk by this proportion to allow space between them. Defaults to 0.1.}
-
-\item{reverse}{If TRUE, will reverse the default stacking order. This is
-useful if you're rotating both the plot and legend.}
 }
 \value{
 A \code{"Position"} object.

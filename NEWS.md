@@ -9,6 +9,8 @@ editor_options:
 # ggpp 0.5.9
 
 - Ensure compatibility with upcoming 'ggplot2' 4.0.0.
+- When used with 'ggplot2' 4.0.0 support parameter `reverse` in 
+`position_dodge_keep()`, `position_dodgenudge()` and `position_dodgenudge_to()`.
 - Add `position_dodgenudge_to()` and `position_dodge2nudge_to()` that allow the 
 action of `position_nudge_to()` to be combined with dodging.
 - Add `position_stacknudge_to()` and `position_fillnudge_to()` that allow the 

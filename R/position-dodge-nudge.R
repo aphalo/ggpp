@@ -42,6 +42,7 @@
 #'   geoms. See the examples.
 #' @param preserve Should dodging preserve the total width of all elements at a
 #'   position, or the width of a single element?.
+#' @param reverse logical If TRUE, will reverse the default dodging order.
 #' @param padding Padding between elements at the same position. Elements are
 #'   shrunk by this proportion to allow space between them. Defaults to 0.1.
 #' @param reverse If TRUE, will reverse the default stacking order. This is
@@ -99,6 +100,7 @@
 position_dodgenudge <-
   function(width = 1,
            preserve = c("total", "single"),
+           reverse = FALSE,
            x = 0,
            y = 0,
            direction = c("none", "split", "split.x", "split.y", "center"),
@@ -125,7 +127,8 @@ position_dodgenudge <-
                                      center = sign),
                      kept.origin = kept.origin,
                      width = width,
-                     preserve = preserve
+                     preserve = preserve,
+                     reverse = reverse
     )
   }
 
@@ -217,26 +220,13 @@ PositionDodgeAndNudge <-
 #'
 position_dodge_keep <- function(width = 1,
                                 preserve = c("total", "single"),
+                                reverse = FALSE,
                                 kept.origin = "original") {
   position_dodgenudge(width = width,
                       preserve = preserve,
+                      reverse = reverse,
                       x = 0,
                       y = 0,
                       direction = "none",
                       kept.origin = kept.origin)
-}
-
-#' @rdname position_dodgenudge
-#'
-#' @export
-#'
-position_dodge2_keep <- function(width = 1,
-                                 preserve = c("total", "single"),
-                                 kept.origin = "original") {
-  position_dodge2nudge(width = width,
-                       preserve = preserve,
-                       x = 0,
-                       y = 0,
-                       direction = "none",
-                       kept.origin = kept.origin)
 }

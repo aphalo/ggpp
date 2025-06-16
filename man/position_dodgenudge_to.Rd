@@ -45,8 +45,7 @@ geoms. See the examples.}
 \item{preserve}{Should dodging preserve the total width of all elements at a
 position, or the width of a single element?.}
 
-\item{reverse}{If TRUE, will reverse the default stacking order. This is
-useful if you're rotating both the plot and legend.}
+\item{reverse}{If TRUE, will reverse the default dodging order.}
 
 \item{x, y}{Coordinates of the destination position. A vector of mode
 \code{numeric}, that is extended if needed, to the same length as rows
