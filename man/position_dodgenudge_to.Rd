@@ -9,6 +9,7 @@
 position_dodgenudge_to(
   width = 1,
   preserve = c("total", "single"),
+  reverse = FALSE,
   x = NULL,
   y = NULL,
   x.action = c("none", "spread"),
@@ -44,6 +45,9 @@ geoms. See the examples.}
 \item{preserve}{Should dodging preserve the total width of all elements at a
 position, or the width of a single element?.}
 
+\item{reverse}{If TRUE, will reverse the default stacking order. This is
+useful if you're rotating both the plot and legend.}
+
 \item{x, y}{Coordinates of the destination position. A vector of mode
 \code{numeric}, that is extended if needed, to the same length as rows
 there are in \code{data}. The default, \code{NULL}, leaves the original
@@ -65,9 +69,6 @@ fraction of width of the range.}
 
 \item{padding}{Padding between elements at the same position. Elements are
 shrunk by this proportion to allow space between them. Defaults to 0.1.}
-
-\item{reverse}{If TRUE, will reverse the default stacking order. This is
-useful if you're rotating both the plot and legend.}
 }
 \value{
 A \code{"Position"} object.

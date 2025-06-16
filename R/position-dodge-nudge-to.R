@@ -16,6 +16,7 @@
 #'   geoms. See the examples.
 #' @param preserve Should dodging preserve the total width of all elements at a
 #'   position, or the width of a single element?.
+#' @param reverse logical If TRUE, will reverse the default dodging order.
 #' @param padding Padding between elements at the same position. Elements are
 #'   shrunk by this proportion to allow space between them. Defaults to 0.1.
 #' @param reverse If TRUE, will reverse the default stacking order. This is
@@ -150,6 +151,7 @@
 position_dodgenudge_to <-
   function(width = 1,
            preserve = c("total", "single"),
+           reverse = FALSE,
            x = NULL,
            y = NULL,
            x.action = c("none", "spread"),
@@ -186,6 +188,7 @@ position_dodgenudge_to <-
                      y.expansion = rep_len(y.expansion, 2),
                      kept.origin = rlang::arg_match(kept.origin),
                      width = width,
+                     reverse = reverse,
                      preserve = rlang::arg_match(preserve)
     )
   }
@@ -214,6 +217,7 @@ PositionDodgeNudgeTo <-
            y.reorder = !is.null(self$y) && length(self$y) > 1 && length(self$y) < nrow(data),
            kept.origin = self$kept.origin,
            width = self$width,
+           reverse = self$reverse,
            preserve = self$preserve
       )
     },

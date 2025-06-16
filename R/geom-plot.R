@@ -246,7 +246,7 @@ GeomPlot <-
               return(grid::nullGrob())
             }
 
-            if (!ggplot2::is.ggplot(data$label[[1]])) {
+            if (!ggplot2::is_ggplot(data$label[[1]])) {
               warning("Skipping as object mapped to 'label' is not",
                       " a list of \"gg\" or \"ggplot\" objects.")
               return(grid::nullGrob())
@@ -393,7 +393,7 @@ GeomPlotNpc <-
               return(grid::nullGrob())
             }
 
-            if (!is.ggplot(data$label[[1]])) {
+            if (!ggplot2::is_ggplot(data$label[[1]])) {
               warning("Skipping as object mapped to 'label' is not a list of \"gg\" or \"ggplot\" objects.")
               return(grid::nullGrob())
             }
