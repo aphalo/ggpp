@@ -35,6 +35,8 @@ ttheme_gtbw(
   base_family = "",
   parse = FALSE,
   padding = unit(c(1, 0.6), "char"),
+  fill.alpha = 1,
+  colour.alpha = 1,
   ...
 )
 
@@ -44,6 +46,8 @@ ttheme_gtplain(
   base_family = "",
   parse = FALSE,
   padding = unit(c(0.8, 0.6), "char"),
+  fill.alpha = 1,
+  colour.alpha = 1,
   ...
 )
 
@@ -53,6 +57,8 @@ ttheme_gtdark(
   base_family = "",
   parse = FALSE,
   padding = unit(c(0.8, 0.6), "char"),
+  fill.alpha = 1,
+  colour.alpha = 1,
   ...
 )
 
@@ -62,6 +68,8 @@ ttheme_gtlight(
   base_family = "",
   parse = FALSE,
   padding = unit(c(0.8, 0.6), "char"),
+  fill.alpha = 1,
+  colour.alpha = 1,
   ...
 )
 
@@ -71,6 +79,7 @@ ttheme_gtsimple(
   base_family = "",
   parse = FALSE,
   padding = unit(c(0.5, 0.4), "char"),
+  fill.alpha = 1,
   ...
 )
 
@@ -80,6 +89,7 @@ ttheme_gtstripes(
   base_family = "",
   parse = FALSE,
   padding = unit(c(0.8, 0.6), "char"),
+  fill.alpha = 1,
   ...
 )
 }
@@ -96,6 +106,9 @@ ttheme_gtstripes(
 padding of text within each cell.}
 
 \item{...}{further arguments to control the gtable.}
+
+\item{fill.alpha, colour.alpha}{numeric in [0..1] Transparency applied to
+table body background and line grid, respectively.}
 }
 \value{
 A \code{list} object that can be used as \code{ttheme} in the
@@ -109,8 +122,7 @@ Depending on the theme, the base_colour, which is
   mapped to the \code{colour} aesthetic if present, is applied to only the
   text elements, or to the text elements and rules. The difference is
   exemplified below.
-}
-\note{
+
 These theme constructors are wrappers on
   \code{gridExtra::ttheme_default()} and \code{gridExtra::ttheme_minimal()}.
   They can also be used with \code{\link[gridExtra]{grid.table}} if desired.
