@@ -4,7 +4,7 @@ test_that("ttheme_gtbw, default text elements", {
   t1 <- ttheme_gtbw()
 
   expect_true(t1$core$fg_params$fontsize == 10)
-  expect_true(t1$core$fg_params$col == "black")
+  expect_true(t1$core$fg_params$col == "#000000FF")
 
   expect_identical(t1$core$bg_params$fill, ttheme_gtbw()$core$bg_params$fill)
   expect_identical(t1$core$bg_params$col, ttheme_gtbw()$core$bg_params$col)
@@ -23,7 +23,7 @@ test_that("ttheme_gtbw, check changes to text elements", {
   t2 <- ttheme_gtbw(base_size = 15, base_colour = "darkblue")
 
   expect_true(t2$core$fg_params$fontsize == 15)
-  expect_true(t2$core$fg_params$col == "darkblue")
+  expect_true(t2$core$fg_params$col == "#00008BFF")
 
   expect_identical(t2$core$bg_params$fill, ttheme_gtbw()$core$bg_params$fill)
   expect_identical(t2$core$bg_params$col, ttheme_gtbw()$core$bg_params$col)

@@ -4,7 +4,7 @@ test_that("ttheme_gtsimple, default text elements", {
   t1 <- ttheme_gtsimple()
 
   expect_true(t1$core$fg_params$fontsize == 10)
-  expect_true(t1$core$fg_params$col == "grey10")
+  expect_true(t1$core$fg_params$col == "#1A1A1AFF")
 
   expect_identical(t1$core$bg_params$fill, ttheme_gtsimple()$core$bg_params$fill)
   expect_identical(t1$core$bg_params$col, ttheme_gtsimple()$core$bg_params$col)
@@ -23,7 +23,7 @@ test_that("ttheme_gtsimple, check changes to text elements", {
   t2 <- ttheme_gtsimple(base_size = 20)
 
   expect_true(t2$core$fg_params$fontsize == 20)
-  expect_true(t2$core$fg_params$col == "grey10")
+  expect_true(t2$core$fg_params$col == "#1A1A1AFF")
 
   expect_identical(t2$core$bg_params$fill, ttheme_gtsimple()$core$bg_params$fill)
   expect_identical(t2$core$bg_params$col, ttheme_gtsimple()$core$bg_params$col)
