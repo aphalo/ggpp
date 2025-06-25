@@ -12,7 +12,7 @@
 #' thus plot insets can differ among panels.
 #'
 #' @details By default \code{geom_table()} uses
-#' \code{\link{position_nudge_center}} which is
+#'   \code{\link{position_nudge_center}} which is
 #'   backwards compatible with \code{\link[ggplot2]{position_nudge}} but
 #'   provides additional control on the direction of the nudging. In contrast to
 #'   \code{\link[ggplot2]{position_nudge}}, \code{\link{position_nudge_center}}
@@ -34,14 +34,14 @@
 #'   the passed to this theme constructor for each individual table. In
 #'   contrast, if a ready constructed \code{ttheme} stored as a list object is
 #'   passed as argument (e.g., by calling the constructor, using constructor
-#'   name followed by parenthesis), it will be used as is, i.e., mappings to
-#'   aesthetics such as \code{colour} are ignored if present. By default the
-#'   constructor \code{ttheme_gtdefault} is used and \code{colour} and
-#'   \code{fill}, are mapped to \code{NA}. Mapping these aesthetics to \code{NA}
-#'   triggers the use of the default \code{base_colour} of the \code{ttheme}. As
-#'   the table is built with function \code{gridExtra::gtable()}, for formatting
-#'   details, please, consult \code{\link[gridExtra]{tableGrob}} and
-#'   \code{\link{ttheme_gtdefault}}.
+#'   name followed by parenthesis), it is used as is, with mappings to
+#'   aesthetics \code{colour}, \code{fill}, \code{alpha}, and \code{family}
+#'   ignored if present. By default the constructor \code{ttheme_gtdefault} is
+#'   used and \code{colour} and \code{fill}, are mapped to \code{NA}. Mapping
+#'   these aesthetics to \code{NA} triggers the use the values set in the
+#'   \code{ttheme}. As the table is built with function
+#'   \code{gridExtra::gtable()}, for details, please, consult
+#'   \code{\link[gridExtra]{tableGrob}} and \code{\link{ttheme_gtdefault}}.
 #'
 #'   The \code{x} and \code{y} aesthetics determine the position of the whole
 #'   inset table, similarly to that of a text label, justification is
@@ -248,12 +248,13 @@ geom_table <- function(mapping = NULL,
 
   colour.target <-
     rlang::arg_match(color.target,
-                     values = c("segment", "all", "box", "none"),
+                     values = c("segment", "all", "box", "table", "table.base",
+                                "table.rules", "table.canvas", "none"),
                      multiple = TRUE)
   alpha.target <-
     rlang::arg_match(alpha.target,
-                     values = c("segment", "all", "box",
-                                "box.line", "box.fill", "none"),
+                     values = c("segment", "all", "box", "table", "table.base",
+                                "table.rules", "table.canvas", "none"),
                      multiple = TRUE)
 
   if (!missing(nudge_x) || !missing(nudge_y)) {
@@ -343,7 +344,7 @@ GeomTable <-
                                 parse = FALSE,
                                 default.colour = "black",
                                 colour.target = "all",
-                                default.alpha = 1,
+                                default.alpha = NA,
                                 alpha.target = "all",
                                 na.rm = FALSE) {
 
@@ -357,7 +358,8 @@ GeomTable <-
               return(grid::nullGrob())
             }
 
-            add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
+            add.segments <-
+              add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
 
             # should be called only once!
             data <- coord$transform(data, panel_params)
@@ -403,13 +405,41 @@ GeomTable <-
 
             for (row.idx in 1:nrow(data)) {
               row <- data[row.idx, , drop = FALSE]
-              table.alpha <-
+              # colour
+              base.colour <-
+                ifelse(any(colour.target %in% c("all", "table")),
+                       row$colour, default.colour)
+              rules.colour <-
+                ifelse(any(colour.target %in% c("all", "table", "table.rules")),
+                       row$colour, default.colour)
+              canvas.colour <-
+                ifelse(any(colour.target %in% c("all", "table", "table.canvas")),
+                       row$colour, default.colour)
+              segment.colour <-
+                ifelse(any(colour.target %in% c("all", "segment")),
+                       row$colour, default.colour)
+              box.colour <-
+                ifelse(any(colour.target %in% c("all", "segment")),
+                       row$colour, default.colour)
+             # fill
+              canvas.fill <-
+                ifelse(!is.na(row$fill), row$fill, default.fill)
+             # alpha
+              base.alpha <-
                 ifelse(any(alpha.target %in% c("all", "table")),
+                       row$alpha, default.alpha)
+              rules.alpha <-
+                ifelse(any(alpha.target %in% c("all", "table", "table.rules")),
+                       row$alpha, default.alpha)
+              canvas.alpha <-
+                ifelse(any(alpha.target %in% c("all", "table", "table.canvas")),
                        row$alpha, default.alpha)
               segment.alpha <-
                 ifelse(any(alpha.target %in% c("all", "segment")),
                        row$alpha, default.alpha)
-
+              box.alpha <-
+                ifelse(any(alpha.target %in% c("all", "segment")),
+                       row$alpha, default.alpha)
               # Build the table
               if (is.function(table.theme)) {
                 # tableGrob puts all the padding on the same side unless just = 0.5
@@ -694,10 +724,16 @@ GeomTableNpc <-
 #'   corresponding text-related aesthetics are mapped or set to a constant
 #'   through the usual 'ggplot2' mechanisms. On the other hand the properties
 #'   of the background fill, rules and column and row headings can be set only
-#'   through the theme. Several of the \code{ttheme} constructors defined in
+#'   through the theme. The \code{ttheme} constructors defined in
 #'   'ggpp' have formal parameters for \code{alpha} transparency of the
-#'   background fill and rule lines' colour. These are specially useful to
-#'   make visible other possibly overlapped elements of the plot.
+#'   text, background and rules. Transparency is useful as plot insets can
+#'   accidentally overlap observations hiding them from view depending on the
+#'   stacking order of plot layers.
+#'
+#'   These theme constructors are wrappers on the constructors
+#'   \code{gridExtra::ttheme_default()} and \code{gridExtra::ttheme_minimal()}.
+#'   They can also be used directly with \code{\link[gridExtra]{grid.table}} if
+#'   desired.
 #'
 #' @param base_size numeric, default font size of text in table.
 #' @param base_colour	default font colour for text in table.
@@ -705,13 +741,10 @@ GeomTableNpc <-
 #' @param parse	logical, behaviour for parsing text as plotmath.
 #' @param padding length-2 unit vector specifying the horizontal and vertical
 #'   padding of text within each cell.
-#' @param fill.alpha,colour.alpha numeric in [0..1] Transparency applied to
-#'   table body background and line grid, respectively.
+#' @param base.alpha,canvas.alpha,rules.alpha numeric in [0..1] Transparency
+#'   applied to table \code{base_colour}, to table body background
+#'   \code{fill} and rules \code{colour}, respectively.
 #' @param ... further arguments to control the gtable.
-#'
-#' @details These theme constructors are wrappers on
-#'   \code{gridExtra::ttheme_default()} and \code{gridExtra::ttheme_minimal()}.
-#'   They can also be used with \code{\link[gridExtra]{grid.table}} if desired.
 #'
 #' @return A \code{list} object that can be used as \code{ttheme} in the
 #'   construction of tables with functions from package 'gridExtra'.
@@ -804,8 +837,8 @@ GeomTableNpc <-
 #' ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
 #'   geom_point() +
 #'   geom_table(data = df, aes(x = 1.5, y = y, label = tb),
-#'              table.theme = ttheme_gtplain(fill.alpha = 0.5,
-#'                                           colour.alpha = 0.2)) +
+#'              table.theme = ttheme_gtplain(canvas.alpha = 0.5,
+#'                                           rules.alpha = 0.2)) +
 #'   theme_classic()
 #'
 #' # Transparency of table background fill and grid lines colour
@@ -814,8 +847,8 @@ GeomTableNpc <-
 #'   geom_point() +
 #'   geom_table(data = df, aes(x = 1.5, y = y, label = tb),
 #'              table.theme = ttheme_gtplain(base_colour = rgb(0, 0, 0, 0.5),
-#'                                           fill.alpha = 0.5,
-#'                                           colour.alpha = 0.2)) +
+#'                                           canvas.alpha = 0.5,
+#'                                           rules.alpha = 0.2)) +
 #'   theme_classic()
 #'
 ttheme_gtdefault <- function (base_size = 10,
@@ -823,23 +856,25 @@ ttheme_gtdefault <- function (base_size = 10,
                               base_family = "",
                               parse = FALSE,
                               padding = grid::unit(c(0.8, 0.6), "char"),
-                              fill.alpha = NA,
-                              colour.alpha = NA,
+                              base.alpha = NA,
+                              rules.alpha = base.alpha,
+                              canvas.alpha = base.alpha,
                               ...)
 {
   core <-
     list(bg_params =
-           list(fill = ggplot2::alpha(c("grey95", "grey90"), fill.alpha),
-                col = ggplot2::alpha("white", colour.alpha)))
+           list(fill = ggplot2::alpha(c("grey95", "grey90"), canvas.alpha),
+                col = ggplot2::alpha("white", rules.alpha)))
   colhead <-
-    list(bg_params = list(fill = ggplot2::alpha("grey80", fill.alpha),
-                          col = ggplot2::alpha("white", colour.alpha)))
+    list(bg_params = list(fill = ggplot2::alpha("grey80", canvas.alpha),
+                          col = ggplot2::alpha("white", rules.alpha)))
   colhead <- rowhead <-
     list(bg_params = list(fill = NA,
-                          col = ggplot2::alpha("white", colour.alpha)))
+                          col = ggplot2::alpha("white", rules.alpha)))
 
   gridExtra::ttheme_default(base_size = base_size,
-                            base_colour = base_colour,
+                            base_colour = ggplot2::alpha(base_colour,
+                                                         base.alpha),
                             base_family = base_family,
                             parse = parse,
                             padding = padding,
@@ -858,12 +893,14 @@ ttheme_gtminimal <- function (base_size = 10,
                               base_family = "",
                               parse = FALSE,
                               padding = grid::unit(c(0.5, 0.4), "char"),
-                              fill.alpha = NA,
-                              colour.alpha = NA,
+                              base.alpha = NA,
+                              rules.alpha = base.alpha,
+                              canvas.alpha = base.alpha,
                               ...)
 {
   gridExtra::ttheme_minimal(base_size = base_size,
-                            base_colour = base_colour,
+                            base_colour = ggplot2::alpha(base_colour,
+                                                         base.alpha),
                             base_family = base_family,
                             parse = parse,
                             padding = padding,
@@ -879,23 +916,25 @@ ttheme_gtbw <- function (base_size = 10,
                          base_family = "",
                          parse = FALSE,
                          padding = grid::unit(c(1, 0.6), "char"),
-                         fill.alpha = 1.0,
-                         colour.alpha = 1.0,
+                         base.alpha = NA,
+                         rules.alpha = base.alpha,
+                         canvas.alpha = base.alpha,
                          ...)
 {
   core <-
     list(bg_params =
-           list(fill = ggplot2::alpha("white", fill.alpha),
+           list(fill = ggplot2::alpha("white", canvas.alpha),
                 lwd = 1.5,
-                col = ggplot2::alpha("grey90", colour.alpha)))
+                col = ggplot2::alpha("grey90", rules.alpha)))
   colhead <- rowhead <-
-    list(bg_params = list(fill = ggplot2::alpha("grey80", fill.alpha),
+    list(bg_params = list(fill = ggplot2::alpha("grey80", canvas.alpha),
                           lwd = 1.5,
-                          col = ggplot2::alpha("grey90", colour.alpha)))
+                          col = ggplot2::alpha("grey90", rules.alpha)))
 
   default <-
     gridExtra::ttheme_default(base_size = base_size,
-                              base_colour = base_colour,
+                              base_colour = ggplot2::alpha(base_colour,
+                                                           base.alpha),
                               base_family = base_family,
                               parse = parse,
                               padding = padding,
@@ -915,18 +954,20 @@ ttheme_gtplain <- function (base_size = 10,
                             base_family = "",
                             parse = FALSE,
                             padding = grid::unit(c(0.8, 0.6), "char"),
-                            fill.alpha = 1.0,
-                            colour.alpha = 1.0,
+                            base.alpha = NA,
+                            rules.alpha = base.alpha,
+                            canvas.alpha = base.alpha,
                             ...)
 {
   core <-
     list(bg_params =
-           list(fill = ggplot2::alpha("white", fill.alpha)))
+           list(fill = ggplot2::alpha("white", canvas.alpha)))
   colhead <- rowhead <-
-    list(bg_params = list(fill = ggplot2::alpha("grey90", fill.alpha)))
+    list(bg_params = list(fill = ggplot2::alpha("grey90", canvas.alpha)))
   default <-
     gridExtra::ttheme_default(base_size = base_size,
-                              base_colour = base_colour,
+                              base_colour = ggplot2::alpha(base_colour,
+                                                           base.alpha),
                               base_family = base_family,
                               parse = parse,
                               padding = padding,
@@ -946,22 +987,24 @@ ttheme_gtdark <- function (base_size = 10,
                            base_family = "",
                            parse = FALSE,
                            padding = grid::unit(c(0.8, 0.6), "char"),
-                           fill.alpha = 1.0,
-                           colour.alpha = 1.0,
+                           base.alpha = NA,
+                           rules.alpha = base.alpha,
+                           canvas.alpha = base.alpha,
                            ...)
 {
   core <-
     list(bg_params =
-           list(fill = ggplot2::alpha("grey30", fill.alpha),
+           list(fill = ggplot2::alpha("grey30", canvas.alpha),
                 lwd = 1.5,
-                col = ggplot2::alpha(base_colour, colour.alpha)))
+                col = ggplot2::alpha(base_colour, rules.alpha)))
   colhead <- rowhead <-
-    list(bg_params = list(fill = ggplot2::alpha("black", fill.alpha),
+    list(bg_params = list(fill = ggplot2::alpha("black", canvas.alpha),
                           lwd = 1.5,
-                          col = ggplot2::alpha(base_colour, colour.alpha)))
+                          col = ggplot2::alpha(base_colour, rules.alpha)))
   default <-
     gridExtra::ttheme_default(base_size = base_size,
-                              base_colour = base_colour,
+                              base_colour = ggplot2::alpha(base_colour,
+                                                           base.alpha),
                               base_family = base_family,
                               parse = parse,
                               padding = padding,
@@ -981,23 +1024,25 @@ ttheme_gtlight <- function (base_size = 10,
                             base_family = "",
                             parse = FALSE,
                             padding = grid::unit(c(0.8, 0.6), "char"),
-                            fill.alpha = 1.0,
-                            colour.alpha = 1.0,
+                            base.alpha = NA,
+                            rules.alpha = base.alpha,
+                            canvas.alpha = base.alpha,
                             ...)
 {
   core <-
     list(bg_params =
-           list(fill = ggplot2::alpha("white", fill.alpha),
+           list(fill = ggplot2::alpha("white", canvas.alpha),
                 lwd = 1.5,
-                col = ggplot2::alpha(base_colour, colour.alpha)))
+                col = ggplot2::alpha(base_colour, rules.alpha)))
   colhead <- rowhead <-
-    list(bg_params = list(fill = ggplot2::alpha("grey80", fill.alpha),
+    list(bg_params = list(fill = ggplot2::alpha("grey80", canvas.alpha),
                           lwd = 1.5,
-                          col = ggplot2::alpha(base_colour, colour.alpha)))
+                          col = ggplot2::alpha(base_colour, rules.alpha)))
 
   default <-
     gridExtra::ttheme_default(base_size = base_size,
-                              base_colour = base_colour,
+                              base_colour = ggplot2::alpha(base_colour,
+                                                           base.alpha),
                               base_family = base_family,
                               parse = parse,
                               padding = padding,
@@ -1017,23 +1062,25 @@ ttheme_gtsimple <- function (base_size = 10,
                             base_family = "",
                             parse = FALSE,
                             padding = grid::unit(c(0.5, 0.4), "char"),
-                            fill.alpha = 1.0,
-                            colour.alpha = NA,
+                            base.alpha = NA,
+                            rules.alpha = base.alpha,
+                            canvas.alpha = base.alpha,
                             ...)
 {
   core <-
     list(bg_params =
-           list(fill = ggplot2::alpha("white", fill.alpha),
+           list(fill = ggplot2::alpha("white", canvas.alpha),
                 lwd = 0,
                 col = NA))
   colhead <- rowhead <-
-    list(bg_params = list(fill = ggplot2::alpha("grey80", fill.alpha),
+    list(bg_params = list(fill = ggplot2::alpha("grey80", canvas.alpha),
                           lwd = 0,
                           col = NA))
 
   default <-
     gridExtra::ttheme_default(base_size = base_size,
-                              base_colour = base_colour,
+                              base_colour = ggplot2::alpha(base_colour,
+                                                           base.alpha),
                               base_family = base_family,
                               parse = parse,
                               padding = padding,
@@ -1053,22 +1100,24 @@ ttheme_gtstripes <- function (base_size = 10,
                               base_family = "",
                               parse = FALSE,
                               padding = grid::unit(c(0.8, 0.6), "char"),
-                              fill.alpha = 1.0,
-                              colour.alpha = NA,
+                              base.alpha = NA,
+                              rules.alpha = base.alpha,
+                              canvas.alpha = base.alpha,
                               ...)
 {
   core <-
     list(bg_params =
-           list(fill = ggplot2::alpha(c("white", "grey90"), fill.alpha),
+           list(fill = ggplot2::alpha(c("white", "grey90"), canvas.alpha),
                 lwd = 0,
                 col = NA))
   colhead <- rowhead <-
-    list(bg_params = list(fill = ggplot2::alpha("grey75", fill.alpha),
+    list(bg_params = list(fill = ggplot2::alpha("grey75", canvas.alpha),
                           lwd = 0,
                           col = NA))
   default <-
     gridExtra::ttheme_default(base_size = base_size,
-                              base_colour = base_colour,
+                              base_colour = ggplot2::alpha(base_colour,
+                                                           base.alpha),
                               base_family = base_family,
                               parse = parse,
                               padding = padding,

@@ -16,9 +16,10 @@ ttheme_gtdefault(
   base_colour = "black",
   base_family = "",
   parse = FALSE,
-  padding = unit(c(0.8, 0.6), "char"),
-  fill.alpha = NA,
-  colour.alpha = NA,
+  padding = grid::unit(c(0.8, 0.6), "char"),
+  base.alpha = NA,
+  rules.alpha = base.alpha,
+  canvas.alpha = base.alpha,
   ...
 )
 
@@ -27,9 +28,10 @@ ttheme_gtminimal(
   base_colour = "black",
   base_family = "",
   parse = FALSE,
-  padding = unit(c(0.5, 0.4), "char"),
-  fill.alpha = NA,
-  colour.alpha = NA,
+  padding = grid::unit(c(0.5, 0.4), "char"),
+  base.alpha = NA,
+  rules.alpha = base.alpha,
+  canvas.alpha = base.alpha,
   ...
 )
 
@@ -38,9 +40,10 @@ ttheme_gtbw(
   base_colour = "black",
   base_family = "",
   parse = FALSE,
-  padding = unit(c(1, 0.6), "char"),
-  fill.alpha = 1,
-  colour.alpha = 1,
+  padding = grid::unit(c(1, 0.6), "char"),
+  base.alpha = NA,
+  rules.alpha = base.alpha,
+  canvas.alpha = base.alpha,
   ...
 )
 
@@ -49,9 +52,10 @@ ttheme_gtplain(
   base_colour = "black",
   base_family = "",
   parse = FALSE,
-  padding = unit(c(0.8, 0.6), "char"),
-  fill.alpha = 1,
-  colour.alpha = 1,
+  padding = grid::unit(c(0.8, 0.6), "char"),
+  base.alpha = NA,
+  rules.alpha = base.alpha,
+  canvas.alpha = base.alpha,
   ...
 )
 
@@ -60,9 +64,10 @@ ttheme_gtdark(
   base_colour = "grey90",
   base_family = "",
   parse = FALSE,
-  padding = unit(c(0.8, 0.6), "char"),
-  fill.alpha = 1,
-  colour.alpha = 1,
+  padding = grid::unit(c(0.8, 0.6), "char"),
+  base.alpha = NA,
+  rules.alpha = base.alpha,
+  canvas.alpha = base.alpha,
   ...
 )
 
@@ -71,9 +76,10 @@ ttheme_gtlight(
   base_colour = "grey10",
   base_family = "",
   parse = FALSE,
-  padding = unit(c(0.8, 0.6), "char"),
-  fill.alpha = 1,
-  colour.alpha = 1,
+  padding = grid::unit(c(0.8, 0.6), "char"),
+  base.alpha = NA,
+  rules.alpha = base.alpha,
+  canvas.alpha = base.alpha,
   ...
 )
 
@@ -82,9 +88,10 @@ ttheme_gtsimple(
   base_colour = "grey10",
   base_family = "",
   parse = FALSE,
-  padding = unit(c(0.5, 0.4), "char"),
-  fill.alpha = 1,
-  colour.alpha = NA,
+  padding = grid::unit(c(0.5, 0.4), "char"),
+  base.alpha = NA,
+  rules.alpha = base.alpha,
+  canvas.alpha = base.alpha,
   ...
 )
 
@@ -93,9 +100,10 @@ ttheme_gtstripes(
   base_colour = "grey10",
   base_family = "",
   parse = FALSE,
-  padding = unit(c(0.8, 0.6), "char"),
-  fill.alpha = 1,
-  colour.alpha = NA,
+  padding = grid::unit(c(0.8, 0.6), "char"),
+  base.alpha = NA,
+  rules.alpha = base.alpha,
+  canvas.alpha = base.alpha,
   ...
 )
 }
@@ -111,8 +119,9 @@ ttheme_gtstripes(
 \item{padding}{length-2 unit vector specifying the horizontal and vertical
 padding of text within each cell.}
 
-\item{fill.alpha, colour.alpha}{numeric in [0..1] Transparency applied to
-table body background and line grid, respectively.}
+\item{base.alpha, canvas.alpha, rules.alpha}{numeric in [0..1] Transparency
+applied to table \code{base_colour}, to table body background
+\code{fill} and rules \code{colour}, respectively.}
 
 \item{...}{further arguments to control the gtable.}
 }
@@ -133,14 +142,16 @@ These wrapper functions are table theme (\code{ttheme}) constructors
   corresponding text-related aesthetics are mapped or set to a constant
   through the usual 'ggplot2' mechanisms. On the other hand the properties
   of the background fill, rules and column and row headings can be set only
-  through the theme. Several of the \code{ttheme} constructors defined in
+  through the theme. The \code{ttheme} constructors defined in
   'ggpp' have formal parameters for \code{alpha} transparency of the
-  background fill and rule lines' colour. These are specially useful to
-  make visible other possibly overlapped elements of the plot.
+  text, background and rules. Transparency is useful as plot insets can
+  accidentally overlap observations hiding them from view depending on the
+  stacking order of plot layers.
 
-These theme constructors are wrappers on
+  These theme constructors are wrappers on the constructors
   \code{gridExtra::ttheme_default()} and \code{gridExtra::ttheme_minimal()}.
-  They can also be used with \code{\link[gridExtra]{grid.table}} if desired.
+  They can also be used directly with \code{\link[gridExtra]{grid.table}} if
+  desired.
 }
 \examples{
 library(dplyr)
@@ -226,8 +237,8 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point() +
   geom_table(data = df, aes(x = 1.5, y = y, label = tb),
-             table.theme = ttheme_gtplain(fill.alpha = 0.5,
-                                          colour.alpha = 0.2)) +
+             table.theme = ttheme_gtplain(canvas.alpha = 0.5,
+                                          rules.alpha = 0.2)) +
   theme_classic()
 
 # Transparency of table background fill and grid lines colour
@@ -236,8 +247,8 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point() +
   geom_table(data = df, aes(x = 1.5, y = y, label = tb),
              table.theme = ttheme_gtplain(base_colour = rgb(0, 0, 0, 0.5),
-                                          fill.alpha = 0.5,
-                                          colour.alpha = 0.2)) +
+                                          canvas.alpha = 0.5,
+                                          rules.alpha = 0.2)) +
   theme_classic()
 
 }
