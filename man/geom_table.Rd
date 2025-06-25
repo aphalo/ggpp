@@ -41,6 +41,12 @@ geom_table_npc(
   stat = "identity",
   position = "identity",
   ...,
+  default.colour = "black",
+  default.color = default.colour,
+  colour.target = "box",
+  color.target = colour.target,
+  default.alpha = 1,
+  alpha.target = "all",
   table.theme = NULL,
   table.rownames = FALSE,
   table.colnames = TRUE,
@@ -76,14 +82,14 @@ starting position of each text label. The units for \code{nudge_x} and
 the colour aesthetic.}
 
 \item{colour.target, color.target}{A vector of character strings; \code{"all"},
-\code{"box"} and \code{"segment"} or \code{"none"}.}
+\code{"table"}, \code{"table.core"}, \code{"table.heads"} and \code{"segment"} or \code{"none"}.}
 
 \item{default.alpha}{numeric in [0..1] A transparency value to use for
 elements not targeted by the alpha aesthetic.}
 
 \item{alpha.target}{A vector of character strings; \code{"all"},
-\code{"segment"}, \code{"box"}, \code{"box.line"}, and
-\code{"box.fill"} or \code{"none"}.}
+\code{"segment"}, \code{"box"}, \code{"core.text"},
+\code{"table"}, \code{"table.core"}, \code{"table.heads"} or \code{"none"}.}
 
 \item{add.segments}{logical Display connecting segments or arrows between
 original positions and displaced ones if both are available.}
@@ -139,7 +145,8 @@ as annotations to plots, but contrary to layer function \code{annotate},
 thus plot insets can differ among panels.
 }
 \details{
-By default \code{geom_table()} uses \code{\link{position_nudge_center}} which is
+By default \code{geom_table()} uses
+  \code{\link{position_nudge_center}} which is
   backwards compatible with \code{\link[ggplot2]{position_nudge}} but
   provides additional control on the direction of the nudging. In contrast to
   \code{\link[ggplot2]{position_nudge}}, \code{\link{position_nudge_center}}
@@ -147,12 +154,13 @@ By default \code{geom_table()} uses \code{\link{position_nudge_center}} which is
   keep the original coordinates thus allowing the plotting of connecting
   segments and arrows.
 
-  This geom works only with tibbles as \code{data}, as its expects a list of
-  data frames (or tibbles) to be mapped to the \code{label} aesthetic. A
-  table is built with function \code{gridExtra::gtable} for each data frame
-  in the list, and formatted according to a table theme or \code{ttheme}. The
-  character strings in the data frame can be parsed into R expressions so the
-  inset tables can include maths.
+  This geom works with tibbles or data frames as \code{data}, as its expects
+  a list of data frames (or tibbles) to be mapped to the \code{label}
+  aesthetic. A table is built with function \code{gridExtra::gtable} for
+  each data frame in the list, and formatted according to a \code{ttheme}
+  (table theme) or \code{ttheme} constructor function passed as argument
+  to parameter \code{table.theme}. The character strings in the data frame
+  can be parsed into R expressions so the inset tables can include maths.
 
   If the argument passed to \code{table.theme} is a constructor function
   (passing its name without parenthesis), the values mapped to \code{size},
@@ -160,13 +168,14 @@ By default \code{geom_table()} uses \code{\link{position_nudge_center}} which is
   the passed to this theme constructor for each individual table. In
   contrast, if a ready constructed \code{ttheme} stored as a list object is
   passed as argument (e.g., by calling the constructor, using constructor
-  name followed by parenthesis), it will be used as is, i.e., mappings to
-  aesthetics such as \code{colour} are ignored if present. By default the
-  constructor \code{ttheme_gtdefault} is used and \code{colour} and
-  \code{fill}, are mapped to \code{NA}. Mapping these aesthetics to \code{NA}
-  triggers the use of the default \code{base_colour} of the \code{ttheme}. As
-  the table is built with function \code{gridExtra::gtable()}, for formatting
-  details, please, consult \code{\link[gridExtra]{tableGrob}}.
+  name followed by parenthesis), it is used as is, with mappings to
+  aesthetics \code{colour}, \code{fill}, \code{alpha}, and \code{family}
+  ignored if present. By default the constructor \code{ttheme_gtdefault} is
+  used and \code{colour} and \code{fill}, are mapped to \code{NA}. Mapping
+  these aesthetics to \code{NA} triggers the use the values set in the
+  \code{ttheme}. As the table is built with function
+  \code{gridExtra::gtable()}, for details, please, consult
+  \code{\link[gridExtra]{tableGrob}} and \code{\link{ttheme_gtdefault}}.
 
   The \code{x} and \code{y} aesthetics determine the position of the whole
   inset table, similarly to that of a text label, justification is
@@ -174,9 +183,9 @@ By default \code{geom_table()} uses \code{\link{position_nudge_center}} which is
   its \emph{horizontal} and \emph{vertical} axes (rows and columns in the
   data frame), and \code{angle} is used to rotate the inset table as a whole.
 
-  Of these two geoms only \code{\link{geom_grob}} supports the plotting of
-  segments, as \code{\link{geom_grob_npc}} uses a coordinate system that is
-  unrelated to data units and data.In the case of \code{geom_table_npc},
+  Of these two geoms only \code{\link{geom_table}} supports the plotting of
+  segments, as \code{\link{geom_table_npc}} uses a coordinate system that is
+  unrelated to data units and data. In the case of \code{geom_table_npc},
   \code{npcx} and \code{npcy} aesthetics determine the position of the inset
   table. Justification as described above for .
 }
@@ -266,7 +275,8 @@ ggplot(mtcars,
   geom_point() +
   geom_table(data = df,
              aes(x = x, y = y, label = tb),
-             color = "red", fill = "#FFCCCC",
+             color = "red",
+             fill = "#FFCCCC",
              family = "serif", size = 5,
              angle = 90, vjust = 0)
 

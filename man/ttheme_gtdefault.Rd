@@ -16,7 +16,10 @@ ttheme_gtdefault(
   base_colour = "black",
   base_family = "",
   parse = FALSE,
-  padding = unit(c(0.8, 0.6), "char"),
+  padding = grid::unit(c(0.8, 0.6), "char"),
+  base.alpha = NA,
+  rules.alpha = base.alpha,
+  canvas.alpha = base.alpha,
   ...
 )
 
@@ -25,7 +28,10 @@ ttheme_gtminimal(
   base_colour = "black",
   base_family = "",
   parse = FALSE,
-  padding = unit(c(0.5, 0.4), "char"),
+  padding = grid::unit(c(0.5, 0.4), "char"),
+  base.alpha = NA,
+  rules.alpha = base.alpha,
+  canvas.alpha = base.alpha,
   ...
 )
 
@@ -34,7 +40,10 @@ ttheme_gtbw(
   base_colour = "black",
   base_family = "",
   parse = FALSE,
-  padding = unit(c(1, 0.6), "char"),
+  padding = grid::unit(c(1, 0.6), "char"),
+  base.alpha = NA,
+  rules.alpha = base.alpha,
+  canvas.alpha = base.alpha,
   ...
 )
 
@@ -43,7 +52,10 @@ ttheme_gtplain(
   base_colour = "black",
   base_family = "",
   parse = FALSE,
-  padding = unit(c(0.8, 0.6), "char"),
+  padding = grid::unit(c(0.8, 0.6), "char"),
+  base.alpha = NA,
+  rules.alpha = base.alpha,
+  canvas.alpha = base.alpha,
   ...
 )
 
@@ -52,7 +64,10 @@ ttheme_gtdark(
   base_colour = "grey90",
   base_family = "",
   parse = FALSE,
-  padding = unit(c(0.8, 0.6), "char"),
+  padding = grid::unit(c(0.8, 0.6), "char"),
+  base.alpha = NA,
+  rules.alpha = base.alpha,
+  canvas.alpha = base.alpha,
   ...
 )
 
@@ -61,7 +76,10 @@ ttheme_gtlight(
   base_colour = "grey10",
   base_family = "",
   parse = FALSE,
-  padding = unit(c(0.8, 0.6), "char"),
+  padding = grid::unit(c(0.8, 0.6), "char"),
+  base.alpha = NA,
+  rules.alpha = base.alpha,
+  canvas.alpha = base.alpha,
   ...
 )
 
@@ -70,7 +88,10 @@ ttheme_gtsimple(
   base_colour = "grey10",
   base_family = "",
   parse = FALSE,
-  padding = unit(c(0.5, 0.4), "char"),
+  padding = grid::unit(c(0.5, 0.4), "char"),
+  base.alpha = NA,
+  rules.alpha = base.alpha,
+  canvas.alpha = base.alpha,
   ...
 )
 
@@ -79,21 +100,28 @@ ttheme_gtstripes(
   base_colour = "grey10",
   base_family = "",
   parse = FALSE,
-  padding = unit(c(0.8, 0.6), "char"),
+  padding = grid::unit(c(0.8, 0.6), "char"),
+  base.alpha = NA,
+  rules.alpha = base.alpha,
+  canvas.alpha = base.alpha,
   ...
 )
 }
 \arguments{
-\item{base_size}{numeric, default font size.}
+\item{base_size}{numeric, default font size of text in table.}
 
-\item{base_colour}{default font colour.}
+\item{base_colour}{default font colour for text in table.}
 
-\item{base_family}{default font family.}
+\item{base_family}{default font family for text in table.}
 
-\item{parse}{logical, default behaviour for parsing text as plotmath.}
+\item{parse}{logical, behaviour for parsing text as plotmath.}
 
 \item{padding}{length-2 unit vector specifying the horizontal and vertical
 padding of text within each cell.}
+
+\item{base.alpha, canvas.alpha, rules.alpha}{numeric in [0..1] Transparency
+applied to table \code{base_colour}, to table body background
+\code{fill} and rules \code{colour}, respectively.}
 
 \item{...}{further arguments to control the gtable.}
 }
@@ -105,15 +133,25 @@ A \code{list} object that can be used as \code{ttheme} in the
 Additional theme constructors for use with \code{\link{geom_table}}.
 }
 \details{
-Depending on the theme, the base_colour, which is
-  mapped to the \code{colour} aesthetic if present, is applied to only the
-  text elements, or to the text elements and rules. The difference is
-  exemplified below.
-}
-\note{
-These theme constructors are wrappers on
+These wrapper functions are table theme (\code{ttheme}) constructors
+  making it easier to change the style of tables created with
+  \code{\link[gridExtra]{tableGrob}}. When passed as argument to
+  \code{\link{geom_table}} the table theme's \code{base_colour},
+  \code{base_family}, \code{base_colour} and \code{base_size} function as
+  defaults for the text in the body of the table. They are overriden if the
+  corresponding text-related aesthetics are mapped or set to a constant
+  through the usual 'ggplot2' mechanisms. On the other hand the properties
+  of the background fill, rules and column and row headings can be set only
+  through the theme. The \code{ttheme} constructors defined in
+  'ggpp' have formal parameters for \code{alpha} transparency of the
+  text, background and rules. Transparency is useful as plot insets can
+  accidentally overlap observations hiding them from view depending on the
+  stacking order of plot layers.
+
+  These theme constructors are wrappers on the constructors
   \code{gridExtra::ttheme_default()} and \code{gridExtra::ttheme_minimal()}.
-  They can also be used with \code{\link[gridExtra]{grid.table}} if desired.
+  They can also be used directly with \code{\link[gridExtra]{grid.table}} if
+  desired.
 }
 \examples{
 library(dplyr)
@@ -149,7 +187,7 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
              table.theme = ttheme_gtbw) +
   theme_bw()
 
-# Default colour of theme superceded by aesthetic constant
+# Base colour of theme overridden by aesthetic constant
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point() +
   geom_table(data = df, aes(x = x, y = y, label = tb),
@@ -163,7 +201,7 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
              table.theme = ttheme_gtdark) +
   theme_dark()
 
-# Default colour of theme superceded by aesthetic constant
+# Base colour of theme overridden by aesthetic constant
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point() +
   geom_table(data = df, aes(x = x, y = y, label = tb),
@@ -176,13 +214,13 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_table(data = df, aes(x = x, y = y, label = tb),
              table.theme = ttheme_gtlight)
 
-# Default colour of theme superceded by aesthetic constant
+# Base colour of theme overridden by aesthetic constant
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point() +
   geom_table(data = df, aes(x = x, y = y, label = tb),
              table.theme = ttheme_gtlight, colour = "darkred")
 
-# Default colour of theme superceded by aesthetic constant
+# Base colour of theme overridden by aesthetic constant
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point() +
   geom_table(data = df, aes(x = x, y = y, label = tb),
@@ -194,6 +232,22 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_table(data = df, aes(x = x, y = y, label = tb),
              table.theme = ttheme_gtstripes) +
   theme_dark()
+
+# Transparency of table background fill and grid lines colour
+ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+  geom_point() +
+  geom_table(data = df, aes(x = 1.5, y = y, label = tb),
+             table.theme = ttheme_gtplain(canvas.alpha = 0.5,
+                                          rules.alpha = 0.2)) +
+  theme_classic()
+
+# Transparency of table background fill and grid lines colour
+# and table text base colour: black with 50\% transparency
+ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+  geom_point() +
+  geom_table(data = df, aes(x = 1.5, y = y, label = tb),
+             table.theme = ttheme_gtplain(base.alpha = 0.5)) +
+  theme_classic()
 
 }
 \concept{geometries for adding insets to ggplots}

@@ -15,6 +15,8 @@ editor_options:
 action of `position_nudge_to()` to be combined with dodging.
 - Add `position_stacknudge_to()` and `position_fillnudge_to()` that allow the 
 action of `position_nudge_to()` to be combined with stacking.
+- Update `geom_table()`, `geom_table_npc()` and the table-theme constructors to 
+support transparency with the `alpha` aesthetic.
 
 # ggpp 0.5.8-1
 

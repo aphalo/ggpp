@@ -2,9 +2,12 @@
 % Please edit documentation in R/geom-table.R
 \name{ttheme_set}
 \alias{ttheme_set}
+\alias{set_ttheme}
 \title{Set default table theme}
 \usage{
 ttheme_set(table.theme = NULL)
+
+set_ttheme(table.theme = NULL)
 }
 \arguments{
 \item{table.theme}{NULL, list or function A gridExtra ttheme defintion, or
