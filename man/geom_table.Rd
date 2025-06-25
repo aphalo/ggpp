@@ -41,6 +41,12 @@ geom_table_npc(
   stat = "identity",
   position = "identity",
   ...,
+  default.colour = "black",
+  default.color = default.colour,
+  colour.target = "box",
+  color.target = colour.target,
+  default.alpha = 1,
+  alpha.target = "all",
   table.theme = NULL,
   table.rownames = FALSE,
   table.colnames = TRUE,
@@ -122,9 +128,6 @@ never includes, and \code{TRUE} always includes.}
 than combining with them. This is most useful for helper functions that
 define both data and aesthetics and shouldn't inherit behaviour from the
 default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
-
-\item{fill.target}{A vector of character strings: \code{"all"},
-\code{"table"}, \code{"table.core"}, \code{"table.heads"}, or \code{"none"}.}
 }
 \value{
 A plot layer instance.
@@ -272,7 +275,8 @@ ggplot(mtcars,
   geom_point() +
   geom_table(data = df,
              aes(x = x, y = y, label = tb),
-             color = "red", fill = "#FFCCCC",
+             color = "red",
+             fill = "#FFCCCC",
              family = "serif", size = 5,
              angle = 90, vjust = 0)
 

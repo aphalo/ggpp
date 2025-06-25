@@ -246,9 +246,7 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point() +
   geom_table(data = df, aes(x = 1.5, y = y, label = tb),
-             table.theme = ttheme_gtplain(base_colour = rgb(0, 0, 0, 0.5),
-                                          canvas.alpha = 0.5,
-                                          rules.alpha = 0.2)) +
+             table.theme = ttheme_gtplain(base.alpha = 0.5)) +
   theme_classic()
 
 }

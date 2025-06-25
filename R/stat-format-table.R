@@ -131,6 +131,14 @@ stat_fmt_tb <- function(mapping = NULL,
                         show.legend = FALSE,
                         inherit.aes = TRUE,
                         ...) {
+
+  # replace NULL with default
+  if (is.null(table.theme)) {
+    table.theme <-
+      getOption("ggpmisc.ttheme.default",
+                default = ggpp::ttheme_gtdefault)
+  }
+
   ggplot2::layer(
     stat = StatFmtTb, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
