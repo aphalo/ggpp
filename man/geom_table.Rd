@@ -166,7 +166,8 @@ By default \code{geom_table()} uses \code{\link{position_nudge_center}} which is
   \code{fill}, are mapped to \code{NA}. Mapping these aesthetics to \code{NA}
   triggers the use of the default \code{base_colour} of the \code{ttheme}. As
   the table is built with function \code{gridExtra::gtable()}, for formatting
-  details, please, consult \code{\link[gridExtra]{tableGrob}}.
+  details, please, consult \code{\link[gridExtra]{tableGrob}} and
+  \code{\link{ttheme_gtdefault}}.
 
   The \code{x} and \code{y} aesthetics determine the position of the whole
   inset table, similarly to that of a text label, justification is
@@ -174,9 +175,9 @@ By default \code{geom_table()} uses \code{\link{position_nudge_center}} which is
   its \emph{horizontal} and \emph{vertical} axes (rows and columns in the
   data frame), and \code{angle} is used to rotate the inset table as a whole.
 
-  Of these two geoms only \code{\link{geom_grob}} supports the plotting of
-  segments, as \code{\link{geom_grob_npc}} uses a coordinate system that is
-  unrelated to data units and data.In the case of \code{geom_table_npc},
+  Of these two geoms only \code{\link{geom_table}} supports the plotting of
+  segments, as \code{\link{geom_table_npc}} uses a coordinate system that is
+  unrelated to data units and data. In the case of \code{geom_table_npc},
   \code{npcx} and \code{npcy} aesthetics determine the position of the inset
   table. Justification as described above for .
 }
@@ -267,6 +268,15 @@ ggplot(mtcars,
   geom_table(data = df,
              aes(x = x, y = y, label = tb),
              color = "red", fill = "#FFCCCC",
+             family = "serif", size = 5,
+             angle = 90, vjust = 0)
+
+ggplot(mtcars,
+       aes(wt, mpg, colour = factor(cyl))) +
+  geom_point() +
+  geom_table(data = df,
+             aes(x = x, y = y, label = tb),
+             color = "red", fill = "#FFCCCC", alpha = 0.5,
              family = "serif", size = 5,
              angle = 90, vjust = 0)
 

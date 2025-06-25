@@ -107,12 +107,14 @@
 #' @param default.colour,default.color A colour definition to use for elements not targeted by
 #'   the colour aesthetic.
 #' @param colour.target,color.target A vector of character strings; \code{"all"},
-#'   \code{"box"} and \code{"segment"} or \code{"none"}.
+#'   \code{"table"}, \code{"table.core"}, \code{"table.heads"} and \code{"segment"} or \code{"none"}.
 #' @param default.alpha numeric in [0..1] A transparency value to use for
 #'   elements not targeted by the alpha aesthetic.
 #' @param alpha.target A vector of character strings; \code{"all"},
-#'   \code{"segment"}, \code{"box"}, \code{"box.line"}, and
-#'   \code{"table.fill"}, \code{table.rules} or \code{"none"}.
+#'   \code{"segment"}, \code{"box"}, \code{"core.text"},
+#'   \code{"table"}, \code{"table.core"}, \code{"table.heads"} or \code{"none"}.
+#' @param fill.target A vector of character strings: \code{"all"},
+#'   \code{"table"}, \code{"table.core"}, \code{"table.heads"}, or \code{"none"}.
 #' @param add.segments logical Display connecting segments or arrows between
 #'   original positions and displaced ones if both are available.
 #' @param box.padding,point.padding numeric By how much each end of the segments
@@ -820,16 +822,30 @@ ttheme_gtdefault <- function (base_size = 10,
                               base_colour = "black",
                               base_family = "",
                               parse = FALSE,
-                              padding = unit(c(0.8, 0.6), "char"),
+                              padding = grid::unit(c(0.8, 0.6), "char"),
                               fill.alpha = NA,
                               colour.alpha = NA,
                               ...)
 {
+  core <-
+    list(bg_params =
+           list(fill = ggplot2::alpha(c("grey95", "grey90"), fill.alpha),
+                col = ggplot2::alpha("white", colour.alpha)))
+  colhead <-
+    list(bg_params = list(fill = ggplot2::alpha("grey80", fill.alpha),
+                          col = ggplot2::alpha("white", colour.alpha)))
+  colhead <- rowhead <-
+    list(bg_params = list(fill = NA,
+                          col = ggplot2::alpha("white", colour.alpha)))
+
   gridExtra::ttheme_default(base_size = base_size,
                             base_colour = base_colour,
                             base_family = base_family,
                             parse = parse,
                             padding = padding,
+                            core = core,
+                            colhead = colhead,
+                            rowhead = rowhead,
                             ...)
 }
 
@@ -841,7 +857,7 @@ ttheme_gtminimal <- function (base_size = 10,
                               base_colour = "black",
                               base_family = "",
                               parse = FALSE,
-                              padding = unit(c(0.5, 0.4), "char"),
+                              padding = grid::unit(c(0.5, 0.4), "char"),
                               fill.alpha = NA,
                               colour.alpha = NA,
                               ...)
@@ -862,7 +878,7 @@ ttheme_gtbw <- function (base_size = 10,
                          base_colour = "black",
                          base_family = "",
                          parse = FALSE,
-                         padding = grid::(c(1, 0.6), "char"),
+                         padding = grid::unit(c(1, 0.6), "char"),
                          fill.alpha = 1.0,
                          colour.alpha = 1.0,
                          ...)
