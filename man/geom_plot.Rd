@@ -136,9 +136,10 @@ You can modify the size of inset plots with the \code{vp.width} and
   keep the original coordinates thus allowing the plotting of connecting
   segments and arrows.
 
-  This geom works only with tibbles as \code{data}, as its expects a list of
-  ggplot objects (\code{"gg"} class) to be mapped to the \code{label}
-  aesthetic.
+  \code{geom_plot} and \code{geom_plot_npc} expect a list of ggplot objects
+  (\code{"gg"} class) to be mapped to the \code{label} aesthetic. These geoms
+  work with tibbles or data frames as \code{data} as they both support
+  \code{list} objects as member variables.
 
   The \code{x} and \code{y} aesthetics determine the position of the whole
   inset plot, similarly to that of a text label, justification is interpreted
@@ -217,13 +218,15 @@ p <-
   ggplot(data = mtcars, mapping = aes(wt, mpg)) +
   geom_point()
 
-df <- tibble(x = 0.01,
-             y = 0.01,
-             plot = list(p +
-                         coord_cartesian(xlim = c(3, 4),
-                                         ylim = c(13, 16)) +
-                         labs(x = NULL, y = NULL) +
-                         theme_bw(10)))
+p.crop <- p +
+          coord_cartesian(xlim = c(3, 4),
+          ylim = c(13, 16)) +
+          labs(x = NULL, y = NULL) +
+          theme_bw(10)
+
+df <- data.frame(x = 0.01,
+                 y = 0.01,
+                 plot = I(list(p.crop)))
 p +
   expand_limits(x = 0, y = 0) +
   geom_plot_npc(data = df,

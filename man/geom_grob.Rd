@@ -140,9 +140,10 @@ You can modify the size of insets with the \code{vp.width} and
   defined in packages 'ggpp' keep the original coordinates thus allowing the
   plotting of connecting segments and arrows.
 
-  This \code{geom_grob} and \code{geom_grob_npc} require the use tibbles as
-  argument for \code{data}, as the grobs should be stored as a list of
-  graphics objects ("grob") to be mapped to the \code{label} aesthetic.
+  \code{geom_grob} and \code{geom_grob_npc} expect a list of graphic objects
+  ("grob") to be mapped to the \code{label} aesthetic. These geoms work with
+  tibbles or data frames as \code{data} as they both support \code{list}
+  objects as member variables.
 
   The \code{x} and \code{y} aesthetics determine the position of the whole
   inset grob, similarly to that of a text label, justification is interpreted

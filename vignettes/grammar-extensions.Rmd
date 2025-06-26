@@ -555,11 +555,22 @@ by default does not inherit the globally mapped aesthetics. Tables are
 always added at their native sizes, which can be altered by changing the
 `size` of the text in them.
 
+Passing a data frame or a tibble results in the same plot, but there is a
+difference in how a `list` is added as a column to them, as shown below.
+
 ```{r}
 tb <- mpg %>%
   group_by(cyl) %>%
   summarise(hwy = median(hwy), cty = median(cty))
 
+# using R's data frames we need to call I() to add the list as is
+data.df <- data.frame(x = 7, y = 44, tb = I(list(tb)))
+
+ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
+  geom_table(data = data.df, aes(x, y, label = tb)) +
+  geom_point() 
+
+# using 'tibble' the list is added as is by default
 data.tb <- tibble(x = 7, y = 44, tb = list(tb))
 
 ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
@@ -568,9 +579,9 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
 ```
 
 In plots with a single panel it can be easier to use `annotate()` to add
-inset tables, giving the same plot as above. In this case single data
-frames, ggplots or grobs do not need to be wrapped in a list, although
-lists are also supported.
+inset tables, here creating the same plot as above. When using `annotate()`
+single data frames, ggplots or grobs do not need to be wrapped in a list, 
+although lists are also supported.
 
 ```{r}
 tb <- mpg %>%
@@ -583,17 +594,17 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
 ```
 
 Table themes are supported through parameter `table.theme` and if
-variables or constants are mapped to the `colour`, `fill`, `size`, or
-`family`, aesthetics they override the corresponding default theme
+variables or constants are mapped to the `colour`, `fill`, `size`, `alpha` or
+`family` aesthetics they override the corresponding default theme
 settings. The display of `rownames` and `colnames` can be enabled or
 disable through parameter `table.rownames` and `table.colnames` and the
 horizontal justification of text in the core of the table through
 parameter `table.hjust`.
 
 Parameter `table.theme` accepts as arguments `NULL` for use of the
-current default, a `ttheme` constructor function such as those defined
-in package 'gridExtra', or the variations on them defined in this
-package. The active default can be set with function `ttheme_set()`.
+the default as set at time of rendering, a `ttheme` constructor function such 
+as those defined in package 'gridExtra', or the variations on them defined in
+package 'ggpp'. The active default can be set with function `ttheme_set()`.
 
 ```{r}
 ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
@@ -602,6 +613,19 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
              table.hjust = 0, colour = "darkred", fill = "#FFFFBB") +
   geom_point() 
 ```
+
+Transparency can be set with the `alpha`aesthetic or in the table theme.
+
+```{r}
+ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
+  geom_table(data = data.tb, aes(x, y, label = tb),
+             table.theme = ttheme_gtdefault,
+             table.hjust = 0, 
+             colour = "darkred", fill = "#FFFFBB",
+             alpha = 0.7) +
+  geom_point()
+```
+
 
 Using `stat_fmt_tb()` we can rename columns and rows of the tibble,
 reorder them and/or select a subset of columns or rows as shown below.

@@ -1,5 +1,15 @@
 context("dark_or_light")
 
+test_that("character(0) on NULL input", {
+  res <- dark_or_light(NULL)
+  expect_equal(res, character(0))
+})
+
+test_that("character(0) on character(0) input", {
+  res <- dark_or_light(character(0))
+  expect_equal(res, character(0))
+})
+
 test_that("color: yellow, switch to black, default threshold", {
   res <- dark_or_light("yellow")
   expect_equal(res, "black")

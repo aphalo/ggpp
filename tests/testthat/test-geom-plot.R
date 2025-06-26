@@ -2,11 +2,57 @@ context("geom_plot")
 
 library(tibble)
 
-test_that("data.frame", {
+test_that("character label gives error", {
    my.df <- data.frame(x = 1:10, y = 1:10, tb = letters[1:10])
    expect_error(print(ggplot(my.df, aes(x, y, label = tb)) +
                   geom_plot()))
 })
+
+
+test_that("numeric label gives error", {
+  my.df <- data.frame(x = 1:10, y = 1:10, tb = 1:10)
+  expect_error(print(ggplot(my.df, aes(x, y, label = tb)) +
+                       geom_plot()))
+})
+
+test_that("geom_plot works as expected", {
+  p1 <- ggplot(mpg, aes(displ, cty)) + geom_point()
+
+  p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+    geom_point()
+  # tibble
+  tb <- tibble(x = 5.45, y = 34, plot = list(p1))
+  result <- expect_silent(
+    p + geom_plot(data = tb, aes(x = x, y = y, label = plot))
+  )
+  expect_s3_class(result, "ggplot")
+  # data.frame
+  df <- data.frame(x = 5.45, y = 34, plot = I(list(p1)))
+  result1 <- expect_silent(
+    p + geom_plot(data = df, aes(x = x, y = y, label = plot))
+  )
+  expect_s3_class(result1, "ggplot")
+})
+
+test_that("geom_plot_npc works as expected", {
+  p1 <- ggplot(mpg, aes(displ, cty)) + geom_point()
+
+  p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+    geom_point()
+  # tibble
+  tbnpc <- tibble(x = 0.95, y = 0.95,  plot = list(p1))
+  result <- expect_silent(
+    p + geom_plot_npc(data = tbnpc, aes(npcx = x, npcy = y, label = plot))
+  )
+  expect_s3_class(result, "ggplot")
+
+  dfnpc <- data.frame(x = 0.95, y = 0.95,  plot = I(list(p1)))
+  result1 <- expect_silent(
+    p + geom_plot_npc(data = dfnpc, aes(npcx = x, npcy = y, label = plot))
+  )
+  expect_s3_class(result1, "ggplot")
+})
+
 
 test_that("multiple_ggplot", {
   p1 <- ggplot(mpg, aes(displ, cty)) + geom_point()

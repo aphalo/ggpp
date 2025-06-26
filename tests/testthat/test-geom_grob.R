@@ -3,6 +3,18 @@ context("geom_grob")
 library(ggplot2)
 library(tibble)
 
+test_that("character label gives error in geom_grob", {
+  my.df <- data.frame(x = 1:10, y = 1:10, tb = letters[1:10])
+  expect_error(print(ggplot(my.df, aes(x, y, label = tb)) +
+                       geom_grob()))
+})
+
+test_that("numeric label gives error in geom_grob", {
+  my.df <- data.frame(x = 1:10, y = 1:10, tb = 1:10)
+  expect_error(print(ggplot(my.df, aes(x, y, label = tb)) +
+                       geom_grob()))
+})
+
 test_that("geom_grob pos_or_nudge", {
   tb <- tibble(a = 2:4, b = 4:2)
   my.tb <- tibble(x = 0, y = 0, tb = list(tb))

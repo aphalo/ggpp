@@ -1,8 +1,19 @@
 context("geom_tb")
 
-library(ggplot2)
 library(tibble)
 library(dplyr)
+
+test_that("character label gives error in geom_table", {
+  my.df <- data.frame(x = 1:10, y = 1:10, tb = letters[1:10])
+  expect_error(print(ggplot(my.df, aes(x, y, label = tb)) +
+                       geom_table()))
+})
+
+test_that("numeric label gives error in geom_table", {
+  my.df <- data.frame(x = 1:10, y = 1:10, tb = 1:10)
+  expect_error(print(ggplot(my.df, aes(x, y, label = tb)) +
+                       geom_table()))
+})
 
 get_tb <- function() {
   mtcars %>%
@@ -19,7 +30,14 @@ test_that("geom_table works as expected", {
   p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
     geom_point()
   tb <- get_tb()
-  df <- tibble(x = 5.45, y = 34, tb = list(tb))
+
+  tbbl <- tibble(x = 5.45, y = 34, tb = list(tb))
+  result <- expect_silent(
+    p + geom_table(data = tbbl, aes(x = x, y = y, label = tb))
+  )
+  expect_s3_class(result, "ggplot")
+
+  df <- data.frame(x = 5.45, y = 34, tb = I(list(tb)))
   result <- expect_silent(
     p + geom_table(data = df, aes(x = x, y = y, label = tb))
   )
@@ -30,11 +48,18 @@ test_that("geom_table_npc works as expected", {
   p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
     geom_point()
   tb <- get_tb()
-  dfnpc <- tibble(x = 0.95, y = 0.95, tb = list(tb))
+  # tibble
+  tbnpc <- tibble(x = 0.95, y = 0.95, tb = list(tb))
   result <- expect_silent(
-    p + geom_table_npc(data = dfnpc, aes(npcx = x, npcy = y, label = tb))
+    p + geom_table_npc(data = tbnpc, aes(npcx = x, npcy = y, label = tb))
   )
   expect_s3_class(result, "ggplot")
+  # data.frame
+  dfnpc <- data.frame(x = 0.95, y = 0.95, tb = I(list(tb)))
+  result1 <- expect_silent(
+    p + geom_table_npc(data = dfnpc, aes(npcx = x, npcy = y, label = tb))
+  )
+  expect_s3_class(result1, "ggplot")
 })
 
 # test_that("data.frame", {
@@ -97,6 +122,21 @@ test_that("numbers_tb", {
                                 geom_table(data = my.tb,
                                            mapping = aes(x, y, label = tb))
                               )
+  vdiffr::expect_doppelganger("geom_table_num7",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           mapping = aes(x, y, label = tb))
+  )
+  vdiffr::expect_doppelganger("geom_table_num8",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2, nudge_y = 2,
+                                           vjust = 0.5, hjust = 1,
+                                           mapping = aes(x, y, label = tb))
+  )
 })
 
 test_that("theme_tb", {

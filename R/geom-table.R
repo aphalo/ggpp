@@ -20,9 +20,12 @@
 #'   keep the original coordinates thus allowing the plotting of connecting
 #'   segments and arrows.
 #'
-#'   This geom works with tibbles or data frames as \code{data}, as its expects
-#'   a list of data frames (or tibbles) to be mapped to the \code{label}
-#'   aesthetic. A table is built with function \code{gridExtra::gtable} for each
+#'   \code{geom_table} and \code{geom_table_npc} expect a list of data frames
+#'   (\code{"data.frame"} class or derived) to be mapped to the \code{label}
+#'   aesthetic. These geoms work with tibbles or data frames as \code{data} as
+#'   they both support \code{list} objects as member variables.
+#'
+#'   A table is built with function \code{gridExtra::gtable} for each
 #'   data frame in the list, and formatted according to a \code{ttheme} (table
 #'   theme) list object or \code{ttheme} constructor function passed as argument
 #'   to parameter \code{table.theme}. If the value passed as argument to
@@ -158,7 +161,7 @@
 #'   mutate(wt = sprintf("%.2f", wt),
 #'          mpg = sprintf("%.1f", mpg)) -> tb
 #'
-#' df <- tibble(x = 5.45, y = 34, tb = list(tb))
+#' df <- data.frame(x = 5.45, y = 34, tb = I(list(tb)))
 #'
 #' # using defaults
 #' ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
@@ -416,41 +419,6 @@ GeomTable <-
             all.grobs <- grid::gList()
             for (row.idx in seq_len(nrow(data))) {
               row <- data[row.idx, , drop = FALSE]
-              # colour
-              base.colour <-
-                ifelse(any(colour.target %in% c("all", "table")),
-                       row$colour, default.colour)
-              rules.colour <-
-                ifelse(any(colour.target %in% c("all", "table", "table.rules")),
-                       row$colour, default.colour)
-              canvas.colour <-
-                ifelse(any(colour.target %in%
-                           c("all", "table", "table.canvas")),
-                       row$colour, default.colour)
-              segment.colour <-
-                ifelse(any(colour.target %in% c("all", "segment")),
-                       row$colour, default.colour)
-              box.colour <-
-                ifelse(any(colour.target %in% c("all", "segment")),
-                       row$colour, default.colour)
-             # fill
-              canvas.fill <- row$fill
-             # alpha
-              base.alpha <-
-                ifelse(any(alpha.target %in% c("all", "table")),
-                       row$alpha, default.alpha)
-              rules.alpha <-
-                ifelse(any(alpha.target %in% c("all", "table", "table.rules")),
-                       row$alpha, default.alpha)
-              canvas.alpha <-
-                ifelse(any(alpha.target %in% c("all", "table", "table.canvas")),
-                       row$alpha, default.alpha)
-              segment.alpha <-
-                ifelse(any(alpha.target %in% c("all", "segment")),
-                       row$alpha, default.alpha)
-              box.alpha <-
-                ifelse(any(alpha.target %in% c("all", "segment")),
-                       row$alpha, default.alpha)
               # Build the table
               if (is.function(table.theme)) {
                 # tableGrob puts all the padding on the same side unless
@@ -459,6 +427,43 @@ GeomTable <-
                 # here at least ensures that whatever its length the whole text
                 # is always displayed.
                 table.x <- table.hjust
+                # alpha
+                base.alpha <-
+                  ifelse(any(alpha.target %in% c("all", "table")),
+                         row$alpha, default.alpha)
+                rules.alpha <-
+                  ifelse(any(alpha.target %in% c("all", "table", "table.rules")),
+                         row$alpha, default.alpha)
+                canvas.alpha <-
+                  ifelse(any(alpha.target %in% c("all", "table", "table.canvas")),
+                         row$alpha, default.alpha)
+                segment.alpha <-
+                  ifelse(any(alpha.target %in% c("all", "segment")),
+                         row$alpha, default.alpha)
+                box.alpha <-
+                  ifelse(any(alpha.target %in% c("all", "box")),
+                         row$alpha, default.alpha)
+                # colour
+                base.colour <-
+                  ifelse(any(colour.target %in% c("all", "table")),
+                         row$colour, default.colour)
+                # base.alpha applied in ttheme constructor
+                rules.colour <-
+                  ifelse(any(colour.target %in% c("all", "table", "table.rules")),
+                         row$colour, default.colour) |>
+                  ggplot2::alpha(rules.alpha)
+                segment.colour <-
+                  ifelse(any(colour.target %in% c("all", "segment")),
+                         row$colour, default.colour) |>
+                  ggplot2::alpha(segment.alpha)
+                box.colour <-
+                  ifelse(any(colour.target %in% c("all", "segment")),
+                         row$colour, default.colour) |>
+                  ggplot2::alpha(box.alpha)
+                # fill
+                canvas.fill <- row$fill |>
+                  ggplot2::alpha(canvas.alpha)
+
                 if (is.na(canvas.fill)) {
                   core.params <-
                     list(fg_params = list(hjust = table.hjust, x = table.x))
@@ -466,33 +471,47 @@ GeomTable <-
                   colhead.params <- list(fg_params = list(hjust = table.hjust,
                                                           x = table.x))
                 } else {
+                  # override ttheme fill for background canvas
                   core.params <-
                     list(fg_params = list(hjust = table.hjust, x = table.x),
                          bg_params = list(fill = canvas.fill))
-                  rowhead.params <- list(fg_params = list(hjust = 1, x = 0.9),
-                                         bg_params = list(fill = canvas.fill))
+                  rowhead.params <-
+                    list(fg_params = list(hjust = 1, x = 0.9),
+                         bg_params = list(fill = canvas.fill))
                   colhead.params <- list(fg_params = list(hjust = table.hjust,
                                                           x = table.x),
                                          bg_params = list(fill = canvas.fill))
                 }
-
-                if (is.na(row$colour)) {
+                # override ttheme colour for background rules
+                if (!is.na(rules.colour)) {
+                  rules.colour <- ggplot2::alpha(rules.colour, rules.alpha)
+                  core.params$bg_params$col <- rules.colour
+                  rowhead.params$bg_params$col <- rules.colour
+                  colhead.params$bg_params$col <- rules.colour
+                }
+                if (is.na(base.colour)) {
                   # use theme's default base_colour
                   this.table.theme <-
                     table.theme(base_size = row$size * .pt,
                                 base_family = row$family,
                                 parse = parse,
+                                base.alpha = base.alpha,
+                                canvas.alpha = canvas.alpha,
+                                rules.alpha = rules.alpha,
                                 rowhead = rowhead.params,
                                 colhead = colhead.params,
                                 core = core.params)
                 } else {
+                  # use colour from data$colour
                   this.table.theme <-
-                    # use colour from data$colour
                     table.theme(base_size = row$size * .pt,
                                 base_colour =
-                                  ggplot2::alpha(row$colour, row$alpha),
+                                  ggplot2::alpha(base.colour, base.alpha),
                                 base_family = row$family,
                                 parse = parse,
+                                base.alpha = base.alpha,
+                                canvas.alpha = canvas.alpha,
+                                rules.alpha = rules.alpha,
                                 rowhead = rowhead.params,
                                 colhead = colhead.params,
                                 core = core.params)
@@ -689,40 +708,6 @@ GeomTableNpc <-
 
               for (row.idx in seq_len(nrow(data))) {
                 row <- data[row.idx, , drop = FALSE]
-                # colour
-                base.colour <-
-                  ifelse(any(colour.target %in% c("all", "table")),
-                         row$colour, default.colour)
-                rules.colour <-
-                  ifelse(any(colour.target %in% c("all", "table", "table.rules")),
-                         row$colour, default.colour)
-                canvas.colour <-
-                  ifelse(any(colour.target %in% c("all", "table", "table.canvas")),
-                         row$colour, default.colour)
-                segment.colour <-
-                  ifelse(any(colour.target %in% c("all", "segment")),
-                         row$colour, default.colour)
-                box.colour <-
-                  ifelse(any(colour.target %in% c("all", "segment")),
-                         row$colour, default.colour)
-                # fill
-                canvas.fill <- row$fill
-                # alpha
-                base.alpha <-
-                  ifelse(any(alpha.target %in% c("all", "table")),
-                         row$alpha, default.alpha)
-                rules.alpha <-
-                  ifelse(any(alpha.target %in% c("all", "table", "table.rules")),
-                         row$alpha, default.alpha)
-                canvas.alpha <-
-                  ifelse(any(alpha.target %in% c("all", "table", "table.canvas")),
-                         row$alpha, default.alpha)
-                segment.alpha <-
-                  ifelse(any(alpha.target %in% c("all", "segment")),
-                         row$alpha, default.alpha)
-                box.alpha <-
-                  ifelse(any(alpha.target %in% c("all", "segment")),
-                         row$alpha, default.alpha)
                 # Build the table
                 if (is.function(table.theme)) {
                   # tableGrob puts all the padding on the same side unless just = 0.5
@@ -732,6 +717,36 @@ GeomTableNpc <-
                   table.x <- table.hjust
                   # text position in cell depends on hjust
 #                  table.x <- if(table.hjust == 0.5) 0.5 else table.hjust * 0.8 + 0.1
+                  # alpha
+                  base.alpha <-
+                    ifelse(any(alpha.target %in% c("all", "table")),
+                           row$alpha, default.alpha)
+                  rules.alpha <-
+                    ifelse(any(alpha.target %in% c("all", "table", "table.rules")),
+                           row$alpha, default.alpha)
+                  canvas.alpha <-
+                    ifelse(any(alpha.target %in% c("all", "table", "table.canvas")),
+                           row$alpha, default.alpha)
+                  box.alpha <-
+                    ifelse(any(alpha.target %in% c("all", "box")),
+                           row$alpha, default.alpha)
+                  # colour
+                  base.colour <-
+                    ifelse(any(colour.target %in% c("all", "table")),
+                           row$colour, default.colour) |>
+                    ggplot2::alpha(base.alpha)
+                  rules.colour <-
+                    ifelse(any(colour.target %in% c("all", "table", "table.rules")),
+                           row$colour, default.colour) |>
+                    ggplot2::alpha(rules.alpha)
+                  box.colour <-
+                    ifelse(any(colour.target %in% c("all", "segment")),
+                           row$colour, default.colour) |>
+                    ggplot2::alpha(box.alpha)
+                  # fill
+                  canvas.fill <- row$fill |>
+                    ggplot2::alpha(canvas.alpha)
+
                   if (is.na(canvas.fill)) {
                     core.params <-
                       list(fg_params = list(hjust = table.hjust, x = table.x))
@@ -749,12 +764,15 @@ GeomTableNpc <-
                                            bg_params = list(fill = canvas.fill))
                   }
 
-                  if (is.na(row$colour)) {
+                  if (is.na(base.colour)) {
                     # use theme's default base_colour
                     this.table.theme <-
                       table.theme(base_size = row$size * .pt,
                                   base_family = row$family,
                                   parse = parse,
+                                  base.alpha = base.alpha,
+                                  canvas.alpha = canvas.alpha,
+                                  rules.alpha = rules.alpha,
                                   rowhead = rowhead.params,
                                   colhead = colhead.params,
                                   core = core.params)
@@ -762,10 +780,12 @@ GeomTableNpc <-
                     this.table.theme <-
                       # use colour from data$colour
                       table.theme(base_size = row$size * .pt,
-                                  base_colour =
-                                    ggplot2::alpha(row$colour, row$alpha),
+                                  base_colour = base.colour,
                                   base_family = row$family,
                                   parse = parse,
+                                  base.alpha = base.alpha,
+                                  canvas.alpha = canvas.alpha,
+                                  rules.alpha = rules.alpha,
                                   rowhead = rowhead.params,
                                   colhead = colhead.params,
                                   core = core.params)

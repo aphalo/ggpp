@@ -156,9 +156,12 @@ By default \code{geom_table()} uses
   keep the original coordinates thus allowing the plotting of connecting
   segments and arrows.
 
-  This geom works with tibbles or data frames as \code{data}, as its expects
-  a list of data frames (or tibbles) to be mapped to the \code{label}
-  aesthetic. A table is built with function \code{gridExtra::gtable} for each
+  \code{geom_table} and \code{geom_table_npc} expect a list of data frames
+  (\code{"data.frame"} class or derived) to be mapped to the \code{label}
+  aesthetic. These geoms work with tibbles or data frames as \code{data} as
+  they both support \code{list} objects as member variables.
+
+  A table is built with function \code{gridExtra::gtable} for each
   data frame in the list, and formatted according to a \code{ttheme} (table
   theme) list object or \code{ttheme} constructor function passed as argument
   to parameter \code{table.theme}. If the value passed as argument to
@@ -266,7 +269,7 @@ mtcars \%>\%
   mutate(wt = sprintf("\%.2f", wt),
          mpg = sprintf("\%.1f", mpg)) -> tb
 
-df <- tibble(x = 5.45, y = 34, tb = list(tb))
+df <- data.frame(x = 5.45, y = 34, tb = I(list(tb)))
 
 # using defaults
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
