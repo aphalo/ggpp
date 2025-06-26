@@ -1,6 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.Rhistory
+^\.lintr
 inst-not
 tests-not
 data-raw

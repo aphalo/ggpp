@@ -12,9 +12,9 @@
 #' thus plot insets can differ among panels.
 #'
 #' @details By default \code{geom_table()} uses
-#'   \code{\link{position_nudge_center}} which is
-#'   backwards compatible with \code{\link[ggplot2]{position_nudge}} but
-#'   provides additional control on the direction of the nudging. In contrast to
+#'   \code{\link{position_nudge_center}} which is backwards compatible with
+#'   \code{\link[ggplot2]{position_nudge}} but provides additional control on
+#'   the direction of the nudging. In contrast to
 #'   \code{\link[ggplot2]{position_nudge}}, \code{\link{position_nudge_center}}
 #'   and all other position functions defined in packages 'ggpp' and 'ggrepel'
 #'   keep the original coordinates thus allowing the plotting of connecting
@@ -22,26 +22,36 @@
 #'
 #'   This geom works with tibbles or data frames as \code{data}, as its expects
 #'   a list of data frames (or tibbles) to be mapped to the \code{label}
-#'   aesthetic. A table is built with function \code{gridExtra::gtable} for
-#'   each data frame in the list, and formatted according to a \code{ttheme}
-#'   (table theme) or \code{ttheme} constructor function passed as argument
-#'   to parameter \code{table.theme}. The character strings in the data frame
-#'   can be parsed into R expressions so the inset tables can include maths.
+#'   aesthetic. A table is built with function \code{gridExtra::gtable} for each
+#'   data frame in the list, and formatted according to a \code{ttheme} (table
+#'   theme) list object or \code{ttheme} constructor function passed as argument
+#'   to parameter \code{table.theme}. If the value passed as argument to
+#'   \code{table.theme} is \code{NULL} the table theme used is that set as
+#'   default through R option \code{ggpmisc.ttheme.default} at the time the plot
+#'   is rendered or the \code{\link{ttheme_gtdefault}} constructor function if
+#'   not set.
 #'
-#'   If the argument passed to \code{table.theme} is a constructor function
-#'   (passing its name without parenthesis), the values mapped to \code{size},
-#'   \code{colour}, \code{fill}, \code{alpha}, and \code{family} aesthetics will
-#'   the passed to this theme constructor for each individual table. In
-#'   contrast, if a ready constructed \code{ttheme} stored as a list object is
-#'   passed as argument (e.g., by calling the constructor, using constructor
-#'   name followed by parenthesis), it is used as is, with mappings to
-#'   aesthetics \code{colour}, \code{fill}, \code{alpha}, and \code{family}
-#'   ignored if present. By default the constructor \code{ttheme_gtdefault} is
-#'   used and \code{colour} and \code{fill}, are mapped to \code{NA}. Mapping
-#'   these aesthetics to \code{NA} triggers the use the values set in the
-#'   \code{ttheme}. As the table is built with function
-#'   \code{gridExtra::gtable()}, for details, please, consult
+#'   If the argument passed to \code{table.theme} or set through R option
+#'   \code{ggpmisc.ttheme.default} is a constructor function (passing its name
+#'   without parenthesis), the values mapped to \code{size}, \code{colour},
+#'   \code{fill}, \code{alpha}, and \code{family} aesthetics will the passed to
+#'   this theme constructor for each individual table. In contrast, if a ready
+#'   constructed \code{ttheme} stored as a list object is passed as argument
+#'   (e.g., by calling the constructor, using constructor name followed by
+#'   parenthesis), it is used as is, with mappings to aesthetics \code{colour},
+#'   \code{fill}, \code{alpha}, and \code{family} ignored if present. By default
+#'   the constructor \code{ttheme_gtdefault} is used and \code{colour} and
+#'   \code{fill}, are mapped to \code{NA}. Mapping these aesthetics to \code{NA}
+#'   triggers the use the values set in the \code{ttheme}. As the table is built
+#'   with function \code{gridExtra::gtable()}, for details, please, consult
 #'   \code{\link[gridExtra]{tableGrob}} and \code{\link{ttheme_gtdefault}}.
+#'
+#'   The character strings in the data frame can be parsed into R expressions so
+#'   the inset tables can include maths. With \code{parse = TRUE} parsing is
+#'   attempted on each table cell, but failure triggers fall-back to rendering
+#'   without parsing, on a cell by cell basis. Thus, a table can contain a
+#'   mixture cells and/or headings that require parsing or not (see the
+#'   documentation in \link[gridExtra]{gridExtra-package} for details).
 #'
 #'   The \code{x} and \code{y} aesthetics determine the position of the whole
 #'   inset table, similarly to that of a text label, justification is
@@ -50,10 +60,11 @@
 #'   data frame), and \code{angle} is used to rotate the inset table as a whole.
 #'
 #'   Of these two geoms only \code{\link{geom_table}} supports the plotting of
-#'   segments, as \code{\link{geom_table_npc}} uses a coordinate system that is
-#'   unrelated to data units and data. In the case of \code{geom_table_npc},
-#'   \code{npcx} and \code{npcy} aesthetics determine the position of the inset
-#'   table. Justification as described above for .
+#'   segments when its position has been modified by a \code{position} function.
+#'   This is because \code{\link{geom_table_npc}} uses a coordinate system that
+#'   is unrelated to data units, scales or data in other plot layers. In the
+#'   case of \code{geom_table_npc}, \code{npcx} and \code{npcy}
+#'   pseudo-aesthetics determine the position of the inset table.
 #'
 #' @inheritSection geom_text_s Alignment
 #'
@@ -87,7 +98,8 @@
 #'   can include aesthetics whose values you want to set, not map. See
 #'   \code{\link[ggplot2]{layer}} for more details.
 #' @param table.theme NULL, list or function A gridExtra ttheme defintion, or
-#'   a constructor for a ttheme or NULL for default.
+#'   a constructor for a ttheme or NULL for default. If \code{nULL} the theme
+#'   is retrieved from R option \code{} at the time the plot is rendered.
 #' @param table.rownames,table.colnames logical flag to enable or disable
 #'   printing of row names and column names.
 #' @param table.hjust numeric Horizontal justification for the core and column
@@ -104,10 +116,11 @@
 #' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
 #'   starting position of each text label. The units for \code{nudge_x} and
 #'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
-#' @param default.colour,default.color A colour definition to use for elements not targeted by
-#'   the colour aesthetic.
-#' @param colour.target,color.target A vector of character strings; \code{"all"},
-#'   \code{"table"}, \code{"table.core"}, \code{"table.heads"} and \code{"segment"} or \code{"none"}.
+#' @param default.colour,default.color A colour definition to use for elements
+#'   not targeted by the colour aesthetic.
+#' @param colour.target,color.target A vector of character strings;
+#'   \code{"all"}, \code{"table"}, \code{"table.core"}, \code{"table.heads"} and
+#'   \code{"segment"} or \code{"none"}.
 #' @param default.alpha numeric in [0..1] A transparency value to use for
 #'   elements not targeted by the alpha aesthetic.
 #' @param alpha.target A vector of character strings; \code{"all"},
@@ -276,13 +289,6 @@ geom_table <- function(mapping = NULL,
                           0.5)
   }
 
-  # replace NULL with default
-  if (is.null(table.theme)) {
-    table.theme <-
-      getOption("ggpmisc.ttheme.default",
-                default = ggpp::ttheme_gtdefault)
-  }
-
   ggplot2::layer(
     data = data,
     mapping = mapping,
@@ -319,20 +325,19 @@ geom_table <- function(mapping = NULL,
 #' @export
 GeomTable <-
   ggplot2::ggproto("GeomTable", ggplot2::Geom,
-          required_aes = c("x", "y", "label"),
-
-          default_aes = ggplot2::aes(
-            colour = NA,
-            fill = NA,
-            size = 3.2,
-            angle = 0,
-            hjust = "inward",
-            vjust = "inward",
-            alpha = NA,
-            family = "",
-            fontface = 1,
-            lineheight = 1.2
-          ),
+                   required_aes = c("x", "y", "label"),
+                   default_aes = ggplot2::aes(
+                     colour = NA,
+                     fill = NA,
+                     size = 3.2,
+                     angle = 0,
+                     hjust = "inward",
+                     vjust = "inward",
+                     alpha = NA,
+                     family = "",
+                     fontface = 1,
+                     lineheight = 1.2
+                   ),
 
           draw_panel = function(data,
                                 panel_params,
@@ -343,8 +348,7 @@ GeomTable <-
                                 segment.linewidth = 1,
                                 min.segment.length = 0,
                                 arrow = NULL,
-                                table.theme = getOption("ggpmisc.ttheme.default",
-                                                        default = ggpp::ttheme_gtdefault),
+                                table.theme = NULL,
                                 table.rownames = FALSE,
                                 table.colnames = TRUE,
                                 table.hjust = 0.5,
@@ -363,6 +367,13 @@ GeomTable <-
               warning("Skipping as object mapped to 'label' is not a list of ",
                       "\"tibble\" or \"data.frame\" objects.")
               return(grid::nullGrob())
+            }
+
+            # replace NULL with default at time of rendering!
+            if (is.null(table.theme)) {
+              table.theme <-
+                getOption("ggpmisc.ttheme.default",
+                          default = ggpp::ttheme_gtdefault)
             }
 
             add.segments <-
@@ -403,8 +414,7 @@ GeomTable <-
 
             # loop needed as gpar is not vectorized
             all.grobs <- grid::gList()
-
-            for (row.idx in 1:nrow(data)) {
+            for (row.idx in seq_len(nrow(data))) {
               row <- data[row.idx, , drop = FALSE]
               # colour
               base.colour <-
@@ -414,7 +424,8 @@ GeomTable <-
                 ifelse(any(colour.target %in% c("all", "table", "table.rules")),
                        row$colour, default.colour)
               canvas.colour <-
-                ifelse(any(colour.target %in% c("all", "table", "table.canvas")),
+                ifelse(any(colour.target %in%
+                           c("all", "table", "table.canvas")),
                        row$colour, default.colour)
               segment.colour <-
                 ifelse(any(colour.target %in% c("all", "segment")),
@@ -442,10 +453,11 @@ GeomTable <-
                        row$alpha, default.alpha)
               # Build the table
               if (is.function(table.theme)) {
-                # tableGrob puts all the padding on the same side unless just = 0.5
-                # this makes it difficult to compute a suitable value for table.x
-                # without knowing the width of the column. The code here at least
-                # ensures that whatever its length the whole text is always displayed.
+                # tableGrob puts all the padding on the same side unless
+                # just = this makes it difficult to compute a suitable value
+                # for table.x without knowing the width of the column. The code
+                # here at least ensures that whatever its length the whole text
+                # is always displayed.
                 table.x <- table.hjust
                 if (is.na(canvas.fill)) {
                   core.params <-
@@ -586,13 +598,6 @@ geom_table_npc <- function(mapping = NULL, data = NULL,
                           0.5)
   }
 
-  # replace NULL with default
-  if (is.null(table.theme)) {
-    table.theme <-
-      getOption("ggpmisc.ttheme.default",
-                default = ggpp::ttheme_gtdefault)
-  }
-
   ggplot2::layer(
     data = data,
     mapping = mapping,
@@ -642,8 +647,7 @@ GeomTableNpc <-
             function(data,
                      panel_params,
                      coord,
-                     table.theme = getOption("ggpmisc.ttheme.default",
-                                             default = ggpp::ttheme_gtdefault),
+                     table.theme = NULL,
                      table.rownames = FALSE,
                      table.colnames = TRUE,
                      table.hjust = 0.5,
@@ -662,6 +666,13 @@ GeomTableNpc <-
                 warning("Skipping as object mapped to 'label' is not a list of ",
                         "\"tibble\" or \"data.frame\" objects.")
                 return(grid::nullGrob())
+              }
+
+              # replace NULL with default
+              if (is.null(table.theme)) {
+                table.theme <-
+                  getOption("ggpmisc.ttheme.default",
+                            default = ggpp::ttheme_gtdefault)
               }
 
               data$npcx <- compute_npcx(data$npcx)
@@ -1191,10 +1202,14 @@ ttheme_gtstripes <- function(base_size = 10,
            list(fill = ggplot2::alpha(c("white", "grey90"), canvas.alpha),
                 lwd = 0,
                 col = NA))
-  colhead <- rowhead <-
+  rowhead <- colhead <-
     list(bg_params = list(fill = ggplot2::alpha("grey75", canvas.alpha),
                           lwd = 0,
                           col = NA))
+  # colhead <-
+  #   list(bg_params = list(fill = ggplot2::alpha("white", canvas.alpha),
+  #                         lwd = 0,
+  #                         col = NA))
   default <-
     gridExtra::ttheme_default(base_size = base_size,
                               base_colour = ggplot2::alpha(base_colour,

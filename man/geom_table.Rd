@@ -78,11 +78,12 @@ can include aesthetics whose values you want to set, not map. See
 starting position of each text label. The units for \code{nudge_x} and
 \code{nudge_y} are the same as for the data units on the x-axis and y-axis.}
 
-\item{default.colour, default.color}{A colour definition to use for elements not targeted by
-the colour aesthetic.}
+\item{default.colour, default.color}{A colour definition to use for elements
+not targeted by the colour aesthetic.}
 
-\item{colour.target, color.target}{A vector of character strings; \code{"all"},
-\code{"table"}, \code{"table.core"}, \code{"table.heads"} and \code{"segment"} or \code{"none"}.}
+\item{colour.target, color.target}{A vector of character strings;
+\code{"all"}, \code{"table"}, \code{"table.core"}, \code{"table.heads"} and
+\code{"segment"} or \code{"none"}.}
 
 \item{default.alpha}{numeric in [0..1] A transparency value to use for
 elements not targeted by the alpha aesthetic.}
@@ -106,7 +107,8 @@ are not rendered, in mm.}
 \code{\link[grid]{arrow}}}
 
 \item{table.theme}{NULL, list or function A gridExtra ttheme defintion, or
-a constructor for a ttheme or NULL for default.}
+a constructor for a ttheme or NULL for default. If \code{nULL} the theme
+is retrieved from R option \code{} at the time the plot is rendered.}
 
 \item{table.rownames, table.colnames}{logical flag to enable or disable
 printing of row names and column names.}
@@ -146,9 +148,9 @@ thus plot insets can differ among panels.
 }
 \details{
 By default \code{geom_table()} uses
-  \code{\link{position_nudge_center}} which is
-  backwards compatible with \code{\link[ggplot2]{position_nudge}} but
-  provides additional control on the direction of the nudging. In contrast to
+  \code{\link{position_nudge_center}} which is backwards compatible with
+  \code{\link[ggplot2]{position_nudge}} but provides additional control on
+  the direction of the nudging. In contrast to
   \code{\link[ggplot2]{position_nudge}}, \code{\link{position_nudge_center}}
   and all other position functions defined in packages 'ggpp' and 'ggrepel'
   keep the original coordinates thus allowing the plotting of connecting
@@ -156,26 +158,36 @@ By default \code{geom_table()} uses
 
   This geom works with tibbles or data frames as \code{data}, as its expects
   a list of data frames (or tibbles) to be mapped to the \code{label}
-  aesthetic. A table is built with function \code{gridExtra::gtable} for
-  each data frame in the list, and formatted according to a \code{ttheme}
-  (table theme) or \code{ttheme} constructor function passed as argument
-  to parameter \code{table.theme}. The character strings in the data frame
-  can be parsed into R expressions so the inset tables can include maths.
+  aesthetic. A table is built with function \code{gridExtra::gtable} for each
+  data frame in the list, and formatted according to a \code{ttheme} (table
+  theme) list object or \code{ttheme} constructor function passed as argument
+  to parameter \code{table.theme}. If the value passed as argument to
+  \code{table.theme} is \code{NULL} the table theme used is that set as
+  default through R option \code{ggpmisc.ttheme.default} at the time the plot
+  is rendered or the \code{\link{ttheme_gtdefault}} constructor function if
+  not set.
 
-  If the argument passed to \code{table.theme} is a constructor function
-  (passing its name without parenthesis), the values mapped to \code{size},
-  \code{colour}, \code{fill}, \code{alpha}, and \code{family} aesthetics will
-  the passed to this theme constructor for each individual table. In
-  contrast, if a ready constructed \code{ttheme} stored as a list object is
-  passed as argument (e.g., by calling the constructor, using constructor
-  name followed by parenthesis), it is used as is, with mappings to
-  aesthetics \code{colour}, \code{fill}, \code{alpha}, and \code{family}
-  ignored if present. By default the constructor \code{ttheme_gtdefault} is
-  used and \code{colour} and \code{fill}, are mapped to \code{NA}. Mapping
-  these aesthetics to \code{NA} triggers the use the values set in the
-  \code{ttheme}. As the table is built with function
-  \code{gridExtra::gtable()}, for details, please, consult
+  If the argument passed to \code{table.theme} or set through R option
+  \code{ggpmisc.ttheme.default} is a constructor function (passing its name
+  without parenthesis), the values mapped to \code{size}, \code{colour},
+  \code{fill}, \code{alpha}, and \code{family} aesthetics will the passed to
+  this theme constructor for each individual table. In contrast, if a ready
+  constructed \code{ttheme} stored as a list object is passed as argument
+  (e.g., by calling the constructor, using constructor name followed by
+  parenthesis), it is used as is, with mappings to aesthetics \code{colour},
+  \code{fill}, \code{alpha}, and \code{family} ignored if present. By default
+  the constructor \code{ttheme_gtdefault} is used and \code{colour} and
+  \code{fill}, are mapped to \code{NA}. Mapping these aesthetics to \code{NA}
+  triggers the use the values set in the \code{ttheme}. As the table is built
+  with function \code{gridExtra::gtable()}, for details, please, consult
   \code{\link[gridExtra]{tableGrob}} and \code{\link{ttheme_gtdefault}}.
+
+  The character strings in the data frame can be parsed into R expressions so
+  the inset tables can include maths. With \code{parse = TRUE} parsing is
+  attempted on each table cell, but failure triggers fall-back to rendering
+  without parsing, on a cell by cell basis. Thus, a table can contain a
+  mixture cells and/or headings that require parsing or not (see the
+  documentation in \link[gridExtra]{gridExtra-package} for details).
 
   The \code{x} and \code{y} aesthetics determine the position of the whole
   inset table, similarly to that of a text label, justification is
@@ -184,10 +196,11 @@ By default \code{geom_table()} uses
   data frame), and \code{angle} is used to rotate the inset table as a whole.
 
   Of these two geoms only \code{\link{geom_table}} supports the plotting of
-  segments, as \code{\link{geom_table_npc}} uses a coordinate system that is
-  unrelated to data units and data. In the case of \code{geom_table_npc},
-  \code{npcx} and \code{npcy} aesthetics determine the position of the inset
-  table. Justification as described above for .
+  segments when its position has been modified by a \code{position} function.
+  This is because \code{\link{geom_table_npc}} uses a coordinate system that
+  is unrelated to data units, scales or data in other plot layers. In the
+  case of \code{geom_table_npc}, \code{npcx} and \code{npcy}
+  pseudo-aesthetics determine the position of the inset table.
 }
 \note{
 Complex tables with annotations or different colouring of rows or cells
