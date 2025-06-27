@@ -120,15 +120,18 @@
 #'   starting position of each text label. The units for \code{nudge_x} and
 #'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
 #' @param default.colour,default.color A colour definition to use for elements
-#'   not targeted by the colour aesthetic.
-#' @param colour.target,color.target A vector of character strings;
-#'   \code{"all"}, \code{"table"}, \code{"table.core"}, \code{"table.heads"} and
-#'   \code{"segment"} or \code{"none"}.
+#'   not targeted by the colour aesthetic. If \code{NA} the colours in the table
+#'   theme are not modified.
+#' @param colour.target,color.target A vector of character strings with one or
+#'   more of \code{"all"}, \code{"table"}, \code{"table.base"},
+#'   \code{"table.rules"}, \code{"segment"} or \code{"none"}.
 #' @param default.alpha numeric in [0..1] A transparency value to use for
-#'   elements not targeted by the alpha aesthetic.
-#' @param alpha.target A vector of character strings; \code{"all"},
-#'   \code{"segment"}, \code{"box"}, \code{"core.text"},
-#'   \code{"table"}, \code{"table.core"}, \code{"table.heads"} or \code{"none"}.
+#'   elements not targeted by the alpha aesthetic. If \code{NA} the alpha
+#'   channel of the colour definitions is not modified.
+#' @param alpha.target A vector of character strings with one or
+#'   more of \code{"all"}, \code{"table"}, \code{"table.base"},
+#'   \code{"table.rules"} and \code{"table.canvas"}, \code{"segment"} or
+#'   \code{"none"}.
 #' @param add.segments logical Display connecting segments or arrows between
 #'   original positions and displaced ones if both are available.
 #' @param box.padding,point.padding numeric By how much each end of the segments
@@ -154,6 +157,8 @@
 #' library(dplyr)
 #' library(tibble)
 #'
+#' theme_set(theme_bw())
+#'
 #' mtcars %>%
 #'   group_by(cyl) %>%
 #'   summarize(wt = mean(wt), mpg = mean(mpg)) %>%
@@ -168,14 +173,6 @@
 #'   geom_point() +
 #'   geom_table(data = df,
 #'              aes(x = x, y = y, label = tb))
-#'
-#' ggplot(mtcars,
-#'        aes(wt, mpg, colour = factor(cyl))) +
-#'   geom_point() +
-#'   geom_table(data = df,
-#'              aes(x = x, y = y, label = tb),
-#'              table.rownames = TRUE,
-#'              table.theme = ttheme_gtstripes)
 #'
 #' # settings aesthetics to constants
 #' ggplot(mtcars,
@@ -194,8 +191,22 @@
 #'   geom_point() +
 #'   geom_table(data = df,
 #'              aes(x = x, y = y, label = tb),
-#'              table.theme = ttheme_gtminimal) +
+#'              table.theme = ttheme_gtstripes) +
 #'   theme_classic()
+#'
+#' # transparency
+#' ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+#'   geom_point() +
+#'   geom_table(data = df,
+#'              aes(x = x, y = y, label = tb),
+#'              alpha = 0.5) +
+#'   theme_bw()
+#'
+#' ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+#'   geom_point() +
+#'   geom_table(data = df,
+#'              aes(x = x, y = y, label = tb),
+#'              alpha = 0.5, alpha.target = "table.canvas")
 #'
 #' df2 <- tibble(x = 5.45,
 #'               y = c(34, 29, 24),
@@ -212,6 +223,14 @@
 #'              inherit.aes = TRUE,
 #'              mapping = aes(x = x, y = y, label = tb))
 #'
+#' ggplot(mtcars,
+#'        aes(wt, mpg, color = factor(cyl))) +
+#'   geom_point() +
+#'   geom_table(data = df2,
+#'              inherit.aes = TRUE,
+#'              colour.target = "table.rules",
+#'              mapping = aes(x = x, y = y, label = tb))
+#'
 #' # nudging and segments
 #' ggplot(mtcars,
 #'        aes(wt, mpg, color = factor(cyl))) +
@@ -222,6 +241,18 @@
 #'              nudge_x = 0.7, nudge_y = 3,
 #'              vjust = 0.5, hjust = 0.5,
 #'              arrow = arrow(length = unit(0.5, "lines"))) +
+#'   theme_classic()
+#'
+#' ggplot(mtcars,
+#'        aes(wt, mpg, color = factor(cyl))) +
+#'   geom_point(show.legend = FALSE) +
+#'   geom_table(data = df2,
+#'              inherit.aes = TRUE,
+#'              mapping = aes(x = x1, y = y1, label = tb),
+#'              nudge_x = 0.7, nudge_y = 3,
+#'              vjust = 0.5, hjust = 0.5,
+#'              arrow = arrow(length = unit(0.5, "lines")),
+#'              colour.target = c("table.rules", "segment")) +
 #'   theme_classic()
 #'
 #' # Using native plot coordinates instead of data coordinates
@@ -240,9 +271,9 @@ geom_table <- function(mapping = NULL,
                        ...,
                        nudge_x = 0,
                        nudge_y = 0,
-                       default.colour = "black",
+                       default.colour = NA,
                        default.color = default.colour,
-                       colour.target = "box",
+                       colour.target = "table.base",
                        color.target = colour.target,
                        default.alpha = 1,
                        alpha.target = "all",
@@ -264,7 +295,7 @@ geom_table <- function(mapping = NULL,
   colour.target <-
     rlang::arg_match(color.target,
                      values = c("segment", "all", "box", "table", "table.base",
-                                "table.rules", "table.canvas", "none"),
+                                "table.rules", "none"),
                      multiple = TRUE)
   alpha.target <-
     rlang::arg_match(alpha.target,
@@ -348,7 +379,7 @@ GeomTable <-
                                 add.segments = TRUE,
                                 box.padding = 0.25,
                                 point.padding = 1e-06,
-                                segment.linewidth = 1,
+                                segment.linewidth = 0.5,
                                 min.segment.length = 0,
                                 arrow = NULL,
                                 table.theme = NULL,
@@ -356,8 +387,8 @@ GeomTable <-
                                 table.colnames = TRUE,
                                 table.hjust = 0.5,
                                 parse = FALSE,
-                                default.colour = "black",
-                                colour.target = "all",
+                                default.colour = NA,
+                                colour.target = "table.base",
                                 default.alpha = NA,
                                 alpha.target = "all",
                                 na.rm = FALSE) {
@@ -414,6 +445,13 @@ GeomTable <-
                                 box.padding = box.padding,
                                 min.segment.length = min.segment.length)
             }
+            # for the table itself default.colour NA uses the table theme
+            # box and segment use "black" as default as in earlier versions
+            if (is.na(default.colour)) {
+              off.table.default.colour <- "black"
+            } else {
+              off.table.default.colour <- default.colour
+            }
 
             # loop needed as gpar is not vectorized
             all.grobs <- grid::gList()
@@ -429,7 +467,7 @@ GeomTable <-
                 table.x <- table.hjust
                 # alpha
                 base.alpha <-
-                  ifelse(any(alpha.target %in% c("all", "table")),
+                  ifelse(any(alpha.target %in% c("all", "table", "table.base")),
                          row$alpha, default.alpha)
                 rules.alpha <-
                   ifelse(any(alpha.target %in% c("all", "table", "table.rules")),
@@ -445,7 +483,7 @@ GeomTable <-
                          row$alpha, default.alpha)
                 # colour
                 base.colour <-
-                  ifelse(any(colour.target %in% c("all", "table")),
+                  ifelse(any(colour.target %in% c("all", "table", "table.base")),
                          row$colour, default.colour)
                 # base.alpha applied in ttheme constructor
                 rules.colour <-
@@ -454,11 +492,11 @@ GeomTable <-
                   ggplot2::alpha(rules.alpha)
                 segment.colour <-
                   ifelse(any(colour.target %in% c("all", "segment")),
-                         row$colour, default.colour) |>
+                         row$colour, off.table.default.colour) |>
                   ggplot2::alpha(segment.alpha)
                 box.colour <-
-                  ifelse(any(colour.target %in% c("all", "segment")),
-                         row$colour, default.colour) |>
+                  ifelse(any(colour.target %in% c("all", "box")),
+                         row$colour, off.table.default.colour) |>
                   ggplot2::alpha(box.alpha)
                 # fill
                 canvas.fill <- row$fill |>
@@ -505,8 +543,7 @@ GeomTable <-
                   # use colour from data$colour
                   this.table.theme <-
                     table.theme(base_size = row$size * .pt,
-                                base_colour =
-                                  ggplot2::alpha(base.colour, base.alpha),
+                                base_colour = base.colour,
                                 base_family = row$family,
                                 parse = parse,
                                 base.alpha = base.alpha,
@@ -554,12 +591,14 @@ GeomTable <-
                                        y1 = segment.row$y_orig,
                                        arrow = arrow,
                                        gp = grid::gpar(
-                                         col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
-                                           ifelse(any(colour.target %in% c("all", "segment")),
-                                                  ggplot2::alpha(row$colour, segment.alpha),
-                                                  ggplot2::alpha(default.colour, segment.alpha)),
-                                         lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
-                                       name = paste("table.s.segment", row$group, row.idx, sep = "."))
+                                         col = if (segment.linewidth == 0) NA else
+                                           # lwd = 0 is invalid in 'grid'
+                                           segment.colour,
+                                         lwd = if (segment.linewidth == 0) 0.5 else
+                                           segment.linewidth * ggplot2::.stroke),
+                                       name = paste("table.s.segment",
+                                                    row$group,
+                                                    row.idx, sep = "."))
                 }
                 all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
               } else {
@@ -582,9 +621,9 @@ GeomTable <-
 geom_table_npc <- function(mapping = NULL, data = NULL,
                            stat = "identity", position = "identity",
                            ...,
-                           default.colour = "black",
+                           default.colour = NA,
                            default.color = default.colour,
-                           colour.target = "box",
+                           colour.target = "table.base",
                            color.target = colour.target,
                            default.alpha = 1,
                            alpha.target = "all",
@@ -600,7 +639,7 @@ geom_table_npc <- function(mapping = NULL, data = NULL,
   colour.target <-
     rlang::arg_match(color.target,
                      values = c("segment", "all", "box", "table", "table.base",
-                                "table.rules", "table.canvas", "none"),
+                                "table.rules", "none"),
                      multiple = TRUE)
   alpha.target <-
     rlang::arg_match(alpha.target,
@@ -671,8 +710,8 @@ GeomTableNpc <-
                      table.colnames = TRUE,
                      table.hjust = 0.5,
                      parse = FALSE,
-                     default.colour = "black",
-                     colour.target = "all",
+                     default.colour = NA,
+                     colour.target = "table.base",
                      default.alpha = NA,
                      alpha.target = "all",
                      na.rm = FALSE) {

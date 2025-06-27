@@ -80,6 +80,14 @@ tb <- mpg %>%
   group_by(cyl) %>%
   summarise(hwy = median(hwy), cty = median(cty))
 
+# using R's data frames we need to call I() to add the list as is
+data.df <- data.frame(x = 7, y = 44, tb = I(list(tb)))
+
+ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
+  geom_table(data = data.df, aes(x, y, label = tb)) +
+  geom_point() 
+
+# using 'tibble' the list is added as is by default
 data.tb <- tibble(x = 7, y = 44, tb = list(tb))
 
 ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
@@ -101,6 +109,15 @@ ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
              table.theme = ttheme_gtsimple,
              table.hjust = 0, colour = "darkred", fill = "#FFFFBB") +
   geom_point() 
+
+## -----------------------------------------------------------------------------
+ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
+  geom_table(data = data.tb, aes(x, y, label = tb),
+             table.theme = ttheme_gtdefault,
+             table.hjust = 0, 
+             colour = "darkred", fill = "#FFFFBB",
+             alpha = 0.7) +
+  geom_point()
 
 ## -----------------------------------------------------------------------------
 ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +

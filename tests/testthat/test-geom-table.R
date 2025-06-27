@@ -91,22 +91,22 @@ test_that("numbers_tb", {
   my_data.tb <- tibble(x = -5:5, y = -5:5)
   tb <- tibble(a = 2:4, b = 4:2)
   my.tb <- tibble(x = 0, y = 0, tb = list(tb))
-  vdiffr::expect_doppelganger("geom_table_num1",
+  vdiffr::expect_doppelganger("geom_table_geom_data",
                               ggplot() +
                                 geom_table(data = my.tb,
                                            mapping = aes(x, y, label = tb))
                               )
-  vdiffr::expect_doppelganger("geom_table_num2",
+  vdiffr::expect_doppelganger("geom_table_plot_data",
                               ggplot(data = my.tb) +
                                 geom_table(mapping = aes(x, y, label = tb))
                               )
-  vdiffr::expect_doppelganger("geom_table_num3",
+  vdiffr::expect_doppelganger("geom_table_vjust",
                               ggplot() +
                                 geom_table(data = my.tb,
                                            mapping = aes(x, y, label = tb),
                                            vjust = 1)
                               )
-  vdiffr::expect_doppelganger("geom_table_num4",
+  vdiffr::expect_doppelganger("geom_table_vjust_hjust",
                               ggplot(data = my.tb) +
                                 geom_table(vjust = 1, hjust = 0,
                                      mapping = aes(x, y, label = tb))
@@ -116,20 +116,20 @@ test_that("numbers_tb", {
                                 geom_table(vjust = 0, hjust = 1,
                                      mapping = aes(x, y, label = tb))
                               )
-  vdiffr::expect_doppelganger("geom_table_num6",
+  vdiffr::expect_doppelganger("geom_table_with_points",
                               ggplot(my_data.tb, aes(x, y)) +
                                 geom_point() +
                                 geom_table(data = my.tb,
                                            mapping = aes(x, y, label = tb))
                               )
-  vdiffr::expect_doppelganger("geom_table_num7",
+  vdiffr::expect_doppelganger("geom_table_nudge_x",
                               ggplot(my_data.tb, aes(x, y)) +
                                 geom_point() +
                                 geom_table(data = my.tb,
                                            nudge_x = -2,
                                            mapping = aes(x, y, label = tb))
   )
-  vdiffr::expect_doppelganger("geom_table_num8",
+  vdiffr::expect_doppelganger("geom_table_nudge_x_nudge_y",
                               ggplot(my_data.tb, aes(x, y)) +
                                 geom_point() +
                                 geom_table(data = my.tb,
@@ -137,6 +137,485 @@ test_that("numbers_tb", {
                                            vjust = 0.5, hjust = 1,
                                            mapping = aes(x, y, label = tb))
   )
+})
+
+test_that("alpha targets work", {
+  my_data.tb <- tibble(x = -5:5, y = -5:5)
+  tb <- tibble(a = 2:4, b = 4:2)
+  my.tb <- tibble(x = 0, y = 0, tb = list(tb))
+  vdiffr::expect_doppelganger("geom_table_alpha_aes",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.5,
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_alpha_all",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.5,
+                                           alpha.target = "all",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_alpha_segment",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = "segment",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_alpha_table",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = "table",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_alpha_canvas",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = "table.canvas",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_alpha_rules",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = "table.rules",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_alpha_base",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = "table.base",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_alpha_box",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = "box",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_alpha_none",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = "none",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+})
+
+test_that("colour targets work", {
+  my_data.tb <- tibble(x = -5:5, y = -5:5)
+  tb <- tibble(a = 2:4, b = 4:2)
+  my.tb <- tibble(x = 0, y = 0, tb = list(tb))
+
+  vdiffr::expect_doppelganger("geom_table_colour_na",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           colour = NA,
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_colour_aes",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           colour = "red",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_default_colour",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           default.colour = "blue",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_default_colour_none",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           default.colour = "blue",
+                                           colour.target = "none",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_colour_all",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           colour = "red",
+                                           colour.target = "all",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_colour_segment",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           colour = "red",
+                                           colour.target = "segment",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_colour_table",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           colour = "red",
+                                           colour.target = "table",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_colour_rules",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           colour = "red",
+                                           colour.target = "table.rules",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_colour_base",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           colour = "red",
+                                           colour.target = "table.base",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_colour_box",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           colour = "red",
+                                           colour.target = "box",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_colour_none",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           colour = "red",
+                                           colour.target = "none",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+})
+
+test_that("colour targets and alpha targets work together", {
+  my_data.tb <- tibble(x = -5:5, y = -5:5)
+  tb <- tibble(a = 2:4, b = 4:2)
+  my.tb <- tibble(x = 0, y = 0, tb = list(tb))
+  vdiffr::expect_doppelganger("geom_table_colour_alpha_aes",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           colour = "red",
+                                           alpha = 0.25,
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_colour_all_alpha",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = "all",
+                                           colour = "red",
+                                           colour.target = "all",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_colour_segment_alpha_all",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = "all",
+                                           colour = "red",
+                                           colour.target = "segment",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_colour_segment_alpha_table",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = "table",
+                                           colour = "red",
+                                           colour.target = "segment",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_colour_table_alpha_table",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = "table",
+                                           colour = "red",
+                                           colour.target = "table",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_colour_table_alpha_segment",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = "segment",
+                                           colour = "red",
+                                           colour.target = "table",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_colour_rules_alpha_table",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = "table",
+                                           colour = "red",
+                                           colour.target = "table.rules",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_colour_rules_alpha_canvas",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = "table.canvas",
+                                           colour = "red",
+                                           colour.target = "table.rules",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_default_colour_rules_alpha_canvas",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           default.colour = "blue",
+                                           alpha.target = "table.canvas",
+                                           colour = "red",
+                                           colour.target = "table.rules",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_colour_base_alpha_multiple",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = c("table.rules",
+                                                            "table.canvas"),
+                                           colour = "red",
+                                           colour.target = "table.base",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_colour_box",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.1,
+                                           alpha.target = "none",
+                                           colour = "red",
+                                           colour.target = "box",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+})
+
+test_that("fill and alpha work together", {
+  my_data.tb <- tibble(x = -5:5, y = -5:5)
+  tb <- tibble(a = 2:4, b = 4:2)
+  my.tb <- tibble(x = 0, y = 0, tb = list(tb))
+  vdiffr::expect_doppelganger("geom_table_fill_aes",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           fill = "yellow",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_fill_alpha_all",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = "all",
+                                           fill = "yellow",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_fill_alpha_table",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = "table",
+                                           fill = "yellow",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_fill_alpha_segment",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = "segment",
+                                           fill = "yellow",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_fill_alpha_canvas",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = "table.canvas",
+                                           fill = "yellow",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_fill_alpha_multiple",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.25,
+                                           alpha.target = c("table.rules",
+                                                            "table.canvas"),
+                                           fill = "yellow",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_fill_alpha_none",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.1,
+                                           alpha.target = "none",
+                                           fill = "yellow",
+                                           mapping = aes(x, y, label = tb))
+  )
+
+  vdiffr::expect_doppelganger("geom_table_fill_alpha_na",
+                              ggplot(my_data.tb, aes(x, y)) +
+                                geom_point() +
+                                geom_table(data = my.tb,
+                                           nudge_x = -2,
+                                           hjust = 1,
+                                           alpha = 0.1,
+                                           alpha.target = "none",
+                                           fill = NA,
+                                           mapping = aes(x, y, label = tb))
+  )
+
 })
 
 test_that("theme_tb", {

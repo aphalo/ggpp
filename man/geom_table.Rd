@@ -13,9 +13,9 @@ geom_table(
   ...,
   nudge_x = 0,
   nudge_y = 0,
-  default.colour = "black",
+  default.colour = NA,
   default.color = default.colour,
-  colour.target = "box",
+  colour.target = "table.base",
   color.target = colour.target,
   default.alpha = 1,
   alpha.target = "all",
@@ -41,9 +41,9 @@ geom_table_npc(
   stat = "identity",
   position = "identity",
   ...,
-  default.colour = "black",
+  default.colour = NA,
   default.color = default.colour,
-  colour.target = "box",
+  colour.target = "table.base",
   color.target = colour.target,
   default.alpha = 1,
   alpha.target = "all",
@@ -79,18 +79,21 @@ starting position of each text label. The units for \code{nudge_x} and
 \code{nudge_y} are the same as for the data units on the x-axis and y-axis.}
 
 \item{default.colour, default.color}{A colour definition to use for elements
-not targeted by the colour aesthetic.}
+not targeted by the colour aesthetic. If \code{NA} the colours in the table
+theme are not modified.}
 
-\item{colour.target, color.target}{A vector of character strings;
-\code{"all"}, \code{"table"}, \code{"table.core"}, \code{"table.heads"} and
-\code{"segment"} or \code{"none"}.}
+\item{colour.target, color.target}{A vector of character strings with one or
+more of \code{"all"}, \code{"table"}, \code{"table.base"},
+\code{"table.rules"}, \code{"segment"} or \code{"none"}.}
 
 \item{default.alpha}{numeric in [0..1] A transparency value to use for
-elements not targeted by the alpha aesthetic.}
+elements not targeted by the alpha aesthetic. If \code{NA} the alpha
+channel of the colour definitions is not modified.}
 
-\item{alpha.target}{A vector of character strings; \code{"all"},
-\code{"segment"}, \code{"box"}, \code{"core.text"},
-\code{"table"}, \code{"table.core"}, \code{"table.heads"} or \code{"none"}.}
+\item{alpha.target}{A vector of character strings with one or
+more of \code{"all"}, \code{"table"}, \code{"table.base"},
+\code{"table.rules"} and \code{"table.canvas"}, \code{"segment"} or
+\code{"none"}.}
 
 \item{add.segments}{logical Display connecting segments or arrows between
 original positions and displaced ones if both are available.}
@@ -262,6 +265,8 @@ Complex tables with annotations or different colouring of rows or cells
 library(dplyr)
 library(tibble)
 
+theme_set(theme_bw())
+
 mtcars \%>\%
   group_by(cyl) \%>\%
   summarize(wt = mean(wt), mpg = mean(mpg)) \%>\%
@@ -276,14 +281,6 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point() +
   geom_table(data = df,
              aes(x = x, y = y, label = tb))
-
-ggplot(mtcars,
-       aes(wt, mpg, colour = factor(cyl))) +
-  geom_point() +
-  geom_table(data = df,
-             aes(x = x, y = y, label = tb),
-             table.rownames = TRUE,
-             table.theme = ttheme_gtstripes)
 
 # settings aesthetics to constants
 ggplot(mtcars,
@@ -302,8 +299,22 @@ ggplot(mtcars,
   geom_point() +
   geom_table(data = df,
              aes(x = x, y = y, label = tb),
-             table.theme = ttheme_gtminimal) +
+             table.theme = ttheme_gtstripes) +
   theme_classic()
+
+# transparency
+ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+  geom_point() +
+  geom_table(data = df,
+             aes(x = x, y = y, label = tb),
+             alpha = 0.5) +
+  theme_bw()
+
+ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+  geom_point() +
+  geom_table(data = df,
+             aes(x = x, y = y, label = tb),
+             alpha = 0.5, alpha.target = "table.canvas")
 
 df2 <- tibble(x = 5.45,
               y = c(34, 29, 24),
@@ -320,6 +331,14 @@ ggplot(mtcars,
              inherit.aes = TRUE,
              mapping = aes(x = x, y = y, label = tb))
 
+ggplot(mtcars,
+       aes(wt, mpg, color = factor(cyl))) +
+  geom_point() +
+  geom_table(data = df2,
+             inherit.aes = TRUE,
+             colour.target = "table.rules",
+             mapping = aes(x = x, y = y, label = tb))
+
 # nudging and segments
 ggplot(mtcars,
        aes(wt, mpg, color = factor(cyl))) +
@@ -330,6 +349,18 @@ ggplot(mtcars,
              nudge_x = 0.7, nudge_y = 3,
              vjust = 0.5, hjust = 0.5,
              arrow = arrow(length = unit(0.5, "lines"))) +
+  theme_classic()
+
+ggplot(mtcars,
+       aes(wt, mpg, color = factor(cyl))) +
+  geom_point(show.legend = FALSE) +
+  geom_table(data = df2,
+             inherit.aes = TRUE,
+             mapping = aes(x = x1, y = y1, label = tb),
+             nudge_x = 0.7, nudge_y = 3,
+             vjust = 0.5, hjust = 0.5,
+             arrow = arrow(length = unit(0.5, "lines")),
+             colour.target = c("table.rules", "segment")) +
   theme_classic()
 
 # Using native plot coordinates instead of data coordinates
