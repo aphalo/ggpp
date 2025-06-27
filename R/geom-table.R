@@ -743,8 +743,15 @@ GeomTableNpc <-
                 data$hjust <- compute_just(data$hjust, data$npcx)
               }
 
-              tb.grobs <- grid::gList()
+              # for the table itself default.colour NA uses the table theme
+              # box and segment use "black" as default as in earlier versions
+              if (is.na(default.colour)) {
+                off.table.default.colour <- "black"
+              } else {
+                off.table.default.colour <- default.colour
+              }
 
+              tb.grobs <- grid::gList()
               for (row.idx in seq_len(nrow(data))) {
                 row <- data[row.idx, , drop = FALSE]
                 # Build the table
@@ -758,7 +765,7 @@ GeomTableNpc <-
 #                  table.x <- if(table.hjust == 0.5) 0.5 else table.hjust * 0.8 + 0.1
                   # alpha
                   base.alpha <-
-                    ifelse(any(alpha.target %in% c("all", "table")),
+                    ifelse(any(alpha.target %in% c("all", "table", "table.base")),
                            row$alpha, default.alpha)
                   rules.alpha <-
                     ifelse(any(alpha.target %in% c("all", "table", "table.rules")),
@@ -771,7 +778,7 @@ GeomTableNpc <-
                            row$alpha, default.alpha)
                   # colour
                   base.colour <-
-                    ifelse(any(colour.target %in% c("all", "table")),
+                    ifelse(any(colour.target %in% c("all", "table", "table.base")),
                            row$colour, default.colour) |>
                     ggplot2::alpha(base.alpha)
                   rules.colour <-
@@ -779,8 +786,8 @@ GeomTableNpc <-
                            row$colour, default.colour) |>
                     ggplot2::alpha(rules.alpha)
                   box.colour <-
-                    ifelse(any(colour.target %in% c("all", "segment")),
-                           row$colour, default.colour) |>
+                    ifelse(any(colour.target %in% c("all", "box")),
+                           row$colour, off.table.default.colour) |>
                     ggplot2::alpha(box.alpha)
                   # fill
                   canvas.fill <- row$fill |>
@@ -793,16 +800,24 @@ GeomTableNpc <-
                     colhead.params <- list(fg_params = list(hjust = table.hjust,
                                                             x = table.x))
                   } else {
+                    # override ttheme fill for background canvas
                     core.params <-
                       list(fg_params = list(hjust = table.hjust, x = table.x),
                            bg_params = list(fill = canvas.fill))
-                    rowhead.params <- list(fg_params = list(hjust = 1, x = 0.9),
-                                           bg_params = list(fill = canvas.fill))
+                    rowhead.params <-
+                      list(fg_params = list(hjust = 1, x = 0.9),
+                           bg_params = list(fill = canvas.fill))
                     colhead.params <- list(fg_params = list(hjust = table.hjust,
                                                             x = table.x),
                                            bg_params = list(fill = canvas.fill))
                   }
-
+                  # override ttheme colour for background rules
+                  if (!is.na(rules.colour)) {
+                    rules.colour <- ggplot2::alpha(rules.colour, rules.alpha)
+                    core.params$bg_params$col <- rules.colour
+                    rowhead.params$bg_params$col <- rules.colour
+                    colhead.params$bg_params$col <- rules.colour
+                  }
                   if (is.na(base.colour)) {
                     # use theme's default base_colour
                     this.table.theme <-
@@ -816,8 +831,8 @@ GeomTableNpc <-
                                   colhead = colhead.params,
                                   core = core.params)
                   } else {
+                    # use colour from data$colour
                     this.table.theme <-
-                      # use colour from data$colour
                       table.theme(base_size = row$size * .pt,
                                   base_colour = base.colour,
                                   base_family = row$family,

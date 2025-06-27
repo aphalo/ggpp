@@ -327,10 +327,6 @@ you are dealing with data labels or data points.
 
 ## Summary statistics
 
-Frequently, maxima or minima are features of interest that may need to be
-labelled or highlighted in a plot. This can be done easily with functions
-`stat_peaks()` and `stat_valleys()`. 
-
 With some types of data it is common to compute a summary per plot quadrant,
 rather than based on a prior grouping. The *stat* `stat_quadrant_counts()` can
 de used to annotate plots with the number of observations in each quadrant,
