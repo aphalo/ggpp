@@ -192,7 +192,7 @@ test_that("alpha targets work in geom_table", {
                                            nudge_x = -2,
                                            hjust = 1,
                                            alpha = 0.25,
-                                           alpha.target = "table.base",
+                                           alpha.target = "table.text",
                                            mapping = aes(x, y, label = tb))
   )
 
@@ -317,7 +317,7 @@ test_that("colour targets work in geom_table", {
                                            nudge_x = -2,
                                            hjust = 1,
                                            colour = "red",
-                                           colour.target = "table.base",
+                                           colour.target = "table.text",
                                            mapping = aes(x, y, label = tb))
   )
 
@@ -475,7 +475,7 @@ test_that("colour targets and alpha targets work together in geom_table", {
                                            alpha.target = c("table.rules",
                                                             "table.canvas"),
                                            colour = "red",
-                                           colour.target = "table.base",
+                                           colour.target = "table.text",
                                            mapping = aes(x, y, label = tb))
   )
 

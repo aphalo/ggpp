@@ -15,7 +15,7 @@ geom_table(
   nudge_y = 0,
   default.colour = NA,
   default.color = default.colour,
-  colour.target = "table.base",
+  colour.target = "table.text",
   color.target = colour.target,
   default.alpha = 1,
   alpha.target = "all",
@@ -43,7 +43,7 @@ geom_table_npc(
   ...,
   default.colour = NA,
   default.color = default.colour,
-  colour.target = "table.base",
+  colour.target = "table.text",
   color.target = colour.target,
   default.alpha = 1,
   alpha.target = "all",
@@ -83,7 +83,7 @@ not targeted by the colour aesthetic. If \code{NA} the colours in the table
 theme are not modified.}
 
 \item{colour.target, color.target}{A vector of character strings with one or
-more of \code{"all"}, \code{"table"}, \code{"table.base"},
+more of \code{"all"}, \code{"table"}, \code{"table.text"},
 \code{"table.rules"}, \code{"segment"} or \code{"none"}.}
 
 \item{default.alpha}{numeric in [0..1] A transparency value to use for
@@ -91,7 +91,7 @@ elements not targeted by the alpha aesthetic. If \code{NA} the alpha
 channel of the colour definitions is not modified.}
 
 \item{alpha.target}{A vector of character strings with one or
-more of \code{"all"}, \code{"table"}, \code{"table.base"},
+more of \code{"all"}, \code{"table"}, \code{"table.text"},
 \code{"table.rules"} and \code{"table.canvas"}, \code{"segment"} or
 \code{"none"}.}
 

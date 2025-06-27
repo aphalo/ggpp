@@ -371,8 +371,7 @@ citation("ggpp")
 #> To cite package 'ggpp' in publications use:
 #> 
 #>   Aphalo P (2025). _ggpp: Grammar Extensions to 'ggplot2'_. R package
-#>   version 0.5.8-1.9000, https://github.com/aphalo/ggpp,
-#>   <https://docs.r4photobiology.info/ggpp/>.
+#>   version 0.5.8-1.9001, <https://docs.r4photobiology.info/ggpp/>.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -380,8 +379,7 @@ citation("ggpp")
 #>     title = {ggpp: Grammar Extensions to 'ggplot2'},
 #>     author = {Pedro J. Aphalo},
 #>     year = {2025},
-#>     note = {R package version 0.5.8-1.9000, 
-#> https://github.com/aphalo/ggpp},
+#>     note = {R package version 0.5.8-1.9001},
 #>     url = {https://docs.r4photobiology.info/ggpp/},
 #>   }
 ```

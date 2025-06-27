@@ -33,9 +33,9 @@ test_that("segment annotations transform with scales", {
 
 context("ggpp_annotate")
 
-test_that("ggpp::annotate works with npc pseudo-aesthetics", {
-
 p <- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
+
+test_that("ggpp::annotate works with npc pseudo-aesthetics", {
 
 vdiffr::expect_doppelganger("annotate_label_npc1",
                             p + annotate("label_npc", npcx = c(0.1, 0.9), npcy = c(0.1, 0.9),
@@ -66,6 +66,10 @@ vdiffr::expect_doppelganger("annotate_plot_npc2",
                                          vp.width = 0.3, vp.height = 0.4)
 )
 
+})
+
+test_that("ggpp::annotate works with x and y aesthetics", {
+
 vdiffr::expect_doppelganger("annotate_text",
                             p + annotate("text", x = c(2, 5), y = c(15, 32),
                                          label = c("A", "B"))
@@ -78,6 +82,29 @@ vdiffr::expect_doppelganger("annotate_label",
 
 vdiffr::expect_doppelganger("annotate_table",
                             p + annotate("table", x = 5, y = 30,
+                                         label = data.frame(A = 1:2, B = letters[1:2]))
+)
+
+vdiffr::expect_doppelganger("annotate_table_colour",
+                            p + annotate("table", x = 5, y = 30, colour = "blue",
+                                         label = data.frame(A = 1:2, B = letters[1:2]))
+)
+
+vdiffr::expect_doppelganger("annotate_table_alpha",
+                            p + annotate("table", x = 5, y = 30, alpha = 0.25,
+                                         label = data.frame(A = 1:2, B = letters[1:2]))
+)
+
+vdiffr::expect_doppelganger("annotate_table_colour_target_rules",
+                            p + annotate("table", x = 5, y = 30,
+                                         colour = "red", colour.target = "table.rules",
+                                         label = data.frame(A = 1:2, B = letters[1:2]))
+)
+
+vdiffr::expect_doppelganger("annotate_table_colour_default_colour",
+                            p + annotate("table", x = 5, y = 30,
+                                         default.colour = "blue",
+                                         colour = "red", colour.target = "table.rules",
                                          label = data.frame(A = 1:2, B = letters[1:2]))
 )
 

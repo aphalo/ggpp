@@ -17,9 +17,9 @@ ttheme_gtdefault(
   base_family = "",
   parse = FALSE,
   padding = grid::unit(c(0.8, 0.6), "char"),
-  base.alpha = NA,
-  rules.alpha = base.alpha,
-  canvas.alpha = base.alpha,
+  text.alpha = NA,
+  rules.alpha = NA,
+  canvas.alpha = NA,
   ...
 )
 
@@ -29,9 +29,9 @@ ttheme_gtminimal(
   base_family = "",
   parse = FALSE,
   padding = grid::unit(c(0.5, 0.4), "char"),
-  base.alpha = NA,
-  rules.alpha = base.alpha,
-  canvas.alpha = base.alpha,
+  text.alpha = NA,
+  rules.alpha = NA,
+  canvas.alpha = NA,
   ...
 )
 
@@ -41,9 +41,9 @@ ttheme_gtbw(
   base_family = "",
   parse = FALSE,
   padding = grid::unit(c(1, 0.6), "char"),
-  base.alpha = NA,
-  rules.alpha = base.alpha,
-  canvas.alpha = base.alpha,
+  text.alpha = NA,
+  rules.alpha = NA,
+  canvas.alpha = NA,
   ...
 )
 
@@ -53,9 +53,9 @@ ttheme_gtplain(
   base_family = "",
   parse = FALSE,
   padding = grid::unit(c(0.8, 0.6), "char"),
-  base.alpha = NA,
-  rules.alpha = base.alpha,
-  canvas.alpha = base.alpha,
+  text.alpha = NA,
+  rules.alpha = NA,
+  canvas.alpha = NA,
   ...
 )
 
@@ -65,9 +65,9 @@ ttheme_gtdark(
   base_family = "",
   parse = FALSE,
   padding = grid::unit(c(0.8, 0.6), "char"),
-  base.alpha = NA,
-  rules.alpha = base.alpha,
-  canvas.alpha = base.alpha,
+  text.alpha = NA,
+  rules.alpha = NA,
+  canvas.alpha = NA,
   ...
 )
 
@@ -77,9 +77,9 @@ ttheme_gtlight(
   base_family = "",
   parse = FALSE,
   padding = grid::unit(c(0.8, 0.6), "char"),
-  base.alpha = NA,
-  rules.alpha = base.alpha,
-  canvas.alpha = base.alpha,
+  text.alpha = NA,
+  rules.alpha = NA,
+  canvas.alpha = NA,
   ...
 )
 
@@ -89,9 +89,9 @@ ttheme_gtsimple(
   base_family = "",
   parse = FALSE,
   padding = grid::unit(c(0.5, 0.4), "char"),
-  base.alpha = NA,
-  rules.alpha = base.alpha,
-  canvas.alpha = base.alpha,
+  text.alpha = NA,
+  rules.alpha = NA,
+  canvas.alpha = NA,
   ...
 )
 
@@ -101,9 +101,9 @@ ttheme_gtstripes(
   base_family = "",
   parse = FALSE,
   padding = grid::unit(c(0.8, 0.6), "char"),
-  base.alpha = NA,
-  rules.alpha = base.alpha,
-  canvas.alpha = base.alpha,
+  text.alpha = NA,
+  rules.alpha = NA,
+  canvas.alpha = NA,
   ...
 )
 }
@@ -119,7 +119,7 @@ ttheme_gtstripes(
 \item{padding}{length-2 unit vector specifying the horizontal and vertical
 padding of text within each cell.}
 
-\item{base.alpha, canvas.alpha, rules.alpha}{numeric in [0..1] Transparency
+\item{text.alpha, canvas.alpha, rules.alpha}{numeric in [0..1] Transparency
 applied to table \code{base_colour}, to table body background
 \code{fill} and rules \code{colour}, respectively.}
 
@@ -246,7 +246,7 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point() +
   geom_table(data = df, aes(x = 1.5, y = y, label = tb),
-             table.theme = ttheme_gtplain(base.alpha = 0.5)) +
+             table.theme = ttheme_gtplain(text.alpha = 0.5)) +
   theme_classic()
 
 }
