@@ -136,45 +136,46 @@ ggplot(df2, aes(1, b, size = b)) +
   xlim(0, 2) +
   theme(legend.position = "none")
 
-## ----eval=eval_ggrepel--------------------------------------------------------
-keep <- c("Israel", "United States", "European Union", "China", "South Africa", "Qatar",
-          "Argentina", "Chile", "Brazil", "Ukraine", "Indonesia", "Bangladesh")
-
-data <- read.csv("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv")
-data$date <- ymd(data$date)
-
-data %>%
-  filter(location %in% keep) %>%
-  select(location, date, total_vaccinations_per_hundred) %>%
-  arrange(location, date) %>%
-  filter(!is.na(total_vaccinations_per_hundred)) %>%
-  mutate(location = factor(location),
-         location = reorder(location, total_vaccinations_per_hundred)) %>%
-  group_by(location) %>% # max(date) depends on the location!
-  mutate(label = if_else(date == max(date), 
-                         as.character(location), 
-                         "")) -> owid
-
-ggplot(owid,
-       aes(x = date, 
-           y = total_vaccinations_per_hundred,
-           color = location)) +
-  geom_line() +
-  geom_text_repel(aes(label = label),
-                  size = 3,
-                  position = position_nudge_to(x = max(owid$date) + days(30)),
-                  segment.color = 'grey',
-                  point.size = 0,
-                  box.padding = 0.1,
-                  point.padding = 0.1,
-                  hjust = "left",
-                  direction = "y") + 
-  scale_x_date(expand = expansion(mult = c(0.05, 0.2))) +
-  labs(title = "Cumulative COVID-19 vaccination doses administered per 100 people",
-       y = "",
-       x = "Date (year-month)") +
-  theme_bw() +
-  theme(legend.position = "none")
+## ----eval=FALSE---------------------------------------------------------------
+# # not run by default as URL requires internet access
+# keep <- c("Israel", "United States", "European Union", "China", "South Africa", "Qatar",
+#           "Argentina", "Chile", "Brazil", "Ukraine", "Indonesia", "Bangladesh")
+# 
+# data <- read.csv("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv")
+# data$date <- ymd(data$date)
+# 
+# data %>%
+#   filter(location %in% keep) %>%
+#   select(location, date, total_vaccinations_per_hundred) %>%
+#   arrange(location, date) %>%
+#   filter(!is.na(total_vaccinations_per_hundred)) %>%
+#   mutate(location = factor(location),
+#          location = reorder(location, total_vaccinations_per_hundred)) %>%
+#   group_by(location) %>% # max(date) depends on the location!
+#   mutate(label = if_else(date == max(date),
+#                          as.character(location),
+#                          "")) -> owid
+# 
+# ggplot(owid,
+#        aes(x = date,
+#            y = total_vaccinations_per_hundred,
+#            color = location)) +
+#   geom_line() +
+#   geom_text_repel(aes(label = label),
+#                   size = 3,
+#                   position = position_nudge_to(x = max(owid$date) + days(30)),
+#                   segment.color = 'grey',
+#                   point.size = 0,
+#                   box.padding = 0.1,
+#                   point.padding = 0.1,
+#                   hjust = "left",
+#                   direction = "y") +
+#   scale_x_date(expand = expansion(mult = c(0.05, 0.2))) +
+#   labs(title = "Cumulative COVID-19 vaccination doses administered per 100 people",
+#        y = "",
+#        x = "Date (year-month)") +
+#   theme_bw() +
+#   theme(legend.position = "none")
 
 ## ----eval=eval_ggrepel--------------------------------------------------------
 ggplot(df, aes(x, y, label = round(x, 2))) +

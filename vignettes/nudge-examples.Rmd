@@ -359,7 +359,8 @@ the *x* axis. In this example we avoid overlaps with repulsion along the _y_
 axis. The data set used in this example is dynamic, so we use nudging to a
 position that is dynamicaly computed from the data.
 
-```{r, eval=eval_ggrepel}
+```{r, eval=FALSE}
+# not run by default as URL requires internet access
 keep <- c("Israel", "United States", "European Union", "China", "South Africa", "Qatar",
           "Argentina", "Chile", "Brazil", "Ukraine", "Indonesia", "Bangladesh")
 

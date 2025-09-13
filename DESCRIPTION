@@ -1,8 +1,8 @@
 Package: ggpp
 Type: Package
 Title: Grammar Extensions to 'ggplot2'
-Version: 0.5.9
-Date: 2025-06-27
+Version: 0.5.9.9000
+Date: 2025-09-13
 Authors@R:
     c(
     person("Pedro J.", "Aphalo", email = "pedro.aphalo@helsinki.fi", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3385-972X")),
@@ -25,7 +25,7 @@ LazyData: TRUE
 LazyLoad: TRUE
 ByteCompile: TRUE
 Depends:
-    R (>= 4.0.0),
+    R (>= 4.1.0),
     ggplot2 (>= 3.5.0)
 Imports:
     stats,
@@ -57,7 +57,7 @@ URL: https://docs.r4photobiology.info/ggpp/,
      https://github.com/aphalo/ggpp
 BugReports: https://github.com/aphalo/ggpp/issues
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 Collate: 
     'annotate.r'
