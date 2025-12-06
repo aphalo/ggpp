@@ -22,9 +22,8 @@ test_that("geom_quadrant_lines works as expected with default values", {
     PANEL = factor(1),
     group = gp,
     colour = "black",
-    size = 0.5,
     linewidth = 0.5,
-    linetype = "dashed",
+    linetype = 1,
     alpha = NA
   )
 
@@ -51,7 +50,6 @@ test_that("geom_quadrant_lines works as expected with custom parameter values", 
     PANEL = factor(1),
     group = gp,
     colour = "blue",
-    size = 0.5,
     linewidth = 0.5,
     linetype = "dashed",
     alpha = NA
@@ -113,7 +111,6 @@ test_that("geom_vhlines works as expected with multiple intercepts", {
     PANEL = factor(c(1, 1)),
     group = gp,
     colour = c("black", "black"),
-    size = c(0.5, 0.5),
     linewidth = c(0.5, 0.5),
     linetype = c(1, 1),
     alpha = c(NA, NA)

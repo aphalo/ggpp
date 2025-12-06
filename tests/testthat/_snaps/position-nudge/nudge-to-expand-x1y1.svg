@@ -34,17 +34,17 @@
 <circle cx='515.23' cy='68.11' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='304.71' cy='379.88' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <line x1='67.26' y1='237.43' x2='94.18' y2='259.97' style='stroke-width: 1.42;' />
-<text x='66.11' y='236.46' text-anchor='end' style='font-size: 11.04px; font-family: sans;' textLength='17.80px' lengthAdjust='spacingAndGlyphs'>abc</text>
+<text x='66.11' y='236.46' text-anchor='end' style='font-size: 11.00px; font-family: sans;' textLength='17.74px' lengthAdjust='spacingAndGlyphs'>abc</text>
 <line x1='435.09' y1='520.83' x2='374.88' y2='499.79' style='stroke-width: 1.42;' />
-<text x='436.63' y='528.97' style='font-size: 11.04px; font-family: sans;' textLength='11.66px' lengthAdjust='spacingAndGlyphs'>cd</text>
+<text x='436.63' y='528.94' style='font-size: 11.00px; font-family: sans;' textLength='11.62px' lengthAdjust='spacingAndGlyphs'>cd</text>
 <line x1='191.32' y1='141.44' x2='234.53' y2='140.06' style='stroke-width: 1.42;' />
-<text x='189.62' y='149.09' text-anchor='end' style='font-size: 11.04px; font-family: sans;' textLength='6.14px' lengthAdjust='spacingAndGlyphs'>d</text>
+<text x='189.62' y='149.06' text-anchor='end' style='font-size: 11.00px; font-family: sans;' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>d</text>
 <line x1='682.50' y1='330.47' x2='655.57' y2='307.93' style='stroke-width: 1.42;' />
-<text x='683.64' y='339.03' style='font-size: 11.04px; font-family: sans;' textLength='5.52px' lengthAdjust='spacingAndGlyphs'>c</text>
+<text x='683.64' y='339.00' style='font-size: 11.00px; font-family: sans;' textLength='5.50px' lengthAdjust='spacingAndGlyphs'>c</text>
 <line x1='558.70' y1='47.22' x2='515.23' y2='68.11' style='stroke-width: 1.42;' />
-<text x='560.14' y='46.53' style='font-size: 11.04px; font-family: sans;' textLength='17.80px' lengthAdjust='spacingAndGlyphs'>bcd</text>
+<text x='560.14' y='46.53' style='font-size: 11.00px; font-family: sans;' textLength='17.74px' lengthAdjust='spacingAndGlyphs'>bcd</text>
 <line x1='312.89' y1='425.11' x2='304.71' y2='379.88' style='stroke-width: 1.42;' />
-<text x='313.13' y='434.00' style='font-size: 11.04px; font-family: sans;' textLength='6.14px' lengthAdjust='spacingAndGlyphs'>a</text>
+<text x='313.13' y='433.97' style='font-size: 11.00px; font-family: sans;' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>a</text>
 <rect x='35.24' y='22.78' width='679.28' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>

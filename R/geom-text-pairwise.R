@@ -337,14 +337,14 @@ GeomTextPairwise <-
                    required_aes = c("xmin", "xmax", "y", "label"),
 
                    default_aes = ggplot2::aes(
+                     colour = from_theme(colour %||% ink),
+                     family = from_theme(family),
+                     size = from_theme(fontsize),
                      x = NA_real_,
-                     colour = "black",
-                     size = 3.88,
                      angle = 0,
                      hjust = 0.5,
                      vjust = -0.5,
                      alpha = NA,
-                     family = "",
                      fontface = 1,
                      lineheight = 1.2
                    ),

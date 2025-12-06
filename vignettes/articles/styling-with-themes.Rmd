@@ -1,0 +1,127 @@
+---
+title: "Styling Plots"
+subtitle: "Packages 'ggplot2' (>= 4.0.0) and 'ggpp' (>= 0.6.0)"
+author: "Pedro J. Aphalo"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: yes
+vignette: >
+  %\VignetteIndexEntry{Styling Plots}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, include=FALSE, echo=FALSE}
+library(knitr)
+opts_chunk$set(fig.align = 'center', 
+               fig.show = 'hold', fig.width = 7, fig.height = 4)
+options(warnPartialMatchArgs = FALSE,
+        tibble.print.max = 4,
+        tibble.print.min = 4,
+        dplyr.summarise.inform = FALSE)
+```
+
+```{r setup}
+library(ggplot2)
+library(ggpp)
+```
+
+## Introduction
+
+Version 4.0.0 of package 'ggplot2' introduced several enhancements to the use of themes. The code in 'ggpp' needs to be update to make these work with the geometries used in the code below.
+
+The aim of this article is to test what already works and what does not yet work. This article was rendered on `r lubridate::today()` with 'ggpp' version `r packageVersion("ggpp")`
+
+## Geometries
+
+'ggplot2' (>= 4.0.0) introduced the `geom` slot in themes. The different geometries defined in 'ggpp' differ in how they connect to 'ggplot2' code.
+
+```{r}
+set_theme(theme_minimal() +
+            theme(
+              geom = element_geom(
+                ink = "darkgreen",
+                paper = "yellow",
+                accent = "darkred",
+                family = "serif",
+                linewidth = 0.3,
+                linetype = "dotted",
+                borderwidth = 1,
+                bordertype = "dotted",
+                pointsize = 1.5,
+                pointshape = "cross"
+              )
+            )
+)
+
+update_theme(geom.point = element_geom(colour = "blue"))
+```
+
+
+```{r}
+my.cars <- mtcars[c(TRUE, FALSE, FALSE, FALSE), ]
+my.cars$name <- rownames(my.cars)
+
+p <-
+  ggplot(my.cars, 
+         aes(x = wt, y = mpg, label = name, 
+             xintercept = wt, yintercept = mpg,
+             npcx = (wt - min(wt)) / diff(range(wt)), 
+             npcy = (mpg - (min(mpg))) / diff(range(mpg)))) +
+  geom_point() +
+  expand_limits(x = c(2, 6))
+
+p + geom_text()
+```
+
+```{r}
+p + geom_text_s()
+```
+
+```{r}
+p + geom_text_npc(inherit.aes = TRUE)
+```
+
+```{r}
+p + geom_label()
+```
+
+```{r}
+p + geom_label_s()
+```
+
+```{r}
+p + geom_label_npc(inherit.aes = TRUE)
+```
+
+```{r}
+p + 
+  geom_x_margin_point(inherit.aes = TRUE) + 
+  geom_y_margin_point(inherit.aes = TRUE)
+```
+
+```{r}
+p + 
+  geom_x_margin_point(inherit.aes = TRUE) + 
+  geom_y_margin_point(inherit.aes = TRUE)
+```
+
+```{r}
+p + 
+  geom_x_margin_arrow(inherit.aes = TRUE) + 
+  geom_y_margin_arrow(inherit.aes = TRUE)
+```
+
+```{r}
+p + annotate(geom = "plot", label = p, x = 6, y = 22)
+```
+
+```{r}
+p + annotate(geom = "table", 
+             label = data.frame(a = 1:2, b = 3:4), 
+             x = 6, y = 22)
+```

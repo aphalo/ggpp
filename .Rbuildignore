@@ -12,3 +12,4 @@ data-raw
 ^build-binary-from-source.sh$
 ^\.github$
 ^revdep$
+^vignettes/articles$

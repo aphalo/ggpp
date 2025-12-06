@@ -96,8 +96,14 @@ GeomXMarginPoint <-
   ggproto("GeomXMarginPoint", Geom,
           required_aes = c("xintercept"),
           non_missing_aes = c("size", "shape", "colour"),
-          default_aes = aes(shape = 99, colour = "black", size = 2.5,
-                            fill = "red", alpha = NA, stroke = 0.5),
+          default_aes = aes(
+            shape = from_theme(pointshape),
+            colour = from_theme(colour %||% ink),
+            fill = from_theme(fill %||% NA),
+            size = from_theme(pointsize),
+            alpha = NA,
+            stroke = from_theme(borderwidth)
+          ),
 
   draw_panel = function(data, panel_params, coord, sides = "b",
                         point.shift = 0.01, na.rm = FALSE) {
@@ -215,8 +221,14 @@ GeomYMarginPoint <-
   ggproto("GeomYMarginPoint", Geom,
           required_aes = c("yintercept"),
           non_missing_aes = c("size", "shape", "colour"),
-          default_aes = aes(shape = 99, colour = "black", size = 2.5,
-                            fill = "red", alpha = NA, stroke = 0.5),
+          default_aes = aes(
+            shape = from_theme(pointshape),
+            colour = from_theme(colour %||% ink),
+            fill = from_theme(fill %||% NA),
+            size = from_theme(pointsize),
+            alpha = NA,
+            stroke = from_theme(borderwidth)
+          ),
 
           draw_panel = function(data, panel_params, coord, sides = "l",
                                 point.shift = 0.01, na.rm = FALSE) {

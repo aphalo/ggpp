@@ -6,6 +6,14 @@ editor_options:
     wrap: 72
 ---
 
+# ggpp 0.6.0
+
+This version adds support for new features from 'ggplot2' (>= 4.0.0) and works
+only with these new versions of 'ggplot2'.
+
+- Add support for 'ggplot2' (>= 4.0.0) theme settings in 'ggpp' geoms.
+- Add online-only article demonstrating their use.
+
 # ggpp 0.5.9
 
 - Ensure compatibility with upcoming 'ggplot2' 4.0.0.

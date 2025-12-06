@@ -479,7 +479,7 @@ test_that("colour targets and alpha targets work together in geom_table", {
                                            mapping = aes(x, y, label = tb))
   )
 
-  vdiffr::expect_doppelganger("geom_table_colour_box",
+  vdiffr::expect_doppelganger("geom_table_colour_box2",
                               ggplot(my_data.tb, aes(x, y)) +
                                 geom_point() +
                                 geom_table(data = my.tb,

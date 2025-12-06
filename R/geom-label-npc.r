@@ -56,9 +56,18 @@ GeomLabelNpc <- ggplot2::ggproto("GeomLabelNpc", ggplot2::Geom,
   required_aes = c("npcx", "npcy", "label"),
 
   default_aes = ggplot2::aes(
-    colour = "black", fill = "white", size = 3.88, angle = 0, hjust = "inward",
-    vjust = "inward", alpha = NA, family = "", fontface = 1, lineheight = 1.2,
-    linetype = "solid"
+    colour = from_theme(colour %||% ink),
+    fill = from_theme(fill %||% paper),
+    family = from_theme(family),
+    size = from_theme(fontsize),
+    angle = 0,
+    hjust = "inward",
+    vjust = "inward",
+    alpha = NA,
+    fontface = 1,
+    lineheight = 1.2,
+    linewidth = from_theme(borderwidth * 0.5),
+    linetype  = from_theme(bordertype)
   ),
 
   draw_panel = function(self, data, panel_params, coord, parse = FALSE,
