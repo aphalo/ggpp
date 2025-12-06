@@ -109,14 +109,22 @@ navbar:
       - text: Blog on R by Pedro J. Aphalo
         href: https://www.r4photobiology.info/
       - text: ------
-      - text: Package 'ggpmisc'
-        href: https://docs.r4photobiology.info/ggpmisc/
-      - text: Package 'ggrepel'
+      - text: "'ggrepel' documentation"
         href: https://ggrepel.slowkow.com/
-      - text: Package 'gginnards'
+      - text: "'gginnards' documentation"
         href: https://docs.r4photobiology.info/gginnards/
-      - text: Resources about 'ggplot2'
+      - text: "'ggpmisc' documentation"
+        href: https://docs.r4photobiology.info/ggpmisc/
+      - text: "'ggplot2' documentation"
         href: https://ggplot2.tidyverse.org/
+      - text: "'scales' documentation"
+        href: https://scales.r-lib.org/
+      - text: "'ggplot2' 4.0.0 [new features]"
+        href: https://tidyverse.org/blog/2025/09/ggplot2-4-0-0/
+      - text: "'ggplot2' 4.0.0 styling [with themes]"
+        href: https://tidyverse.org/blog/2025/10/ggplot2-styling/
+      - text: "'scales' 1.4.0 [new features]"
+        href: https://tidyverse.org/blog/2025/04/scales-1-4-0/
       - text: Other 'ggplot2' extensions
         href: https://exts.ggplot2.tidyverse.org/
 
