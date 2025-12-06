@@ -101,6 +101,8 @@ navbar:
         href: articles/grammar-extensions.html
       - text: 'Combining repulsion and nudging'
         href: articles/nudge-examples.html
+      - text: "'ggplot2' >= 4.0.0 and geom defaults"
+        href: articles/styling-with-themes.html
     tutorials:
       text: Resources
       menu:

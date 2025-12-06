@@ -1,5 +1,5 @@
 ---
-title: "Styling Plots"
+title: "Themes and default geom aesthetics"
 subtitle: "Packages 'ggplot2' (>= 4.0.0) and 'ggpp' (>= 0.6.0)"
 author: "Pedro J. Aphalo"
 date: "`r Sys.Date()`"
@@ -7,7 +7,7 @@ output:
   rmarkdown::html_vignette:
     toc: yes
 vignette: >
-  %\VignetteIndexEntry{Styling Plots}
+  %\VignetteIndexEntry{Themes and default geom aesthetics}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -25,16 +25,18 @@ options(warnPartialMatchArgs = FALSE,
         dplyr.summarise.inform = FALSE)
 ```
 
-```{r setup}
+```{r setup, message=FALSE}
 library(ggplot2)
 library(ggpp)
 ```
 
 ## Introduction
 
-Version 4.0.0 of package 'ggplot2' introduced several enhancements to the use of themes. The code in 'ggpp' needs to be update to make these work with the geometries used in the code below.
+Version 4.0.0 of package 'ggplot2' introduced several enhancements to the use of themes. Of these, the addition of several default aesthetics of _geoms_ to the `theme` tree and of `element_geom()` are relevant to 'ggpp'. The code in the geometries defined in 'ggpp' needs to be updated to enable their use.
 
-The aim of this article is to test what already works and what does not yet work. This article was rendered on `r lubridate::today()` with 'ggpp' version `r packageVersion("ggpp")`
+**A simple approach is now implemented, however, it makes 'ggpp' dependent on 'ggplot2' (>= 4.0.0).**
+
+The aim of this article is to test what already works and what does not yet work in the version of 'ggpp' used to render this article. This article was rendered on `r lubridate::today()` with 'ggpp' version `r packageVersion("ggpp")`. 
 
 ## Geometries
 
@@ -78,11 +80,22 @@ p <-
 p + geom_text()
 ```
 
+
 ```{r}
 p + geom_text_s()
 ```
 
 ```{r}
+update_theme(geom.text.s = element_geom(colour = "blue"))
+p + geom_text_s()
+```
+
+```{r}
+p + geom_text_npc(inherit.aes = TRUE)
+```
+
+```{r}
+update_theme(geom.text.npc = element_geom(colour = "blue"))
 p + geom_text_npc(inherit.aes = TRUE)
 ```
 
@@ -95,6 +108,17 @@ p + geom_label_s()
 ```
 
 ```{r}
+update_theme(geom.label.s = element_geom(colour = "blue",
+                                         fill = NA))
+p + geom_label_s()
+```
+
+```{r}
+p + geom_label_npc(inherit.aes = TRUE)
+```
+```{r}
+update_theme(geom.label.npc = element_geom(colour = "blue",
+                                         fill = NA))
 p + geom_label_npc(inherit.aes = TRUE)
 ```
 
@@ -105,12 +129,26 @@ p +
 ```
 
 ```{r}
+update_theme(geom.x.margin.point = element_geom(colour = "red",
+                                                pointshape = 19),
+             geom.y.margin.point = element_geom(colour = "orange",
+                                                pointshape = "triangle"))
 p + 
   geom_x_margin_point(inherit.aes = TRUE) + 
   geom_y_margin_point(inherit.aes = TRUE)
 ```
 
 ```{r}
+p + 
+  geom_x_margin_arrow(inherit.aes = TRUE) + 
+  geom_y_margin_arrow(inherit.aes = TRUE)
+```
+
+```{r}
+update_theme(geom.x.margin.arrow = element_geom(colour = "green",
+                                                pointshape = 19),
+             geom.y.margin.arrow = element_geom(colour = "orange",
+                                                pointshape = "triangle"))
 p + 
   geom_x_margin_arrow(inherit.aes = TRUE) + 
   geom_y_margin_arrow(inherit.aes = TRUE)
