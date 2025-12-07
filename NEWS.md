@@ -8,11 +8,15 @@ editor_options:
 
 # ggpp 0.6.0
 
-This version adds support for new features from 'ggplot2' (>= 4.0.0) and works
-only with these new versions of 'ggplot2'.
+This version adds support for new features from 'ggplot2' (>= 4.0.0) but
+implements a fall back mechanism for compatibility with 'ggplot2' (>= 3.5.0).
 
-- Add support for 'ggplot2' (>= 4.0.0) theme settings in 'ggpp' geoms.
-- Add online-only article demonstrating their use.
+- Add support for 'ggplot2' (>= 4.0.0) theme settings in 'ggpp' geoms. In
+`geom_table()` the default size of text within the table is that in the theme
+multiplied by the new parameter `fontsize.scaling` with a default value that
+ensures a similar size for text to that used in 'ggpp' < 0.6.0.
+- Add on-line-only article demonstrating the use `theme()` to modify geoms'
+default aesthetic mappings.
 
 # ggpp 0.5.9
 

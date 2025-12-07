@@ -11,16 +11,7 @@
 #' \code{\link{geom_table_npc}} is data driven and respects grouping and facets,
 #' thus plot insets can differ among panels.
 #'
-#' @details By default \code{geom_table()} uses
-#'   \code{\link{position_nudge_center}} which is backwards compatible with
-#'   \code{\link[ggplot2]{position_nudge}} but provides additional control on
-#'   the direction of the nudging. In contrast to
-#'   \code{\link[ggplot2]{position_nudge}}, \code{\link{position_nudge_center}}
-#'   and all other position functions defined in packages 'ggpp' and 'ggrepel'
-#'   keep the original coordinates thus allowing the plotting of connecting
-#'   segments and arrows.
-#'
-#'   \code{geom_table} and \code{geom_table_npc} expect a list of data frames
+#' @details \code{geom_table} and \code{geom_table_npc} expect a list of data frames
 #'   (\code{"data.frame"} class or derived) to be mapped to the \code{label}
 #'   aesthetic. These geoms work with tibbles or data frames as \code{data} as
 #'   they both support \code{list} objects as member variables.
@@ -61,13 +52,18 @@
 #'   interpreted as indicating the position of the inset table with respect to
 #'   its \emph{horizontal} and \emph{vertical} axes (rows and columns in the
 #'   data frame), and \code{angle} is used to rotate the inset table as a whole.
+#'   The default for the \code{colour} and \code{fill} aesthetics is to retrieve
+#'   them from the table theme, while \code{family} and \code{size} are
+#'   retrieved from the \code{geom} element of the ggplot theme.
 #'
 #'   Of these two geoms only \code{\link{geom_table}} supports the plotting of
-#'   segments when its position has been modified by a \code{position} function.
-#'   This is because \code{\link{geom_table_npc}} uses a coordinate system that
-#'   is unrelated to data units, scales or data in other plot layers. In the
-#'   case of \code{geom_table_npc}, \code{npcx} and \code{npcy}
-#'   pseudo-aesthetics determine the position of the inset table.
+#'   connecting segments or arrows when its position has been modified by a
+#'   \code{position} function. This is because \code{\link{geom_table_npc}} uses
+#'   a coordinate system that is unrelated to data units, scales or data in
+#'   other plot layers. In the case of \code{geom_table_npc}, \code{npcx} and
+#'   \code{npcy} pseudo-aesthetics determine the position of the inset table. By
+#'   default, \code{hjust} and \code{vjust} are set to \code{"inward"} to avoid
+#'   clipping at the edge of the plot canvas.
 #'
 #' @inheritSection geom_text_s Alignment
 #'
@@ -86,20 +82,8 @@
 #'   \code{\link{ttheme_gtdefault}}, \code{\link{ttheme_set}},
 #'   \code{\link[gridExtra]{tableGrob}}.
 #'
-#' @param mapping The aesthetic mapping, usually constructed with
-#'   \code{\link[ggplot2]{aes}}. Only needs to be set at the layer level if you
-#'   are overriding the plot defaults.
-#' @param data A layer specific data set - only needed if you want to override
-#'   the plot defaults.
-#' @param stat The statistical transformation to use on the data for this layer,
-#'   as a string.
-#' @param na.rm If \code{FALSE} (the default), removes missing values with a
-#'   warning.  If \code{TRUE} silently removes missing values.
-#' @param position Position adjustment, either as a string, or the result of a
-#<'   call to a position adjustment function.
-#' @param ... other arguments passed on to \code{\link[ggplot2]{layer}}. This
-#'   can include aesthetics whose values you want to set, not map. See
-#'   \code{\link[ggplot2]{layer}} for more details.
+#' @inheritParams geom_grob
+#'
 #' @param table.theme NULL, list or function A gridExtra ttheme defintion, or
 #'   a constructor for a ttheme or NULL for default. If \code{nULL} the theme
 #'   is retrieved from R option \code{} at the time the plot is rendered.
@@ -109,16 +93,6 @@
 #'   headings of the table.
 #' @param parse If TRUE, the labels will be parsed into expressions and
 #'   displayed as described in \code{?plotmath}.
-#' @param show.legend logical. Should this layer be included in the legends?
-#'   \code{NA}, the default, includes if any aesthetics are mapped. \code{FALSE}
-#'   never includes, and \code{TRUE} always includes.
-#' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather
-#'   than combining with them. This is most useful for helper functions that
-#'   define both data and aesthetics and shouldn't inherit behaviour from the
-#'   default plot specification, e.g. \code{\link[ggplot2]{borders}}.
-#' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
-#'   starting position of each text label. The units for \code{nudge_x} and
-#'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
 #' @param default.colour,default.color A colour definition to use for elements
 #'   not targeted by the colour aesthetic. If \code{NA} the colours in the table
 #'   theme are not modified.
@@ -132,15 +106,8 @@
 #'   more of \code{"all"}, \code{"table"}, \code{"table.text"},
 #'   \code{"table.rules"} and \code{"table.canvas"}, \code{"segment"} or
 #'   \code{"none"}.
-#' @param add.segments logical Display connecting segments or arrows between
-#'   original positions and displaced ones if both are available.
-#' @param box.padding,point.padding numeric By how much each end of the segments
-#'   should shortened in mm.
-#' @param segment.linewidth numeric Width of the segments or arrows in mm.
-#' @param min.segment.length numeric Segments shorter that the minimum length
-#'   are not rendered, in mm.
-#' @param arrow specification for arrow heads, as created by
-#'   \code{\link[grid]{arrow}}
+#' @param fontsize.scaling A scaling factor to apply to the \emph{size}
+#'   aesthetic retrieved from the theme or mapped, applied to table text.
 #'
 #' @references This geometry is inspired on answers to two questions in
 #'   Stackoverflow. In contrast to these earlier examples, the current geom
@@ -159,10 +126,10 @@
 #'
 #' theme_set(theme_bw())
 #'
-#' mtcars %>%
-#'   group_by(cyl) %>%
-#'   summarize(wt = mean(wt), mpg = mean(mpg)) %>%
-#'   ungroup() %>%
+#' mtcars |>
+#'   group_by(cyl) |>
+#'   summarize(wt = mean(wt), mpg = mean(mpg)) |>
+#'   ungroup() |>
 #'   mutate(wt = sprintf("%.2f", wt),
 #'          mpg = sprintf("%.1f", mpg)) -> tb
 #'
@@ -277,6 +244,7 @@ geom_table <- function(mapping = NULL,
                        color.target = colour.target,
                        default.alpha = 1,
                        alpha.target = "all",
+                       fontsize.scaling = 0.825,
                        add.segments = TRUE,
                        box.padding = 0.25,
                        point.padding = 1e-06,
@@ -337,6 +305,7 @@ geom_table <- function(mapping = NULL,
       colour.target = colour.target,
       default.alpha = default.alpha,
       alpha.target = alpha.target,
+      fontsize.scaling = fontsize.scaling,
       add.segments = add.segments,
       box.padding = box.padding,
       point.padding = point.padding,
@@ -364,12 +333,12 @@ GeomTable <-
                    default_aes = ggplot2::aes(
                      colour = NA,
                      fill = NA,
-                     size = 3.2,
+                     family = from_theme(family),
+                     size = from_theme(fontsize),
                      angle = 0,
                      hjust = "inward",
                      vjust = "inward",
                      alpha = NA,
-                     family = "",
                      fontface = 1,
                      lineheight = 1.2
                    ),
@@ -392,6 +361,7 @@ GeomTable <-
                                 colour.target = "table.text",
                                 default.alpha = NA,
                                 alpha.target = "all",
+                                fontsize.scaling = 0.825,
                                 na.rm = FALSE) {
 
             if (nrow(data) == 0) {
@@ -531,7 +501,7 @@ GeomTable <-
                 if (is.na(text.colour)) {
                   # use theme's default base_colour
                   this.table.theme <-
-                    table.theme(base_size = row$size * .pt,
+                    table.theme(base_size = row$size * fontsize.scaling * .pt,
                                 base_family = row$family,
                                 parse = parse,
                                 text.alpha = text.alpha,
@@ -543,7 +513,7 @@ GeomTable <-
                 } else {
                   # use colour from data$colour
                   this.table.theme <-
-                    table.theme(base_size = row$size * .pt,
+                    table.theme(base_size = row$size * fontsize.scaling * .pt,
                                 base_colour = text.colour,
                                 base_family = row$family,
                                 parse = parse,
@@ -628,6 +598,7 @@ geom_table_npc <- function(mapping = NULL, data = NULL,
                            color.target = colour.target,
                            default.alpha = 1,
                            alpha.target = "all",
+                           fontsize.scaling = 0.825,
                            table.theme = NULL,
                            table.rownames = FALSE,
                            table.colnames = TRUE,
@@ -671,6 +642,7 @@ geom_table_npc <- function(mapping = NULL, data = NULL,
       colour.target = colour.target,
       default.alpha = default.alpha,
       alpha.target = alpha.target,
+      fontsize.scaling = fontsize.scaling,
       table.theme = table.theme,
       table.rownames = table.rownames,
       table.colnames = table.colnames,
@@ -693,12 +665,12 @@ GeomTableNpc <-
           default_aes = ggplot2::aes(
             colour = NA,
             fill = NA,
-            size = 3.2,
+            family = from_theme(family),
+            size = from_theme(fontsize),
             angle = 0,
             hjust = "inward",
             vjust = "inward",
             alpha = 1,
-            family = "",
             fontface = 1,
             lineheight = 1.2
           ),
@@ -716,6 +688,7 @@ GeomTableNpc <-
                      colour.target = "table.text",
                      default.alpha = NA,
                      alpha.target = "all",
+                     fontsize.scaling = 0.825,
                      na.rm = FALSE) {
 
               if (nrow(data) == 0) {
@@ -823,7 +796,7 @@ GeomTableNpc <-
                   if (is.na(text.colour)) {
                     # use theme's default base_colour
                     this.table.theme <-
-                      table.theme(base_size = row$size * .pt,
+                      table.theme(base_size = row$size * fontsize.scaling * .pt,
                                   base_family = row$family,
                                   parse = parse,
                                   text.alpha = text.alpha,
@@ -835,7 +808,7 @@ GeomTableNpc <-
                   } else {
                     # use colour from data$colour
                     this.table.theme <-
-                      table.theme(base_size = row$size * .pt,
+                      table.theme(base_size = row$size * fontsize.scaling * .pt,
                                   base_colour = text.colour,
                                   base_family = row$family,
                                   parse = parse,
@@ -929,10 +902,10 @@ GeomTableNpc <-
 #' library(dplyr)
 #' library(tibble)
 #'
-#' mtcars %>%
-#'   group_by(cyl) %>%
-#'   summarize(wt = mean(wt), mpg = mean(mpg)) %>%
-#'   ungroup() %>%
+#' mtcars |>
+#'   group_by(cyl) |>
+#'   summarize(wt = mean(wt), mpg = mean(mpg)) |>
+#'   ungroup() |>
 #'   mutate(wt = sprintf("%.2f", wt),
 #'          mpg = sprintf("%.1f", mpg)) -> tb
 #'
@@ -1343,10 +1316,10 @@ ttheme_gtstripes <- function(base_size = 10,
 #' library(dplyr)
 #' library(tibble)
 #'
-#' mtcars %>%
-#'   group_by(cyl) %>%
-#'   summarize(wt = mean(wt), mpg = mean(mpg)) %>%
-#'   ungroup() %>%
+#' mtcars |>
+#'   group_by(cyl) |>
+#'   summarize(wt = mean(wt), mpg = mean(mpg)) |>
+#'   ungroup() |>
 #'   mutate(wt = sprintf("%.2f", wt),
 #'          mpg = sprintf("%.1f", mpg)) -> tb
 #'

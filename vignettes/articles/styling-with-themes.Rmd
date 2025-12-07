@@ -32,9 +32,9 @@ library(ggpp)
 
 ## Introduction
 
-Version 4.0.0 of package 'ggplot2' introduced several enhancements to the use of themes. Of these, the addition of several default aesthetics of _geoms_ to the `theme` tree and of `element_geom()` are relevant to 'ggpp'. The code in the geometries defined in 'ggpp' needs to be updated to enable their use.
+Version 4.0.0 of package 'ggplot2' introduced several enhancements to the use of themes. Of these, the addition of several default aesthetics of _geoms_ to the `theme` tree and of `element_geom()` are relevant to 'ggpp'. The code in the geometries defined in 'ggpp' had to be updated to enable their use.
 
-**A simple approach is now implemented, however, it makes 'ggpp' dependent on 'ggplot2' (>= 4.0.0).**
+**The simple approach now implemented, however, it makes 'ggpp' dependent on 'ggplot2' (>= 4.0.0). The fall-back mechanism for 'ggplor2' (< 4.0.0) is not yet tested.**
 
 The aim of this article is to test what already works and what does not yet work in the version of 'ggpp' used to render this article. This article was rendered on `r lubridate::today()` with 'ggpp' version `r packageVersion("ggpp")`. 
 
@@ -159,6 +159,14 @@ p + annotate(geom = "plot", label = p, x = 6, y = 22)
 ```
 
 ```{r}
+p + annotate(geom = "table", 
+             label = data.frame(a = 1:2, b = 3:4), 
+             x = 6, y = 22)
+```
+
+
+```{r}
+update_theme(geom.table = element_geom(fontsize = 15, family = "sans"))
 p + annotate(geom = "table", 
              label = data.frame(a = 1:2, b = 3:4), 
              x = 6, y = 22)

@@ -92,10 +92,10 @@
 #'   define both data and aesthetics and shouldn't inherit behaviour from the
 #'   default plot specification, e.g. \code{\link[ggplot2]{borders}}.
 #' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
-#'   starting position of each text label. The units for \code{nudge_x} and
+#'   starting position of each "label". The units for \code{nudge_x} and
 #'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
-#' @param default.colour,default.color A colour definition to use for elements not targeted by
-#'   the colour aesthetic.
+#' @param default.colour,default.color A colour definition to use for elements
+#'   not targeted by the colour aesthetic.
 #' @param colour.target,color.target A vector of character strings; \code{"all"},
 #'   \code{"text"}, \code{"box"} and \code{"segment"} or \code{"none"}.
 #' @param default.alpha numeric in [0..1] A transparency value to use for

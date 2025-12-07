@@ -35,7 +35,6 @@
 #'
 #' @import scales grid ggplot2
 #' @importFrom ggplot2 ggplot
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #'
 #' @importFrom dplyr mutate

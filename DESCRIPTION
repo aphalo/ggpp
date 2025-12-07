@@ -26,17 +26,16 @@ LazyLoad: TRUE
 ByteCompile: TRUE
 Depends:
     R (>= 4.1.0),
-    ggplot2 (>= 4.0.0)
+    ggplot2 (>= 3.5.0)
 Imports:
     stats,
     grid,
     grDevices,
     rlang (>= 1.0.6),
     vctrs (>= 0.6.0),
-    magrittr (>= 2.0.1),
     glue (>= 1.6.0),
     gridExtra (>= 2.3),
-    scales (>= 1.4.0),
+    scales (>= 1.3.0),
     tibble (>= 3.1.8),
     dplyr (>= 1.1.0),
     xts (>= 0.13.0),
@@ -82,6 +81,7 @@ Collate:
     'geom-text-npc.r'
     'geom-text-pairwise.R'
     'ggpp.R'
+    'onload.R'
     'position-dodge-nudge-to.R'
     'position-dodge-nudge.R'
     'position-dodge2-nudge.R'

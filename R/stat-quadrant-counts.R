@@ -335,11 +335,11 @@ StatQuadrantCounts <-
                                         y = range.y[2])
                      } else {
                        # counts for the selected quadrants
-                       data %>%
-                         dplyr::mutate(quadrant = which_quadrant(.data$x, .data$y)) %>%
-                         dplyr::filter(.data$quadrant %in% quadrants) %>%
-                         dplyr::group_by(.data$quadrant) %>%
-                         dplyr::summarise(count = length(.data$x)) %>% # dplyr::n() triggers error
+                       data |>
+                         dplyr::mutate(quadrant = which_quadrant(.data$x, .data$y)) |>
+                         dplyr::filter(.data$quadrant %in% quadrants) |>
+                         dplyr::group_by(.data$quadrant) |>
+                         dplyr::summarise(count = length(.data$x)) |> # dplyr::n() triggers error
                          dplyr::ungroup() -> data
 
                        data$total <- num.obs
@@ -362,7 +362,7 @@ StatQuadrantCounts <-
                                                 data$count, data$total)
 
                        z <-
-                         data %>%
+                         data |>
                          dplyr::mutate(npcx = ifelse(.data$quadrant %in% c(1L, 2L),
                                                      label.x[2],
                                                      label.x[1]),
