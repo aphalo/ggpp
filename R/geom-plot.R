@@ -111,7 +111,7 @@ geom_plot <- function(mapping = NULL,
                       ...,
                       nudge_x = 0,
                       nudge_y = 0,
-                      default.colour = "black",
+                      default.colour = NULL,
                       default.color = default.colour,
                       colour.target = "box",
                       color.target = colour.target,
@@ -215,6 +215,8 @@ GeomPlot <-
                       " a list of \"gg\" or \"ggplot\" objects.")
               return(grid::nullGrob())
             }
+
+            default.colour <- check_default_colour(default.colour)
 
             add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
 

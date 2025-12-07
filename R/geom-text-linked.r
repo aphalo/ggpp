@@ -323,7 +323,7 @@ geom_text_s <- function(mapping = NULL,
                         parse = FALSE,
                         nudge_x = 0,
                         nudge_y = 0,
-                        default.colour = "black",
+                        default.colour = NULL,
                         default.color = default.colour,
                         colour.target = "text",
                         color.target = colour.target,
@@ -415,7 +415,7 @@ GeomTextS <-
                                          coord, #panel_scales,
                                          parse = FALSE,
                                          size.unit = "mm",
-                                         default.colour = "black",
+                                         default.colour = NULL,
                                          colour.target = "all",
                                          default.alpha = NA,
                                          alpha.target = "all",
@@ -429,6 +429,8 @@ GeomTextS <-
                                          arrow = NULL) {
 
                      add.segments <- add.segments && any(c("x_orig", "y_orig") %in% colnames(data))
+
+                     default.colour <- check_default_colour(default.colour)
 
                      data$label <- as.character(data$label)
                      data <- subset(data, !is.na(label) & label != "")

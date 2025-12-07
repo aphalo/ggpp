@@ -10,11 +10,16 @@ editor_options:
 
 This version adds support for new features from 'ggplot2' (>= 4.0.0) but
 implements a fall back mechanism for compatibility with 'ggplot2' (>= 3.5.0).
+The default value used for the `linewidth` aesthetic of label boxes is
+narrower than in earlier versions of 'ggpp' and matches that currently used in
+'ggplot2'. 
 
 - Add support for 'ggplot2' (>= 4.0.0) theme settings in 'ggpp' geoms. In
 `geom_table()` the default size of text within the table is that in the theme
 multiplied by the new parameter `fontsize.scaling` with a default value that
 ensures a similar size for text to that used in 'ggpp' < 0.6.0.
+- In all geoms having a `default.colour` formal parameter, if its value is 
+`NULL`, the value used is that of `ink` in the "global" `geom` theme.
 - Add on-line-only article demonstrating the use `theme()` to modify geoms'
 default aesthetic mappings.
 

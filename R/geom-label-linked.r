@@ -15,7 +15,7 @@ geom_label_s <-
            parse = FALSE,
            nudge_x = 0,
            nudge_y = 0,
-           default.colour = "black",
+           default.colour = NULL,
            default.color = default.colour,
            colour.target = c("text", "box"),
            color.target = colour.target,
@@ -108,12 +108,14 @@ GeomLabelS <-
                      linetype  = from_theme(bordertype)
                    ),
 
-                   draw_panel = function(data, panel_params, coord, #panel_scales,
+                   draw_panel = function(data,
+                                         panel_params,
+                                         coord, #panel_scales,
                                          parse = FALSE,
                                          na.rm = FALSE,
                                          size.unit = "mm",
                                          add.segments = TRUE,
-                                         default.colour = "black",
+                                         default.colour = NULL,
                                          colour.target = "all",
                                          default.alpha = NA,
                                          alpha.target = "fill",
@@ -125,11 +127,16 @@ GeomLabelS <-
                                          label.padding = unit(0.25, "lines"),
                                          label.r = unit(0.15, "lines")) {
 
-                     add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
+                     add.segments <-
+                       add.segments &&
+                       all(c("x_orig", "y_orig") %in% colnames(data))
+
+                     default.colour <- check_default_colour(default.colour)
 
                      # ensure compatibility with 'ggplot2'
                      if (exists("label.size", data)) {
-                       data$line.width <- data$label.size * .pt / ggplot2::.stroke
+                       data$line.width <-
+                         data$label.size * .pt / ggplot2::.stroke
                        data$label.size <- NULL
                      }
                      data$label <- as.character(data$label)

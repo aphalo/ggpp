@@ -14,7 +14,7 @@ geom_label_pairwise(
   parse = FALSE,
   nudge_x = 0,
   nudge_y = 0,
-  default.colour = "black",
+  default.colour = NULL,
   default.color = default.colour,
   colour.target = "all",
   color.target = colour.target,

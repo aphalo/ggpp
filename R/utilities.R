@@ -1,3 +1,33 @@
+#'  Check default.colour argument
+#'
+#' if possible use ink from theme as default colour
+#'
+#' @param default.colour The value to be checked
+#' @param theme The theme from where to fetch a replacement value when
+#'   \code{default.colour} is \code{NULL}.
+#'
+#' @details The replacement value is fetched from the theme only if
+#'   'ggplot2' >= 4.0.0 and otherwise \code{"black"} is used. \code{NA}
+#'   values are passed through as they can be used to disable rendering
+#'   of grob elements.
+#'
+#' @return A colour definition or NA
+#
+#' @keywords internal
+#'
+check_default_colour <-
+  function(default.colour, theme = ggplot2::get_theme()) {
+    if (is.null(default.colour)) {
+      if (utils::packageVersion("ggplot2") >= "4.0.0") {
+        ggplot2::calc_element("geom", theme)@ink
+      } else {
+        "black"
+      }
+    } else {
+      default.colour[[1L]] # trim vectors or lists
+    }
+  }
+
 # utility functions not exported by 'ggplot2'
 # constant copied from geom-.R
 .pt <- 72.27 / 25.4

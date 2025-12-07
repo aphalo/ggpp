@@ -14,7 +14,7 @@ geom_point_s(
   nudge_y = 0,
   move.point = TRUE,
   arrow = grid::arrow(length = unit(1/3, "lines"), ends = "first"),
-  default.colour = "black",
+  default.colour = NULL,
   default.color = default.colour,
   colour.target = "point",
   color.target = colour.target,

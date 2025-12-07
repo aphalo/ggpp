@@ -13,7 +13,7 @@ geom_plot(
   ...,
   nudge_x = 0,
   nudge_y = 0,
-  default.colour = "black",
+  default.colour = NULL,
   default.color = default.colour,
   colour.target = "box",
   color.target = colour.target,

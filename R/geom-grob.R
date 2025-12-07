@@ -175,7 +175,7 @@ geom_grob <-
            ...,
            nudge_x = 0,
            nudge_y = 0,
-           default.colour = "black",
+           default.colour = NULL,
            default.color = default.colour,
            colour.target = "segment",
            color.target = colour.target,
@@ -244,20 +244,20 @@ GeomGrob <-
                    required_aes = c("x", "y", "label"),
 
                    default_aes = ggplot2::aes(
-                     colour = "black",
+                     colour = from_theme(colour %||% ink),
+                     family = from_theme(family),
+                     fontface = 1,
                      angle = 0,
                      hjust = 0.5,
                      vjust = 0.5,
                      alpha = NA,
-                     family = "",
-                     fontface = 1,
                      vp.width = 1/5, vp.height = 1/5
                    ),
 
                    draw_panel = function(data,
                                          panel_params,
                                          coord,
-                                         default.colour = "black",
+                                         default.colour = NULL,
                                          colour.target = "all",
                                          default.alpha = 1,
                                          alpha.target = "all",
@@ -279,6 +279,8 @@ GeomGrob <-
                      }
 
                      add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
+
+                     default.colour <- check_default_colour(default.colour)
 
                      # should be called only once!
                      data <- coord$transform(data, panel_params)
@@ -409,8 +411,13 @@ GeomGrobNpc <-
                    required_aes = c("npcx", "npcy", "label"),
 
                    default_aes = ggplot2::aes(
-                     colour = "black", angle = 0, hjust = "inward",
-                     vjust = "inward", alpha = NA, family = "", fontface = 1,
+                     colour = from_theme(colour %||% ink),
+                     family = from_theme(family),
+                     fontface = 1,
+                     angle = 0,
+                     hjust = "inward",
+                     vjust = "inward",
+                     alpha = NA,
                      vp.width = 1/5, vp.height = 1/5
                    ),
 

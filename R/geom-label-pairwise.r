@@ -15,7 +15,7 @@ geom_label_pairwise <-
            parse = FALSE,
            nudge_x = 0,
            nudge_y = 0,
-           default.colour = "black",
+           default.colour = NULL,
            default.color = default.colour,
            colour.target = "all",
            color.target = colour.target,
@@ -84,25 +84,26 @@ GeomLabelPairwise <-
 
                    default_aes = ggplot2::aes(
                      x = NA_real_,
-                     colour = "black",
-                     fill = "white",
-                     size = 3.88,
+                     colour = from_theme(colour %||% ink),
+                     fill = from_theme(fill %||% paper),
+                     # fill = rgb(1, 1, 1, alpha = 0.75), # "white", but occluded data are visible
+                     family = from_theme(family),
+                     size = from_theme(fontsize),
                      angle = 0, # currently ignored
-                     linewidth = 0.5, # same as segment.linewidth default
-                     linetype = "solid",
                      hjust = 0.5,
                      vjust = 0.5,
                      alpha = NA,
-                     family = "",
                      fontface = 1,
-                     lineheight = 1.2
+                     lineheight = 1.2,
+                     linewidth = from_theme(borderwidth * 0.5),
+                     linetype  = from_theme(bordertype)
                    ),
 
                    draw_panel = function(data, panel_params, coord, #panel_scales,
                                          parse = FALSE,
                                          na.rm = FALSE,
                                          size.unit = "mm",
-                                         default.colour = "black",
+                                         default.colour = NULL,
                                          colour.target = "all",
                                          default.alpha = NA,
                                          alpha.target = "fill",
@@ -110,6 +111,8 @@ GeomLabelPairwise <-
                                          arrow = NULL,
                                          label.padding = unit(0.25, "lines"),
                                          label.r = unit(0.15, "lines")) {
+
+                     default.colour <- check_default_colour(default.colour)
 
                      data$label <- as.character(data$label)
                      data <- subset(data, !is.na(label) & label != "")

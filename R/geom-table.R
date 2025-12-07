@@ -381,6 +381,8 @@ GeomTable <-
                           default = ggpp::ttheme_gtdefault)
             }
 
+            default.colour <- check_default_colour(default.colour)
+
             add.segments <-
               add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
 
@@ -707,6 +709,8 @@ GeomTableNpc <-
                   getOption("ggpmisc.ttheme.default",
                             default = ggpp::ttheme_gtdefault)
               }
+
+              default.colour <- check_default_colour(default.colour)
 
               data$npcx <- compute_npcx(data$npcx)
               data$npcy <- compute_npcy(data$npcy)

@@ -137,7 +137,7 @@ geom_point_s <- function(mapping = NULL, data = NULL,
                          move.point = TRUE,
                          arrow = grid::arrow(length = unit(1/3, "lines"),
                                              ends = "first"),
-                         default.colour = "black",
+                         default.colour = NULL,
                          default.color = default.colour,
                          colour.target = "point",
                          color.target = colour.target,
@@ -220,7 +220,7 @@ GeomPointS <-
                                          panel_params,
                                          coord,
                                          move.point = TRUE,
-                                         default.colour = "black",
+                                         default.colour = NULL,
                                          colour.target = "point",
                                          default.alpha = NA,
                                          alpha.target = "segment",
@@ -239,6 +239,8 @@ GeomPointS <-
                      if (nrow(data) == 0L) {
                        return(nullGrob())
                      }
+
+                     default.colour <- check_default_colour(default.colour)
 
                      add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
 
