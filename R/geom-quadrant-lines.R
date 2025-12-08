@@ -119,8 +119,8 @@ geom_quadrant_lines <- function(mapping = NULL,
     mapping <- ggplot2::aes(xintercept = xintercept,
                             yintercept = yintercept)
     show.legend <- FALSE
-  } else if (xor(missing(xintercept), missing(yintercept))) {
-    stop("Missing 'xintercept' and 'yintercept'")
+  } else if (missing(xintercept) || missing(yintercept)) {
+    stop("Missing 'xintercept' and/or 'yintercept'")
   }
 
   ggplot2::layer(
