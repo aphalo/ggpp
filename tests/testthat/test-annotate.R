@@ -19,6 +19,8 @@ test_that("dates in segment annotation work", {
   expect_true(all(c("xend", "yend") %in% names(layer_data(p, 2))))
 })
 
+
+
 test_that("segment annotations transform with scales", {
   # Line should match data points
   df <- tibble::tibble(x = c(1, 10), y = c(10, 1))

@@ -14,22 +14,26 @@ test_that("stat_apply_group", {
     geom_point() +
     stat_apply_group(geom = "rug", .fun.y = quantile, .fun.x = quantile)
   result <- ggplot2::layer_data(result,2)
-  result <- result[result$group == 1,]$x %>% as.data.frame()
-  expected <- quantile(my.df[my.df$category == "A",]$X)[1:5] %>%
+  result <- result[result$group == 1,]$x |> as.data.frame()
+  expected <- quantile(my.df[my.df$category == "A",]$X)[1:5] |>
     as.data.frame()
   rownames(result) <- NULL
   rownames(expected) <- NULL
+  colnames(result) <- NULL
+  colnames(expected) <- NULL
   expect_identical(result, expected)
 
   result <- ggplot(my.df, aes(x = X, y = Y, colour = category)) +
     geom_point() +
     stat_apply_group(geom = "rug", .fun.y = quantile, .fun.x = quantile)
   result <- ggplot2::layer_data(result,2)
-  result <- result[result$group == 1,]$y %>% as.data.frame()
-  expected <- quantile(my.df[my.df$category == "A",]$Y)[1:5] %>%
+  result <- result[result$group == 1,]$y |> as.data.frame()
+  expected <- quantile(my.df[my.df$category == "A",]$Y)[1:5] |>
     as.data.frame()
   rownames(result) <- NULL
   rownames(expected) <- NULL
+  colnames(result) <- NULL
+  colnames(expected) <- NULL
   expect_identical(result, expected)
 
   expect_silent(result <- ggplot(my.df, aes(x = X, y = Y)) +
@@ -51,11 +55,13 @@ test_that("stat_apply_group", {
                      .fun.y = quantile,
                      .fun.y.args = list(probs = my.probs))
   result <- ggplot2::layer_data(result,2)
-  result <- result[result$group == 1,]$y %>% as.data.frame()
-  expected <- quantile(my.df[my.df$category == "A",]$Y, probs = my.probs) %>%
+  result <- result[result$group == 1,]$y |> as.data.frame()
+  expected <- quantile(my.df[my.df$category == "A",]$Y, probs = my.probs) |>
     as.data.frame()
   rownames(result) <- NULL
   rownames(expected) <- NULL
+  colnames(result) <- NULL
+  colnames(expected) <- NULL
   expect_identical(result, expected)
 
   # cummulative summaries
@@ -70,7 +76,7 @@ test_that("stat_apply_group", {
   result <- ggplot(my.df, aes(x = X, y = Y, colour = category)) +
     stat_apply_group(.fun.x = cumsum, .fun.y = cumsum)
   result <- ggplot2::layer_data(result)
-  result <- result[result$group == 1,]$x %>% as.numeric()
-  expected <- cumsum(my.df[my.df$category == "A",]$X) %>% as.numeric()
+  result <- result[result$group == 1,]$x |> as.numeric()
+  expected <- cumsum(my.df[my.df$category == "A",]$X) |> as.numeric()
   expect_identical(result, expected)
 })

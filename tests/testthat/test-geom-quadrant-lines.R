@@ -7,6 +7,31 @@ library(ggplot2)
     group = c("A", "A", "A", "B", "B", "B")
   )
 
+test_that("geom_quadrant_lines errors on missing intercept", {
+  expect_error(
+    ggplot(tst.df, aes(x = x, y = y)) +
+      geom_point() +
+      geom_quadrant_lines(xintercept = NULL)
+  )
+
+  expect_error(
+    ggplot(tst.df, aes(x = x, y = y)) +
+      geom_point() +
+      geom_quadrant_lines(yintercept = NULL)
+  )
+
+  # errors in 'ggplot2' code!
+  # expect_error(
+  #   ggplot(tst.df, aes(x = x, y = y)) +
+  #     geom_point() +
+  #     geom_quadrant_lines(xintercept = NULL,
+  #                         yintercept = NULL)
+  # )
+
+})
+
+# tests with intercept coords mapped with aes() are missing!!
+
 test_that("geom_quadrant_lines works as expected with default values", {
   res <- ggplot(tst.df, aes(x = x, y = y)) +
     geom_point() +
@@ -91,6 +116,19 @@ test_that("geom_vhlines returns an error if neither x nor y intercept is provide
         geom_vhlines()
     )
   )
+
+  expect_error(
+    ggplot(tst.df, aes(x = x, y = y)) +
+      geom_point() +
+      geom_vhlines(xintercept = 0)
+  )
+
+  expect_error(
+    ggplot(tst.df, aes(x = x, y = y)) +
+      geom_point() +
+      geom_vhlines(yintercept = 0)
+  )
+
 })
 
 test_that("geom_vhlines works as expected with multiple intercepts", {

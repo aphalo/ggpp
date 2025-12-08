@@ -19,6 +19,13 @@ test_that("geom_point_s pos_or_nudge", {
                    nudge_x = 0.5),
     "You must specify either `position` or `nudge_x`/`nudge_y`."
   )
+
+  expect_silent(
+    ggplot(mpg[1:20, ],
+           aes(cyl, hwy, label = drv)) +
+      geom_point_s(nudge_x = 0.2, nudge_y = -0.2)
+    )
+
 })
 
 test_that("translate_shape_string maps correctly", {
