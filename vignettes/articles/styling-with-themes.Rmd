@@ -1,18 +1,11 @@
 ---
-title: "Default geom aesthetics"
-subtitle: "Packages 'ggplot2' (>= 4.0.0) and 'ggpp' (>= 0.6.0)"
+title: "Geom aesthetics: defaults and targetting"
+subtitle: "Using packages 'ggplot2' (>= 4.0.0) and 'ggpp' (>= 0.6.0)"
 author: "Pedro J. Aphalo"
 date: "`r Sys.Date()`"
-output: 
+output:
   rmarkdown::html_vignette:
     toc: yes
-vignette: >
-  %\VignetteIndexEntry{Default geom aesthetics}
-  %\VignetteEncoding{UTF-8}
-  %\VignetteEngine{knitr::rmarkdown}
-editor_options: 
-  markdown: 
-    wrap: 72
 ---
 
 ```{r, include=FALSE, echo=FALSE}
@@ -32,28 +25,51 @@ library(ggpp)
 
 ## The `geom` element of 'ggplot2' themes
 
-Version 4.0.0 of package 'ggplot2' introduced several enhancements to the use of themes. Of these, the addition of several default aesthetics of _geoms_ to the `theme` tree and of `element_geom()` are relevant to 'ggpp'. The code in the geometries defined in 'ggpp' had to be updated to enable support for themes. Examples of their use are given in this section.
+Version 4.0.0 of package 'ggplot2' introduced several enhancements to the use of themes. Of these, the addition of several default aesthetics of _geoms_ to the `theme` tree and of `element_geom()` are relevant to 'ggpp'. The code in the geometries defined in 'ggpp' had to be updated to enable support for themes when used together with 'ggplot2' (>= 4.0.0). Examples of their use are given in this section.
 
 **To avoid a hard dependency on 'ggplot2' (>= 4.0.0) a fall-back was implemented. The fall back simply provides the same defaults as the default theme from 'ggplot2' (< 4.0.0). However, this fall-back mechanism is not yet tested with 'ggplot2' (< 4.0.0).**
 
-One aim of this article is to test what already works and what does not yet work in the version of 'ggpp' used to render this article. This article was rendered on `r lubridate::today()` with 'ggpp' version `r packageVersion("ggpp")`. 
+One aim of this article is to test what already works and what does not yet work in the version of 'ggpp' used to render this article. This article was rendered on `r lubridate::today()` with 'ggpp' version `r packageVersion("ggpp")` and 'ggplot2' version `r packageVersion("ggplot2")`.
 
-'ggplot2' (>= 4.0.0) introduced the `geom` slot in themes. This can be modified as other slots, but by calling `element_geom()` instead of `element_text()`, `element_rect()`, etc.
+In 'ggplot2' (>= 4.0.0) it is possible to change the defaults used by geoms in coordination with the styling of the plot as a whole.
+
+We will use `p` as a base plot for testing the different geometries. Because of this, we add mappings to the aesthetics required by all the different geometries that we will test.
+
+```{r}
+p0 <-
+  ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point()
+```
+
+Using the default theme.
+
+```{r}
+p0
+```
+
+In a call to `theme()` it is now easy to modify the default for `colour` and other aesthetics when used as part of the overall graphic design. Taking into account that using `set_theme()` to set a theme as default we can set the style of all subsequent plots, this new feature is very convenient.
+
+```{r}
+p0 + theme(geom = element_geom(ink = "blue", paper = "wheat"))
+```
+
+The `geom` slot of themes was introduced in 'ggplot2' (== 4.0.0). As seen above, the entry for `geom` can be modified as other slots by calling `element_geom()` instead of `element_text()`, `element_rect()`, etc. 
 
 The defaults from 'ggplot2' version `r packageVersion("ggplot2")` are:
 
 ```{r}
-calc_element("geom", complete_theme())
+calc_element("geom", get_theme())
 ```
+We can see that the defaults for colour and fill are set to `NULL`. Unless set explicitly, `colour` takes its default value value from `ink`. While we have only one aesthetic called `linetype` used for both lines and column and label borders, for the plot as a whole, they can be set differently.
 
-To test if the geometries from 'ggpp' obey defaults set through these theme settings, we modify them in `theme_minimal()` and set this as the default theme.
+To test if the geometries from 'ggpp' obey defaults set through these theme settings, we modify them in `theme_minimal()` and set this as the default theme. Using very unsightly but contrasting colour we can check more easily if the geometries obey the theme settings.
 
 ```{r}
 set_theme(theme_minimal() +
             theme(
               geom = element_geom(
                 ink = "darkgreen",
-                paper = "yellow",
+                paper = "wheat",
                 accent = "darkred",
                 family = "serif",
                 linewidth = 0.3,
@@ -67,10 +83,24 @@ set_theme(theme_minimal() +
 )
 ```
 
+We can use the same code as above to retrieve the currently active theme. As expected, it reflects the changes we introduuced above.
+
+```{r}
+calc_element("geom", get_theme())
+```
+
+```{r}
+p0
+```
+
 It is also possible to modify them for a specific geom, here, `geom_point()`.
 
 ```{r}
 update_theme(geom.point = element_geom(colour = "blue"))
+```
+
+```{r}
+p0
 ```
 
 We will use `p` as a base plot for testing the different geometries. Because of this, we add mappings to the aesthetics required by all the different geometries that we will test.
@@ -94,9 +124,10 @@ p <-
 p
 ```
 
+
 ### Variations on `geom_text()`
 
-The expectation is that the text in all these plots look consitent with eaither green or blue text depending on the specific settings. The positions relative to the points is epected to differ when using roughly calcualted NPC.
+The expectation is that the text in all these plots look consistent with either green or blue text depending on the specific settings. The positions relative to the points is expected to differ when using roughly calculated NPC.
 
 ```{r}
 p + geom_text()
@@ -129,7 +160,7 @@ p + geom_text_npc(inherit.aes = TRUE)
 
 ### Variations on `geom_label()`
 
-The expectation is that the labels in all these plots look consitent with eaither green or blue text on a yellow or transparent background depending on the specific settings. The positions relative to the points is expected to differ when using roughly calcualted NPC.
+The expectation is that the labels in all these plots look consistent with either green or blue text on a yellow or transparent background depending on the specific settings. The positions relative to the points is expected to differ when using roughly calculated NPC.
 
 ```{r}
 p + geom_label()
@@ -217,7 +248,7 @@ p + annotate(geom = "table",
              x = 6, y = 22)
 ```
 
-Currently, `fontsize` and `family` set in the plot theme (`theme`) override those in the table theme (`ttheme`) as defaults. The default colour and fill for the table are always from the table theme. All these defaults, as expected, can be overriden by mapping a variable or a constant to the respective aesthetics.
+Currently, `fontsize` and `family` set in the plot theme (`theme`) override those in the table theme (`ttheme`) as defaults. The default colour and fill for the table are always from the table theme. All these defaults, as expected, can be overridden by mapping a variable or a constant to the respective aesthetics.
 
 ```{r}
 update_theme(geom.table = element_geom(fontsize = 15, family = "sans"))
@@ -232,7 +263,7 @@ Some geometries create simple graphical elements on the layer, and, thus, there 
 
 In this case two contrasting approaches are possible: 1) defining multiple aesthetics so that the same conceptual aesthetic (e.g., `colour`) can be independently mapped to different variables to different components of the graphical object, or 2) adding a parameter to the geometry constructor that indicates to which graphical element the aesthetic should apply.
 
-I consider that the targetting of the aesthetic mapping to different elements of a graphical object is related to _graphical design_ and not part of the data representation. Thus 'ggpp' follows the second approach. The idea is that a single colour mapping assings a meaning to the diferent colours in single colour scale, and that this meaning should be unique.
+I consider that the targeting of the aesthetic mapping to different elements of a graphical object is related to _graphical design_ and not part of the data representation. Thus 'ggpp' follows the second approach. The idea is that a single colour mapping assigns a meaning to the different colours in single colour scale, and that this meaning should be unique.
 
 The user interface used in 'ggpp' differs from that used in 'ggplot2' (>= 4.0.0) for `geom_label()`. It was introduced in 'ggpp' several years earlier and in the more complex geometries from 'ggpp' it remains preferable. Conceptually, the approaches are equivalent.
 
@@ -241,40 +272,54 @@ So, how does this work?
 ### `geom_label()` comapred to `geom_label_s()` 
 
 ```{r}
+opts_chunk$set(fig.align = 'center', 
+               fig.show = 'hold', fig.width = 7, fig.height = 7)
+```
+
+```{r}
 set_theme(theme_minimal())
 library(patchwork)
 ```
 
 ```{r}
-(p + geom_label(colour = "red")) / 
-  (p + geom_label_s(colour = "red"))
+(p + geom_label(colour = "red") + labs(title = "geom_label()")) / 
+  (p + geom_label_s(colour = "red") + labs(title = "geom_label_s()"))
 ```
 
 ```{r}
-(p + geom_label(colour = "red", border.colour = "black")) / 
+(p + geom_label(colour = "red", border.colour = "black")
+ + labs(title = "geom_label()")) / 
   (p + geom_label_s(colour = "red", colour.target = "text"))
 ```
 
 ```{r}
-(p + geom_label(colour = "red", border.colour = "green")) / 
+(p + geom_label(colour = "red", border.colour = "green")
+ + labs(title = "geom_label()")) / 
   (p + geom_label_s(colour = "red", default.colour = "green", 
                     colour.target = "text"))
 ```
 
 ```{r}
 update_theme(geom = element_geom(colour = "red"))
-(p + geom_label()) / 
+(p + geom_label() + labs(title = "geom_label()")) / 
   (p + geom_label_s())
 ```
 
 ```{r}
 update_theme(geom = element_geom(colour = "black", borderwidth = 3))
-(p + geom_label()) / (p + geom_label_s())
+(p + geom_label() + labs(title = "geom_label()")) /
+  (p + geom_label_s())
 ```
 
 ```{r}
 update_theme(geom = element_geom(colour = "black", borderwidth = 3))
-(p + geom_label(linewidth = 0)) / (p + geom_label_s(linewidth = 0))
+(p + geom_label(linewidth = 0) + labs(title = "geom_label()")) /
+  (p + geom_label_s(linewidth = 0))
+```
+
+```{r}
+opts_chunk$set(fig.align = 'center', 
+               fig.show = 'hold', fig.width = 7, fig.height = 4)
 ```
 
 ```{r}
