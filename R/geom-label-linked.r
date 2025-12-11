@@ -297,21 +297,27 @@ labelGrob <- function(label, x = grid::unit(0.5, "npc"), y = grid::unit(0.5, "np
   descent <- font_descent(
     text.gp$fontfamily, text.gp$fontface, text.gp$fontsize, text.gp$cex
   )
+  # To balance labels, we ensure the top includes at least the descent height
+  # and subtract the descent height from the bottom padding
+  padding[1] <- grid::unit.pmax(padding[1], descent)
+  padding[3] <- grid::unit.pmax(padding[3] - descent, unit(0, "pt"))
+
   hjust <- grid::resolveHJust(just, NULL)
   vjust <- grid::resolveVJust(just, NULL)
 
   text <- titleGrob(
-    label = label, hjust = hjust, vjust = vjust, x = x, y = y,
-    margin = padding,
-    margin_x = TRUE, margin_y = TRUE,
+    label = label, hjust = hjust, vjust = vjust, x = x,
+    y = y + (1 - vjust) * descent,
+    margin = padding, margin_x = TRUE, margin_y = TRUE,
     gp = text.gp
   )
 
+  height <- grid::heightDetails(text)
   box <- grid::roundrectGrob(
-    x = x, y = y - (1 - vjust) * descent,
+    x = x, y = y + (0.5 - vjust) * height,
     width  = grid::widthDetails(text),
-    height = grid::heightDetails(text),
-    just   = c(hjust, vjust),
+    height = height,
+    just   = c(hjust, 0.5),
     r = r, gp = rect.gp, name = "box"
   )
 

@@ -115,3 +115,39 @@ replace_null <- function(obj, ..., env = rlang::caller_env()) {
   obj[nms] <- rlang::inject(list(!!!dots[nms]), env = env)
   obj
 }
+
+# From 'ggplot2' 4.0.0
+descent_cache <- new.env(parent = emptyenv())
+# Important: This function is not vectorized. Do not use to look up multiple
+# font descents at once.
+font_descent <- function(family = "", face = "plain", size = 12, cex = 1) {
+  cur_dev <- names(grDevices::dev.cur())
+  if (cur_dev == "null device") {
+    cache <- FALSE   # don't cache if no device open
+  } else {
+    cache <- TRUE
+  }
+  key <- paste0(cur_dev, ':', family, ':', face, ":", size, ":", cex)
+  # we only look up the first result; this function is not vectorized
+  key <- key[1]
+
+  descent <- descent_cache[[key]]
+
+  if (is.null(descent)) {
+    descent <- convertHeight(grobDescent(textGrob(
+      label = "gjpqyQ",
+      gp = gg_par(
+        fontsize = size,
+        cex = cex,
+        fontfamily = family,
+        fontface = face
+      )
+    )), 'inches')
+
+    if (cache) {
+      descent_cache[[key]] <- descent
+    }
+  }
+
+  descent
+}
