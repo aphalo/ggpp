@@ -134,7 +134,7 @@ font_descent <- function(family = "", face = "plain", size = 12, cex = 1) {
   descent <- descent_cache[[key]]
 
   if (is.null(descent)) {
-    descent <- convertHeight(grobDescent(textGrob(
+    descent <- grid::convertHeight(grid::grobDescent(textGrob(
       label = "gjpqyQ",
       gp = gg_par(
         fontsize = size,

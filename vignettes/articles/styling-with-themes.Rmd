@@ -3,9 +3,13 @@ title: "Geom aesthetics: defaults and targetting"
 subtitle: "Using packages 'ggplot2' (>= 4.0.0) and 'ggpp' (>= 0.6.0)"
 author: "Pedro J. Aphalo"
 date: "`r Sys.Date()`"
-output:
+output: 
   rmarkdown::html_vignette:
     toc: yes
+vignette: >
+  %\VignetteIndexEntry{Geom aesthetics: defaults and targetting}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r, include=FALSE, echo=FALSE}

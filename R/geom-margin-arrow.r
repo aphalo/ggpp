@@ -96,9 +96,9 @@ GeomXMarginArrow <-
                    required_aes = c("xintercept"),
                    non_missing_aes = c("linewidth", "shape", "colour"),
                    default_aes = ggplot2::aes(
-                     colour = from_theme(colour %||% ink),
-                     fill = from_theme(fill %||% paper),
-                     linewidth = from_theme(linewidth),
+                     colour = "black",
+                     fill = "red",
+                     linewidth = 1,
                      alpha = NA
                    ),
 
@@ -217,9 +217,9 @@ GeomYMarginArrow <-
           required_aes = c("yintercept"),
           non_missing_aes = c("linewidth", "shape", "colour"),
           default_aes = ggplot2::aes(
-            colour = from_theme(colour %||% ink),
-            fill = from_theme(fill %||% paper),
-            linewidth = from_theme(linewidth),
+            colour = "black",
+            fill = "red",
+            linewidth = 1,
             alpha = NA
           ),
 

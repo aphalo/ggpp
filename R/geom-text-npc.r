@@ -145,9 +145,9 @@ GeomTextNpc <- ggplot2::ggproto("GeomTextNpc", ggplot2::Geom,
   required_aes = c("npcx", "npcy", "label"),
 
   default_aes = ggplot2::aes(
-    colour = from_theme(colour %||% ink),
-    family = from_theme(family),
-    size = from_theme(fontsize),
+    colour = "black",
+    family = "",
+    size = 3.87,
     angle = 0,
     hjust = "inward",
     vjust = "inward",

@@ -84,19 +84,18 @@ GeomLabelPairwise <-
 
                    default_aes = ggplot2::aes(
                      x = NA_real_,
-                     colour = from_theme(colour %||% ink),
-                     fill = from_theme(fill %||% paper),
-                     # fill = rgb(1, 1, 1, alpha = 0.75), # "white", but occluded data are visible
-                     family = from_theme(family),
-                     size = from_theme(fontsize),
-                     angle = 0, # currently ignored
+                     colour = "black",
+                     fill = rgb(1, 1, 1, alpha = 0.75), # "white", but occluded data are visible
+                     family = "",
+                     size = 3.87,
+                     angle = 0,
                      hjust = 0.5,
                      vjust = 0.5,
                      alpha = NA,
                      fontface = 1,
                      lineheight = 1.2,
-                     linewidth = from_theme(borderwidth * 0.5),
-                     linetype  = from_theme(bordertype)
+                     linewidth = 0.5,
+                     linetype  = "solid"
                    ),
 
                    draw_panel = function(data, panel_params, coord, #panel_scales,

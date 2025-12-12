@@ -180,8 +180,8 @@ GeomPlot <-
           required_aes = c("x", "y", "label"),
 
           default_aes = ggplot2::aes(
-            colour = from_theme(colour %||% ink),
-            family = from_theme(family),
+            colour = "black",
+            family = "",
             angle = 0,
             hjust = "inward",
             vjust = "inward",
@@ -347,8 +347,13 @@ GeomPlotNpc <-
           required_aes = c("npcx", "npcy", "label"),
 
           default_aes = ggplot2::aes(
-            colour = "black", angle = 0, hjust = "inward",
-            vjust = "inward", alpha = NA, family = "", fontface = 1,
+            colour = "black",
+            angle = 0,
+            hjust = "inward",
+            vjust = "inward",
+            alpha = NA,
+            family = "",
+            fontface = 1,
             vp.width = 0.4, vp.height = 0.4
           ),
 

@@ -333,8 +333,8 @@ GeomTable <-
                    default_aes = ggplot2::aes(
                      colour = NA,
                      fill = NA,
-                     family = from_theme(family),
-                     size = from_theme(fontsize),
+                     family = "",
+                     size = 3.2,
                      angle = 0,
                      hjust = "inward",
                      vjust = "inward",
@@ -667,12 +667,12 @@ GeomTableNpc <-
           default_aes = ggplot2::aes(
             colour = NA,
             fill = NA,
-            family = from_theme(family),
-            size = from_theme(fontsize),
+            size = 3.2,
             angle = 0,
             hjust = "inward",
             vjust = "inward",
-            alpha = 1,
+            alpha = NA,
+            family = "",
             fontface = 1,
             lineheight = 1.2
           ),

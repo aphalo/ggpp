@@ -93,19 +93,18 @@ GeomLabelS <-
                    non_missing_aes = "angle",
 
                    default_aes = ggplot2::aes(
-                     colour = from_theme(colour %||% ink),
-                     fill = from_theme(fill %||% paper),
-                     # fill = rgb(1, 1, 1, alpha = 0.75), # "white", but occluded data are visible
-                     family = from_theme(family),
-                     size = from_theme(fontsize),
+                     colour = "black",
+                     fill = rgb(1, 1, 1, alpha = 0.75), # "white", but occluded data are visible
+                     family = "",
+                     size = 3.87,
                      angle = 0,
                      hjust = "position",
                      vjust = "position",
                      alpha = NA,
                      fontface = 1,
                      lineheight = 1.2,
-                     linewidth = from_theme(borderwidth * 0.5),
-                     linetype  = from_theme(bordertype)
+                     linewidth = 0.5,
+                     linetype  = "solid"
                    ),
 
                    draw_panel = function(data,

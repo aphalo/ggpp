@@ -189,12 +189,11 @@ GeomQuadrantLines <-
 
     },
 
-    default_aes = ggplot2::aes(
-      colour = from_theme(colour %||% ink),
-      linewidth = from_theme(linewidth),
-      linetype = from_theme(linetype),
-      alpha = NA
-    ),
+    default_aes =
+      ggplot2::aes(colour = "black",
+                   linewidth = 0.5,
+                   linetype = "dashed",
+                   alpha = NA),
     required_aes = c("xintercept", "yintercept"),
     non_missing_aes = c("size", "linetype", "colour"),
 
@@ -270,9 +269,9 @@ GeomVHLines <-
     },
 
     default_aes = ggplot2::aes(
-      colour = from_theme(colour %||% ink),
-      linewidth = from_theme(linewidth),
-      linetype = from_theme(linetype),
+      colour = "black",
+      linewidth = 0.5,
+      linetype = 1,
       alpha = NA
     ),
     required_aes = c("xintercept", "yintercept"),

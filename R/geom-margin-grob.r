@@ -98,8 +98,8 @@ GeomXMarginGrob <-
   ggproto("GeomXMarginGrob", Geom,
           required_aes = c("xintercept"),
           default_aes = ggplot2::aes(
-            colour = from_theme(colour %||% ink),
-            family = from_theme(family),
+            colour = "black",
+            family = "",
             fontface = 1,
             angle = 0,
             hjust = 0.5,
@@ -258,8 +258,8 @@ GeomYMarginGrob <-
   ggproto("GeomYMarginGrob", Geom,
           required_aes = c("yintercept"),
           default_aes = ggplot2::aes(
-            colour = from_theme(colour %||% ink),
-            family = from_theme(family),
+            colour = "black",
+            family = "",
             fontface = 1,
             angle = 0,
             hjust = 0.5,

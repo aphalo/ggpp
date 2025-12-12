@@ -9,9 +9,9 @@ editor_options:
 # ggpp 0.6.0
 
 This version adds support for new features from 'ggplot2' (>= 4.0.0) but
-implements a fall back mechanism for compatibility with 'ggplot2' (>= 3.5.0).
-The default value used for the `linewidth` aesthetic of label boxes is
-narrower than in earlier versions of 'ggpp' and matches that currently used in
+remains compatibel with 'ggplot2' (>= 3.4.0).
+The default value used for the `linewidth` aesthetic of label boxes is narrower
+than in earlier versions of 'ggpp' and matches that currently used in
 'ggplot2'. 
 
 - Add support for 'ggplot2' (>= 4.0.0) theme settings in 'ggpp' geoms. In

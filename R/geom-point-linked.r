@@ -208,12 +208,12 @@ GeomPointS <-
                    required_aes = c("x", "y"),
                    non_missing_aes = c("size", "shape", "colour"),
                    default_aes = ggplot2::aes(
-                     shape = from_theme(pointshape),
-                     colour = from_theme(colour %||% ink),
-                     fill = from_theme(fill %||% NA),
-                     size = from_theme(pointsize),
+                     shape = 19,
+                     colour = "black",
+                     size = 1.5,
+                     fill = NA,
                      alpha = NA,
-                     stroke = from_theme(borderwidth)
+                     stroke = 0.5
                    ),
 
                    draw_panel = function(data,
