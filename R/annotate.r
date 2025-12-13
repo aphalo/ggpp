@@ -71,9 +71,11 @@ annotate <-
             npcx = NULL, npcy = NULL, label = NULL, ...,
             na.rm = FALSE)
   {
+    # convert to lists for 'ggpp' geoms
     if (inherits(label, what = c("data.frame", "gg", "grob"))) {
       label <- list(label)
     }
+
     position <- compact(list(x = x,
                              xmin = xmin,
                              xmax = xmax,
@@ -82,25 +84,37 @@ annotate <-
                              ymin = ymin,
                              ymax = ymax,
                              yend = yend,
-                             npcx = npcx,
-                             npcy = npcy,
+                             npcx = npcx, # for 'ggpp' geoms
+                             npcy = npcy, # for 'ggpp' geoms
                              label = label))
+
     aesthetics <- c(position, list(...))
-    lengths <- vapply(aesthetics, length, integer(1))
+
+    # Check that all aesthetic have compatible lengths
+    lengths <- lengths(aesthetics)
     n <- unique(lengths)
+
+    # if there is more than one unique length, ignore constants
     if (length(n) > 1L) {
       n <- setdiff(n, 1L)
     }
+
+    # if there is still more than one unique length, we error out
     if (length(n) > 1L) {
       bad <- lengths != 1L
       details <- paste(names(aesthetics)[bad], " (", lengths[bad],
                        ")", sep = "", collapse = ", ")
       rlang::abort(glue::glue("Unequal parameter lengths: {details}"))
     }
+
     data <- new_data_frame(position, n = n)
-    ggplot2::layer(geom = geom, params = list(na.rm = na.rm, ...),
+
+    ggplot2::layer(geom = geom,
+                   params = list(na.rm = na.rm, ...),
                    stat = StatIdentity,
-                   position = PositionIdentity, data = data,
+                   position = PositionIdentity,
+                   data = data,
                    mapping = aes_all(names(data)),
-                   inherit.aes = FALSE, show.legend = FALSE)
+                   inherit.aes = FALSE,
+                   show.legend = FALSE)
   }
