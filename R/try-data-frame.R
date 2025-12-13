@@ -69,10 +69,9 @@ try_data_frame <- function(x,
     data.xts <- xts::as.xts(x)
   }
   times.raw <- zoo::index(data.xts) # because TZ = "UTC"
+  # index is never numeric in an xts object
   if (as.numeric) {
-    if (is.numeric(times.raw)) {
-      times <- times.raw
-    } else if (inherits(times.raw, "yearmon")) {
+    if (inherits(times.raw, "yearmon")) {
       times <- as.numeric(times.raw)
     } else if (inherits(times.raw, "yearqtr")) {
       times <- zoo::as.Date(times.raw)
@@ -88,9 +87,6 @@ try_data_frame <- function(x,
       times <- as.POSIXct(format(times.raw, "%Y-%m-01"),  tz = "UTC", format = "%Y-%m-%d")
     } else if (inherits(times.raw, "yearqtr")) {
       times <- zoo::as.Date(times.raw)
-    } else if (is.numeric(times.raw)) {
-      times <- lubridate::date_decimal(times.raw, "UTC") # handles conversion from classes in xts and zoo
-      times <- lubridate::round_date(times, unit = time.resolution)
     } else {
       stop("class '", class(times.raw), "' used as index is not supported")
     }

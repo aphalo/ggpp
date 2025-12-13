@@ -93,10 +93,14 @@ geom_x_margin_arrow <- function(mapping = NULL, data = NULL,
 #' @export
 GeomXMarginArrow <-
   ggplot2::ggproto("GeomXMarginArrow", ggplot2::Geom,
-          required_aes = c("xintercept"),
-          non_missing_aes = c("size", "shape", "colour"),
-          default_aes = ggplot2::aes(colour = "red", size = 1,
-                                     fill = "red", alpha = NA),
+                   required_aes = c("xintercept"),
+                   non_missing_aes = c("linewidth", "shape", "colour"),
+                   default_aes = ggplot2::aes(
+                     colour = "black",
+                     fill = "red",
+                     linewidth = 1,
+                     alpha = NA
+                   ),
 
   draw_panel = function(data, panel_params, coord, sides = "b",
                         arrow.length = 0.03, na.rm = FALSE) {
@@ -115,7 +119,7 @@ GeomXMarginArrow <-
     }
 
     arrow <- arrow(length = unit(arrow.length / 3, "npc"), ends = "first", type = "open")
-    gp <- gpar(col = alpha(data$colour, data$alpha), lty = data$linetype, lwd = data$size * .pt)
+    gp <- gpar(col = alpha(data$colour, data$alpha), lty = data$linetype, lwd = data$linewidth * .pt)
     if (!flipped && !is.null(data$xintercept)) {
       if (grepl("b", sides)) {
         rugarrows$x_b <- grid::segmentsGrob(
@@ -211,9 +215,13 @@ geom_y_margin_arrow <- function(mapping = NULL, data = NULL,
 GeomYMarginArrow <-
   ggproto("GeomYMarginArrow", Geom,
           required_aes = c("yintercept"),
-          non_missing_aes = c("size", "shape", "colour"),
-          default_aes = aes(colour = "red", size = 1,
-                            fill = "red", alpha = NA),
+          non_missing_aes = c("linewidth", "shape", "colour"),
+          default_aes = ggplot2::aes(
+            colour = "black",
+            fill = "red",
+            linewidth = 1,
+            alpha = NA
+          ),
 
           draw_panel = function(data, panel_params, coord, sides = "l",
                                 arrow.length = 0.03, na.rm = FALSE) {
@@ -232,7 +240,7 @@ GeomYMarginArrow <-
             }
 
             arrow <- arrow(length = unit(arrow.length / 3, "npc"), ends = "first", type = "open")
-            gp <- gpar(col = alpha(data$colour, data$alpha), lty = data$linetype, lwd = data$size * .pt)
+            gp <- gpar(col = alpha(data$colour, data$alpha), lty = data$linetype, lwd = data$linewidth * .pt)
 
             if (!flipped && !is.null(data$yintercept)) {
               if (grepl("l", sides)) {

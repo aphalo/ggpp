@@ -56,9 +56,18 @@ GeomLabelNpc <- ggplot2::ggproto("GeomLabelNpc", ggplot2::Geom,
   required_aes = c("npcx", "npcy", "label"),
 
   default_aes = ggplot2::aes(
-    colour = "black", fill = "white", size = 3.88, angle = 0, hjust = "inward",
-    vjust = "inward", alpha = NA, family = "", fontface = 1, lineheight = 1.2,
-    linetype = "solid"
+    colour = "black",
+    fill = rgb(1, 1, 1, alpha = 0.75), # "white", but occluded data are visible
+    family = "",
+    size = 3.87,
+    angle = 0,
+    hjust = "inward",
+    vjust = "inward",
+    alpha = NA,
+    fontface = 1,
+    lineheight = 1.2,
+    linewidth = 0.5,
+    linetype  = "solid"
   ),
 
   draw_panel = function(self, data, panel_params, coord, parse = FALSE,

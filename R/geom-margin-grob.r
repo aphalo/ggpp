@@ -97,9 +97,14 @@ geom_x_margin_grob <- function(mapping = NULL, data = NULL,
 GeomXMarginGrob <-
   ggproto("GeomXMarginGrob", Geom,
           required_aes = c("xintercept"),
-          default_aes = aes(
-            colour = "black", angle = 0, hjust = 0.5,
-            vjust = 0.5, alpha = NA, family = "", fontface = 1,
+          default_aes = ggplot2::aes(
+            colour = "black",
+            family = "",
+            fontface = 1,
+            angle = 0,
+            hjust = 0.5,
+            vjust = 0.5,
+            alpha = NA,
             vp.width = 1/5, vp.height = 1/5
           ),
 
@@ -252,9 +257,14 @@ geom_y_margin_grob <- function(mapping = NULL, data = NULL,
 GeomYMarginGrob <-
   ggproto("GeomYMarginGrob", Geom,
           required_aes = c("yintercept"),
-          default_aes = aes(
-            colour = "black", angle = 0, hjust = 0.5,
-            vjust = 0.5, alpha = NA, family = "", fontface = 1,
+          default_aes = ggplot2::aes(
+            colour = "black",
+            family = "",
+            fontface = 1,
+            angle = 0,
+            hjust = 0.5,
+            vjust = 0.5,
+            alpha = NA,
             vp.width = 1/5, vp.height = 1/5
           ),
 

@@ -208,16 +208,6 @@ test_that("numbers_x_tb", {
                                 geom_point() +
                                 stat_dens1d_filter(colour = "red")
   )
-  vdiffr::expect_doppelganger("stat_d1d_flt_03",
-                              ggplot(data = make_data_tbl(20), aes(x, y)) +
-                                geom_point() +
-                                stat_dens1d_filter(colour = "red")
-  )
-  vdiffr::expect_doppelganger("stat_d1d_flt_03",
-                              ggplot(data = make_data_tbl(20), aes(x, y)) +
-                                geom_point() +
-                                stat_dens1d_filter(colour = "red")
-  )
   vdiffr::expect_doppelganger("stat_d1d_flt_04",
                               ggplot(data = make_data_tbl(100), aes(x, y)) +
                                 geom_point() +

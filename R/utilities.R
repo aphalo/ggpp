@@ -1,3 +1,33 @@
+#'  Check default.colour argument
+#'
+#' if possible use ink from theme as default colour
+#'
+#' @param default.colour The value to be checked
+#' @param theme The theme from where to fetch a replacement value when
+#'   \code{default.colour} is \code{NULL}.
+#'
+#' @details The replacement value is fetched from the theme only if
+#'   'ggplot2' >= 4.0.0 and otherwise \code{"black"} is used. \code{NA}
+#'   values are passed through as they can be used to disable rendering
+#'   of grob elements.
+#'
+#' @return A colour definition or NA
+#
+#' @keywords internal
+#'
+check_default_colour <-
+  function(default.colour, theme = ggplot2::get_theme()) {
+    if (is.null(default.colour)) {
+      if (utils::packageVersion("ggplot2") >= "4.0.0") {
+        ggplot2::calc_element("geom", theme)@ink
+      } else {
+        "black"
+      }
+    } else {
+      default.colour[[1L]] # trim vectors or lists
+    }
+  }
+
 # utility functions not exported by 'ggplot2'
 # constant copied from geom-.R
 .pt <- 72.27 / 25.4
@@ -84,4 +114,40 @@ replace_null <- function(obj, ..., env = rlang::caller_env()) {
   # Replace those with the evaluated dots
   obj[nms] <- rlang::inject(list(!!!dots[nms]), env = env)
   obj
+}
+
+# From 'ggplot2' 4.0.0
+descent_cache <- new.env(parent = emptyenv())
+# Important: This function is not vectorized. Do not use to look up multiple
+# font descents at once.
+font_descent <- function(family = "", face = "plain", size = 12, cex = 1) {
+  cur_dev <- names(grDevices::dev.cur())
+  if (cur_dev == "null device") {
+    cache <- FALSE   # don't cache if no device open
+  } else {
+    cache <- TRUE
+  }
+  key <- paste0(cur_dev, ':', family, ':', face, ":", size, ":", cex)
+  # we only look up the first result; this function is not vectorized
+  key <- key[1]
+
+  descent <- descent_cache[[key]]
+
+  if (is.null(descent)) {
+    descent <- grid::convertHeight(grid::grobDescent(textGrob(
+      label = "gjpqyQ",
+      gp = gg_par(
+        fontsize = size,
+        cex = cex,
+        fontfamily = family,
+        fontface = face
+      )
+    )), 'inches')
+
+    if (cache) {
+      descent_cache[[key]] <- descent
+    }
+  }
+
+  descent
 }

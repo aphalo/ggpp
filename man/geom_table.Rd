@@ -19,6 +19,7 @@ geom_table(
   color.target = colour.target,
   default.alpha = 1,
   alpha.target = "all",
+  fontsize.scaling = 0.825,
   add.segments = TRUE,
   box.padding = 0.25,
   point.padding = 1e-06,
@@ -47,6 +48,7 @@ geom_table_npc(
   color.target = colour.target,
   default.alpha = 1,
   alpha.target = "all",
+  fontsize.scaling = 0.825,
   table.theme = NULL,
   table.rownames = FALSE,
   table.colnames = TRUE,
@@ -62,20 +64,21 @@ geom_table_npc(
 \code{\link[ggplot2]{aes}}. Only needs to be set at the layer level if you
 are overriding the plot defaults.}
 
-\item{data}{A layer specific data set - only needed if you want to override
+\item{data}{A layer specific dataset - only needed if you want to override
 the plot defaults.}
 
 \item{stat}{The statistical transformation to use on the data for this layer,
 as a string.}
 
-\item{position}{Position adjustment, either as a string, or the result of a}
+\item{position}{Position adjustment, either as a string, or the result of a
+call to a position adjustment function.}
 
 \item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
 can include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
 
 \item{nudge_x, nudge_y}{Horizontal and vertical adjustments to nudge the
-starting position of each text label. The units for \code{nudge_x} and
+starting position of each "label". The units for \code{nudge_x} and
 \code{nudge_y} are the same as for the data units on the x-axis and y-axis.}
 
 \item{default.colour, default.color}{A colour definition to use for elements
@@ -94,6 +97,9 @@ channel of the colour definitions is not modified.}
 more of \code{"all"}, \code{"table"}, \code{"table.text"},
 \code{"table.rules"} and \code{"table.canvas"}, \code{"segment"} or
 \code{"none"}.}
+
+\item{fontsize.scaling}{A scaling factor to apply to the \emph{size}
+aesthetic retrieved from the theme or mapped, applied to table text.}
 
 \item{add.segments}{logical Display connecting segments or arrows between
 original positions and displaced ones if both are available.}
@@ -150,16 +156,7 @@ as annotations to plots, but contrary to layer function \code{annotate},
 thus plot insets can differ among panels.
 }
 \details{
-By default \code{geom_table()} uses
-  \code{\link{position_nudge_center}} which is backwards compatible with
-  \code{\link[ggplot2]{position_nudge}} but provides additional control on
-  the direction of the nudging. In contrast to
-  \code{\link[ggplot2]{position_nudge}}, \code{\link{position_nudge_center}}
-  and all other position functions defined in packages 'ggpp' and 'ggrepel'
-  keep the original coordinates thus allowing the plotting of connecting
-  segments and arrows.
-
-  \code{geom_table} and \code{geom_table_npc} expect a list of data frames
+\code{geom_table} and \code{geom_table_npc} expect a list of data frames
   (\code{"data.frame"} class or derived) to be mapped to the \code{label}
   aesthetic. These geoms work with tibbles or data frames as \code{data} as
   they both support \code{list} objects as member variables.
@@ -200,13 +197,18 @@ By default \code{geom_table()} uses
   interpreted as indicating the position of the inset table with respect to
   its \emph{horizontal} and \emph{vertical} axes (rows and columns in the
   data frame), and \code{angle} is used to rotate the inset table as a whole.
+  The default for the \code{colour} and \code{fill} aesthetics is to retrieve
+  them from the table theme, while \code{family} and \code{size} are
+  retrieved from the \code{geom} element of the ggplot theme.
 
   Of these two geoms only \code{\link{geom_table}} supports the plotting of
-  segments when its position has been modified by a \code{position} function.
-  This is because \code{\link{geom_table_npc}} uses a coordinate system that
-  is unrelated to data units, scales or data in other plot layers. In the
-  case of \code{geom_table_npc}, \code{npcx} and \code{npcy}
-  pseudo-aesthetics determine the position of the inset table.
+  connecting segments or arrows when its position has been modified by a
+  \code{position} function. This is because \code{\link{geom_table_npc}} uses
+  a coordinate system that is unrelated to data units, scales or data in
+  other plot layers. In the case of \code{geom_table_npc}, \code{npcx} and
+  \code{npcy} pseudo-aesthetics determine the position of the inset table. By
+  default, \code{hjust} and \code{vjust} are set to \code{"inward"} to avoid
+  clipping at the edge of the plot canvas.
 }
 \note{
 Complex tables with annotations or different colouring of rows or cells
@@ -267,10 +269,10 @@ library(tibble)
 
 theme_set(theme_bw())
 
-mtcars \%>\%
-  group_by(cyl) \%>\%
-  summarize(wt = mean(wt), mpg = mean(mpg)) \%>\%
-  ungroup() \%>\%
+mtcars |>
+  group_by(cyl) |>
+  summarize(wt = mean(wt), mpg = mean(mpg)) |>
+  ungroup() |>
   mutate(wt = sprintf("\%.2f", wt),
          mpg = sprintf("\%.1f", mpg)) -> tb
 

@@ -16,10 +16,10 @@ test_that("numeric label gives error in geom_table", {
 })
 
 get_tb <- function() {
-  mtcars %>%
-    group_by(cyl) %>%
-    summarize(wt = mean(wt), mpg = mean(mpg)) %>%
-    ungroup() %>%
+  mtcars |>
+    group_by(cyl) |>
+    summarize(wt = mean(wt), mpg = mean(mpg)) |>
+    ungroup() |>
     mutate(
       wt = sprintf("%.2f", wt),
       mpg = sprintf("%.1f", mpg)
@@ -40,6 +40,37 @@ test_that("geom_table works as expected", {
   df <- data.frame(x = 5.45, y = 34, tb = I(list(tb)))
   result <- expect_silent(
     p + geom_table(data = df, aes(x = x, y = y, label = tb))
+  )
+  expect_s3_class(result, "ggplot")
+})
+
+test_that("geom_table_npc works as expected", {
+  p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+    geom_point()
+  tb <- get_tb()
+
+  tbbl <- tibble(x = 0.5, y = 0.5, tb = list(tb))
+  result <- expect_silent(
+    p + geom_table_npc(data = tbbl, aes(npcx = x, npcy = y, label = tb))
+  )
+  expect_s3_class(result, "ggplot")
+
+  df <- data.frame(x = 0.5, y = 0.5, tb = I(list(tb)))
+  result <- expect_silent(
+    p + geom_table_npc(data = df, aes(npcx = x, npcy = y, label = tb))
+  )
+  expect_s3_class(result, "ggplot")
+
+  df <- data.frame(x = 0.5, y = 0.5, tb = I(list(tb)))
+  result <- expect_silent(
+    p + geom_table_npc(data = df, aes(npcx = x, npcy = y, label = tb),
+                       table.hjust = 0)
+  )
+  expect_s3_class(result, "ggplot")
+
+  result <- expect_silent(
+    p + geom_table_npc(data = df, aes(npcx = x, npcy = y, label = tb),
+                       table.hjust = "center")
   )
   expect_s3_class(result, "ggplot")
 })
@@ -479,7 +510,7 @@ test_that("colour targets and alpha targets work together in geom_table", {
                                            mapping = aes(x, y, label = tb))
   )
 
-  vdiffr::expect_doppelganger("geom_table_colour_box",
+  vdiffr::expect_doppelganger("geom_table_colour_box2",
                               ggplot(my_data.tb, aes(x, y)) +
                                 geom_point() +
                                 geom_table(data = my.tb,

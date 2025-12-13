@@ -145,8 +145,15 @@ GeomTextNpc <- ggplot2::ggproto("GeomTextNpc", ggplot2::Geom,
   required_aes = c("npcx", "npcy", "label"),
 
   default_aes = ggplot2::aes(
-    colour = "black", size = 3.88, angle = 0, hjust = "inward",
-    vjust = "inward", alpha = NA, family = "", fontface = 1, lineheight = 1.2
+    colour = "black",
+    family = "",
+    size = 3.87,
+    angle = 0,
+    hjust = "inward",
+    vjust = "inward",
+    alpha = NA,
+    fontface = 1,
+    lineheight = 1.2
   ),
 
   draw_panel = function(data, panel_params, coord, parse = FALSE,

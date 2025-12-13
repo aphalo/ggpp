@@ -30,10 +30,10 @@ the option setting does not affect rendering of ready built plot objects.
 library(dplyr)
 library(tibble)
 
-mtcars \%>\%
-  group_by(cyl) \%>\%
-  summarize(wt = mean(wt), mpg = mean(mpg)) \%>\%
-  ungroup() \%>\%
+mtcars |>
+  group_by(cyl) |>
+  summarize(wt = mean(wt), mpg = mean(mpg)) |>
+  ungroup() |>
   mutate(wt = sprintf("\%.2f", wt),
          mpg = sprintf("\%.1f", mpg)) -> tb
 

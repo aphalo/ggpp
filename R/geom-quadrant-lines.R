@@ -119,8 +119,8 @@ geom_quadrant_lines <- function(mapping = NULL,
     mapping <- ggplot2::aes(xintercept = xintercept,
                             yintercept = yintercept)
     show.legend <- FALSE
-  } else if (xor(missing(xintercept), missing(yintercept))) {
-    stop("Missing 'xintercept' and 'yintercept'")
+  } else if (missing(xintercept) || missing(yintercept)) {
+    stop("Missing 'xintercept' and/or 'yintercept'")
   }
 
   ggplot2::layer(
@@ -189,11 +189,11 @@ GeomQuadrantLines <-
 
     },
 
-    default_aes = ggplot2::aes(colour = "black",
-                               size = 0.5, # ggplot2 (<= 3.3.6)
-                               linewidth = 0.5, # ggplot2 (> 3.3.6)
-                               linetype = "dashed",
-                               alpha = NA),
+    default_aes =
+      ggplot2::aes(colour = "black",
+                   linewidth = 0.5,
+                   linetype = "dashed",
+                   alpha = NA),
     required_aes = c("xintercept", "yintercept"),
     non_missing_aes = c("size", "linetype", "colour"),
 
@@ -268,11 +268,12 @@ GeomVHLines <-
 
     },
 
-    default_aes = ggplot2::aes(colour = "black",
-                               size = 0.5, # ggplot2 (<= 3.3.6)
-                               linewidth = 0.5, # ggplot2 (> 3.3.6)
-                               linetype = 1,
-                               alpha = NA),
+    default_aes = ggplot2::aes(
+      colour = "black",
+      linewidth = 0.5,
+      linetype = 1,
+      alpha = NA
+    ),
     required_aes = c("xintercept", "yintercept"),
     non_missing_aes = c("size", "linetype", "colour"),
 

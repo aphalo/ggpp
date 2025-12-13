@@ -96,8 +96,13 @@ GeomXMarginPoint <-
   ggproto("GeomXMarginPoint", Geom,
           required_aes = c("xintercept"),
           non_missing_aes = c("size", "shape", "colour"),
-          default_aes = aes(shape = 99, colour = "black", size = 2.5,
-                            fill = "red", alpha = NA, stroke = 0.5),
+          default_aes = aes(
+            shape = 99,
+            colour = "black",
+            size = 2.5,
+            fill = "red",
+            alpha = NA,
+            stroke = 0.5),
 
   draw_panel = function(data, panel_params, coord, sides = "b",
                         point.shift = 0.01, na.rm = FALSE) {
@@ -215,8 +220,13 @@ GeomYMarginPoint <-
   ggproto("GeomYMarginPoint", Geom,
           required_aes = c("yintercept"),
           non_missing_aes = c("size", "shape", "colour"),
-          default_aes = aes(shape = 99, colour = "black", size = 2.5,
-                            fill = "red", alpha = NA, stroke = 0.5),
+          default_aes = aes(
+            shape = 99,
+            colour = "black",
+            size = 2.5,
+            fill = "red",
+            alpha = NA,
+            stroke = 0.5),
 
           draw_panel = function(data, panel_params, coord, sides = "l",
                                 point.shift = 0.01, na.rm = FALSE) {
@@ -227,7 +237,7 @@ GeomYMarginPoint <-
             rugpoints <- list()
             data <- coord$transform(data, panel_params)
 
-            # For coord_flip, coord$tranform does not flip the sides where to
+            # For coord_flip, coord$transform does not flip the sides where to
             # draw the rugs. We have to flip them.
             flipped <- inherits(coord, 'CoordFlip')
             if (flipped) {

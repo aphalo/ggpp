@@ -91,6 +91,28 @@ test_that("filter_params", {
       stat_dens2d_filter_g(keep.number = -1)
   )
 
+  testthat::expect_error(
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
+      stat_dens2d_filter_g(keep.fraction = rep(1/3, 5),
+                           pool.along = "none")
+  )
+
+  testthat::expect_error(
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
+      stat_dens2d_filter_g(keep.number = rep(10, 5),
+                           pool.along = "none")
+  )
+
+  testthat::expect_warning(
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
+      stat_dens2d_filter_g(keep.fraction = rep(1/3, 4))
+  )
+
+  testthat::expect_warning(
+    ggplot(data = make_data_tbl(20), aes(x, y)) +
+      stat_dens2d_filter_g(keep.number = rep(10, 4))
+  )
+
   testthat::expect_no_error(
     ggplot(data = make_data_tbl(20), aes(x, y)) +
       stat_dens2d_filter_g(keep.these = 1:3)

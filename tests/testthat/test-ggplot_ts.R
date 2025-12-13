@@ -8,6 +8,13 @@ test_that("ggplot.ts works as expected with the yearly time series.", {
 
   expect_equal(res$x, as.numeric(time(data)))
   expect_equal(res$y, as.numeric(data))
+
+  # argument to data is not an object name
+  expect_silent(p <- ggplot.ts(get("data")) + geom_line())
+  res <- layer_data(p)
+
+  expect_equal(res$x, as.numeric(time(data)))
+  expect_equal(res$y, as.numeric(data))
 })
 
 test_that("ggplot.ts works as expected with the monthly time series.", {

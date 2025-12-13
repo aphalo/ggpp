@@ -21,14 +21,6 @@
 #'   preserved and size is adjusted until the whole inset fits within the
 #'   viewport.
 #'
-#'   By default this geom uses \code{\link{position_nudge_center}} which is
-#'   backwards compatible with \code{\link[ggplot2]{position_nudge}} but
-#'   provides additional control on the direction of the nudging. In contrast to
-#'   \code{\link[ggplot2]{position_nudge}}, \code{\link{position_nudge_center}}
-#'   and all other position functions defined in packages 'ggpp' and 'ggrepel'
-#'   keep the original coordinates thus allowing the plotting of connecting
-#'   segments and arrows.
-#'
 #'   \code{geom_plot} and \code{geom_plot_npc} expect a list of ggplot objects
 #'   (\code{"gg"} class) to be mapped to the \code{label} aesthetic. These geoms
 #'   work with tibbles or data frames as \code{data} as they both support
@@ -50,32 +42,12 @@
 #'
 #' @inheritSection geom_text_s Position functions
 #'
+#' @inheritSection geom_grob Plot boundaries and clipping
+#'
 #' @inherit geom_grob return note seealso references
 #'
-#' @param mapping The aesthetic mapping, usually constructed with
-#'   \code{\link[ggplot2]{aes}}. Only needs to be set at the layer level if you
-#'   are overriding the plot defaults.
-#' @param data A layer specific data set - only needed if you want to override
-#'   the plot defaults.
-#' @param stat The statistical transformation to use on the data for this layer,
-#'   as a string.
-#' @param na.rm If \code{FALSE} (the default), removes missing values with a
-#'   warning.  If \code{TRUE} silently removes missing values.
-#' @param position Position adjustment, either as a string, or the result of a
-#'   call to a position adjustment function.
-#' @param ... other arguments passed on to \code{\link[ggplot2]{layer}}. This
-#'   can include aesthetics whose values you want to set, not map. See
-#'   \code{\link[ggplot2]{layer}} for more details.
-#' @param show.legend logical. Should this layer be included in the legends?
-#'   \code{NA}, the default, includes if any aesthetics are mapped. \code{FALSE}
-#'   never includes, and \code{TRUE} always includes.
-#' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather
-#'   than combining with them. This is most useful for helper functions that
-#'   define both data and aesthetics and shouldn't inherit behaviour from the
-#'   default plot specification, e.g. \code{\link[ggplot2]{borders}}.
-#' @param nudge_x,nudge_y Horizontal and vertical adjustments to nudge the
-#'   starting position of each text label. The units for \code{nudge_x} and
-#'   \code{nudge_y} are the same as for the data units on the x-axis and y-axis.
+#' @inheritParams geom_grob
+#'
 #' @param default.colour,default.color A colour definition to use for elements not targeted by
 #'   the colour aesthetic.
 #' @param colour.target,color.target A vector of character strings; \code{"all"},
@@ -85,17 +57,6 @@
 #' @param alpha.target A vector of character strings; \code{"all"},
 #'   \code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
 #'   \code{"box.fill"}.
-#' @param add.segments logical Display connecting segments or arrows between
-#'   original positions and displaced ones if both are available.
-#' @param box.padding,point.padding numeric By how much each end of the segments
-#'   should shortened in mm.
-#' @param segment.linewidth numeric Width of the segments or arrows in mm.
-#' @param min.segment.length numeric Segments shorter that the minimum length
-#'   are not rendered, in mm.
-#' @param arrow specification for arrow heads, as created by
-#'   \code{\link[grid]{arrow}}
-#'
-#' @inheritSection geom_grob Plot boundaries and clipping
 #'
 #' @family geometries adding layers with insets
 #'
@@ -150,7 +111,7 @@ geom_plot <- function(mapping = NULL,
                       ...,
                       nudge_x = 0,
                       nudge_y = 0,
-                      default.colour = "black",
+                      default.colour = NULL,
                       default.color = default.colour,
                       colour.target = "box",
                       color.target = colour.target,
@@ -220,11 +181,11 @@ GeomPlot <-
 
           default_aes = ggplot2::aes(
             colour = "black",
+            family = "",
             angle = 0,
             hjust = "inward",
             vjust = "inward",
             alpha = NA,
-            family = "",
             fontface = 1,
             vp.width = 0.4,
             vp.height = 0.4
@@ -254,6 +215,8 @@ GeomPlot <-
                       " a list of \"gg\" or \"ggplot\" objects.")
               return(grid::nullGrob())
             }
+
+            default.colour <- check_default_colour(default.colour)
 
             add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
 
@@ -384,8 +347,13 @@ GeomPlotNpc <-
           required_aes = c("npcx", "npcy", "label"),
 
           default_aes = ggplot2::aes(
-            colour = "black", angle = 0, hjust = "inward",
-            vjust = "inward", alpha = NA, family = "", fontface = 1,
+            colour = "black",
+            angle = 0,
+            hjust = "inward",
+            vjust = "inward",
+            alpha = NA,
+            family = "",
+            fontface = 1,
             vp.width = 0.4, vp.height = 0.4
           ),
 

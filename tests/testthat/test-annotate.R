@@ -19,6 +19,7 @@ test_that("dates in segment annotation work", {
   expect_true(all(c("xend", "yend") %in% names(layer_data(p, 2))))
 })
 
+
 test_that("segment annotations transform with scales", {
   # Line should match data points
   df <- tibble::tibble(x = c(1, 10), y = c(10, 1))
@@ -34,6 +35,14 @@ test_that("segment annotations transform with scales", {
 context("ggpp_annotate")
 
 p <- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
+
+test_that("ggpp::annotate handles input of uneven lengths", {
+  expect_error(p + annotate("text", label = "a", x = 1:3, y = 2:1))
+  expect_error(p + annotate("text", label = c("a", "b"), x = 1:3, y = 3:1))
+  expect_silent(p + annotate("text", label = "a", x = 1, y = 30))
+  expect_silent(p + annotate("text", label = "a", x = 1:3, y = 3:1))
+  expect_silent(p + annotate("text", label = c("a", "b"), x = 1:2, y = 1))
+})
 
 test_that("ggpp::annotate works with npc pseudo-aesthetics", {
 

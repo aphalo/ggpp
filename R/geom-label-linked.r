@@ -15,7 +15,7 @@ geom_label_s <-
            parse = FALSE,
            nudge_x = 0,
            nudge_y = 0,
-           default.colour = "black",
+           default.colour = NULL,
            default.color = default.colour,
            colour.target = c("text", "box"),
            color.target = colour.target,
@@ -95,24 +95,26 @@ GeomLabelS <-
                    default_aes = ggplot2::aes(
                      colour = "black",
                      fill = rgb(1, 1, 1, alpha = 0.75), # "white", but occluded data are visible
-                     size = 3.88,
+                     family = "",
+                     size = 3.87,
                      angle = 0,
-                     linewidth = 0.5,
-                     linetype = "solid",
                      hjust = "position",
                      vjust = "position",
                      alpha = NA,
-                     family = "",
                      fontface = 1,
-                     lineheight = 1.2
+                     lineheight = 1.2,
+                     linewidth = 0.5,
+                     linetype  = "solid"
                    ),
 
-                   draw_panel = function(data, panel_params, coord, #panel_scales,
+                   draw_panel = function(data,
+                                         panel_params,
+                                         coord, #panel_scales,
                                          parse = FALSE,
                                          na.rm = FALSE,
                                          size.unit = "mm",
                                          add.segments = TRUE,
-                                         default.colour = "black",
+                                         default.colour = NULL,
                                          colour.target = "all",
                                          default.alpha = NA,
                                          alpha.target = "fill",
@@ -124,11 +126,16 @@ GeomLabelS <-
                                          label.padding = unit(0.25, "lines"),
                                          label.r = unit(0.15, "lines")) {
 
-                     add.segments <- add.segments && all(c("x_orig", "y_orig") %in% colnames(data))
+                     add.segments <-
+                       add.segments &&
+                       all(c("x_orig", "y_orig") %in% colnames(data))
+
+                     default.colour <- check_default_colour(default.colour)
 
                      # ensure compatibility with 'ggplot2'
                      if (exists("label.size", data)) {
-                       data$line.width <- data$label.size * .pt / ggplot2::.stroke
+                       data$line.width <-
+                         data$label.size * .pt / ggplot2::.stroke
                        data$label.size <- NULL
                      }
                      data$label <- as.character(data$label)
@@ -289,21 +296,27 @@ labelGrob <- function(label, x = grid::unit(0.5, "npc"), y = grid::unit(0.5, "np
   descent <- font_descent(
     text.gp$fontfamily, text.gp$fontface, text.gp$fontsize, text.gp$cex
   )
+  # To balance labels, we ensure the top includes at least the descent height
+  # and subtract the descent height from the bottom padding
+  padding[1] <- grid::unit.pmax(padding[1], descent)
+  padding[3] <- grid::unit.pmax(padding[3] - descent, unit(0, "pt"))
+
   hjust <- grid::resolveHJust(just, NULL)
   vjust <- grid::resolveVJust(just, NULL)
 
   text <- titleGrob(
-    label = label, hjust = hjust, vjust = vjust, x = x, y = y,
-    margin = padding,
-    margin_x = TRUE, margin_y = TRUE,
+    label = label, hjust = hjust, vjust = vjust, x = x,
+    y = y + (1 - vjust) * descent,
+    margin = padding, margin_x = TRUE, margin_y = TRUE,
     gp = text.gp
   )
 
+  height <- grid::heightDetails(text)
   box <- grid::roundrectGrob(
-    x = x, y = y - (1 - vjust) * descent,
+    x = x, y = y + (0.5 - vjust) * height,
     width  = grid::widthDetails(text),
-    height = grid::heightDetails(text),
-    just   = c(hjust, vjust),
+    height = height,
+    just   = c(hjust, 0.5),
     r = r, gp = rect.gp, name = "box"
   )
 

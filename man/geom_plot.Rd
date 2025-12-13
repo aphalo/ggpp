@@ -13,7 +13,7 @@ geom_plot(
   ...,
   nudge_x = 0,
   nudge_y = 0,
-  default.colour = "black",
+  default.colour = NULL,
   default.color = default.colour,
   colour.target = "box",
   color.target = colour.target,
@@ -46,7 +46,7 @@ geom_plot_npc(
 \code{\link[ggplot2]{aes}}. Only needs to be set at the layer level if you
 are overriding the plot defaults.}
 
-\item{data}{A layer specific data set - only needed if you want to override
+\item{data}{A layer specific dataset - only needed if you want to override
 the plot defaults.}
 
 \item{stat}{The statistical transformation to use on the data for this layer,
@@ -60,7 +60,7 @@ can include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
 
 \item{nudge_x, nudge_y}{Horizontal and vertical adjustments to nudge the
-starting position of each text label. The units for \code{nudge_x} and
+starting position of each "label". The units for \code{nudge_x} and
 \code{nudge_y} are the same as for the data units on the x-axis and y-axis.}
 
 \item{default.colour, default.color}{A colour definition to use for elements not targeted by
@@ -127,14 +127,6 @@ You can modify the size of inset plots with the \code{vp.width} and
   irrespective of how the plot is rendered. The aspect ratio of insets is
   preserved and size is adjusted until the whole inset fits within the
   viewport.
-
-  By default this geom uses \code{\link{position_nudge_center}} which is
-  backwards compatible with \code{\link[ggplot2]{position_nudge}} but
-  provides additional control on the direction of the nudging. In contrast to
-  \code{\link[ggplot2]{position_nudge}}, \code{\link{position_nudge_center}}
-  and all other position functions defined in packages 'ggpp' and 'ggrepel'
-  keep the original coordinates thus allowing the plotting of connecting
-  segments and arrows.
 
   \code{geom_plot} and \code{geom_plot_npc} expect a list of ggplot objects
   (\code{"gg"} class) to be mapped to the \code{label} aesthetic. These geoms

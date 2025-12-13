@@ -59,23 +59,23 @@
 <circle cx='262.97' cy='333.45' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='389.74' cy='428.42' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
 <circle cx='264.55' cy='299.10' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<text x='32.79' y='544.98' style='font-size: 11.04px; font-family: sans;' textLength='6.62px' lengthAdjust='spacingAndGlyphs'>α</text>
-<text x='39.42' y='539.44' style='font-size: 7.73px; font-family: sans;' textLength='4.30px' lengthAdjust='spacingAndGlyphs'>2</text>
-<text x='32.79' y='30.71' style='font-size: 11.04px; font-family: sans;' textLength='5.12px' lengthAdjust='spacingAndGlyphs'>β</text>
-<text x='37.91' y='32.75' style='font-size: 7.73px; font-family: sans;' textLength='4.30px' lengthAdjust='spacingAndGlyphs'>2</text>
-<text x='705.21' y='543.00' style='font-size: 11.04px; font-family: sans;' textLength='5.01px' lengthAdjust='spacingAndGlyphs'>δ</text>
-<text x='710.22' y='545.04' style='font-size: 7.73px; font-family: sans;' textLength='4.30px' lengthAdjust='spacingAndGlyphs'>a</text>
-<text x='692.29' y='33.72' style='font-size: 11.04px; font-family: sans;' textLength='5.04px' lengthAdjust='spacingAndGlyphs'>γ</text>
-<text x='697.33' y='28.18' style='font-size: 7.73px; font-family: sans;' textLength='17.19px' lengthAdjust='spacingAndGlyphs'>2345</text>
-<text x='350.95' y='288.59' style='font-size: 11.04px; font-family: sans;' textLength='6.45px' lengthAdjust='spacingAndGlyphs'>=</text>
-<text x='357.40' y='288.59' style='font-size: 13.80px; font-family: sans;' textLength='4.60px' lengthAdjust='spacingAndGlyphs'>(</text>
-<text x='361.99' y='283.28' style='font-size: 5.52px; font-family: sans;' textLength='3.07px' lengthAdjust='spacingAndGlyphs'>b</text>
-<polyline points='362.33,286.25 363.69,285.67 365.06,288.69 366.89,280.31 374.70,280.31 ' style='stroke-width: 0.75;' />
-<text x='368.05' y='288.59' style='font-size: 11.04px; font-family: sans;' textLength='6.14px' lengthAdjust='spacingAndGlyphs'>a</text>
-<text x='375.22' y='288.59' style='font-size: 11.04px; font-family: sans;' textLength='2.76px' lengthAdjust='spacingAndGlyphs'>,</text>
-<text x='377.98' y='288.59' style='font-size: 11.04px; font-family: sans;' textLength='2.76px' lengthAdjust='spacingAndGlyphs'> </text>
-<text x='380.74' y='288.59' style='font-size: 11.04px; font-family: sans;' textLength='11.04px' lengthAdjust='spacingAndGlyphs'>∞</text>
-<text x='391.78' y='288.59' style='font-size: 13.80px; font-family: sans;' textLength='4.59px' lengthAdjust='spacingAndGlyphs'>)</text>
+<text x='32.79' y='544.98' style='font-size: 11.00px; font-family: sans;' textLength='6.60px' lengthAdjust='spacingAndGlyphs'>α</text>
+<text x='39.39' y='539.46' style='font-size: 7.70px; font-family: sans;' textLength='4.28px' lengthAdjust='spacingAndGlyphs'>2</text>
+<text x='32.79' y='30.68' style='font-size: 11.00px; font-family: sans;' textLength='5.10px' lengthAdjust='spacingAndGlyphs'>β</text>
+<text x='37.90' y='32.71' style='font-size: 7.70px; font-family: sans;' textLength='4.28px' lengthAdjust='spacingAndGlyphs'>2</text>
+<text x='705.25' y='543.00' style='font-size: 11.00px; font-family: sans;' textLength='4.99px' lengthAdjust='spacingAndGlyphs'>δ</text>
+<text x='710.24' y='545.04' style='font-size: 7.70px; font-family: sans;' textLength='4.28px' lengthAdjust='spacingAndGlyphs'>a</text>
+<text x='692.37' y='33.69' style='font-size: 11.00px; font-family: sans;' textLength='5.02px' lengthAdjust='spacingAndGlyphs'>γ</text>
+<text x='697.39' y='28.16' style='font-size: 7.70px; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>2345</text>
+<text x='351.03' y='288.57' style='font-size: 11.00px; font-family: sans;' textLength='6.43px' lengthAdjust='spacingAndGlyphs'>=</text>
+<text x='357.46' y='288.57' style='font-size: 13.75px; font-family: sans;' textLength='4.58px' lengthAdjust='spacingAndGlyphs'>(</text>
+<text x='362.03' y='283.29' style='font-size: 5.50px; font-family: sans;' textLength='3.06px' lengthAdjust='spacingAndGlyphs'>b</text>
+<polyline points='362.37,286.25 363.73,285.66 365.09,288.68 366.91,280.33 374.70,280.33 ' style='stroke-width: 0.75;' />
+<text x='368.07' y='288.57' style='font-size: 11.00px; font-family: sans;' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>a</text>
+<text x='375.21' y='288.57' style='font-size: 11.00px; font-family: sans;' textLength='2.75px' lengthAdjust='spacingAndGlyphs'>,</text>
+<text x='377.96' y='288.57' style='font-size: 11.00px; font-family: sans;' textLength='2.75px' lengthAdjust='spacingAndGlyphs'> </text>
+<text x='380.71' y='288.57' style='font-size: 11.00px; font-family: sans;' textLength='11.00px' lengthAdjust='spacingAndGlyphs'>∞</text>
+<text x='391.72' y='288.57' style='font-size: 13.75px; font-family: sans;' textLength='4.57px' lengthAdjust='spacingAndGlyphs'>)</text>
 <rect x='32.79' y='22.78' width='681.73' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
