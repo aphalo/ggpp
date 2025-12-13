@@ -16,14 +16,10 @@ utils::globalVariables(c(
 
 .onLoad <- function(libname, pkgname) {
 
-  # support old 'ggpp' behaviour in 'ggplot2' > 4.0.0
-  # and make testing easier
-  theme.flag <- tolower(getOption("ggpp.geom.theme", default = ""))
-
   # if 'ggplot2' >= 4.0.0 we update the Geom "definitions" to retrieve defaults
   # from the theme, as the geom element is available
-  if ("element_geom" %in% getNamespaceExports("ggplot2") && theme.flag != "no") {
-      ggplot2::update_geom_defaults(
+  if ("element_geom" %in% getNamespaceExports("ggplot2")) {
+    ggplot2::update_geom_defaults(
         GeomGrob,
         ggplot2::aes(colour = from_theme(colour %||% ink),
                      family = from_theme(family)))
@@ -131,8 +127,6 @@ utils::globalVariables(c(
         ggplot2::aes(colour = from_theme(colour %||% ink),
                      linewidth = from_theme(linewidth),
                      linetype = from_theme(linetype)))
-    } else if (theme.flag == "yes") {
-      message("Theme support of geoms' default_aes requires 'ggplot2' >= 4.0.0")
     }
 
 }
