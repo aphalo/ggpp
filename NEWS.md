@@ -9,19 +9,20 @@ editor_options:
 # ggpp 0.6.0
 
 This version adds support for new features from 'ggplot2' (>= 4.0.0) but
-remains compatibel with 'ggplot2' (>= 3.4.0).
-The default value used for the `linewidth` aesthetic of label boxes is narrower
-than in earlier versions of 'ggpp' and matches that currently used in
-'ggplot2'. 
+remains compatible with 'ggplot2' (>= 3.4.0).
 
 - Add support for 'ggplot2' (>= 4.0.0) theme settings in 'ggpp' geoms. In
 `geom_table()` the default size of text within the table is that in the theme
 multiplied by the new parameter `fontsize.scaling` with a default value that
 ensures a similar size for text to that used in 'ggpp' < 0.6.0.
+- The default value used for the `linewidth` aesthetic of label boxes is narrower
+than in earlier versions of 'ggpp' and matches that currently used in
+'ggplot2'. 
 - In all geoms having a `default.colour` formal parameter, if its value is 
 `NULL`, the value used is that of `ink` in the "global" `geom` theme.
 - Add on-line-only article demonstrating the use `theme()` to modify geoms'
-default aesthetic mappings.
+default aesthetic mappings and the targetting of aesthetics to different parts
+of complex graphical objects.
 
 # ggpp 0.5.9
 
