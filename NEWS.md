@@ -21,7 +21,7 @@ than in earlier versions of 'ggpp' and matches that currently used in
 - In all geoms having a `default.colour` formal parameter, if its value is 
 `NULL`, the value used is that of `ink` in the "global" `geom` theme.
 - Add on-line-only article demonstrating the use `theme()` to modify geoms'
-default aesthetic mappings and the targetting of aesthetics to different parts
+default aesthetic mappings and the targeting of aesthetics to different parts
 of complex graphical objects.
 
 # ggpp 0.5.9
