@@ -294,12 +294,12 @@ if (gginnards.installed) {
 
   ggplot(data = d, aes(x, y, label = lab, colour = group)) +
     stat_dens1d_filter(geom = "debug_group")
-
-  ggplot(data = d, aes(x, y, label = lab, colour = group)) +
-    stat_dens1d_filter(geom = "debug_group", return.density = TRUE)
-
 }
 
+if (gginnards.installed) {
+  ggplot(data = d, aes(x, y, label = lab, colour = group)) +
+    stat_dens1d_filter(geom = "debug_group", return.density = TRUE)
+}
 }
 \seealso{
 \code{\link[stats]{density}} used internally.

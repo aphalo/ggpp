@@ -269,9 +269,7 @@ if (ggrepel.installed) {
 }
 
 # Using geom_debug_group() we can see that all 100 rows in \code{d} are
-# returned. But only those labelled in the previous example still contain
-# the original labels.
-
+# returned.
 gginnards.installed <- requireNamespace("gginnards", quietly = TRUE)
 if (gginnards.installed) {
   library(gginnards)
@@ -279,22 +277,11 @@ if (gginnards.installed) {
   ggplot(data = d, aes(x, y, label = lab)) +
     geom_point() +
     stat_dens1d_labels(geom = "debug_group")
-
+}
+if (gginnards.installed) {
   ggplot(data = d, aes(x, y, label = lab)) +
     geom_point() +
     stat_dens1d_labels(geom = "debug_group", return.density = TRUE)
-
-  ggplot(data = d, aes(x, y, label = lab)) +
-    geom_point() +
-    stat_dens1d_labels(geom = "debug_group", label.fill = NULL, return.density = TRUE)
-
-  ggplot(data = d, aes(x, y, label = lab)) +
-    geom_point() +
-    stat_dens1d_labels(geom = "debug_group", label.fill = NA, return.density = TRUE)
-
-  ggplot(data = d, aes(x, y, label = lab)) +
-    geom_point() +
-    stat_dens1d_labels(geom = "debug_group", label.fill = FALSE, return.density = TRUE)
 }
 
 }

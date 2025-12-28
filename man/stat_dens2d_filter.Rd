@@ -266,7 +266,8 @@ if (gginnards.installed) {
 
   ggplot(data = d, aes(x, y, label = lab, colour = group)) +
     stat_dens2d_filter(geom = "debug_group")
-
+}
+if (gginnards.installed) {
   ggplot(data = d, aes(x, y, label = lab, colour = group)) +
     geom_point() +
     stat_dens2d_filter(geom = "debug_group", return.density = TRUE)

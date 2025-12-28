@@ -97,7 +97,6 @@
 #'
 #'   ggplot(df1, aes(xmin = min, xmax = max, y = fun)) +
 #'     stat_functions(geom = "debug_group")
-#'
 #' }
 #'
 stat_functions <- function(mapping = NULL,

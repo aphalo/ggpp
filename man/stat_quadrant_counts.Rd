@@ -225,7 +225,9 @@ if (gginnards.installed) {
   ggplot(my.data, aes(x, y)) +
     geom_point() +
     stat_quadrant_counts(geom = "debug_group")
+}
 
+if (gginnards.installed) {
   ggplot(my.data, aes(x, y)) +
     geom_point() +
     stat_quadrant_counts(geom = "debug_group", xintercept = 50)
