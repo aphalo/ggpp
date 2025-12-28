@@ -287,16 +287,16 @@ ggplot(data = d, aes(x, y, label = lab, colour = group)) +
   geom_point() +
   stat_dens1d_filter(geom = "text", hjust = "outward")
 
-# looking under the hood with gginnards::geom_debug()
+# looking under the hood with gginnards::geom_debug_group()
 gginnards.installed <- requireNamespace("gginnards", quietly = TRUE)
 if (gginnards.installed) {
   library(gginnards)
 
   ggplot(data = d, aes(x, y, label = lab, colour = group)) +
-    stat_dens1d_filter(geom = "debug")
+    stat_dens1d_filter(geom = "debug_group")
 
   ggplot(data = d, aes(x, y, label = lab, colour = group)) +
-    stat_dens1d_filter(geom = "debug", return.density = TRUE)
+    stat_dens1d_filter(geom = "debug_group", return.density = TRUE)
 
 }
 

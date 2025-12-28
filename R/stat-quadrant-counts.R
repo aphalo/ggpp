@@ -180,7 +180,7 @@
 #'   geom_point() +
 #'   scale_y_continuous(expand = expansion(mult = 0.15))
 #'
-#' # We use geom_debug() to see the computed values
+#' # We use geom_debug_group() to see the computed values
 #'
 #' gginnards.installed <- requireNamespace("gginnards", quietly = TRUE)
 #' if (gginnards.installed) {
@@ -188,11 +188,11 @@
 #'
 #'   ggplot(my.data, aes(x, y)) +
 #'     geom_point() +
-#'     stat_quadrant_counts(geom = "debug")
+#'     stat_quadrant_counts(geom = "debug_group")
 #'
 #'   ggplot(my.data, aes(x, y)) +
 #'     geom_point() +
-#'     stat_quadrant_counts(geom = "debug", xintercept = 50)
+#'     stat_quadrant_counts(geom = "debug_group", xintercept = 50)
 #' }
 #'
 stat_quadrant_counts <- function(mapping = NULL,
@@ -348,7 +348,9 @@ StatQuadrantCounts <-
 
                        if (length(zero.count.quadrants) > 0) {
                          data <-
-                           rbind(data, tibble::tibble(quadrant = zero.count.quadrants, count = 0L, total = num.obs))
+                           rbind(data,
+                                 tibble::tibble(quadrant = zero.count.quadrants,
+                                                count = 0L, total = num.obs))
                        }
 
                        data$count.label <- sprintf("n=%i", data$count)
@@ -376,7 +378,14 @@ StatQuadrantCounts <-
                                                   range.y[2],
                                                   range.y[1]))
                      }
-                     z$count.label <- sprintf("n=%i", z$count)
+
+                     z[["count.label"]] <- sprintf("n=%i", z$count)
+
+                     # returned data frame must contain a "group" column
+                     if (! "group" %in% colnames(z)) {
+                       z[["group"]] <- -1L
+                     }
+
                      z
                    },
 

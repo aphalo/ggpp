@@ -225,7 +225,7 @@ ggplot(mpg,
                     label.y = 10) +
   annotate(geom = "text", x = 0.55, y = 10, label = "n[i]~`=`", parse = TRUE)
 
-# We use geom_debug() to see the computed values
+# We use geom_debug_group() to see the computed values
 
 gginnards.installed <- requireNamespace("gginnards", quietly = TRUE)
 if (gginnards.installed) {
@@ -233,13 +233,13 @@ if (gginnards.installed) {
 
   ggplot(my.data, aes(x, y)) +
     geom_point() +
-    stat_panel_counts(geom = "debug")
+    stat_panel_counts(geom = "debug_group")
 }
 
 if (gginnards.installed) {
   ggplot(my.data, aes(x, y, colour = group)) +
     geom_point() +
-    stat_group_counts(geom = "debug")
+    stat_group_counts(geom = "debug_group")
 }
 
 }

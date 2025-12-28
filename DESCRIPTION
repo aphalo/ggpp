@@ -2,13 +2,13 @@ Package: ggpp
 Type: Package
 Title: Grammar Extensions to 'ggplot2'
 Version: 0.5.9.9403
-Date: 2025-12-16
+Date: 2025-12-28
 Authors@R:
     c(
     person("Pedro J.", "Aphalo", email = "pedro.aphalo@helsinki.fi", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3385-972X")),
     person("Kamil", "Slowikowski", role = "ctb", comment = c(ORCID = "0000-0002-2843-6370")),
     person("Michał", "Krassowski", role = "ctb", comment = c(ORCID = "0000-0002-9638-7785")),
-    person("Daniel", "Sabanés Bové", role = "ctb"),
+    person("Daniel", "Sabanés Bové", role = "ctb", comment = c(ORCID = "0000-0002-0176-9239")),
     person("Stella", "Banjo", role = "ctb")
     )
 Maintainer: Pedro J. Aphalo <pedro.aphalo@helsinki.fi>
@@ -48,7 +48,7 @@ Suggests:
     knitr (>= 1.40),
     rmarkdown (>= 2.20),
     ggrepel (>= 0.9.2),
-    gginnards(>= 0.1.1),
+    gginnards(>= 0.2.0),
     magick (>= 2.7.3),
     testthat (>= 3.1.5),
     vdiffr (>= 1.0.5)

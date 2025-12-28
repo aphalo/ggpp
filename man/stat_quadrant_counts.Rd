@@ -216,7 +216,7 @@ ggplot(my.data, aes(x, y)) +
   geom_point() +
   scale_y_continuous(expand = expansion(mult = 0.15))
 
-# We use geom_debug() to see the computed values
+# We use geom_debug_group() to see the computed values
 
 gginnards.installed <- requireNamespace("gginnards", quietly = TRUE)
 if (gginnards.installed) {
@@ -224,11 +224,11 @@ if (gginnards.installed) {
 
   ggplot(my.data, aes(x, y)) +
     geom_point() +
-    stat_quadrant_counts(geom = "debug")
+    stat_quadrant_counts(geom = "debug_group")
 
   ggplot(my.data, aes(x, y)) +
     geom_point() +
-    stat_quadrant_counts(geom = "debug", xintercept = 50)
+    stat_quadrant_counts(geom = "debug_group", xintercept = 50)
 }
 
 }

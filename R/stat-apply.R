@@ -176,17 +176,17 @@
 #'   library(gginnards)
 #'
 #'   ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-#'     stat_centroid(.fun = mean_se, geom = "debug")
+#'     stat_centroid(.fun = mean_se, geom = "debug_group")
 #'
 #'   ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-#'     stat_summary_xy(.fun.y = mean_se, geom = "debug")
+#'     stat_summary_xy(.fun.y = mean_se, geom = "debug_group")
 #'
 #'   ggplot(my.df, aes(x = X, y = Y, colour = category)) +
-#'     stat_apply_group(.fun.y = cumsum, geom = "debug")
+#'     stat_apply_group(.fun.y = cumsum, geom = "debug_group")
 #'
 #'   ggplot(my.df, aes(x = X, y = Y, colour = category)) +
 #'     geom_point() +
-#'     stat_apply_group(geom = "debug",
+#'     stat_apply_group(geom = "debug_group",
 #'                     .fun.x = quantile,
 #'                     .fun.x.args = list(probs = my.probs),
 #'                     .fun.y = quantile,

@@ -89,14 +89,14 @@
 #' ggplot(df3, aes(xmin = min, xmax = max, y = fun, colour = name)) +
 #'   stat_functions()
 #'
-#' # We use geom_debug() to see the computed values
+#' # We use geom_debug_group() to see the computed values
 #'
 #' gginnards.installed <- requireNamespace("gginnards", quietly = TRUE)
 #' if (gginnards.installed) {
 #'   library(gginnards)
 #'
 #'   ggplot(df1, aes(xmin = min, xmax = max, y = fun)) +
-#'     stat_functions(geom = "debug")
+#'     stat_functions(geom = "debug_group")
 #'
 #' }
 #'
