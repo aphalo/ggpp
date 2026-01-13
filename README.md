@@ -1,5 +1,5 @@
 
-# ggpp <img src="man/figures/logo.png" align="right" width="150"/>
+# ggpp <img src="man/figures/logo.png" align="right" width="150" alt="Package logo with name and multiple nested rectangles."/>
 
 <!-- badges: start -->
 
@@ -249,7 +249,7 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_table(data = df, aes(x = x, y = y, label = tb))
 ```
 
-![](man/figures/README-readme-03-1.png)<!-- -->
+<img src="man/figures/README-readme-03-1.png" alt="Scatter plot with an inset table near the upper right corner. The points in the plot are coloured according to cyl, and the table displays the mean wt and mean mpg for each group."  />
 
 A plot with an inset plot.
 
@@ -269,7 +269,7 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   expand_limits(y = 0, x = 0)
 ```
 
-![](man/figures/README-readme-06-1.png)<!-- -->
+<img src="man/figures/README-readme-06-1.png" alt="Scatter plot with an inset boxplot near the lower left corner. The points in the plot are coloured according to cyl, and the inset plot displays the boxplots for mpg for each group, using the same colour aesthetic mapping as for the scatterplot."  />
 
 ### Centroids
 
@@ -281,7 +281,7 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   stat_centroid(shape = "asterisk", size = 6)
 ```
 
-![](man/figures/README-unnamed-chunk-1-1.png)<!-- -->
+<img src="man/figures/README-unnamed-chunk-1-1.png" alt="Scatter plot with three added star-shaped points showing the centroid of each group, i.e., the location of the mean  wt and mean mpg for each group on the plot itself."  />
 
 Medians computed on-the-fly shown as marginal arrows. Labels with number
 of observations per group.
@@ -294,7 +294,7 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   stat_group_counts(vstep = 0, hstep = 0.09)
 ```
 
-![](man/figures/README-unnamed-chunk-2-1.png)<!-- -->
+<img src="man/figures/README-unnamed-chunk-2-1.png" alt="Scatter plot with an inset table near the upper right corner. The points in the plot are coloured according to cyl. Arrows just inside the y-axis indicate the mean mpg for each group. In addition annotations near the upper right display the number of observations in eack group."  />
 
 ### Nudging and stacking combined
 
@@ -314,7 +314,7 @@ ggplot(data = df, aes(x2, x1, group = grp)) +
   theme(legend.position = "none")
 ```
 
-![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
+<img src="man/figures/README-unnamed-chunk-3-1.png" alt="Stacked columns plot with each individual column annotated immediately below its top."  />
 
 ## Installation
 
@@ -370,7 +370,7 @@ publications, please cite according to:
 citation("ggpp")
 #> To cite package 'ggpp' in publications use:
 #> 
-#>   Aphalo P (2025). _ggpp: Grammar Extensions to 'ggplot2'_. R package
+#>   Aphalo P (2026). _ggpp: Grammar Extensions to 'ggplot2'_. R package
 #>   version 0.5.9.9403, <https://docs.r4photobiology.info/ggpp/>.
 #> 
 #> A BibTeX entry for LaTeX users is
@@ -378,7 +378,7 @@ citation("ggpp")
 #>   @Manual{,
 #>     title = {ggpp: Grammar Extensions to 'ggplot2'},
 #>     author = {Pedro J. Aphalo},
-#>     year = {2025},
+#>     year = {2026},
 #>     note = {R package version 0.5.9.9403},
 #>     url = {https://docs.r4photobiology.info/ggpp/},
 #>   }
