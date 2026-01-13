@@ -25,6 +25,20 @@ options(warnPartialMatchArgs = FALSE,
 ```{r setup, message=FALSE}
 library(ggplot2)
 library(ggpp)
+library(patchwork)
+```
+
+```{r, echo=FALSE}
+cat("Using: 'ggplot2' ==", format(utils::packageVersion("ggplot2")), "and",
+      "'ggpp' ==", format(utils::packageVersion("ggpp")), "\n")
+if (utils::packageVersion("ggplot2") < "4.0.0" ||
+    utils::packageVersion("ggpp") < "0.5.9.9400" ) {
+  cat("This article demonstrates several features from versions of",
+      "'ggplot2' and/or 'ggpp' newer than those currently installed!\n",
+      "Expected: 'ggplot2' >= 4.0.0 and 'ggpp' >= 0.6.0\n",
+      "Some plots will differ because of ignored arguments",
+      "and missing features!\n")  
+}
 ```
 
 ## The `geom` element of 'ggplot2' themes
@@ -80,14 +94,14 @@ set_theme(theme_minimal() +
                 linetype = "dotted",
                 borderwidth = 1,
                 bordertype = "dotted",
-                pointsize = 1.5,
-                pointshape = "cross"
+                pointsize = 1,
+                pointshape = "circle open"
               )
             )
 )
 ```
 
-We can use the same code as above to retrieve the currently active theme. As expected, it reflects the changes we introduuced above.
+We can use the same code as above to retrieve the currently active theme. As expected, it reflects the changes we introduced above.
 
 ```{r}
 calc_element("geom", get_theme())
@@ -114,14 +128,15 @@ We will use `p` as a base plot for testing the different geometries. Because of 
 my.cars <- mtcars[c(TRUE, FALSE, FALSE, FALSE), ]
 my.cars$name <- rownames(my.cars)
 
-p <-
+p1 <-
   ggplot(my.cars, 
          aes(x = wt, y = mpg, label = name, 
              xintercept = wt, yintercept = mpg,
              npcx = (wt - min(wt)) / diff(range(wt)), 
              npcy = (mpg - (min(mpg))) / diff(range(mpg)))) +
-  geom_point() +
-  expand_limits(x = c(2, 6))
+  geom_point()
+
+p <- p1 + expand_limits(x = 6.5)
 ```
 
 ```{r}
@@ -134,32 +149,23 @@ p
 The expectation is that the text in all these plots look consistent with either green or blue text depending on the specific settings. The positions relative to the points is expected to differ when using roughly calculated NPC.
 
 ```{r}
-p + geom_text()
+p + geom_text(hjust = 0, nudge_x = 0.1)
 ```
 
 
 ```{r}
 update_theme(geom.text = element_geom(colour = "blue"))
-p + geom_text()
+p + geom_text(hjust = 0, nudge_x = 0.1)
 ```
 
 
 ```{r}
-p + geom_text_s()
+p + geom_text_s(hjust = 0, nudge_x = 0.1)
 ```
 
 ```{r}
 update_theme(geom.text.s = element_geom(colour = "blue"))
-p + geom_text_s()
-```
-
-```{r}
-p + geom_text_npc(inherit.aes = TRUE)
-```
-
-```{r}
-update_theme(geom.text.npc = element_geom(colour = "blue"))
-p + geom_text_npc(inherit.aes = TRUE)
+p + geom_text_s(hjust = 0, nudge_x = 0.1)
 ```
 
 ### Variations on `geom_label()`
@@ -167,42 +173,31 @@ p + geom_text_npc(inherit.aes = TRUE)
 The expectation is that the labels in all these plots look consistent with either green or blue text on a yellow or transparent background depending on the specific settings. The positions relative to the points is expected to differ when using roughly calculated NPC.
 
 ```{r}
-p + geom_label()
+p + geom_label(hjust = 0, nudge_x = 0.1)
 ```
 
 ```{r}
-update_theme(geom.label = element_geom(colour = "blue",
-                                         fill = NA))
-p + geom_label()
+update_theme(geom.label = element_geom(colour = "blue", fill = NA))
+p + geom_label(hjust = 0, nudge_x = 0.1)
 ```
 
 ```{r}
-p + geom_label_s()
+p + geom_label_s(hjust = 0, nudge_x = 0.1)
 ```
 
 ```{r}
-update_theme(geom.label.s = element_geom(colour = "blue",
-                                         fill = NA))
-p + geom_label_s()
-```
-
-```{r}
-p + geom_label_npc(inherit.aes = TRUE)
-```
-```{r}
-update_theme(geom.label.npc = element_geom(colour = "blue",
-                                         fill = NA))
-p + geom_label_npc(inherit.aes = TRUE)
+update_theme(geom.label.s = element_geom(colour = "blue", fill = NA))
+p + geom_label_s(hjust = 0, nudge_x = 0.1)
 ```
 
 ### Marks on plot margins
 
 ```{r}
-p + geom_rug()
+p1 + geom_rug()
 ```
 
 ```{r}
-p + 
+p1 + 
   geom_x_margin_point(inherit.aes = TRUE) + 
   geom_y_margin_point(inherit.aes = TRUE)
 ```
@@ -212,13 +207,13 @@ update_theme(geom.x.margin.point = element_geom(colour = "red",
                                                 pointshape = 19),
              geom.y.margin.point = element_geom(colour = "orange",
                                                 pointshape = "triangle"))
-p + 
+p1 + 
   geom_x_margin_point(inherit.aes = TRUE) + 
   geom_y_margin_point(inherit.aes = TRUE)
 ```
 
 ```{r}
-p + 
+p1 + 
   geom_x_margin_arrow(inherit.aes = TRUE) + 
   geom_y_margin_arrow(inherit.aes = TRUE)
 ```
@@ -228,7 +223,7 @@ update_theme(geom.x.margin.arrow = element_geom(colour = "green",
                                                 pointshape = 19),
              geom.y.margin.arrow = element_geom(colour = "orange",
                                                 pointshape = "triangle"))
-p + 
+p1 + 
   geom_x_margin_arrow(inherit.aes = TRUE) + 
   geom_y_margin_arrow(inherit.aes = TRUE)
 ```
@@ -236,18 +231,18 @@ p +
 ### Plot insets
 
 ```{r}
-p + annotate(geom = "plot", label = p, x = 6, y = 22)
+p1 + annotate(geom = "plot", label = p, x = 6, y = 22)
 ```
 Theme defaults for the inset plots are coded into `p` and not modified when added as an inset. The main and inset plots should both have blue points.
 
 ```{r}
 update_theme(geom.plot = element_geom(colour = "red"))
 
-p + annotate(geom = "plot", label = p, x = 6, y = 22)
+p1 + annotate(geom = "plot", label = p, x = 6, y = 22)
 ```
 
 ```{r}
-p + annotate(geom = "table", 
+p1 + annotate(geom = "table", 
              label = data.frame(a = 1:2, b = 3:4), 
              x = 6, y = 22)
 ```
@@ -256,7 +251,7 @@ Currently, `fontsize` and `family` set in the plot theme (`theme`) override thos
 
 ```{r}
 update_theme(geom.table = element_geom(fontsize = 15, family = "sans"))
-p + annotate(geom = "table", 
+p1 + annotate(geom = "table", 
              label = data.frame(a = 1:2, b = 3:4), 
              x = 6, y = 22)
 ```
@@ -265,60 +260,80 @@ p + annotate(geom = "table",
 
 Some geometries create simple graphical elements on the layer, and, thus, there is a single possible approach to apply aesthetics to them. For example, the colour of points or lines. Other geometries create graphical elements composed of multiple parts, such labels with text on a background enclosed by a border line. In these more complex graphical elements there are multiple ways in which an aesthetic like colour or transparency can be applied.
 
-In this case two contrasting approaches are possible: 1) defining multiple aesthetics so that the same conceptual aesthetic (e.g., `colour`) can be independently mapped to different variables to different components of the graphical object, or 2) adding a parameter to the geometry constructor that indicates to which graphical element the aesthetic should apply.
+In this case two contrasting approaches are possible: 1) defining multiple aesthetics so that the same conceptual aesthetic (e.g., `colour`) can be independently mapped to different variables for different components of the graphical object, or 2) adding one parameter or more parameters to the geometry constructor that indicate to which graphical element(s) the aesthetic should be applied.
 
-I consider that the targeting of the aesthetic mapping to different elements of a graphical object is related to _graphical design_ and not part of the data representation. Thus 'ggpp' follows the second approach. The idea is that a single colour mapping assigns a meaning to the different colours in single colour scale, and that this meaning should be unique.
+I consider that the targeting of the aesthetic mapping to different elements of a graphical object is related to _graphical design_ and not part of the data representation. Thus 'ggpp' follows the second approach. The idea is that a single colour mapping assigns a meaning to the different colours in a single colour scale, and that this meaning should be unique.
 
 The user interface used in 'ggpp' differs from that used in 'ggplot2' (>= 4.0.0) for `geom_label()`. It was introduced in 'ggpp' several years earlier and in the more complex geometries from 'ggpp' it remains preferable. Conceptually, the approaches are equivalent.
 
 So, how does this work?
 
-### `geom_label()` comapred to `geom_label_s()` 
+### `geom_label()` compared to `geom_label_s()` 
+
+For the examples below `geom_label()` from 'ggplot2' and `geom_label_s()` from 'ggpp' are compared, other geoms from 'ggpp' follow a similar approach to that used in `geom_label_s()`. `geom_label_s()` is similar to `geom_label()` but when the position is modified by a _position_ functions from 'ggpp' it draws a segment or arrow connecting the displaced position to the original one, i.e., the position corresponding to the variable mapped to _x_ and _y_ aesthetics.
+
+The colour targeting approach used in `geom_label_s()` is limited to two colours, a default one taken from the `theme` geom element `ink` colour or overridden by an argument passed to `default.colour`, and the colour mapped to the colour aesthetic (mapped either to a variable or to a constant).
+
 
 ```{r}
 opts_chunk$set(fig.align = 'center', 
                fig.show = 'hold', fig.width = 7, fig.height = 7)
 ```
 
+We use a simple theme, and as we use nudging, expand the _y_ limit to make space for the labels.
+
 ```{r}
 set_theme(theme_minimal())
-library(patchwork)
+p <- p1 + expand_limits(x = 6.5)
 ```
 
 ```{r}
-(p + geom_label(colour = "red") + labs(title = "geom_label()")) / 
-  (p + geom_label_s(colour = "red") + labs(title = "geom_label_s()"))
+(p + geom_label(colour = "red", 
+                nudge_x = 0.1, hjust = 0) + labs(title = "geom_label()")) / 
+  (p + geom_label_s(colour = "red",
+                    nudge_x = 0.1, hjust = 0) + labs(title = "geom_label_s()"))
 ```
 
 ```{r}
-(p + geom_label(colour = "red", border.colour = "black")
+(p + geom_label(colour = "red", 
+                border.colour = "black", 
+                nudge_x = 0.1, hjust = 0) + labs(title = "geom_label()")) / 
+  (p + geom_label_s(colour = "red", 
+                    colour.target = "text", 
+                nudge_x = 0.1, hjust = 0) + labs(title = "geom_label_s()"))
+```
+
+```{r}
+(p + geom_label(colour = "red", 
+                border.colour = "darkgreen", 
+                nudge_x = 0.1, hjust = 0)
  + labs(title = "geom_label()")) / 
-  (p + geom_label_s(colour = "red", colour.target = "text"))
-```
-
-```{r}
-(p + geom_label(colour = "red", border.colour = "green")
- + labs(title = "geom_label()")) / 
-  (p + geom_label_s(colour = "red", default.colour = "green", 
-                    colour.target = "text"))
+  (p + geom_label_s(colour = "red", 
+                    default.colour = "darkgreen", 
+                    colour.target = "text", 
+                    nudge_x = 0.1, hjust = 0))
 ```
 
 ```{r}
 update_theme(geom = element_geom(colour = "red"))
-(p + geom_label() + labs(title = "geom_label()")) / 
-  (p + geom_label_s())
+
+(p + geom_label(nudge_x = 0.1, hjust = 0) + labs(title = "geom_label()")) / 
+  (p + geom_label_s(nudge_x = 0.1, hjust = 0) + labs(title = "geom_label_s()"))
 ```
 
 ```{r}
-update_theme(geom = element_geom(colour = "black", borderwidth = 3))
-(p + geom_label() + labs(title = "geom_label()")) /
-  (p + geom_label_s())
+update_theme(geom = element_geom(colour = "black", borderwidth = 1.5))
+
+(p + geom_label(nudge_x = 0.1, hjust = 0) + labs(title = "geom_label()")) /
+  (p + geom_label_s(nudge_x = 0.1, hjust = 0) + labs(title = "geom_label_s()"))
 ```
 
 ```{r}
-update_theme(geom = element_geom(colour = "black", borderwidth = 3))
-(p + geom_label(linewidth = 0) + labs(title = "geom_label()")) /
-  (p + geom_label_s(linewidth = 0))
+update_theme(geom = element_geom(colour = "black"))
+(p + geom_label(linewidth = 0, 
+                nudge_x = 0.1, hjust = 0) + labs(title = "geom_label()")) /
+  (p + geom_label_s(linewidth = 0, 
+                    nudge_x = 0.1, hjust = 0) + labs(title = "geom_label_s()"))
 ```
 
 ```{r}
@@ -329,14 +344,50 @@ opts_chunk$set(fig.align = 'center',
 ```{r}
 set_theme(theme_minimal())
 update_theme(geom = element_geom(ink = "blue"))
-p + geom_label_s(colour = "red", colour.target = "text")
+p + geom_label_s(colour = "red", colour.target = "text", 
+                 nudge_x = 0.1, hjust = 0)
 ```
+```{r}
+set_theme(theme_minimal() +
+  theme(geom = element_geom(ink = "blue")))
+
+p + 
+  geom_label_s(colour = "red", 
+               colour.target = "text", 
+               nudge_x = 0.1, hjust = 0)
+```
+
 ```{r}
 set_theme(theme_minimal())
 
 p + 
-  geom_label_s(colour = "red", colour.target = "text") +
-  theme(geom = element_geom(ink = "blue"))
+  geom_label_s(colour = "red", 
+               default.colour = "blue",
+               colour.target = "text", 
+               nudge_x = 0.1, hjust = 0)
+```
+
+If the connecting segment has an arrow head, it is also targetted as a component of the `"segment"`.
+
+```{r}
+set_theme(theme_minimal())
+
+p + 
+  geom_label_s(colour = "red", 
+               colour.target = "segment",
+               arrow = grid::arrow(length = unit(2, "mm")),
+               point.padding = 1,
+               nudge_x = 0.25, hjust = 0)
+```
+
+```{r}
+set_theme(theme_minimal())
+
+p + 
+  geom_label_s(colour = "red", 
+               default.colour = "blue",
+               colour.target = c("box.line", "segment"), 
+               nudge_x = 0.1, hjust = 0)
 ```
 
 ### `geom_table`
@@ -346,32 +397,32 @@ set_theme(theme_minimal())
 ```
 
 ```{r}
-p + annotate(geom = "table",
-             colour = "red",
-             label = data.frame(a = 1:2, b = 3:4), 
-             x = 6, y = 22)
+p1 + annotate(geom = "table",
+              colour = "red",
+              label = data.frame(a = 1:2, b = 3:4), 
+              x = 6, y = 22)
 ```
 
 ```{r}
-p + annotate(geom = "table",
-             colour = "red",
-             colour.target = "table.rules",
-             label = data.frame(a = 1:2, b = 3:4), 
-             x = 6, y = 22)
+p1 + annotate(geom = "table",
+              colour = "red",
+              colour.target = "table.rules",
+              label = data.frame(a = 1:2, b = 3:4), 
+              x = 6, y = 22)
 ```
 
 ```{r}
-p + annotate(geom = "table",
-             colour = "red",
-             colour.target = "all",
-             label = data.frame(a = 1:2, b = 3:4), 
-             x = 6, y = 22)
+p1 + annotate(geom = "table",
+              colour = "red",
+              colour.target = "all",
+              label = data.frame(a = 1:2, b = 3:4), 
+              x = 6, y = 22)
 ```
 
 ```{r}
-p + annotate(geom = "table",
-             colour = "red",
-             colour.target = "none",
-             label = data.frame(a = 1:2, b = 3:4), 
-             x = 6, y = 22)
+p1 + annotate(geom = "table",
+              colour = "red",
+              colour.target = "none",
+              label = data.frame(a = 1:2, b = 3:4), 
+              x = 6, y = 22)
 ```

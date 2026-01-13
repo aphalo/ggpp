@@ -202,6 +202,10 @@ PositionDodgeNudgeTo <-
     Position,
     x = NULL,
     y = NULL,
+    width = NULL,
+    preserve = "total",
+    orientation = "x",
+    reverse = NULL,
 
     setup_params = function(self, data) {
       list(x = self$x,
@@ -216,7 +220,7 @@ PositionDodgeNudgeTo <-
            y.reorder = !is.null(self$y) && length(self$y) > 1 && length(self$y) < nrow(data),
            kept.origin = self$kept.origin,
            width = self$width,
-           reverse = self$reverse,
+           reverse = self$reverse %||% TRUE,
            preserve = self$preserve
       )
     },

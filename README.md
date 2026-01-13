@@ -371,7 +371,7 @@ citation("ggpp")
 #> To cite package 'ggpp' in publications use:
 #> 
 #>   Aphalo P (2025). _ggpp: Grammar Extensions to 'ggplot2'_. R package
-#>   version 0.5.8-1.9001, <https://docs.r4photobiology.info/ggpp/>.
+#>   version 0.5.9.9403, <https://docs.r4photobiology.info/ggpp/>.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -379,7 +379,7 @@ citation("ggpp")
 #>     title = {ggpp: Grammar Extensions to 'ggplot2'},
 #>     author = {Pedro J. Aphalo},
 #>     year = {2025},
-#>     note = {R package version 0.5.8-1.9001},
+#>     note = {R package version 0.5.9.9403},
 #>     url = {https://docs.r4photobiology.info/ggpp/},
 #>   }
 ```
@@ -417,6 +417,6 @@ Computational and Graphical Statistics 19 (1): 3–28.
 
 ## License
 
-© 2016-2025 Pedro J. Aphalo (<pedro.aphalo@helsinki.fi>). Released under
+© 2016-2026 Pedro J. Aphalo (<pedro.aphalo@helsinki.fi>). Released under
 the GPL, version 2 or greater. This software carries no warranty of any
 kind.
