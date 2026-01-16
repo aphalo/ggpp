@@ -1,6 +1,6 @@
 context("position_dodge_keep")
 
-test_that("test expected sefault arguments", {
+test_that("test expected default arguments", {
   position <- position_dodge_keep()
   expect_identical(position$width, 1)
   expect_identical(position$preserve, "total")
@@ -11,12 +11,40 @@ test_that("test expected sefault arguments", {
   expect_type(position$compute_layer, "closure")
   expect_type(position$setup_data, "closure")
   expect_type(position$setup_params, "closure")
+  skip_if(condition = utils::packageVersion("ggplot2") < "4.0.0",
+          message = "'ggplot2' < 4.0.0")
+  expect_false(position$reverse)
+  expect_identical(position$orientation, "x")
+  expect_identical(position$required_aes, character(0))
+  expect_type(position$aesthetics, "closure")
+  expect_type(position$use_defaults, "closure")
 })
 
 test_that("test expected user arguments", {
-  position <- position_dodge_keep(preserve = "single", width = 0.5)
+  position <-
+    position_dodge_keep(preserve = "single", width = 0.5, kept.origin = "dodged")
   expect_identical(position$width, 0.5)
   expect_identical(position$preserve, "single")
+  expect_identical(position$x, 0)
+  expect_identical(position$y, 0)
+  expect_identical(position$kept.origin, "dodged")
+  expect_type(position$compute_panel, "closure")
+  expect_type(position$compute_layer, "closure")
+  expect_type(position$setup_data, "closure")
+  expect_type(position$setup_params, "closure")
+  skip_if(condition = utils::packageVersion("ggplot2") < "4.0.0",
+          message = "'ggplot2' < 4.0.0")
+  expect_false(position$reverse)
+  expect_identical(position$orientation, "x")
+  expect_identical(position$required_aes, character(0))
+  expect_type(position$aesthetics, "closure")
+  expect_type(position$use_defaults, "closure")
+})
+
+test_that("test expected user argument 'reverse'", {
+  position <- position_dodge_keep(reverse = TRUE, width = 0.5)
+  expect_identical(position$width, 0.5)
+  expect_identical(position$preserve, "total")
   expect_identical(position$x, 0)
   expect_identical(position$y, 0)
   expect_identical(position$kept.origin, "original")
@@ -24,4 +52,32 @@ test_that("test expected user arguments", {
   expect_type(position$compute_layer, "closure")
   expect_type(position$setup_data, "closure")
   expect_type(position$setup_params, "closure")
+  skip_if(condition = utils::packageVersion("ggplot2") < "4.0.0",
+          message = "'ggplot2' < 4.0.0")
+  expect_true(position$reverse)
+  expect_identical(position$orientation, "x")
+  expect_identical(position$required_aes, character(0))
+  expect_type(position$aesthetics, "closure")
+  expect_type(position$use_defaults, "closure")
+})
+
+test_that("test expected user argument 'orientation'", {
+  skip("Not yet implemented")
+  position <- position_dodge_keep(orientation = "y", width = 0.5)
+  expect_identical(position$width, 0.5)
+  expect_identical(position$preserve, "total")
+  expect_identical(position$x, 0)
+  expect_identical(position$y, 0)
+  expect_identical(position$kept.origin, "original")
+  expect_type(position$compute_panel, "closure")
+  expect_type(position$compute_layer, "closure")
+  expect_type(position$setup_data, "closure")
+  expect_type(position$setup_params, "closure")
+  skip_if(condition = utils::packageVersion("ggplot2") < "4.0.0",
+          message = "'ggplot2' < 4.0.0")
+  expect_true(position$reverse)
+  expect_identical(position$orientation, "y")
+  expect_identical(position$required_aes, character(0))
+  expect_type(position$aesthetics, "closure")
+  expect_type(position$use_defaults, "closure")
 })

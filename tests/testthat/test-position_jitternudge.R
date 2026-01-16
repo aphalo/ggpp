@@ -35,7 +35,17 @@ test_that("test if correct arguments are assigned", {
   expect_identical(position$width, 0.2)
   expect_identical(position$height, 2)
   expect_identical(position$seed, 123)
-
+  expect_identical(position$x, 0.35)
+  expect_identical(position$y, 0)
+  expect_type(position$compute_panel, "closure")
+  expect_type(position$compute_layer, "closure")
+  expect_type(position$setup_data, "closure")
+  expect_type(position$setup_params, "closure")
+  skip_if(condition = utils::packageVersion("ggplot2") < "4.0.0",
+          message = "'ggplot2' < 4.0.0")
+  expect_identical(position$required_aes, c("x", "y"))
+  expect_type(position$aesthetics, "closure")
+  expect_type(position$use_defaults, "closure")
 })
 
 test_that("warn on x or y longer than data", {

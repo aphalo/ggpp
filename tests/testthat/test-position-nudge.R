@@ -12,36 +12,54 @@ test_that("stacknudge", {
     theme(legend.position = "none")
 
   vdiffr::expect_doppelganger("stack_nudge1",
-                              p + geom_text(aes(label = grp),
-                                            position = position_stacknudge(vjust = 0.5, y = 0.3))
+                              p + geom_text(
+                                aes(label = grp),
+                                position = position_stacknudge(vjust = 0.5, y = 0.3))
   )
   vdiffr::expect_doppelganger("stack_nudge2",
-                              p + geom_text_s(aes(label = grp),
-                                                   vjust = 0,
-                                            position = position_stacknudge(vjust = 0.5, y = 0.3))
+                              p + geom_text_s(
+                                aes(label = grp),
+                                vjust = 0,
+                                position = position_stacknudge(vjust = 0.5, y = 0.3))
   )
   vdiffr::expect_doppelganger("stack_nudge3",
-                              p + geom_text(aes(label = grp),
-                                            hjust = 0,
-                                            position = position_stacknudge(vjust = 0, x = 0.1))
+                              p + geom_text(
+                                aes(label = grp),
+                                hjust = 0,
+                                position = position_stacknudge(vjust = 0, x = 0.1))
   )
   vdiffr::expect_doppelganger("stack_nudge4",
-                              p + geom_text(aes(label = grp),
-                                            hjust = 0, angle = 90,
-                                            position = position_stacknudge(vjust = 0, x = 0.1, y = -0.21))
+                              p + geom_text(
+                                aes(label = grp),
+                                hjust = 0, angle = 90,
+                                position = position_stacknudge(vjust = 0, x = 0.1, y = -0.21))
   )
   vdiffr::expect_doppelganger("stack_nudge5",
-                              p + geom_text_s(aes(label = grp),
-                                              vjust = 0.5,
-                                              box.padding = 0.99,
-                                              position = position_stacknudge(vjust = 0.5, y = c(0.3, -0.3)))
+                              p + geom_text_s(
+                                aes(label = grp),
+                                vjust = 0.5,
+                                box.padding = 0.99,
+                                position = position_stacknudge(vjust = 0.5, y = c(0.3, -0.3)))
   )
   vdiffr::expect_doppelganger("stack_nudge6",
-                              p + geom_text_s(aes(label = grp),
-                                              vjust = 0.5,
-                                              box.padding = 0.99,
-                                              position = position_stacknudge(vjust = 0.5,
-                                                                             y = c(rep(0.3, 2), rep(-0.3, 3))))
+                              p + geom_text_s(
+                                aes(label = grp),
+                                vjust = 0.5,
+                                box.padding = 0.99,
+                                position = position_stacknudge(vjust = 0.5,
+                                                               y = c(rep(0.3, 2), rep(-0.3, 3))))
+  )
+  vdiffr::expect_doppelganger("stack_nudge7",
+                              ggplot(data = df, aes(x1, x2, group = grp)) +
+                                geom_col(aes(fill = grp),
+                                         width = 0.5,
+                                         position = position_stack(reverse = TRUE)) +
+                                theme(legend.position = "none") +
+                                geom_text(
+                                  aes(label = grp),
+                                  position = position_stacknudge(vjust = 0.5,
+                                                                 y = 0.3,
+                                                                 reverse = TRUE))
   )
 })
 
@@ -87,6 +105,17 @@ test_that("fillnudge", {
                                               box.padding = 0.99,
                                               position = position_fillnudge(vjust = 0.5,
                                                                              y = c(rep(0.3, 2), rep(-0.3, 3))))
+  )
+  vdiffr::expect_doppelganger("fill_nudge7",
+                              ggplot(data = df, aes(x1, x2, group = grp)) +
+                                geom_col(aes(fill = grp),
+                                         width = 0.5,
+                                         position = position_fill(reverse = TRUE)) +
+                                theme(legend.position = "none") +
+                                geom_text(aes(label = grp),
+                                          position = position_fillnudge(vjust = 0.5,
+                                                                        y = 0.3,
+                                                                        reverse = TRUE))
   )
 })
 
@@ -134,6 +163,20 @@ test_that("dodgenudge", {
                               p + geom_text(aes(label = grp),
                                             position = position_dodgenudge(width = 0.5,
                                                                            y = 0.1))
+  )
+  vdiffr::expect_doppelganger("dodge_nudge7",
+                              ggplot(data = df, aes(x2, x1, group = grp)) +
+                                geom_col(
+                                  aes(fill = grp),
+                                  width=0.5,
+                                  position = position_dodge(width = 0.5,
+                                                            reverse = TRUE)) +
+                                theme(legend.position = "none") +
+                                geom_text(
+                                  aes(label = grp),
+                                  position = position_dodgenudge(width = 0.5,
+                                                                 y = 0.1,
+                                                                 reverse = TRUE))
   )
 })
 

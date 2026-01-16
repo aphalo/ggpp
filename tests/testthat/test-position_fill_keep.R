@@ -1,11 +1,21 @@
 context("position_fill_keep")
 
-test_that("test vjust, reverse, x, y and kept.origin arguments", {
+test_that("test vjust, reverse, x, y and kept.origin default arguments", {
   position <- position_fill_keep()
   expect_identical(position$vjust, 1)
   expect_identical(position$reverse, FALSE)
   expect_identical(position$x, 0)
   expect_identical(position$y, 0)
+  expect_type(position$compute_panel, "closure")
+  expect_type(position$compute_layer, "closure")
+  expect_type(position$setup_data, "closure")
+  expect_type(position$setup_params, "closure")
   expect_identical(position$kept.origin, "original")
   expect_identical(position$fill, TRUE)
+  skip_if(condition = utils::packageVersion("ggplot2") < "4.0.0",
+          message = "'ggplot2' < 4.0.0")
+  expect_false(position$reverse)
+  expect_identical(position$required_aes, character(0))
+  expect_type(position$aesthetics, "closure")
+  expect_type(position$use_defaults, "closure")
 })

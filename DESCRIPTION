@@ -2,7 +2,7 @@ Package: ggpp
 Type: Package
 Title: Grammar Extensions to 'ggplot2'
 Version: 0.5.9.9404
-Date: 2026-01-13
+Date: 2026-01-16
 Authors@R:
     c(
     person("Pedro J.", "Aphalo", email = "pedro.aphalo@helsinki.fi", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3385-972X")),

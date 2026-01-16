@@ -54,8 +54,9 @@ test_that("NA x used", {
   )
 })
 
-test_that("test if correct arguments are assigned", {
+test_that("test if correct default arguments are assigned", {
   position <- position_fillnudge_to()
+  expect_identical(position$kept.origin, "stacked")
   expect_false(position$reverse)
   expect_identical(position$vjust, 1)
   expect_null(position$x)
@@ -68,10 +69,17 @@ test_that("test if correct arguments are assigned", {
   expect_type(position$compute_layer, "closure")
   expect_type(position$setup_data, "closure")
   expect_type(position$setup_params, "closure")
+  skip_if(condition = utils::packageVersion("ggplot2") < "4.0.0",
+          message = "'ggplot2' < 4.0.0")
+  expect_false(position$reverse)
+  expect_identical(position$required_aes, character(0))
+  expect_type(position$aesthetics, "closure")
+  expect_type(position$use_defaults, "closure")
 })
 
 test_that("test if correct arguments are assigned with 'y.action'", {
   position <- position_fillnudge_to(y.action = "spread")
+  expect_identical(position$kept.origin, "stacked")
   expect_false(position$reverse)
   expect_identical(position$vjust, 1)
   expect_null(position$x)
@@ -84,10 +92,17 @@ test_that("test if correct arguments are assigned with 'y.action'", {
   expect_type(position$compute_layer, "closure")
   expect_type(position$setup_data, "closure")
   expect_type(position$setup_params, "closure")
+  skip_if(condition = utils::packageVersion("ggplot2") < "4.0.0",
+          message = "'ggplot2' < 4.0.0")
+  expect_false(position$reverse)
+  expect_identical(position$required_aes, character(0))
+  expect_type(position$aesthetics, "closure")
+  expect_type(position$use_defaults, "closure")
 })
 
 test_that("test if correct arguments are assigned with 'x.action'", {
   position <- position_fillnudge_to(x.action = "spread")
+  expect_identical(position$kept.origin, "stacked")
   expect_false(position$reverse)
   expect_identical(position$vjust, 1)
   expect_null(position$x)
@@ -100,6 +115,12 @@ test_that("test if correct arguments are assigned with 'x.action'", {
   expect_type(position$compute_layer, "closure")
   expect_type(position$setup_data, "closure")
   expect_type(position$setup_params, "closure")
+  skip_if(condition = utils::packageVersion("ggplot2") < "4.0.0",
+          message = "'ggplot2' < 4.0.0")
+  expect_false(position$reverse)
+  expect_identical(position$required_aes, character(0))
+  expect_type(position$aesthetics, "closure")
+  expect_type(position$use_defaults, "closure")
 })
 
 

@@ -147,8 +147,10 @@ PositionDodgeAndNudge <-
                             nudge_y = self$y,
                             .fun_x = self$.fun_x,
                             .fun_y = self$.fun_y,
-                            x.reorder = !is.null(self$x) && length(self$x) > 1 && length(self$x) < nrow(data),
-                            y.reorder = !is.null(self$y) && length(self$y) > 1 && length(self$y) < nrow(data),
+                            x.reorder = !is.null(self$x) &&
+                              length(self$x) > 1 && length(self$x) < nrow(data),
+                            y.reorder = !is.null(self$y) &&
+                              length(self$y) > 1 && length(self$y) < nrow(data),
                             kept.origin = self$kept.origin),
                        ggplot2::ggproto_parent(ggplot2::PositionDodge, self)$setup_params(data)
                      )

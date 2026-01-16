@@ -21,6 +21,7 @@ test_that("correct kept.origin used", {
 
 test_that("test if correct arguments are assigned", {
   position <- position_dodgenudge(kept.origin = "none")
+  expect_identical(position$kept.origin, "none")
   expect_identical(position$preserve, "total")
   expect_identical(position$width, 1)
   expect_equal(position$width, 1)
@@ -30,10 +31,19 @@ test_that("test if correct arguments are assigned", {
   expect_type(position$compute_layer, "closure")
   expect_type(position$setup_data, "closure")
   expect_type(position$setup_params, "closure")
+  skip_if(condition = utils::packageVersion("ggplot2") < "4.0.0",
+          message = "'ggplot2' < 4.0.0")
+  expect_false(position$reverse)
+  expect_identical(position$required_aes, character(0))
+  expect_type(position$aesthetics, "closure")
+  expect_type(position$use_defaults, "closure")
+  skip("Not yet implemented")
+  expect_identical(position$orientation, "x")
 })
 
 test_that("test if correct arguments are assigned with 'split.y'", {
   position <- position_dodgenudge(kept.origin = "none", direction = "split.y")
+  expect_identical(position$kept.origin, "none")
   expect_identical(position$width, 1)
   expect_equal(position$width, 1)
   expect_identical(position$x, 0)
@@ -42,10 +52,19 @@ test_that("test if correct arguments are assigned with 'split.y'", {
   expect_type(position$compute_layer, "closure")
   expect_type(position$setup_data, "closure")
   expect_type(position$setup_params, "closure")
+  skip_if(condition = utils::packageVersion("ggplot2") < "4.0.0",
+          message = "'ggplot2' < 4.0.0")
+  expect_false(position$reverse)
+  expect_identical(position$required_aes, character(0))
+  expect_type(position$aesthetics, "closure")
+  expect_type(position$use_defaults, "closure")
+  skip("Not yet implemented")
+  expect_identical(position$orientation, "x")
 })
 
 test_that("test if correct arguments are assigned with 'split.x'", {
   position <- position_dodgenudge(kept.origin = "none", direction = "split.x")
+  expect_identical(position$kept.origin, "none")
   expect_identical(position$width, 1)
   expect_equal(position$width, 1)
   expect_identical(position$x, 0)
@@ -54,10 +73,19 @@ test_that("test if correct arguments are assigned with 'split.x'", {
   expect_type(position$compute_layer, "closure")
   expect_type(position$setup_data, "closure")
   expect_type(position$setup_params, "closure")
+  skip_if(condition = utils::packageVersion("ggplot2") < "4.0.0",
+          message = "'ggplot2' < 4.0.0")
+  expect_false(position$reverse)
+  expect_identical(position$required_aes, character(0))
+  expect_type(position$aesthetics, "closure")
+  expect_type(position$use_defaults, "closure")
+  skip("Not yet implemented")
+  expect_identical(position$orientation, "x")
 })
 
 test_that("test if correct arguments are assigned with 'split'", {
   position <- position_dodgenudge(kept.origin = "none", direction = "split")
+  expect_identical(position$kept.origin, "none")
   expect_identical(position$width, 1)
   expect_equal(position$width, 1)
   expect_identical(position$x, 0)
@@ -66,10 +94,19 @@ test_that("test if correct arguments are assigned with 'split'", {
   expect_type(position$compute_layer, "closure")
   expect_type(position$setup_data, "closure")
   expect_type(position$setup_params, "closure")
+  skip_if(condition = utils::packageVersion("ggplot2") < "4.0.0",
+          message = "'ggplot2' < 4.0.0")
+  expect_false(position$reverse)
+  expect_identical(position$required_aes, character(0))
+  expect_type(position$aesthetics, "closure")
+  expect_type(position$use_defaults, "closure")
+  skip("Not yet implemented")
+  expect_identical(position$orientation, "x")
 })
 
 test_that("test if correct arguments are assigned with 'none'", {
   position <- position_dodgenudge(kept.origin = "none", direction = "none")
+  expect_identical(position$kept.origin, "none")
   expect_identical(position$width, 1)
   expect_equal(position$width, 1)
   expect_identical(position$x, 0)
@@ -78,10 +115,19 @@ test_that("test if correct arguments are assigned with 'none'", {
   expect_type(position$compute_layer, "closure")
   expect_type(position$setup_data, "closure")
   expect_type(position$setup_params, "closure")
+  skip_if(condition = utils::packageVersion("ggplot2") < "4.0.0",
+          message = "'ggplot2' < 4.0.0")
+  expect_false(position$reverse)
+  expect_identical(position$required_aes, character(0))
+  expect_type(position$aesthetics, "closure")
+  expect_type(position$use_defaults, "closure")
+  skip("Not yet implemented")
+  expect_identical(position$orientation, "x")
 })
 
 test_that("test if correct arguments are assigned with 'center'", {
   position <- position_dodgenudge(kept.origin = "none", direction = "center")
+  expect_identical(position$kept.origin, "none")
   expect_identical(position$width, 1)
   expect_equal(position$width, 1)
   expect_identical(position$x, 0)
@@ -90,6 +136,14 @@ test_that("test if correct arguments are assigned with 'center'", {
   expect_type(position$compute_layer, "closure")
   expect_type(position$setup_data, "closure")
   expect_type(position$setup_params, "closure")
+  skip_if(condition = utils::packageVersion("ggplot2") < "4.0.0",
+          message = "'ggplot2' < 4.0.0")
+  expect_false(position$reverse)
+  expect_identical(position$required_aes, character(0))
+  expect_type(position$aesthetics, "closure")
+  expect_type(position$use_defaults, "closure")
+  skip("Not yet implemented")
+  expect_identical(position$orientation, "x")
 })
 
 test_that("dodgenudge plots are correct", {
