@@ -104,14 +104,26 @@ These geoms are identical to 'ggplot2'
   \emph{y} and grouping work as in normal geoms. These include
   \code{linetype} and \code{angle} in \code{geom_label_npc()}.
 }
-\section{Alignment}{
- With textual positions and groups a shift is added to
+\note{
+Alignment With textual positions and groups a shift is added to
   successive labels to avoid overlaps. The shift is based on grouping,
   however unused levels are not dropped. In plots with faceting, if not
   all groups appear in each panel, there will be blank spaces in between
   labels. To solve this pass numeric values for the npc coordinates of each
   label instead of character strings.
+}
+\section{Plot boundaries and clipping}{
+ Note that when you change the scale
+  limits for \emph{x} and/or \emph{y} of a plot, text labels stay the same
+  size, as determined by the \code{size} aesthetic, given in millimetres. The
+  actual size as seen in the plotted output is decided during the rendering
+  of the plot to a graphics device. Limits are expanded only to include the
+  anchor point of the labels because the "width" and "height" of a text
+  element are 0 (as seen by ggplot2). Text labels do have height and width,
+  but in grid units, not data units.
+}
 
+\section{Alignment}{
  You can modify text alignment with the \code{vjust} and
   \code{hjust} aesthetics. These can either be a number between 0
   (right/bottom) and 1 (top/left) or a character (\code{"left"},
@@ -133,17 +145,6 @@ These geoms are identical to 'ggplot2'
   'ggplot2' is used, these geometries behave similarly to the corresponding
   ones from package 'ggplot2' with a default justification of \code{0.5} and
   no segment drawn.
-}
-
-\section{Plot boundaries and clipping}{
- Note that when you change the scale
-  limits for \emph{x} and/or \emph{y} of a plot, text labels stay the same
-  size, as determined by the \code{size} aesthetic, given in millimetres. The
-  actual size as seen in the plotted output is decided during the rendering
-  of the plot to a graphics device. Limits are expanded only to include the
-  anchor point of the labels because the "width" and "height" of a text
-  element are 0 (as seen by ggplot2). Text labels do have height and width,
-  but in grid units, not data units.
 }
 
 \examples{
@@ -188,4 +189,45 @@ ggplot(data = mtcars) +
 \seealso{
 \code{\link[ggplot2]{geom_text}} and
    \code{\link[ggplot2]{geom_label}} for additional details.
+}
+\section{Aesthetics}{
+
+\code{geom_label_npc()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
+\tabular{rll}{
+ • \tab \strong{\code{npcx}} \tab   \cr
+ • \tab \strong{\code{npcy}} \tab   \cr
+ • \tab \strong{\code{label}} \tab   \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
+ • \tab \code{angle} \tab → \code{0} \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{colour}} \tab → via \code{theme()} \cr
+ • \tab \code{family} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{fill}} \tab → via \code{theme()} \cr
+ • \tab \code{fontface} \tab → \code{1} \cr
+ • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
+ • \tab \code{hjust} \tab → \code{"inward"} \cr
+ • \tab \code{lineheight} \tab → \code{1.2} \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{size}} \tab → via \code{theme()} \cr
+ • \tab \code{vjust} \tab → \code{"inward"} \cr
+}
+
+\code{geom_text_npc()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
+\tabular{rll}{
+ • \tab \strong{\code{npcx}} \tab   \cr
+ • \tab \strong{\code{npcy}} \tab   \cr
+ • \tab \strong{\code{label}} \tab   \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
+ • \tab \code{angle} \tab → \code{0} \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{colour}} \tab → via \code{theme()} \cr
+ • \tab \code{family} \tab → via \code{theme()} \cr
+ • \tab \code{fontface} \tab → \code{1} \cr
+ • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
+ • \tab \code{hjust} \tab → \code{"inward"} \cr
+ • \tab \code{lineheight} \tab → \code{1.2} \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{size}} \tab → via \code{theme()} \cr
+ • \tab \code{vjust} \tab → \code{"inward"} \cr
+}
+
+Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 }

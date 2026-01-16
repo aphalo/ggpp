@@ -109,6 +109,9 @@
 #' @param fontsize.scaling A scaling factor to apply to the \emph{size}
 #'   aesthetic retrieved from the theme or mapped, applied to table text.
 #'
+#' @aesthetics GeomTable
+#' @aesthetics GeomTableNpc
+#'
 #' @references This geometry is inspired on answers to two questions in
 #'   Stackoverflow. In contrast to these earlier examples, the current geom
 #'   obeys the grammar of graphics, and attempts to be consistent with the

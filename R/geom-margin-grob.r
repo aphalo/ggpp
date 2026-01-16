@@ -37,6 +37,9 @@
 #'   the marginal points. If these are set, data, mapping and show.legend are
 #'   overridden.
 #'
+#' @aesthetics GeomXMarginGrob
+#' @aesthetics GeomYMarginGrob
+#'
 #' @inheritSection geom_text_s Alignment
 #'
 #' @inheritSection geom_text_s Position functions

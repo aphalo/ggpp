@@ -42,6 +42,8 @@
 #' @param parse If \code{TRUE}, the labels will be parsed into expressions and
 #'   displayed as described in \code{?plotmath}.
 #'
+#' @aesthetics StatFmtTb
+#'
 #' @details One or more functions to be applied can be passed in a named list to
 #'   parameter `tb.funs`. Functions are matched by name to columns, after column
 #'   selection and renaming have been applied.

@@ -392,3 +392,43 @@ Other geometries adding layers with insets:
 \code{\link{geom_plot}()}
 }
 \concept{geometries adding layers with insets}
+\section{Aesthetics}{
+
+\code{geom_table()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
+\tabular{rll}{
+ • \tab \strong{\code{\link[ggplot2:aes_position]{x}}} \tab   \cr
+ • \tab \strong{\code{\link[ggplot2:aes_position]{y}}} \tab   \cr
+ • \tab \strong{\code{label}} \tab   \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
+ • \tab \code{angle} \tab → \code{0} \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{colour}} \tab → \code{NA} \cr
+ • \tab \code{family} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{fill}} \tab → \code{NA} \cr
+ • \tab \code{fontface} \tab → \code{1} \cr
+ • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
+ • \tab \code{hjust} \tab → \code{"inward"} \cr
+ • \tab \code{lineheight} \tab → \code{1.2} \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{size}} \tab → via \code{theme()} \cr
+ • \tab \code{vjust} \tab → \code{"inward"} \cr
+}
+
+\code{geom_table_npc()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
+\tabular{rll}{
+ • \tab \strong{\code{npcx}} \tab   \cr
+ • \tab \strong{\code{npcy}} \tab   \cr
+ • \tab \strong{\code{label}} \tab   \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
+ • \tab \code{angle} \tab → \code{0} \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{colour}} \tab → \code{NA} \cr
+ • \tab \code{family} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{fill}} \tab → \code{NA} \cr
+ • \tab \code{fontface} \tab → \code{1} \cr
+ • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
+ • \tab \code{hjust} \tab → \code{"inward"} \cr
+ • \tab \code{lineheight} \tab → \code{1.2} \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{size}} \tab → via \code{theme()} \cr
+ • \tab \code{vjust} \tab → \code{"inward"} \cr
+}
+
+Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
+}

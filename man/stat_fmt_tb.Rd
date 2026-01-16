@@ -158,3 +158,15 @@ See \code{\link{geom_table}} for details on how tables respond
   to mapped aesthetics and table themes. For details on predefined table
   themes see \code{\link{ttheme_gtdefault}}.
 }
+\section{Aesthetics}{
+
+\code{stat_fmt_tb()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
+\tabular{rll}{
+ • \tab \strong{\code{\link[ggplot2:aes_position]{x}}} \tab   \cr
+ • \tab \strong{\code{\link[ggplot2:aes_position]{y}}} \tab   \cr
+ • \tab \strong{\code{label}} \tab   \cr
+ • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
+}
+
+Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
+}

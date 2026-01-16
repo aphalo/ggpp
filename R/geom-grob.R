@@ -113,6 +113,9 @@
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
 #'
+#' @aesthetics GeomGrob
+#' @aesthetics GeomGrobNpc
+#'
 #' @return A plot layer instance.
 #'
 #' @references The idea of implementing a \code{geom_custom()} for grobs has

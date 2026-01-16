@@ -28,6 +28,9 @@
 #' @param label.x,label.y \code{numeric} Coordinates (in npc units) to be used
 #'   for absolute positioning of the labels.
 #'
+#' @aesthetics StatPanelCounts
+#' @aesthetics StatGroupCounts
+#'
 #' @details These statistics can be used to automatically count observations in
 #'   each panel of a plot, and by default add these counts as text labels. These
 #'   statistics, unlike \code{stat_quadrant_counts()} requires only one of

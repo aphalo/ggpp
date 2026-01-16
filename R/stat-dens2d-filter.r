@@ -100,6 +100,9 @@
 #' @param na.rm	a logical value indicating whether NA values should be stripped
 #'   before the computation proceeds.
 #'
+#' @aesthetics StatDens2dFilter
+#' @aesthetics StatDens2dFilterG
+#'
 #' @return A plot layer instance. Using as output \code{data} a subset of the
 #'   rows in input \code{data} retained based on a 2D-density-based filtering
 #'   criterion.

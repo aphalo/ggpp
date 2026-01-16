@@ -167,11 +167,6 @@ Geometries \code{geom_text_pairwise()} and
   graphics using the same aesthetic with multiple meanings is not allowed,
   thus, the approach used in package 'ggpp' attempts to enforce this.
 }
-\section{Under development!}{
- This geometry is still under development
-  and its user interface subject to change.
-}
-
 \section{Plot boundaries and clipping}{
  Note that when you change the scale
   limits for \emph{x} and/or \emph{y} of a plot, text labels stay the same
@@ -203,31 +198,6 @@ Geometries \code{geom_text_pairwise()} and
   based on the direction of the displacement of the position of the label so
   that each individual text or label is justified outwards from its original
   position. The default justification is \code{"identity"}.
-}
-
-\section{Aesthetics}{
- Layer functions \code{geom_text_pairwise()} and
-  \code{geom_label_pairwise()} require aesthetics \code{xmin}, \code{xmax},
-  \code{x}, \code{y} and
-  \code{label} and support aesthetics: \code{alpha}, \code{colour},
-  \code{group}, \code{size} (of text), \code{family}, \code{fontface},
-  \code{linewidth}, \code{linetype}, \code{hjust} and \code{vjust}. In addition,
-  \code{geom_text_pairwise} supports \code{angle} and \code{geom_label_pairwise} supports
-  \code{fill}. See
-  \code{\link[ggplot2]{aes_colour_fill_alpha}},
-  \code{\link[ggplot2]{aes_linetype_size_shape}},
-  \code{\link[ggplot2]{aes_position}}, and
-  \code{\link[ggplot2]{aes_group_order}}.
-
-  In 'ggplot2' \code{linewidth} when applied to the border of the box drawn
-  by \code{geom_label()} is given in points rather than in mm because of a
-  historical error in the code. In other geometries such as
-  \code{geom_segment()} \code{linewidth} is given in mm. As in
-  \code{geom_label_pairwise()} it is important to remain consistent among
-  different \code{linewidth} specifications, mm are used both for the box
-  border and linking segment. To imitate the behaviour of \code{geom_label()}
-  a correction factor of 0.75 (more exactly 1 pt = 0.7528 mm) can be used for
-  the line width of the border of the box.
 }
 
 \examples{
@@ -348,4 +318,49 @@ p2 +
 \code{\link{geom_text_s}}, \code{\link{geom_label_s}},
   \code{\link[ggplot2]{geom_text}}, \code{\link[ggplot2]{geom_label}} and
   other documentation of package 'ggplot2'.
+}
+\section{Aesthetics}{
+
+\code{geom_label_pairwise()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
+\tabular{rll}{
+ • \tab \strong{\code{\link[ggplot2:aes_position]{xmin}}} \tab   \cr
+ • \tab \strong{\code{\link[ggplot2:aes_position]{xmax}}} \tab   \cr
+ • \tab \strong{\code{\link[ggplot2:aes_position]{y}}} \tab   \cr
+ • \tab \strong{\code{label}} \tab   \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
+ • \tab \code{angle} \tab → \code{0} \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{colour}} \tab → via \code{theme()} \cr
+ • \tab \code{family} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{fill}} \tab → via \code{theme()} \cr
+ • \tab \code{fontface} \tab → \code{1} \cr
+ • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
+ • \tab \code{hjust} \tab → \code{0.5} \cr
+ • \tab \code{lineheight} \tab → \code{1.2} \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{size}} \tab → via \code{theme()} \cr
+ • \tab \code{vjust} \tab → \code{0.5} \cr
+ • \tab \code{\link[ggplot2:aes_position]{x}} \tab → \code{NA_real_} \cr
+}
+
+\code{geom_text_pairwise()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
+\tabular{rll}{
+ • \tab \strong{\code{\link[ggplot2:aes_position]{xmin}}} \tab   \cr
+ • \tab \strong{\code{\link[ggplot2:aes_position]{xmax}}} \tab   \cr
+ • \tab \strong{\code{\link[ggplot2:aes_position]{y}}} \tab   \cr
+ • \tab \strong{\code{label}} \tab   \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
+ • \tab \code{angle} \tab → \code{0} \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{colour}} \tab → via \code{theme()} \cr
+ • \tab \code{family} \tab → via \code{theme()} \cr
+ • \tab \code{fontface} \tab → \code{1} \cr
+ • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
+ • \tab \code{hjust} \tab → \code{0.5} \cr
+ • \tab \code{lineheight} \tab → \code{1.2} \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{size}} \tab → via \code{theme()} \cr
+ • \tab \code{vjust} \tab → \code{-0.5} \cr
+ • \tab \code{\link[ggplot2:aes_position]{x}} \tab → \code{NA_real_} \cr
+}
+
+Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 }

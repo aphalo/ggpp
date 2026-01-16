@@ -128,3 +128,16 @@ if (gginnards.installed) {
 }
 
 }
+\section{Aesthetics}{
+
+\code{stat_functions()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
+\tabular{rll}{
+ • \tab \strong{\code{\link[ggplot2:aes_position]{xmin}}} \tab   \cr
+ • \tab \strong{\code{\link[ggplot2:aes_position]{xmax}}} \tab   \cr
+ • \tab \strong{\code{\link[ggplot2:aes_position]{y}}} \tab   \cr
+ • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
+ • \tab \code{\link[ggplot2:aes_position]{x}} \tab → \code{ggplot2::after_stat(x)} \cr
+}
+
+Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
+}

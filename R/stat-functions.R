@@ -24,6 +24,8 @@
 #' @param na.rm	a logical indicating whether \code{NA} values should be stripped
 #'   before the computation proceeds.
 #'
+#' @aesthetics StatFunctions
+#'
 #' @details This statistic can be used to plot values computed by functions. As
 #'   it follows the grammar of graphics, grouping and facets are supported. In
 #'   this it differs from \code{\link[ggplot2]{geom_function}} which behaves

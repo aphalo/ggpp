@@ -58,6 +58,9 @@
 #'   \code{"text"}, \code{"segment"}, \code{"box"}, \code{"box.line"}, and
 #'   \code{"box.fill"}.
 #'
+#' @aesthetics GeomPlot
+#' @aesthetics GeomPlotNpc
+#'
 #' @family geometries adding layers with insets
 #'
 #' @export

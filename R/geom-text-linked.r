@@ -141,27 +141,7 @@
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
 #'
-#' @section Aesthetics: Layer functions \code{geom_text_s()} and
-#'   \code{geom_label_s()} require aesthetics \code{x}, \code{y} and
-#'   \code{label} and support aesthetics: \code{alpha}, \code{colour},
-#'   \code{group}, \code{size} (of text), \code{family}, \code{fontface},
-#'   \code{lineheight}, \code{hjust} and \code{vjust}. In addition,
-#'   \code{geom_text_s} supports \code{angle} and \code{geom_label_s} supports
-#'   \code{fill}, \code{linewidth} and \code{linetype}. See
-#'   \code{\link[ggplot2]{aes_colour_fill_alpha}},
-#'   \code{\link[ggplot2]{aes_linetype_size_shape}},
-#'   \code{\link[ggplot2]{aes_position}}, and
-#'   \code{\link[ggplot2]{aes_group_order}}.
-#'
-#'   In 'ggplot2' \code{linewidth} when applied to the border of the box drawn
-#'   by \code{geom_label()} is given in points rather than in mm because of a
-#'   historical error in the code. In other geometries such as
-#'   \code{geom_segment()} \code{linewidth} is given in mm. As in
-#'   \code{geom_label_s()} it is important to remain consistent among
-#'   different \code{linewidth} specifications, mm are used both for the box
-#'   border and linking segment. To imitate the behaviour of \code{geom_label()}
-#'   a correction factor of 0.75 (more exactly 1 pt = 0.7528 mm) can be used for
-#'   the line width of the border of the box.
+#' @aesthetics GeomTextS
 #'
 #' @section Position functions: Many layer functions from package 'ggpp' are
 #'   designed to work seamlessly with position functions that keep, rather than

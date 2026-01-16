@@ -36,6 +36,9 @@
 #'   the marginal points. If these are set, data, mapping and show.legend are
 #'   overridden.
 #'
+#' @aesthetics GeomXMarginArrow
+#' @aesthetics GeomYMarginArrow
+#'
 #' @family Geometries for marginal annotations in ggplots
 #'
 #' @return A plot layer instance.

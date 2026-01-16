@@ -130,6 +130,8 @@
 #' @param na.rm	a logical value indicating whether NA values should be stripped
 #'   before the computation proceeds.
 #'
+#' @aesthetics StatDens1dLabels
+#'
 #' @seealso \code{\link[stats]{density}} used internally.
 #'
 #' @family statistics returning a subset of data

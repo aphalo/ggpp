@@ -6,9 +6,6 @@
 #'   factor mapped to the \code{x} aesthetic when used to report significance or
 #'   highlighting pairwise comparisons.
 #'
-#' @section Under development!: This geometry is still under development
-#'   and its user interface subject to change.
-#'
 #' @details Geometries \code{geom_text_pairwise()} and
 #'   \code{geom_label_pairwise()} have an interface similar to that of
 #'   \code{\link[ggplot2]{geom_text}} and \code{\link[ggplot2]{geom_label}}, but
@@ -119,28 +116,7 @@
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
 #'
-#' @section Aesthetics: Layer functions \code{geom_text_pairwise()} and
-#'   \code{geom_label_pairwise()} require aesthetics \code{xmin}, \code{xmax},
-#'   \code{x}, \code{y} and
-#'   \code{label} and support aesthetics: \code{alpha}, \code{colour},
-#'   \code{group}, \code{size} (of text), \code{family}, \code{fontface},
-#'   \code{linewidth}, \code{linetype}, \code{hjust} and \code{vjust}. In addition,
-#'   \code{geom_text_pairwise} supports \code{angle} and \code{geom_label_pairwise} supports
-#'   \code{fill}. See
-#'   \code{\link[ggplot2]{aes_colour_fill_alpha}},
-#'   \code{\link[ggplot2]{aes_linetype_size_shape}},
-#'   \code{\link[ggplot2]{aes_position}}, and
-#'   \code{\link[ggplot2]{aes_group_order}}.
-#'
-#'   In 'ggplot2' \code{linewidth} when applied to the border of the box drawn
-#'   by \code{geom_label()} is given in points rather than in mm because of a
-#'   historical error in the code. In other geometries such as
-#'   \code{geom_segment()} \code{linewidth} is given in mm. As in
-#'   \code{geom_label_pairwise()} it is important to remain consistent among
-#'   different \code{linewidth} specifications, mm are used both for the box
-#'   border and linking segment. To imitate the behaviour of \code{geom_label()}
-#'   a correction factor of 0.75 (more exactly 1 pt = 0.7528 mm) can be used for
-#'   the line width of the border of the box.
+#' @aesthetics GeomTextPairwise
 #'
 #' @seealso \code{\link{geom_text_s}}, \code{\link{geom_label_s}},
 #'   \code{\link[ggplot2]{geom_text}}, \code{\link[ggplot2]{geom_label}} and

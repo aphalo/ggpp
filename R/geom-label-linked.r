@@ -4,6 +4,8 @@
 #' @param label.padding Amount of padding around label. Defaults to 0.25 lines.
 #' @param label.r Radius of rounded corners. Defaults to 0.15 lines.
 #'
+#' @aesthetics GeomLabelS
+#'
 #' @export
 #'
 geom_label_s <-

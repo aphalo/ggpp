@@ -116,6 +116,9 @@
 #' @param na.rm	a logical value indicating whether \code{NA} values should be
 #'   stripped before the computation proceeds.
 #'
+#' @aesthetics StatDens1dFilter
+#' @aesthetics StatDens1dFilterG
+#'
 #' @return A plot layer instance. Using as output \code{data} a subset of the
 #'   rows in input \code{data} retained based on a 1D filtering criterion.
 #'

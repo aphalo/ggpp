@@ -37,6 +37,8 @@
 #'   for absolute positioning of the labels.
 #' @param digits integer Number of digits for fraction and percent labels.
 #'
+#' @aesthetics StatQuadrantCounts
+#'
 #' @details This statistic can be used to automatically count observations in
 #'   each of the four quadrants of a plot, and by default add these counts as
 #'   text labels. Values exactly equal to \code{xintercept} or

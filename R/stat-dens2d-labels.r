@@ -109,6 +109,8 @@
 #' @param na.rm	a logical value indicating whether NA values should be stripped
 #'   before the computation proceeds.
 #'
+#' @aesthetics StatDens2dLabels
+#'
 #' @return A plot layer instance. Using as output \code{data} the input
 #'   \code{data} after value substitution based on a 2D the filtering criterion.
 #'

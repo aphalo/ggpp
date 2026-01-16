@@ -257,3 +257,14 @@ Answers to question "R ggplot on-the-fly calculation by grouping variable" at
 \url{https://stackoverflow.com/questions/51412522}.
 }
 \concept{summary stats}
+\section{Aesthetics}{
+
+\code{stat_apply_group()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
+\tabular{rll}{
+ • \tab \strong{\code{\link[ggplot2:aes_position]{x}}} \tab   \cr
+ • \tab \strong{\code{\link[ggplot2:aes_position]{y}}} \tab   \cr
+ • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
+}
+
+Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
+}

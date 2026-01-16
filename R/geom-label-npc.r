@@ -4,6 +4,8 @@
 #' @param label.r Radius of rounded corners. Defaults to 0.15 lines.
 #' @param label.size Size of label border, in mm.
 #'
+#' @aesthetics GeomLabelNpc
+#'
 geom_label_npc <- function(mapping = NULL,
                            data = NULL,
                            stat = "identity",

@@ -71,6 +71,8 @@
 #' @param arrow specification for arrow heads, as created by
 #'   \code{\link[grid]{arrow}}
 #'
+#' @aesthetics GeomPointS
+#'
 #' @export
 #'
 #' @examples

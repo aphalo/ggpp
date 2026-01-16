@@ -19,7 +19,7 @@
 #'
 #' @inheritSection geom_text_s Alignment
 #'
-#' @section Alignment: With textual positions and groups a shift is added to
+#' @note Alignment With textual positions and groups a shift is added to
 #'   successive labels to avoid overlaps. The shift is based on grouping,
 #'   however unused levels are not dropped. In plots with faceting, if not
 #'   all groups appear in each panel, there will be blank spaces in between
@@ -57,10 +57,10 @@
 #'   (`"mm"`, default), points (`"pt"`), centimetres (`"cm"`), inches (`"in"`),
 #'   or picas (`"pc"`).
 #'
+#' @aesthetics GeomTextNpc
+#'
 #' @seealso \code{\link[ggplot2]{geom_text}} and
 #'    \code{\link[ggplot2]{geom_label}} for additional details.
-#'
-#' @rdname geom_text_npc
 #'
 #' @export
 #' @examples

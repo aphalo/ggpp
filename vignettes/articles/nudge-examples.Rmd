@@ -918,7 +918,8 @@ ggplot(df, aes(x, yy)) +
               formula = y ~ poly(x, 2, raw = TRUE)) +
   geom_text_repel(aes(y = yy, label = l),
                   position = position_nudge_line(method = "lm",
-                                                 formula = y ~ poly(x, 2, raw = TRUE),
+                                                 formula = 
+                                                   y ~ poly(x, 2, raw = TRUE),
                                                  x = 0.5, 
                                                  y = 5,
                                                  direction = "split"),
@@ -976,6 +977,30 @@ ggplot(data = df, aes(x, y, group = grp)) +
   geom_vline(xintercept = 0) +
   geom_label_repel(aes(label = grp),
                    position = position_stacknudge(vjust = 0.5, y = 0.4),
+                   label.size = NA)
+```
+
+Parameter `reverse` in `position_stacknudge()` is implemented consistently with
+`position_stack()` from 'ggplot2', and can be used in different layers of the
+same plot.
+
+```{r, eval=eval_ggrepel}
+df <- tibble::tribble(
+  ~y, ~x, ~grp,
+  "a", 1,  "some long name",
+  "a", 2,  "other name",
+  "b", 1,  "some name",
+  "b", 3,  "another name",
+  "b", -1, "some long name"
+)
+
+ggplot(data = df, aes(x, y, group = grp)) +
+  geom_col(aes(fill = grp), width=0.5, 
+           position = position_stack(reverse =TRUE)) +
+  geom_vline(xintercept = 0) +
+  geom_label_repel(aes(label = grp),
+                   position = 
+                     position_stacknudge(vjust = 0.5, y = 0.4, reverse = TRUE),
                    label.size = NA)
 ```
 

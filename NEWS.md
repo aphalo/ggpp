@@ -9,18 +9,23 @@ editor_options:
 # ggpp 0.6.0
 
 This version adds support for new features from 'ggplot2' (>= 4.0.0) but
-remains compatible with 'ggplot2' (>= 3.4.0).
+remains compatible with 'ggplot2' (>= 3.4.0). The support described below for 
+the geom element of `theme` is enabled only under 'ggplot2' (>= 4.0.0).
 
-- Add support for 'ggplot2' (>= 4.0.0) theme settings in 'ggpp' geoms. In
+- Support 'ggplot2' (>= 4.0.0) theme settings in 'ggpp' geoms. In
 `geom_table()` the default size of text within the table is that in the theme
 multiplied by the new parameter `fontsize.scaling` with a default value that
 ensures a similar size for text to that used in 'ggpp' < 0.6.0.
-- The default value used for the `linewidth` aesthetic of label boxes is narrower
-than in earlier versions of 'ggpp' and matches that currently used in
-'ggplot2'. 
+- Use a default for the `linewidth` aesthetic of label boxes that is narrower
+than in earlier versions of 'ggpp' and matches that used in 'ggplot2' 
+(== 4.0.1). 
 - In all geoms having a `default.colour` formal parameter, if its value is 
 `NULL`, the value used is that of `ink` in the "global" `geom` theme.
+- Implement formal parameter `reverse` in position functions matching its
+use in 'ggplot2' (>= 4.0.0).
 - Track changes in 'gginnards' (>= 0.2.0) in examples and docs.
+- Update help for _geoms_ to list aesthetics and their defaults as extracted
+from their definitions in the code.
 - Add on-line-only article demonstrating the use of `theme()` to modify geoms'
 default aesthetic mappings and the targeting of aesthetics to different parts
 of complex graphical objects.

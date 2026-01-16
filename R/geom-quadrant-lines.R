@@ -43,6 +43,9 @@
 #'   \code{geom_quadrant_lines()} the pooling along axes can be specified in the
 #'   same way as in \code{\link{stat_quadrant_counts}()}.
 #'
+#' @aesthetics GeomQuadrantLines
+#' @aesthetics GeomVHLines
+#'
 #' @family Functions for quadrant and volcano plots
 #'
 #' @seealso \code{\link[ggplot2]{geom_abline}}, the topic where

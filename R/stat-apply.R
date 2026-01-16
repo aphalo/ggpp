@@ -52,6 +52,8 @@
 #' @param .fun.x.args,.fun.y.args,.fun.args additional arguments to be passed to
 #'   the function as a named list.
 #'
+#' @aesthetics StatApplyGroup
+#'
 #' @details These four statistics are similar. They differ on whether they
 #'   return a single or multiple rows of data per group.
 #'
