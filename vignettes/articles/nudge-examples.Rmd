@@ -74,6 +74,8 @@ if (eval_ggrepel) library(ggrepel)
 old_theme <- theme_set(theme_bw())
 ```
 
+_The rendered plots can slightly differ among versions of the packages or very rarely depending on the version of R. This article was rendered on `r lubridate::today()` with 'ggpp' version `r packageVersion("ggpp")`, 'ggrepel' version  `r packageVersion("ggrepel")` and 'ggplot2' version `r packageVersion("ggplot2")`._
+
 ## Position functions and nudging
 
 Nudging shifts deterministically the *x* and/or *y* coordinates of an

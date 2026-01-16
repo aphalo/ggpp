@@ -21,9 +21,11 @@ than in earlier versions of 'ggpp' and matches that currently used in
 - In all geoms having a `default.colour` formal parameter, if its value is 
 `NULL`, the value used is that of `ink` in the "global" `geom` theme.
 - Track changes in 'gginnards' (>= 0.2.0) in examples and docs.
-- Add on-line-only article demonstrating the use `theme()` to modify geoms'
+- Add on-line-only article demonstrating the use of `theme()` to modify geoms'
 default aesthetic mappings and the targeting of aesthetics to different parts
 of complex graphical objects.
+- The former package vignette "Combining repulsion and nudging" is now an 
+on-line-only article.
 
 # ggpp 0.5.9
 
