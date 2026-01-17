@@ -20,10 +20,14 @@ utils::globalVariables(c(
   # from the theme, as the geom element is available
   if ("element_geom" %in% getNamespaceExports("ggplot2")) {
     ggplot2::update_geom_defaults(
-        GeomGrob,
-        ggplot2::aes(colour = from_theme(colour %||% ink),
-                     family = from_theme(family)))
-      ggplot2::update_geom_defaults(
+      GeomGrob,
+      ggplot2::aes(colour = from_theme(colour %||% ink),
+                   family = from_theme(family)))
+    ggplot2::update_geom_defaults(
+      GeomGrobNpc,
+      ggplot2::aes(colour = from_theme(colour %||% ink),
+                   family = from_theme(family)))
+    ggplot2::update_geom_defaults(
         GeomLabelS,
         ggplot2::aes(colour = from_theme(colour %||% ink),
                      fill = from_theme(fill %||% paper),

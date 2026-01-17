@@ -411,8 +411,8 @@ GeomGrobNpc <-
                    required_aes = c("npcx", "npcy", "label"),
 
                    default_aes = ggplot2::aes(
-                     colour = from_theme(colour %||% ink),
-                     family = from_theme(family),
+                     colour = "black",
+                     family = "",
                      fontface = 1,
                      angle = 0,
                      hjust = "inward",

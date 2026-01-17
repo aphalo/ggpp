@@ -48,7 +48,7 @@ test_that("geom_quadrant_lines works as expected with default values", {
     group = gp,
     colour = "black",
     linewidth = 0.5,
-    linetype = 1,
+    linetype = "dashed",
     alpha = NA
   )
 

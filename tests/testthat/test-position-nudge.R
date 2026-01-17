@@ -167,6 +167,7 @@ test_that("dodgenudge", {
                                             position = position_dodgenudge(width = 0.5,
                                                                            y = 0.1))
   )
+  skip_if(utils::packageVersion("ggplot2") < "4.0.0", "'ggplot2' < 4.0.0")
   vdiffr::expect_doppelganger("dodge_nudge7",
                               ggplot(data = df, aes(x2, x1, group = grp)) +
                                 geom_col(

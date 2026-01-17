@@ -16,9 +16,12 @@
 #' @keywords internal
 #'
 check_default_colour <-
-  function(default.colour, theme = ggplot2::get_theme()) {
+  function(default.colour, theme = NULL) {
     if (is.null(default.colour)) {
       if (utils::packageVersion("ggplot2") >= "4.0.0") {
+        if (is.null(theme)) {
+          theme <- ggplot2::get_theme()
+        }
         ggplot2::calc_element("geom", theme)@ink
       } else {
         "black"
