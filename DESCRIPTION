@@ -1,8 +1,8 @@
 Package: ggpp
 Type: Package
 Title: Grammar Extensions to 'ggplot2'
-Version: 0.5.9.9404
-Date: 2026-01-16
+Version: 0.5.9.9405
+Date: 2026-01-17
 Authors@R:
     c(
     person("Pedro J.", "Aphalo", email = "pedro.aphalo@helsinki.fi", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3385-972X")),
@@ -26,7 +26,7 @@ LazyLoad: TRUE
 ByteCompile: TRUE
 Depends:
     R (>= 4.1.0),
-    ggplot2 (>= 3.4.0)
+    ggplot2 (>= 3.5.0)
 Imports:
     stats,
     grid,
