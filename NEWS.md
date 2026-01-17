@@ -31,6 +31,8 @@ default aesthetic mappings and the targeting of aesthetics to different parts
 of complex graphical objects.
 - The former package vignette "Combining repulsion and nudging" is now an 
 on-line-only article.
+- Update documentation for geometries and statistics with description of all
+supported aesthetics.
 
 # ggpp 0.5.9
 
