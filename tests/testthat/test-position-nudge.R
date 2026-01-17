@@ -404,8 +404,8 @@ test_that("nudge_center works with duration", {
                                 geom_text(
                                   position = position_nudge_center(x = 300, # numeric = seconds
                                                                    y = 0.2)
-                                ) +
-                                scale_x_time()
+                                ) # +
+#                               scale_x_time() # depends on package 'hms'
   )
   vdiffr::expect_doppelganger("nudge_center_duration1",
                               ggplot(df, aes(x, y, label = y)) +
@@ -413,8 +413,8 @@ test_that("nudge_center works with duration", {
                                 geom_text(hjust = 0, vjust = 0,
                                           position = position_nudge_center(x = 300, # numeric = seconds
                                                                            y = 0.07)
-                                ) +
-                                scale_x_time()
+                                ) # +
+#                               scale_x_time() # depends on package 'hms'
   )
 })
 
