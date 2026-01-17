@@ -10,20 +10,30 @@ test_that("incorrect kept.origin used", {
 
 test_that("correct kept.origin used", {
   expect_no_error(
+    position <- position_stacknudge_to()
+  )
+  expect_identical(position$kept.origin, "stacked")
+})
+
+test_that("correct kept.origin used", {
+  expect_no_error(
     position <- position_stacknudge_to(kept.origin = "none")
   )
+  expect_identical(position$kept.origin, "none")
 })
 
 test_that("correct kept.origin used", {
   expect_no_error(
     position <- position_stacknudge_to(kept.origin = "original")
   )
+  expect_identical(position$kept.origin, "original")
 })
 
 test_that("correct kept.origin used", {
   expect_no_error(
     position <- position_stacknudge_to(kept.origin = "stacked")
   )
+  expect_identical(position$kept.origin, "stacked")
 })
 
 test_that("non-numeric y used", {

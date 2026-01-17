@@ -133,8 +133,9 @@ test_that("dodgenudge", {
     theme(legend.position = "none")
 
   vdiffr::expect_doppelganger("dodge_nudge1",
-                              p + geom_text(aes(label = grp),
-                                            position = position_dodgenudge(width = 0.5, y = 0.1))
+                              p + geom_text(
+                                aes(label = grp),
+                                position = position_dodgenudge(width = 0.5, y = 0.1))
   )
   vdiffr::expect_doppelganger("dodge_nudge2",
                               p + geom_text(aes(label = grp),
@@ -148,16 +149,18 @@ test_that("dodgenudge", {
                                                                              direction = "split"))
   )
   vdiffr::expect_doppelganger("dodge_nudge4",
-                              p + geom_text(aes(label = grp),
-                                            hjust = "center",
-                                            position = position_dodgenudge(width = 0.5, y = -0.075,
-                                                                           direction = "split"))
+                              p + geom_text(
+                                aes(label = grp),
+                                hjust = "center",
+                                position = position_dodgenudge(width = 0.5, y = -0.075,
+                                                               direction = "split"))
   )
   # assumes the default order of factor levels
   vdiffr::expect_doppelganger("dodge_nudge5",
-                              p + geom_text(aes(label = grp),
-                                            position = position_dodgenudge(width = 0.5,
-                                                                           y = c(rep(0.1, 4), -0.1)))
+                              p + geom_text(
+                                aes(label = grp),
+                                position = position_dodgenudge(width = 0.5,
+                                                               y = c(rep(0.1, 4), -0.1)))
   )
   vdiffr::expect_doppelganger("dodge_nudge6",
                               p + geom_text(aes(label = grp),
@@ -192,36 +195,68 @@ test_that("nudge_keep", {
     theme(legend.position = "none")
 
   vdiffr::expect_doppelganger("nudge_keep1",
-                              p + geom_text_s(aes(label = grp),
-                                              vjust = 0, hjust = 0.5,
-                                              position = position_nudge_keep(y = 0.12))
+                              p + geom_text_s(
+                                aes(label = grp),
+                                vjust = 0, hjust = 0.5,
+                                position = position_nudge_keep(y = 0.12))
   )
   vdiffr::expect_doppelganger("nudge_keep2",
-                              p + geom_text_s(aes(label = grp),
-                                              vjust = 0, hjust = "left",
-                                              position = position_nudge_keep(y = 0.12))
+                              p + geom_text_s(
+                                aes(label = grp),
+                                vjust = 0, hjust = "left",
+                                position = position_nudge_keep(y = 0.12))
   )
   vdiffr::expect_doppelganger("nudge_keep3",
-                              p + geom_text_s(aes(label = grp),
-                                              vjust = 0, hjust = "inward",
-                                              position = position_nudge_keep(y = 0.12))
+                              p + geom_text_s(
+                                aes(label = grp),
+                                vjust = 0, hjust = "inward",
+                                position = position_nudge_keep(y = 0.12))
   )
   vdiffr::expect_doppelganger("nudge_keep4",
-                              p + geom_text_s(aes(label = grp),
-                                               position = position_nudge_keep(y = 0.12))
+                              p + geom_text_s(
+                                aes(label = grp),
+                                position = position_nudge_keep(y = 0.12))
   )
   vdiffr::expect_doppelganger("nudge_keep5",
-                              p + geom_text_s(aes(label = grp),
-                                              position = position_nudge_keep(y = c(rep(0.12, 4), -0.12)))
+                              p + geom_text_s(
+                                aes(label = grp),
+                                position = position_nudge_keep(y = c(rep(0.12, 4), -0.12)))
   )
   vdiffr::expect_doppelganger("nudge_keep6",
-                              p + geom_text_s(aes(label = grp),
-                                              position = position_nudge_keep(y = c(rep(0.12, 4), -0.12),
-                                                                             obey_grouping = TRUE))
+                              p + geom_text_s(
+                                aes(label = grp),
+                                position = position_nudge_keep(y = c(rep(0.12, 4), -0.12),
+                                                               obey_grouping = TRUE))
   )
   vdiffr::expect_doppelganger("nudge_keep7",
-                              p + geom_text_s(aes(label = grp),
-                                              position = position_nudge_keep(y = c(0.12, -0.12)))
+                              p + geom_text_s(
+                                aes(label = grp),
+                                position = position_nudge_keep(y = c(0.12, -0.12)))
+  )
+})
+
+test_that("nudge_keep works with duration", {
+  df <- data.frame(x1 = lubridate::as.duration(c(1, 2, 1, 3, -1)),
+                   x2 = c("a", "b", "c", "d", "e"),
+                   grp = c("some long name", "other name", "some name",
+                           "another name", "some long name"))
+
+  p <-
+    ggplot(data = df, aes(x2, x1, group = grp)) +
+    geom_col(aes(fill = grp)) +
+    theme(legend.position = "none")
+
+  vdiffr::expect_doppelganger("nudge_keep_duration1",
+                              p + geom_text_s(
+                                aes(label = grp),
+                                vjust = 0, hjust = 0.5,
+                                position = position_nudge_keep(y = 0.12))
+  )
+  vdiffr::expect_doppelganger("nudge_keep_duration2",
+                              p + geom_text_s(
+                                aes(label = grp),
+                                vjust = 0, hjust = "left",
+                                position = position_nudge_keep(y = 0.12))
   )
 })
 
@@ -330,6 +365,57 @@ test_that("nudge_center", {
                                                                            y = 0.08,
                                                                            center_x = 1.5))
                                 )
+})
+
+test_that("nudge_center works with time", {
+  df <- data.frame(
+    x = lubridate::dmy("01-01-1070") + lubridate::hours(c(1,3,2,5,4,6)),
+    y = c("abc","cd","d","c","bcd","a")
+  )
+
+  vdiffr::expect_doppelganger("nudge_center_time0",
+                              ggplot(df, aes(x, y, label = y)) +
+                                geom_point() +
+                                geom_text(
+                                  position = position_nudge_center(center_y = 4,
+                                                                   x = 600, # numeric = seconds
+                                                                   y = 0.2)
+                                )
+  )
+  vdiffr::expect_doppelganger("nudge_center_time1",
+                              ggplot(df, aes(x, y, label = y)) +
+                                geom_point() +
+                                geom_text(hjust = 0, vjust = 0,
+                                          position = position_nudge_center(x = 300, # numeric = seconds
+                                                                           y = 0.07)
+                                )
+  )
+})
+
+test_that("nudge_center works with duration", {
+  df <- data.frame(
+    x = lubridate::as.duration(lubridate::hours(c(1,3,2,5,4,6))),
+    y = c("abc","cd","d","c","bcd","a")
+  )
+
+  vdiffr::expect_doppelganger("nudge_center_duration0",
+                              ggplot(df, aes(x, y, label = y)) +
+                                geom_point() +
+                                geom_text(
+                                  position = position_nudge_center(x = 300, # numeric = seconds
+                                                                   y = 0.2)
+                                ) +
+                                scale_x_time()
+  )
+  vdiffr::expect_doppelganger("nudge_center_duration1",
+                              ggplot(df, aes(x, y, label = y)) +
+                                geom_point() +
+                                geom_text(hjust = 0, vjust = 0,
+                                          position = position_nudge_center(x = 300, # numeric = seconds
+                                                                           y = 0.07)
+                                ) +
+                                scale_x_time()
+  )
 })
 
 test_that("nudge_line", {
