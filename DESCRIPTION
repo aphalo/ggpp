@@ -26,7 +26,7 @@ LazyLoad: TRUE
 ByteCompile: TRUE
 Depends:
     R (>= 4.1.0),
-    ggplot2 (>= 4.0.0)
+    ggplot2 (>= 3.5.0)
 Imports:
     stats,
     grid,

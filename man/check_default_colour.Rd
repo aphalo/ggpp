@@ -4,7 +4,7 @@
 \alias{check_default_colour}
 \title{Check default.colour argument}
 \usage{
-check_default_colour(default.colour, theme = ggplot2::get_theme())
+check_default_colour(default.colour, theme = NULL)
 }
 \arguments{
 \item{default.colour}{The value to be checked}

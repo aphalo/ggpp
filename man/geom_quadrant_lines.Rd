@@ -152,7 +152,7 @@ Other Functions for quadrant and volcano plots:
  • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
  • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{colour}} \tab → via \code{theme()} \cr
  • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
- • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} \tab → \code{"dashed"} \cr
  • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}} \tab → via \code{theme()} \cr
 }
 
@@ -163,7 +163,7 @@ Other Functions for quadrant and volcano plots:
  • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
  • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{colour}} \tab → via \code{theme()} \cr
  • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
- • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} \tab → \code{1} \cr
  • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}} \tab → via \code{theme()} \cr
 }
 
