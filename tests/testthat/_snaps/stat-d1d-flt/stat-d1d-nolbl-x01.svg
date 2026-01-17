@@ -27,17 +27,26 @@
 </defs>
 <g clip-path='url(#cpMzAuODN8NzE0LjUyfDIyLjc4fDU0NS4xMQ==)'>
 <rect x='30.83' y='22.78' width='683.69' height='522.33' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<circle cx='683.44' cy='278.23' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='370.21' cy='81.31' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='369.19' cy='414.94' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='61.91' cy='253.91' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='319.94' cy='113.12' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='374.71' cy='306.68' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='538.21' cy='46.53' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='311.25' cy='475.33' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='273.59' cy='521.37' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
-<circle cx='182.74' cy='241.01' r='1.95' style='stroke-width: 0.71; fill: #000000;' />
+<circle cx='683.44' cy='278.23' r='0.57' style='stroke-width: 0.71; fill: #000000;' />
+<circle cx='370.21' cy='81.31' r='0.57' style='stroke-width: 0.71; fill: #000000;' />
+<circle cx='369.19' cy='414.94' r='0.57' style='stroke-width: 0.71; fill: #000000;' />
+<circle cx='61.91' cy='253.91' r='0.57' style='stroke-width: 0.71; fill: #000000;' />
+<circle cx='319.94' cy='113.12' r='0.57' style='stroke-width: 0.71; fill: #000000;' />
+<circle cx='374.71' cy='306.68' r='0.57' style='stroke-width: 0.71; fill: #000000;' />
+<circle cx='538.21' cy='46.53' r='0.57' style='stroke-width: 0.71; fill: #000000;' />
+<circle cx='311.25' cy='475.33' r='0.57' style='stroke-width: 0.71; fill: #000000;' />
+<circle cx='273.59' cy='521.37' r='0.57' style='stroke-width: 0.71; fill: #000000;' />
+<circle cx='182.74' cy='241.01' r='0.57' style='stroke-width: 0.71; fill: #000000;' />
+<text x='683.44' y='282.02' text-anchor='middle' style='font-size: 11.00px; fill: #FF0000; font-family: sans;' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>1</text>
+<text x='370.21' y='85.09' text-anchor='middle' style='font-size: 11.00px; fill: #FF0000; font-family: sans;' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>2</text>
+<text x='369.19' y='418.72' text-anchor='middle' style='font-size: 11.00px; fill: #FF0000; font-family: sans;' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>3</text>
+<text x='61.91' y='257.69' text-anchor='middle' style='font-size: 11.00px; fill: #FF0000; font-family: sans;' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>4</text>
+<text x='319.94' y='116.91' text-anchor='middle' style='font-size: 11.00px; fill: #FF0000; font-family: sans;' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>5</text>
+<text x='374.71' y='310.47' text-anchor='middle' style='font-size: 11.00px; fill: #FF0000; font-family: sans;' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>6</text>
 <text x='538.21' y='50.31' text-anchor='middle' style='font-size: 11.00px; fill: #FF0000; font-family: sans;' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>7</text>
+<text x='311.25' y='479.11' text-anchor='middle' style='font-size: 11.00px; fill: #FF0000; font-family: sans;' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>8</text>
+<text x='273.59' y='525.16' text-anchor='middle' style='font-size: 11.00px; fill: #FF0000; font-family: sans;' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>9</text>
+<text x='182.74' y='244.79' text-anchor='middle' style='font-size: 11.00px; fill: #FF0000; font-family: sans;' textLength='12.24px' lengthAdjust='spacingAndGlyphs'>10</text>
 <rect x='30.83' y='22.78' width='683.69' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>

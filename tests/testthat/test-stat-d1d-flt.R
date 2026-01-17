@@ -806,15 +806,17 @@ test_that("labels_y_params", {
 test_that("labels_x_tb", {
   # test non-mapped label filled with row names
   vdiffr::expect_doppelganger("stat_d1d_nolbl_x01",
-                              ggplot(data = make_data_tbl(10), aes(x, y)) +
-                                geom_point() +
+                              ggplot(data = make_labs_tbl(10), aes(x, y)) +
+                                geom_point(size = 0.2) +
                                 stat_dens1d_labels(colour = "red",
+                                                   keep.fraction = 1,
                                                    orientation = "x")
   )
   vdiffr::expect_doppelganger("stat_d1d_nolbl_x02",
                               ggplot(data = make_labs_tbl(10), aes(x, y)) +
-                                geom_point() +
+                                geom_point(size = 0.2) +
                                 stat_dens1d_labels(colour = "red",
+                                                   keep.fraction = 1/2,
                                                    orientation = "x")
   )
   # test with variable mapped to label aesthetic

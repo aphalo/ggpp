@@ -49,6 +49,12 @@
 #'   force inclusion or exclusion of observations after the density is computed.
 #'   In case of conflict, \code{exclude.these} overrides \code{keep.these}.
 #'
+#'   In normal use a character variable is mapped to the \code{label} aesthetic,
+#'   but if no mapping is present, the row names are used instead of the missing
+#'   aesthetic mapping. In either case the "filtered-out" labels are replaced by
+#'   the value passed to \code{label.fill}. This can be useful to identify the
+#'   observations.
+#'
 #' @note Which points are kept and which not depends on how dense a grid is used
 #'   and how flexible the density surface estimate is. This depends on the
 #'   values passed as arguments to parameters \code{n}, \code{bw} and

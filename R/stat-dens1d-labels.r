@@ -16,12 +16,12 @@
 #'   unlabelled points the corresponding rows in data need to be retained but
 #'   labels replaced with the empty character string, \code{""}. Function
 #'   \code{\link{stat_dens1d_filter}} cannot be used with the repulsive geoms
-#'   from 'ggrepel' because it drops the observations.
+#'   from 'ggrepel' because it drops the observations from the data.
 #'
 #'   \code{stat_dens1d_labels()} can be useful also in other situations, as the
 #'   substitution character string can be set by the user by passing an argument
 #'   to \code{label.fill}. If this argument is \code{NULL} the unselected rows
-#'   are filtered out.
+#'   are filtered out, similarly to in \code{\link{stat_dens1d_filter}}.
 #'
 #'   The local density of observations along \emph{x} or \emph{y} is computed
 #'   with function \code{\link[stats]{density}} and used to select observations,
@@ -60,6 +60,12 @@
 #'   Parameters \code{keep.these} and \code{exclude.these} make it possible to
 #'   force inclusion or exclusion of labels after the density is computed.
 #'   In case of conflict, \code{exclude.these} overrides \code{keep.these}.
+#'
+#'   In normal use a character variable is mapped to the \code{label} aesthetic,
+#'   but if no mapping is present, the row names are used instead of the missing
+#'   aesthetic mapping. In either case the "filtered-out" labels are replaced by
+#'   the value passed to \code{label.fill}. This can be useful to identify the
+#'   observations.
 #'
 #' @note Which points are kept and which not depends on how dense and flexible
 #'   is the density curve estimate. This depends on the values passed as
