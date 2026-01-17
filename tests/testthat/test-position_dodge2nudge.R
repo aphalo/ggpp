@@ -15,8 +15,23 @@ test_that("incorrect direction used", {
 })
 
 test_that("correct kept.origin used", {
-  position <- position_dodge2nudge(kept.origin = "dodged")
-  expect_no_error(position)
+  expect_no_error(position <- position_dodge2nudge())
+  expect_identical(position$kept.origin, "dodged")
+})
+
+test_that("correct kept.origin used", {
+  expect_no_error(position <- position_dodge2nudge(kept.origin = "original"))
+  expect_identical(position$kept.origin, "original")
+})
+
+test_that("correct kept.origin used", {
+  expect_no_error(position <- position_dodge2nudge(kept.origin = "dodged"))
+  expect_identical(position$kept.origin, "dodged")
+})
+
+test_that("correct kept.origin used", {
+  expect_no_error(position <- position_dodge2nudge(kept.origin = "none"))
+  expect_identical(position$kept.origin, "none")
 })
 
 test_that("test if correct arguments are assigned", {
