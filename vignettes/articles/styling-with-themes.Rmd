@@ -45,7 +45,7 @@ if (utils::packageVersion("ggplot2") < "4.0.0" ||
 
 Version 4.0.0 of package 'ggplot2' introduced several enhancements to the use of themes. Of these, the addition of several default aesthetics of _geoms_ to the `theme` tree and of `element_geom()` are relevant to 'ggpp'. The code in the geometries defined in 'ggpp' had to be updated to enable support for themes when used together with 'ggplot2' (>= 4.0.0). Examples of their use are given in this section.
 
-**To avoid a hard dependency on 'ggplot2' (>= 4.0.0) a fall-back was implemented. The fall back simply provides the same defaults as the default theme from 'ggplot2' (< 4.0.0). However, this fall-back mechanism is not yet tested with 'ggplot2' (< 4.0.0).**
+**To avoid a hard dependency on 'ggplot2' (>= 4.0.0) a fall-back was implemented. The fall back simply provides the same defaults as the default theme from 'ggplot2' (< 4.0.0). This fall-back mechanism has been tested with 'ggplot2' (== 3.5.2).**
 
 One aim of this article is to test what already works and what does not yet work in the version of 'ggpp' used to render this article. This article was rendered on `r lubridate::today()` with 'ggpp' version `r packageVersion("ggpp")` and 'ggplot2' version `r packageVersion("ggplot2")`.
 

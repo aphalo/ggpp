@@ -74,9 +74,9 @@ the data returned by position functions (see the next section).
 | `geom_margin_point()`                      | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                | no      |
 | `geom_margin_grob()`                       | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                | no      |
 | `geom_quadrant_lines()` , `geom_vhlines()` | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust                | no                                                                                         |         |
-: Geometries defined in package 'ggpp'. <sup>1</sup> NPC versions exist for these geometries, as well as for `geom_text()` and `geom_label()`, used mainly for plot annotations. 
+: **Table 1.** Geometries defined in package 'ggpp'. <sup>1</sup> NPC versions exist for these geometries, as well as for `geom_text()` and `geom_label()`, used mainly for plot annotations. 
 
-## Position functions
+### Position functions
 
 In contrast to position functions from 'ggplot2' all the position functions from
 package 'ggpp' are able keep the original *x* and *y* coordinates under a
@@ -141,21 +141,22 @@ the sequence they appear in the function names.
 | `position_dodgenudge_to()`  | dodge + nudge  | combined, see above             | data labels                 |
 | `position_dodge2nudge_to()` | dodge2 + nudge | combined, see above             | data labels in box plots    |
 
-: Position functions defined in package 'ggpp'.
+: **Table 2.** Position functions defined in package 'ggpp'. 
 
 ### Statistics
 
 Statistic `stat_fmt_tb()` helps with the formatting of tables to be
 plotted with `geom_table()`.
 
-Four statistics, `stat_dens2d_filter()`, `stat_dens2d_label()`,
-`stat_dens1d_filter()` and `stat_dens1d_label()`, implement tagging or
-selective labelling of observations based on the local 2D density of
-observations in a panel. Another two statistics,
-`stat_dens1d_filter_g()` and `stat_dens1d_filter_g()` compute the
-density by group instead of by plot panel. These six statistics are
-designed to work well together with `geom_text_repel()` and
-`geom_label_repel()` from package 'ggrepel' (\>= 0.8.0).
+Two statistics, `stat_dens2d_filter()`, and `stat_dens2d_label()` implement
+tagging or selective labelling of observations based on the local 2D density of
+observations. Similarly, `stat_dens1d_filter()` and `stat_dens1d_label()`
+implement selective tagging or labelling of observation based on the 1D density
+of observations. These four statistics compute the local density per plot panel.
+In contrast `stat_dens1d_filter_g()` and `stat_dens1d_filter_g()` compute the
+density by group of observations. These six statistics are designed to work well
+together with `geom_text_repel()` and `geom_label_repel()` from package
+'ggrepel' (\>= 0.9.2) and `geom_marquee_repel()` from 'ggrepel' (\> 0.9.6).
 
 The statistics `stat_apply_panel()` and `stat_apply_group()` are useful
 for applying arbitrary functions returning numeric vectors like
@@ -165,6 +166,11 @@ and passing them to a geom.
 
 The statistics `stat_quadrant_counts()` and `stat_panel_counts()` make
 it easy to annotate plots with the number of observations.
+
+`stat_functions()` is similar to statistic `stat_function()`
+from 'ggplot2' but accepts a list of function definitions mapped to the `y`
+aesthetic, providing the sane flexibility in relation to grouping and facets
+as statistics accepting `numeric` vectors mapped to the `y` aesthetic.
 
 | Statistic                 | Main use                   | Usual geometries    | Most used with   | Compute function |
 |---------------------------|----------------------------|---------------------|------------------|-------------|
@@ -187,9 +193,11 @@ it easy to annotate plots with the number of observations.
 | `stat_summary_xy()`       | joint x and y summaries    | `geom_point()`, `geom_rug()`, `geom_margin_arrow()`, etc. | data summary | group |
 | `stat_functions()`        | compute y from x range     | `geom_line()`, `geom_point()`, etc. | draw function curves | group |
 
-: Statistics defined in package 'ggpp'.
+: **Table 3.** Statistics defined in package 'ggpp'. Columns show their most common
+uses and _geoms_. In many cases, the default aesthetic mappings in the
+_statistics_ support multiple _geoms_.
 
-## Justification
+### Justification
 
 Justifications `"outward_mean"`, `"inward_mean"`, `"outward_median"` and
 `"inward_median"` implement outward and inward justification relative to
@@ -213,9 +221,9 @@ re-exports all visible definitions from 'ggpp'.
 ## Examples
 
 The plots below exemplify some of the things that 'ggpp' makes possible
-or makes easier to code compared to 'ggplot' used on its own. Additional
+or makes easier to code compared to 'ggplot2' used on its own. Additional
 examples including several combining 'ggpp' and 'ggrepel' are provided
-in the package vignette.
+in the package vignette and [package web pages](https://docs.r4photobiology.info/ggpp/).
 
 ```{r readme-02, message=FALSE}
 library(ggpp)
@@ -232,6 +240,9 @@ A plot with an inset table.
 #|   Scatter plot with an inset table near the upper right corner.
 #|   The points in the plot are coloured according to cyl, and the
 #|   table displays the mean wt and mean mpg for each group.
+#| fig.cap: >
+#|   **Figure 1.** A scatter plot with an inset table displaying group means.
+#|       
 mtcars %>%
   group_by(cyl) %>%
   summarize(wt = mean(wt), mpg = mean(mpg)) %>%
@@ -246,8 +257,6 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_table(data = df, aes(x = x, y = y, label = tb))
 ```
 
-A plot with an inset plot.
-
 Inset plot positioned using native plot coordinates (npc) using
 numerical values in the range 0..1 together with `I()`.
 
@@ -257,6 +266,10 @@ numerical values in the range 0..1 together with `I()`.
 #|   The points in the plot are coloured according to cyl, and the
 #|   inset plot displays the boxplots for mpg for each group, using
 #|   the same colour aesthetic mapping as for the scatterplot.
+#| fig.cap: >
+#|   **Figure 2.** A scatter plot with a boxplot from the same data 
+#|   as an inset.  
+#|   
 p <- ggplot(mtcars, aes(factor(cyl), mpg, colour = factor(cyl))) +
   stat_boxplot() +
   labs(y = NULL, x = "Engine cylinders (number)") +
@@ -278,13 +291,14 @@ Means computed on-the-fly and shown as asterisks.
 #|   Scatter plot with three added star-shaped points showing
 #|   the centroid of each group, i.e., the location of the mean 
 #|   wt and mean mpg for each group on the plot itself.
+#| fig.cap: >
+#|   **Figure 3.** A scatter plot with the group centroids 
+#|   overplotted. 
+#|      
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point() +
   stat_centroid(shape = "asterisk", size = 6)
 ```
-
-Medians computed on-the-fly shown as marginal arrows. Labels with number of
-observations per group.
 
 ```{r, warning=FALSE}
 #| fig.alt: >
@@ -293,6 +307,11 @@ observations per group.
 #|   inside the y-axis indicate the mean mpg for each group. In
 #|   addition annotations near the upper right display the number of
 #|   observations in eack group.
+#| fig.cap: >
+#|   **Figure 4.** A scatter plot with the group y-medians (computed 
+#|   on-the-fly) shown with arrows on the inside of the y-axis. Labels 
+#|   show the number of observations per group.
+#|       
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_point() +
   stat_centroid(geom = "y_margin_arrow", .fun = median,
@@ -306,6 +325,10 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
 #| fig.alt: >
 #|   Stacked columns plot with each individual column annotated
 #|   immediately below its top.
+#| fig.cap: >
+#|   **Figure 5.** Stacked bar plot with bars annotated just below
+#|   their tops with their group label.
+#|       
 df <- data.frame(x1 = c(1, 2, 1, 3, -1),
                  x2 = c("a", "a", "b", "b", "b"),
                  grp = c("some long name", "other name", "some name",
