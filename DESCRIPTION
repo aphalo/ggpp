@@ -1,7 +1,7 @@
 Package: ggpp
 Type: Package
 Title: Grammar Extensions to 'ggplot2'
-Version: 0.5.9.9904
+Version: 0.6.0.9000
 Date: 2026-01-18
 Authors@R:
     c(
