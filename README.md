@@ -74,11 +74,11 @@ functions (see the next section).
 | `geom_margin_grob()` | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust | no |
 | `geom_quadrant_lines()` , `geom_vhlines()` | data labels, scale labels, data | xintercept, yintercept, label, size, family, font face, colour, alpha, group, vjust, hjust | no |
 
-Geometries defined in package ‘ggpp’. <sup>1</sup> NPC versions exist
-for these geometries, as well as for `geom_text()` and `geom_label()`,
-used mainly for plot annotations.
+**Table 1.** Geometries defined in package ‘ggpp’. <sup>1</sup> NPC
+versions exist for these geometries, as well as for `geom_text()` and
+`geom_label()`, used mainly for plot annotations.
 
-## Position functions
+### Position functions
 
 In contrast to position functions from ‘ggplot2’ all the position
 functions from package ‘ggpp’ are able keep the original *x* and *y*
@@ -148,21 +148,24 @@ which are applied in the sequence they appear in the function names.
 | `position_dodgenudge_to()` | dodge + nudge | combined, see above | data labels |
 | `position_dodge2nudge_to()` | dodge2 + nudge | combined, see above | data labels in box plots |
 
-Position functions defined in package ‘ggpp’.
+**Table 2.** Position functions defined in package ‘ggpp’.
 
 ### Statistics
 
 Statistic `stat_fmt_tb()` helps with the formatting of tables to be
 plotted with `geom_table()`.
 
-Four statistics, `stat_dens2d_filter()`, `stat_dens2d_label()`,
-`stat_dens1d_filter()` and `stat_dens1d_label()`, implement tagging or
-selective labelling of observations based on the local 2D density of
-observations in a panel. Another two statistics,
+Two statistics, `stat_dens2d_filter()`, and `stat_dens2d_label()`
+implement tagging or selective labelling of observations based on the
+local 2D density of observations. Similarly, `stat_dens1d_filter()` and
+`stat_dens1d_label()` implement selective tagging or labelling of
+observation based on the 1D density of observations. These four
+statistics compute the local density per plot panel. In contrast
 `stat_dens1d_filter_g()` and `stat_dens1d_filter_g()` compute the
-density by group instead of by plot panel. These six statistics are
-designed to work well together with `geom_text_repel()` and
-`geom_label_repel()` from package ‘ggrepel’ (\>= 0.8.0).
+density by group of observations. These six statistics are designed to
+work well together with `geom_text_repel()` and `geom_label_repel()`
+from package ‘ggrepel’ (\>= 0.9.2) and `geom_marquee_repel()` from
+‘ggrepel’ (\> 0.9.6).
 
 The statistics `stat_apply_panel()` and `stat_apply_group()` are useful
 for applying arbitrary functions returning numeric vectors like
@@ -172,6 +175,12 @@ and passing them to a geom.
 
 The statistics `stat_quadrant_counts()` and `stat_panel_counts()` make
 it easy to annotate plots with the number of observations.
+
+`stat_functions()` is similar to statistic `stat_function()` from
+‘ggplot2’ but accepts a list of function definitions mapped to the `y`
+aesthetic, providing the sane flexibility in relation to grouping and
+facets as statistics accepting `numeric` vectors mapped to the `y`
+aesthetic.
 
 | Statistic | Main use | Usual geometries | Most used with | Compute function |
 |----|----|----|----|----|
@@ -194,9 +203,11 @@ it easy to annotate plots with the number of observations.
 | `stat_summary_xy()` | joint x and y summaries | `geom_point()`, `geom_rug()`, `geom_margin_arrow()`, etc. | data summary | group |
 | `stat_functions()` | compute y from x range | `geom_line()`, `geom_point()`, etc. | draw function curves | group |
 
-Statistics defined in package ‘ggpp’.
+**Table 3.** Statistics defined in package ‘ggpp’. Columns show their
+most common uses and *geoms*. In many cases, the default aesthetic
+mappings in the *statistics* support multiple *geoms*.
 
-## Justification
+### Justification
 
 Justifications `"outward_mean"`, `"inward_mean"`, `"outward_median"` and
 `"inward_median"` implement outward and inward justification relative to
@@ -220,9 +231,10 @@ re-exports all visible definitions from ‘ggpp’.
 ## Examples
 
 The plots below exemplify some of the things that ‘ggpp’ makes possible
-or makes easier to code compared to ‘ggplot’ used on its own. Additional
-examples including several combining ‘ggpp’ and ‘ggrepel’ are provided
-in the package vignette.
+or makes easier to code compared to ‘ggplot2’ used on its own.
+Additional examples including several combining ‘ggpp’ and ‘ggrepel’ are
+provided in the package vignette and [package web
+pages](https://docs.r4photobiology.info/ggpp/).
 
 ``` r
 library(ggpp)
@@ -249,9 +261,16 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   geom_table(data = df, aes(x = x, y = y, label = tb))
 ```
 
-<img src="man/figures/README-readme-03-1.png" alt="Scatter plot with an inset table near the upper right corner. The points in the plot are coloured according to cyl, and the table displays the mean wt and mean mpg for each group."  />
+<div class="figure">
 
-A plot with an inset plot.
+<img src="man/figures/README-readme-03-1.png" alt="Scatter plot with an inset table near the upper right corner. The points in the plot are coloured according to cyl, and the table displays the mean wt and mean mpg for each group.
+"  />
+<p class="caption">
+
+**Figure 1.** A scatter plot with an inset table displaying group means.
+</p>
+
+</div>
 
 Inset plot positioned using native plot coordinates (npc) using
 numerical values in the range 0..1 together with `I()`.
@@ -269,7 +288,17 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   expand_limits(y = 0, x = 0)
 ```
 
-<img src="man/figures/README-readme-06-1.png" alt="Scatter plot with an inset boxplot near the lower left corner. The points in the plot are coloured according to cyl, and the inset plot displays the boxplots for mpg for each group, using the same colour aesthetic mapping as for the scatterplot."  />
+<div class="figure">
+
+<img src="man/figures/README-readme-06-1.png" alt="Scatter plot with an inset boxplot near the lower left corner. The points in the plot are coloured according to cyl, and the inset plot displays the boxplots for mpg for each group, using the same colour aesthetic mapping as for the scatterplot.
+"  />
+<p class="caption">
+
+**Figure 2.** A scatter plot with a boxplot from the same data as an
+inset.
+</p>
+
+</div>
 
 ### Centroids
 
@@ -281,10 +310,16 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   stat_centroid(shape = "asterisk", size = 6)
 ```
 
-<img src="man/figures/README-unnamed-chunk-1-1.png" alt="Scatter plot with three added star-shaped points showing the centroid of each group, i.e., the location of the mean  wt and mean mpg for each group on the plot itself."  />
+<div class="figure">
 
-Medians computed on-the-fly shown as marginal arrows. Labels with number
-of observations per group.
+<img src="man/figures/README-unnamed-chunk-1-1.png" alt="Scatter plot with three added star-shaped points showing the centroid of each group, i.e., the location of the mean  wt and mean mpg for each group on the plot itself.
+"  />
+<p class="caption">
+
+**Figure 3.** A scatter plot with the group centroids overplotted.
+</p>
+
+</div>
 
 ``` r
 ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
@@ -294,7 +329,18 @@ ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
   stat_group_counts(vstep = 0, hstep = 0.09)
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" alt="Scatter plot with an inset table near the upper right corner. The points in the plot are coloured according to cyl. Arrows just inside the y-axis indicate the mean mpg for each group. In addition annotations near the upper right display the number of observations in eack group."  />
+<div class="figure">
+
+<img src="man/figures/README-unnamed-chunk-2-1.png" alt="Scatter plot with an inset table near the upper right corner. The points in the plot are coloured according to cyl. Arrows just inside the y-axis indicate the mean mpg for each group. In addition annotations near the upper right display the number of observations in eack group.
+"  />
+<p class="caption">
+
+**Figure 4.** A scatter plot with the group y-medians (computed
+on-the-fly) shown with arrows on the inside of the y-axis. Labels show
+the number of observations per group.
+</p>
+
+</div>
 
 ### Nudging and stacking combined
 
@@ -314,7 +360,17 @@ ggplot(data = df, aes(x2, x1, group = grp)) +
   theme(legend.position = "none")
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" alt="Stacked columns plot with each individual column annotated immediately below its top."  />
+<div class="figure">
+
+<img src="man/figures/README-unnamed-chunk-3-1.png" alt="Stacked columns plot with each individual column annotated immediately below its top.
+"  />
+<p class="caption">
+
+**Figure 5.** Stacked bar plot with bars annotated just below their tops
+with their group label.
+</p>
+
+</div>
 
 ## Installation
 
@@ -371,7 +427,7 @@ citation("ggpp")
 #> To cite package 'ggpp' in publications use:
 #> 
 #>   Aphalo P (2026). _ggpp: Grammar Extensions to 'ggplot2'_. R package
-#>   version 0.5.9.9403, <https://docs.r4photobiology.info/ggpp/>.
+#>   version 0.5.9.9904, <https://docs.r4photobiology.info/ggpp/>.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
@@ -379,7 +435,7 @@ citation("ggpp")
 #>     title = {ggpp: Grammar Extensions to 'ggplot2'},
 #>     author = {Pedro J. Aphalo},
 #>     year = {2026},
-#>     note = {R package version 0.5.9.9403},
+#>     note = {R package version 0.5.9.9904},
 #>     url = {https://docs.r4photobiology.info/ggpp/},
 #>   }
 ```
