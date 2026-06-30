@@ -2,7 +2,7 @@
 title: "Extensions to the Grammar of Graphics"
 subtitle: "Package 'ggpp' `r packageVersion('ggpp')` "
 author: "Pedro J. Aphalo"
-date: "`r Sys.Date()`"
+date: "`r packageDate('ggpp')`"
 output: 
   rmarkdown::html_vignette:
     toc: yes
