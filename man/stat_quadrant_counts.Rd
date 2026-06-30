@@ -235,8 +235,8 @@ if (gginnards.installed) {
 
 }
 \seealso{
-Other Functions for quadrant and volcano plots: 
-\code{\link{geom_quadrant_lines}()},
-\code{\link{stat_panel_counts}()}
+Other Functions for quadrant and volcano plots:
+\code{\link[=geom_quadrant_lines]{geom_quadrant_lines()}},
+\code{\link[=stat_panel_counts]{stat_panel_counts()}}
 }
 \concept{Functions for quadrant and volcano plots}

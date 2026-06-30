@@ -12,6 +12,7 @@ geom_label_pairwise <-
            stat = "identity",
            position = "identity",
            ...,
+           orientation = NA,
            parse = FALSE,
            nudge_x = 0,
            nudge_y = 0,
@@ -58,6 +59,7 @@ geom_label_pairwise <-
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
+      orientation = orientation,
       parse = parse,
       default.colour = default.color,
       colour.target = colour.target,
@@ -80,10 +82,11 @@ geom_label_pairwise <-
 #' @export
 GeomLabelPairwise <-
   ggplot2::ggproto("GeomLabelPairwise", ggplot2::Geom,
-                   required_aes = c("xmin", "xmax", "y", "label"),
+                   required_aes = c("xmin|ymin", "xmax|ymax", "y|x", "label"),
 
                    default_aes = ggplot2::aes(
                      x = NA_real_,
+                     y = NA_real_,
                      colour = "black",
                      fill = rgb(1, 1, 1, alpha = 0.75), # "white", but occluded data are visible
                      family = "",
@@ -109,8 +112,18 @@ GeomLabelPairwise <-
                                          segment.linewidth = 0.5,
                                          arrow = NULL,
                                          label.padding = unit(0.25, "lines"),
-                                         label.r = unit(0.15, "lines")) {
+                                         label.r = unit(0.15, "lines"),
+                                         orientation = NA) {
 
+                     if (is.null(orientation) || is.na(orientation)) {
+                       if (all(c("xmin", "xmax") %in% colnames(data))) {
+                         orientation <- "x"
+                       } else if (all(c("ymin", "ymax") %in% colnames(data))) {
+                         orientation <- "y"
+                       } else {
+                         stop("Unable to guess 'orientation' from mapped aesthetics!")
+                       }
+                     }
                      default.colour <- check_default_colour(default.colour)
 
                      data$label <- as.character(data$label)
@@ -155,80 +168,155 @@ GeomLabelPairwise <-
                        label.padding <- rep(label.padding, length.out = 4)
                      }
 
-                     # loop needed as gpar is not vectorized
-                     all.grobs <- grid::gList()
+                     if (orientation == "x") {
+                       # loop needed as gpar is not vectorized
+                       all.grobs <- grid::gList()
 
-                     for (row.idx in 1:nrow(data)) {
-                       row <- data[row.idx, , drop = FALSE]
-                       if (is.na(row$x)) {
-                         row$x <- (row$xmin + row$xmax) / 2
+                       for (row.idx in 1:nrow(data)) {
+                         row <- data[row.idx, , drop = FALSE]
+                         if (is.na(row$x)) {
+                           row$x <- (row$xmin + row$xmax) / 2
+                         }
+                         text.alpha <-
+                           ifelse(any(alpha.target %in% c("all", "text")),
+                                  row$alpha, default.alpha)
+                         segment.alpha <-
+                           ifelse(any(alpha.target %in% c("all", "segment")),
+                                  row$alpha, default.alpha)
+                         box.colour.alpha <-
+                           ifelse(any(alpha.target %in% c("all", "box", "box.line")),
+                                  row$alpha, default.alpha)
+                         box.fill.alpha <-
+                           ifelse(any(alpha.target %in% c("all", "box", "box.fill")),
+                                  row$alpha, default.alpha)
+                         user.grob <- labelGrob(lab[row.idx],
+                                                x = unit(row$x, "native"),
+                                                y = unit(row$y, "native"),
+                                                just = c(row$hjust, row$vjust),
+                                                padding = label.padding,
+                                                r = label.r,
+                                                angle = row$angle,
+                                                text.gp = gpar(
+                                                  col = ifelse(any(colour.target %in% c("all", "text")),
+                                                               ggplot2::alpha(row$colour, text.alpha),
+                                                               ggplot2::alpha(default.colour, text.alpha)),
+                                                  fontsize = row$size * size.unit,
+                                                  fontfamily = row$family,
+                                                  fontface = row$fontface,
+                                                  lineheight = row$lineheight
+                                                ),
+                                                rect.gp = gpar(
+                                                  col = if (row$linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
+                                                    ifelse(any(colour.target %in% c("all", "box")),
+                                                           ggplot2::alpha(row$colour, box.colour.alpha),
+                                                           ggplot2::alpha(default.colour, box.colour.alpha)),
+                                                  fill = alpha(row$fill, box.fill.alpha),
+                                                  lwd = (if (row$linewidth == 0) 1 else row$linewidth) * .pt, # mm -> points (as in 'ggplot2')
+                                                  # lwd = (if (row$linewidth == 0) 0.5 else row$linewidth) * ggplot2::.stroke, # mm -> stroke (correct)
+                                                  lty = row$linetype
+                                                )
+                         )
+
+                         # give unique name to each grob
+                         user.grob$name <- paste("label.pw.grob", row$group, row.idx, sep = ".")
+
+                         if (!is.null(arrow) && !inherits(arrow, "arrow")) {
+                           shape <- arrow[[1]]
+                           arrow <- NULL
+                         } else {
+                           shape <- NULL
+                         }
+
+                         segment.grob <-
+                           grid::segmentsGrob(x0 = row$xmin,
+                                              y0 = row$y,
+                                              x1 = row$xmax,
+                                              y1 = row$y,
+                                              arrow = arrow,
+                                              gp = grid::gpar(
+                                                col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
+                                                  ifelse(any(colour.target %in% c("all", "segment")),
+                                                         ggplot2::alpha(row$colour, segment.alpha),
+                                                         ggplot2::alpha(default.colour, segment.alpha)),
+                                                lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
+                                              name = paste("text.pw.segment", row$group, row.idx, sep = "."))
+                         all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
                        }
-                       text.alpha <-
-                         ifelse(any(alpha.target %in% c("all", "text")),
-                                row$alpha, default.alpha)
-                       segment.alpha <-
-                         ifelse(any(alpha.target %in% c("all", "segment")),
-                                row$alpha, default.alpha)
-                       box.colour.alpha <-
-                         ifelse(any(alpha.target %in% c("all", "box", "box.line")),
-                                row$alpha, default.alpha)
-                       box.fill.alpha <-
-                         ifelse(any(alpha.target %in% c("all", "box", "box.fill")),
-                                row$alpha, default.alpha)
-                       user.grob <- labelGrob(lab[row.idx],
-                                              x = unit(row$x, "native"),
-                                              y = unit(row$y, "native"),
-                                              just = c(row$hjust, row$vjust),
-                                              padding = label.padding,
-                                              r = label.r,
-                                              angle = row$angle,
-                                              text.gp = gpar(
-                                                col = ifelse(any(colour.target %in% c("all", "text")),
-                                                             ggplot2::alpha(row$colour, text.alpha),
-                                                             ggplot2::alpha(default.colour, text.alpha)),
-                                                fontsize = row$size * size.unit,
-                                                fontfamily = row$family,
-                                                fontface = row$fontface,
-                                                lineheight = row$lineheight
-                                              ),
-                                              rect.gp = gpar(
-                                                col = if (row$linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
-                                                  ifelse(any(colour.target %in% c("all", "box")),
-                                                         ggplot2::alpha(row$colour, box.colour.alpha),
-                                                         ggplot2::alpha(default.colour, box.colour.alpha)),
-                                                fill = alpha(row$fill, box.fill.alpha),
-                                                lwd = (if (row$linewidth == 0) 1 else row$linewidth) * .pt, # mm -> points (as in 'ggplot2')
-                                                # lwd = (if (row$linewidth == 0) 0.5 else row$linewidth) * ggplot2::.stroke, # mm -> stroke (correct)
-                                                lty = row$linetype
-                                              )
-                       )
+                     } else {
+                       # loop needed as gpar is not vectorized
+                       all.grobs <- grid::gList()
 
-                       # give unique name to each grob
-                       user.grob$name <- paste("label.pw.grob", row$group, row.idx, sep = ".")
+                       for (row.idx in 1:nrow(data)) {
+                         row <- data[row.idx, , drop = FALSE]
+                         if (is.na(row$y)) {
+                           row$y <- (row$ymin + row$ymax) / 2
+                         }
+                         text.alpha <-
+                           ifelse(any(alpha.target %in% c("all", "text")),
+                                  row$alpha, default.alpha)
+                         segment.alpha <-
+                           ifelse(any(alpha.target %in% c("all", "segment")),
+                                  row$alpha, default.alpha)
+                         box.colour.alpha <-
+                           ifelse(any(alpha.target %in% c("all", "box", "box.line")),
+                                  row$alpha, default.alpha)
+                         box.fill.alpha <-
+                           ifelse(any(alpha.target %in% c("all", "box", "box.fill")),
+                                  row$alpha, default.alpha)
+                         user.grob <- labelGrob(lab[row.idx],
+                                                x = unit(row$x, "native"),
+                                                y = unit(row$y, "native"),
+                                                just = c(row$hjust, row$vjust),
+                                                padding = label.padding,
+                                                r = label.r,
+                                                angle = row$angle + 90,
+                                                text.gp = gpar(
+                                                  col = ifelse(any(colour.target %in% c("all", "text")),
+                                                               ggplot2::alpha(row$colour, text.alpha),
+                                                               ggplot2::alpha(default.colour, text.alpha)),
+                                                  fontsize = row$size * size.unit,
+                                                  fontfamily = row$family,
+                                                  fontface = row$fontface,
+                                                  lineheight = row$lineheight
+                                                ),
+                                                rect.gp = gpar(
+                                                  col = if (row$linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
+                                                    ifelse(any(colour.target %in% c("all", "box")),
+                                                           ggplot2::alpha(row$colour, box.colour.alpha),
+                                                           ggplot2::alpha(default.colour, box.colour.alpha)),
+                                                  fill = alpha(row$fill, box.fill.alpha),
+                                                  lwd = (if (row$linewidth == 0) 1 else row$linewidth) * .pt, # mm -> points (as in 'ggplot2')
+                                                  # lwd = (if (row$linewidth == 0) 0.5 else row$linewidth) * ggplot2::.stroke, # mm -> stroke (correct)
+                                                  lty = row$linetype
+                                                )
+                         )
 
-                       if (!is.null(arrow) && !inherits(arrow, "arrow")) {
-                         shape <- arrow[[1]]
-                         arrow <- NULL
-                       } else {
-                         shape <- NULL
+                         # give unique name to each grob
+                         user.grob$name <- paste("label.pw.grob", row$group, row.idx, sep = ".")
+
+                         if (!is.null(arrow) && !inherits(arrow, "arrow")) {
+                           shape <- arrow[[1]]
+                           arrow <- NULL
+                         } else {
+                           shape <- NULL
+                         }
+
+                         segment.grob <-
+                           grid::segmentsGrob(x0 = row$x,
+                                              y0 = row$ymin,
+                                              x1 = row$x,
+                                              y1 = row$ymax,
+                                              arrow = arrow,
+                                              gp = grid::gpar(
+                                                col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
+                                                  ifelse(any(colour.target %in% c("all", "segment")),
+                                                         ggplot2::alpha(row$colour, segment.alpha),
+                                                         ggplot2::alpha(default.colour, segment.alpha)),
+                                                lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
+                                              name = paste("text.pw.segment", row$group, row.idx, sep = "."))
+                         all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
                        }
-
-                       segment.grob <-
-                         grid::segmentsGrob(x0 = row$xmin,
-                                            y0 = row$y,
-                                            x1 = row$xmax,
-                                            y1 = row$y,
-                                            arrow = arrow,
-                                            gp = grid::gpar(
-                                              col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
-                                                ifelse(any(colour.target %in% c("all", "segment")),
-                                                       ggplot2::alpha(row$colour, segment.alpha),
-                                                       ggplot2::alpha(default.colour, segment.alpha)),
-                                              lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
-                                            name = paste("text.pw.segment", row$group, row.idx, sep = "."))
-                       all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
                      }
-
 
                      # name needs to be unique within plot, so we would have to know layer name to use as basis
                      #                     grid::grobTree(children = all.grobs, name = "geom.text.s.panel")

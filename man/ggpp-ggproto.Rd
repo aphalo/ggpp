@@ -10,7 +10,6 @@
 %   R/stat-dens1d-filter.r, R/stat-dens1d-labels.r, R/stat-dens2d-filter.r,
 %   R/stat-dens2d-labels.r, R/stat-format-table.R, R/stat-functions.R,
 %   R/stat-panel-counts.R, R/stat-quadrant-counts.R
-\docType{data}
 \name{GeomGrob}
 \alias{GeomGrob}
 \alias{GeomGrobNpc}
@@ -68,5 +67,4 @@ implement one or more of the following:
 \seealso{
 \code{\link[ggplot2]{ggplot2-ggproto}}
 }
-\keyword{datasets}
 \keyword{internal}

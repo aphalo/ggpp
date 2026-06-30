@@ -29,7 +29,7 @@ Aphalo, P. J. (1991) Interactions in Stomatal Function. PhD
 thesis, University of Edinburgh. \url{http://hdl.handle.net/1842/14758}.
 }
 \seealso{
-Other Plant growth and morphology data: 
+Other Plant growth and morphology data:
 \code{\link{birch.df}}
 }
 \concept{Plant growth and morphology data}

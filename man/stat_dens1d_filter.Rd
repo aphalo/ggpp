@@ -304,9 +304,9 @@ if (gginnards.installed) {
 \seealso{
 \code{\link[stats]{density}} used internally.
 
-Other statistics returning a subset of data: 
-\code{\link{stat_dens1d_labels}()},
-\code{\link{stat_dens2d_filter}()},
-\code{\link{stat_dens2d_labels}()}
+Other statistics returning a subset of data:
+\code{\link[=stat_dens1d_labels]{stat_dens1d_labels()}},
+\code{\link[=stat_dens2d_filter]{stat_dens2d_filter()}},
+\code{\link[=stat_dens2d_labels]{stat_dens2d_labels()}}
 }
 \concept{statistics returning a subset of data}

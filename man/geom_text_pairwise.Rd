@@ -11,6 +11,7 @@ geom_label_pairwise(
   stat = "identity",
   position = "identity",
   ...,
+  orientation = NA,
   parse = FALSE,
   nudge_x = 0,
   nudge_y = 0,
@@ -36,6 +37,7 @@ geom_text_pairwise(
   stat = "identity",
   position = "identity",
   ...,
+  orientation = NA,
   parse = FALSE,
   nudge_x = 0,
   nudge_y = 0,
@@ -77,6 +79,11 @@ call to a position adjustment function.}
   \code{colour = "red"} or \code{size = 3}. \item Other arguments to the
   layer, for example you override the default \code{stat} associated with the
   layer. \item Other arguments passed on to the stat. }}
+
+\item{orientation}{character The orientation of the layer. The default
+(\code{NA}) automatically determines the orientation from the aesthetic
+mapping. In the rare event that this fails it can be given explicitly by
+setting orientation to either "x" or "y".}
 
 \item{parse}{If \code{TRUE}, the labels will be parsed into expressions and
 displayed as described in \code{?plotmath}.}
@@ -234,7 +241,7 @@ Geometries \code{geom_text_pairwise()} and
 
 my.cars <- mtcars
 my.cars$name <- rownames(my.cars)
-p1 <- ggplot(my.cars, aes(factor(cyl), mpg)) +
+p1 <- ggplot(my.cars, aes(x = factor(cyl), y = mpg)) +
        geom_boxplot(width = 0.33)
 
 # With a factor mapped to x, highlight pairs
@@ -342,6 +349,22 @@ p2 +
                      aes(xmin = A, xmax = B,
                          y = bar.height, label = text),
                      arrow = grid::arrow(ends = "both", length = unit(2, "mm")))
+
+# implicit orientation = "y"
+p3 <- ggplot(my.cars, aes(x = mpg, y = factor(cyl))) +
+       geom_boxplot(width = 0.33)
+
+p3 +
+  geom_text_pairwise(data = my.pairs,
+                     aes(ymin = A, ymax = B,
+                         x = bar.height,
+                         label = p.value))
+
+p3 +
+  geom_label_pairwise(data = my.pairs,
+                      aes(ymin = A, ymax = B,
+                          x = bar.height,
+                          label = p.value))
 
 }
 \seealso{

@@ -79,6 +79,10 @@
 #'   as a string.
 #' @param position Position adjustment, either as a string, or the result of a
 #'   call to a position adjustment function.
+#' @param orientation character The orientation of the layer. The default
+#'   (\code{NA}) automatically determines the orientation from the aesthetic
+#'   mapping. In the rare event that this fails it can be given explicitly by
+#'   setting orientation to either "x" or "y".
 #' @param parse If \code{TRUE}, the labels will be parsed into expressions and
 #'   displayed as described in \code{?plotmath}.
 #' @param na.rm If \code{FALSE} (the default), removes missing values with a
@@ -154,7 +158,7 @@
 #'
 #' my.cars <- mtcars
 #' my.cars$name <- rownames(my.cars)
-#' p1 <- ggplot(my.cars, aes(factor(cyl), mpg)) +
+#' p1 <- ggplot(my.cars, aes(x = factor(cyl), y = mpg)) +
 #'        geom_boxplot(width = 0.33)
 #'
 #' # With a factor mapped to x, highlight pairs
@@ -263,11 +267,28 @@
 #'                          y = bar.height, label = text),
 #'                      arrow = grid::arrow(ends = "both", length = unit(2, "mm")))
 #'
+#' # implicit orientation = "y"
+#' p3 <- ggplot(my.cars, aes(x = mpg, y = factor(cyl))) +
+#'        geom_boxplot(width = 0.33)
+#'
+#' p3 +
+#'   geom_text_pairwise(data = my.pairs,
+#'                      aes(ymin = A, ymax = B,
+#'                          x = bar.height,
+#'                          label = p.value))
+#'
+#' p3 +
+#'   geom_label_pairwise(data = my.pairs,
+#'                       aes(ymin = A, ymax = B,
+#'                           x = bar.height,
+#'                           label = p.value))
+#'
 geom_text_pairwise <- function(mapping = NULL,
                                data = NULL,
                                stat = "identity",
                                position = "identity",
                                ...,
+                               orientation = NA,
                                parse = FALSE,
                                nudge_x = 0,
                                nudge_y = 0,
@@ -313,6 +334,7 @@ geom_text_pairwise <- function(mapping = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
+      orientation = orientation,
       parse = parse,
       default.colour = default.color,
       colour.target = colour.target,
@@ -334,10 +356,11 @@ geom_text_pairwise <- function(mapping = NULL,
 #' @export
 GeomTextPairwise <-
   ggplot2::ggproto("GeomTextPairwise", ggplot2::Geom,
-                   required_aes = c("xmin", "xmax", "y", "label"),
+                   required_aes = c("xmin|ymin", "xmax|ymax", "y|x", "label"),
 
                    default_aes = ggplot2::aes(
                      x = NA_real_,
+                     y = NA_real_,
                      colour = "black",
                      size = 3.88,
                      angle = 0,
@@ -361,8 +384,18 @@ GeomTextPairwise <-
                                          na.rm = FALSE,
                                          check_overlap = FALSE,
                                          segment.linewidth = 0.5,
-                                         arrow = NULL) {
+                                         arrow = NULL,
+                                         orientation = NA) {
 
+                     if (is.null(orientation) || is.na(orientation)) {
+                       if (all(c("xmin", "xmax") %in% colnames(data))) {
+                         orientation <- "x"
+                       } else if (all(c("ymin", "ymax") %in% colnames(data))) {
+                         orientation <- "y"
+                       } else {
+                         stop("Unable to guess 'orientation' from mapped aesthetics!")
+                       }
+                     }
                      data$label <- as.character(data$label)
                      data <- subset(data, !is.na(label) & label != "")
                      if (nrow(data) == 0L) {
@@ -395,56 +428,110 @@ GeomTextPairwise <-
 
                      size.unit <- resolve_text_unit(size.unit)
 
-                     # loop needed as gpar is not vectorized
-                     all.grobs <- grid::gList()
+                     if (orientation == "x") {
+                       # loop needed as gpar is not vectorized
+                       all.grobs <- grid::gList()
 
-                     for (row.idx in 1:nrow(data)) {
-                       row <- data[row.idx, , drop = FALSE]
-                       if (is.na(row$x)) {
-                         row$x <- (row$xmin + row$xmax) / 2
-                       }
-                       text.alpha <-
-                         ifelse(any(alpha.target %in% c("all", "text")),
-                                row$alpha, default.alpha)
-                       segment.alpha <-
-                         ifelse(any(alpha.target %in% c("all", "segment")),
-                                row$alpha, default.alpha)
-                       user.grob <- grid::textGrob(
-                         lab[row.idx],
-                         x = row$x, y = row$y, default.units = "native",
-                         hjust = row$hjust, vjust = row$vjust,
-                         rot = row$angle,
-                         gp = gpar(
-                           col = ifelse(any(colour.target %in% c("all", "text")),
-                                        ggplot2::alpha(row$colour, text.alpha),
-                                        ggplot2::alpha(default.colour, text.alpha)),
-                           fontsize = row$size * size.unit,
-                           fontfamily = row$family,
-                           fontface = row$fontface,
-                           lineheight = row$lineheight
-                         ),
-                         check.overlap = check_overlap
-                       )
-
-                       # give unique name to each grob
-                       user.grob$name <- paste("text.pairwise.grob", row$group, row.idx, sep = ".")
-
-                       segment.grob <-
-                         grid::segmentsGrob(x0 = row$xmin,
-                                            y0 = row$y,
-                                            x1 = row$xmax,
-                                            y1 = row$y,
-                                            arrow = arrow,
-                                            gp = grid::gpar(
-                                              col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
-                                                ifelse(any(colour.target %in% c("all", "segment")),
-                                                       ggplot2::alpha(row$colour, segment.alpha),
-                                                       ggplot2::alpha(default.colour, segment.alpha)),
-                                              lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
-                                            name = paste("text.pr.segment", row$group, row.idx, sep = ".")
+                       for (row.idx in 1:nrow(data)) {
+                         row <- data[row.idx, , drop = FALSE]
+                         if (is.na(row$x)) {
+                           row$x <- (row$xmin + row$xmax) / 2
+                         }
+                         text.alpha <-
+                           ifelse(any(alpha.target %in% c("all", "text")),
+                                  row$alpha, default.alpha)
+                         segment.alpha <-
+                           ifelse(any(alpha.target %in% c("all", "segment")),
+                                  row$alpha, default.alpha)
+                         user.grob <- grid::textGrob(
+                           lab[row.idx],
+                           x = row$x, y = row$y, default.units = "native",
+                           hjust = row$hjust, vjust = row$vjust,
+                           rot = row$angle,
+                           gp = gpar(
+                             col = ifelse(any(colour.target %in% c("all", "text")),
+                                          ggplot2::alpha(row$colour, text.alpha),
+                                          ggplot2::alpha(default.colour, text.alpha)),
+                             fontsize = row$size * size.unit,
+                             fontfamily = row$family,
+                             fontface = row$fontface,
+                             lineheight = row$lineheight
+                           ),
+                           check.overlap = check_overlap
                          )
-                       all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
 
+                         # give unique name to each grob
+                         user.grob$name <-
+                           paste("text.pairwise.grob", row$group, row.idx, sep = ".")
+
+                         segment.grob <-
+                           grid::segmentsGrob(x0 = row$xmin,
+                                              y0 = row$y,
+                                              x1 = row$xmax,
+                                              y1 = row$y,
+                                              arrow = arrow,
+                                              gp = grid::gpar(
+                                                col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
+                                                  ifelse(any(colour.target %in% c("all", "segment")),
+                                                         ggplot2::alpha(row$colour, segment.alpha),
+                                                         ggplot2::alpha(default.colour, segment.alpha)),
+                                                lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
+                                              name = paste("text.pr.segment", row$group, row.idx, sep = ".")
+                           )
+                         all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
+                       }
+                     } else {
+                       # loop needed as gpar is not vectorized
+                       all.grobs <- grid::gList()
+
+                       for (row.idx in 1:nrow(data)) {
+                         row <- data[row.idx, , drop = FALSE]
+                         if (is.na(row$y)) {
+                           row$y <- (row$ymin + row$ymax) / 2
+                         }
+                         text.alpha <-
+                           ifelse(any(alpha.target %in% c("all", "text")),
+                                  row$alpha, default.alpha)
+                         segment.alpha <-
+                           ifelse(any(alpha.target %in% c("all", "segment")),
+                                  row$alpha, default.alpha)
+                         user.grob <- grid::textGrob(
+                           lab[row.idx],
+                           y = row$y, x = row$x, default.units = "native",
+                           hjust = row$hjust, vjust = row$vjust,
+                           rot = row$angle + 90,
+                           gp = gpar(
+                             col = ifelse(any(colour.target %in% c("all", "text")),
+                                          ggplot2::alpha(row$colour, text.alpha),
+                                          ggplot2::alpha(default.colour, text.alpha)),
+                             fontsize = row$size * size.unit,
+                             fontfamily = row$family,
+                             fontface = row$fontface,
+                             lineheight = row$lineheight
+                           ),
+                           check.overlap = check_overlap
+                         )
+
+                         # give unique name to each grob
+                         user.grob$name <-
+                           paste("text.pairwise.grob", row$group, row.idx, sep = ".")
+
+                         segment.grob <-
+                           grid::segmentsGrob(x0 = row$x,
+                                              y0 = row$ymin,
+                                              x1 = row$x,
+                                              y1 = row$ymax,
+                                              arrow = arrow,
+                                              gp = grid::gpar(
+                                                col = if (segment.linewidth == 0) NA else # lwd = 0 is invalid in 'grid'
+                                                  ifelse(any(colour.target %in% c("all", "segment")),
+                                                         ggplot2::alpha(row$colour, segment.alpha),
+                                                         ggplot2::alpha(default.colour, segment.alpha)),
+                                                lwd = (if (segment.linewidth == 0) 0.5 else segment.linewidth) * ggplot2::.stroke),
+                                              name = paste("text.pr.segment", row$group, row.idx, sep = ".")
+                           )
+                         all.grobs <- grid::gList(all.grobs, segment.grob, user.grob)
+                       }
                      }
 
                      # name needs to be unique within plot, so we would need to know other layers
