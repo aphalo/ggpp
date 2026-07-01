@@ -132,8 +132,8 @@ personality" as both annotations and geometries.
 \code{\link[grid]{grid-package}}, \code{\link[ggplot2]{geom_rug}},
   and other documentation of package 'ggplot2'.
 
-Other Geometries for marginal annotations in ggplots: 
-\code{\link{geom_x_margin_arrow}()},
-\code{\link{geom_x_margin_point}()}
+Other Geometries for marginal annotations in ggplots:
+\code{\link[=geom_x_margin_arrow]{geom_x_margin_arrow()}},
+\code{\link[=geom_x_margin_point]{geom_x_margin_point()}}
 }
 \concept{Geometries for marginal annotations in ggplots}

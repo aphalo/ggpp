@@ -176,15 +176,15 @@ ggplot(birch_dw.df,
   \code{\link[ggplot2]{position_stack}},
   \code{\link[ggrepel]{position_nudge_repel}}.
 
-Other position adjustments: 
-\code{\link{position_dodgenudge}()},
-\code{\link{position_dodgenudge_to}()},
-\code{\link{position_jitternudge}()},
-\code{\link{position_nudge_center}()},
-\code{\link{position_nudge_keep}()},
-\code{\link{position_nudge_line}()},
-\code{\link{position_nudge_to}()},
-\code{\link{position_stacknudge_to}()}
+Other position adjustments:
+\code{\link[=position_dodgenudge]{position_dodgenudge()}},
+\code{\link[=position_dodgenudge_to]{position_dodgenudge_to()}},
+\code{\link[=position_jitternudge]{position_jitternudge()}},
+\code{\link[=position_nudge_center]{position_nudge_center()}},
+\code{\link[=position_nudge_keep]{position_nudge_keep()}},
+\code{\link[=position_nudge_line]{position_nudge_line()}},
+\code{\link[=position_nudge_to]{position_nudge_to()}},
+\code{\link[=position_stacknudge_to]{position_stacknudge_to()}}
 }
 \author{
 Michał Krassowski, edited by Pedro J. Aphalo.

@@ -388,7 +388,7 @@ Formatting of tables \code{stat_fmt_table},
   \code{\link{ttheme_gtdefault}}, \code{\link{ttheme_set}},
   \code{\link[gridExtra]{tableGrob}}.
 
-Other geometries adding layers with insets: 
-\code{\link{geom_plot}()}
+Other geometries adding layers with insets:
+\code{\link[=geom_plot]{geom_plot()}}
 }
 \concept{geometries adding layers with insets}

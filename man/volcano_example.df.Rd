@@ -30,7 +30,7 @@ Gareth I.; Lehto, Tarja; Salojärvi, Jarkko; Brosché, Mikael; Strid. Åke;
  Environment}, 43:1513-1527.
 }
 \seealso{
-Other Transcriptomics data: 
+Other Transcriptomics data:
 \code{\link{quadrant_example.df}}
 }
 \concept{Transcriptomics data}

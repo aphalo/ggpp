@@ -252,7 +252,7 @@ The idea of implementing a \code{geom_custom()} for grobs has
   \url{https://github.com/tidyverse/ggplot2/issues/1399}.
 }
 \seealso{
-Other geometries adding layers with insets: 
-\code{\link{geom_table}()}
+Other geometries adding layers with insets:
+\code{\link[=geom_table]{geom_table()}}
 }
 \concept{geometries adding layers with insets}

@@ -280,9 +280,9 @@ if (gginnards.installed) {
   the parameters with the same name in this imported function. Limits are set
   to the limits of the plot scales.
 
-Other statistics returning a subset of data: 
-\code{\link{stat_dens1d_filter}()},
-\code{\link{stat_dens1d_labels}()},
-\code{\link{stat_dens2d_labels}()}
+Other statistics returning a subset of data:
+\code{\link[=stat_dens1d_filter]{stat_dens1d_filter()}},
+\code{\link[=stat_dens1d_labels]{stat_dens1d_labels()}},
+\code{\link[=stat_dens2d_labels]{stat_dens2d_labels()}}
 }
 \concept{statistics returning a subset of data}

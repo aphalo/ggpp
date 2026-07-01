@@ -39,7 +39,7 @@ silver-birch planting-stock grown at different spacing and in containers of
 different volume. \emph{New Forests}, 25:93-108. \doi{10.1023/A:1022618810937}.
 }
 \seealso{
-Other Plant growth and morphology data: 
+Other Plant growth and morphology data:
 \code{\link{ivy.df}}
 }
 \concept{Plant growth and morphology data}
