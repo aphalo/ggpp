@@ -116,9 +116,11 @@ GeomLabelPairwise <-
                                          orientation = NA) {
 
                      if (is.null(orientation) || is.na(orientation)) {
-                       if (all(c("xmin", "xmax") %in% colnames(data))) {
+                       if (all(c("xmin", "xmax") %in% colnames(data)) &&
+                               !(all(is.na(data[["xmin"]])) || all(is.na(data[["xmax"]])))) {
                          orientation <- "x"
-                       } else if (all(c("ymin", "ymax") %in% colnames(data))) {
+                       } else if (all(c("ymin", "ymax") %in% colnames(data)) &&
+                                  !(all(is.na(data[["ymin"]])) || all(is.na(data[["ymax"]])))) {
                          orientation <- "y"
                        } else {
                          stop("Unable to guess 'orientation' from mapped aesthetics!")
