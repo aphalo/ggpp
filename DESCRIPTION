@@ -9,7 +9,8 @@ Authors@R:
     person("Kamil", "Slowikowski", role = "ctb", comment = c(ORCID = "0000-0002-2843-6370")),
     person("Michał", "Krassowski", role = "ctb", comment = c(ORCID = "0000-0002-9638-7785")),
     person("Daniel", "Sabanés Bové", role = "ctb", comment = c(ORCID = "0000-0002-0176-9239")),
-    person("Stella", "Banjo", role = "ctb")
+    person("Stella", "Banjo", role = "ctb"),
+    person("dajiaohuang", role = "ctb")
     )
 Maintainer: Pedro J. Aphalo <pedro.aphalo@helsinki.fi>
 Description: Extensions to 'ggplot2' respecting the grammar of graphics 

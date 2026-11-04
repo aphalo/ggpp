@@ -368,6 +368,19 @@ test_that("nudge_center", {
                                 )
 })
 
+test_that("nudge_center split supports vector offsets", {
+  df <- data.frame(x = 1:4, y = 1:4)
+  built <- ggplot_build(
+    ggplot(df, aes(x, y)) +
+      geom_point(position = position_nudge_center(x = c(0.1, -0.1),
+                                                  y = 0.2,
+                                                  direction = "split"))
+  )
+
+  expect_equal(built$data[[1]]$x, c(0.9, 2.1, 3.1, 3.9))
+  expect_equal(built$data[[1]]$y, c(0.8, 1.8, 3.2, 4.2))
+})
+
 test_that("nudge_center works with time", {
   df <- data.frame(
     x = lubridate::dmy("01-01-1070") + lubridate::hours(c(1,3,2,5,4,6)),
